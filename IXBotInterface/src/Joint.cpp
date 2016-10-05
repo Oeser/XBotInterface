@@ -29,7 +29,7 @@ void XBot::Joint::setJointName(std::string joint_name)
     _joint_name = joint_name;
 }
 
-void XBot::Joint::setJoitId(int joint_id)
+void XBot::Joint::setJointId(int joint_id)
 {
     _joint_id = joint_id;
 }
