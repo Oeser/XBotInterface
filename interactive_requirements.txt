@@ -1,0 +1,31 @@
+Interactive Requirements
+
+XBotInterface& r = *XBotInterfacePtr::getRobot(path_to_cfg);
+ModelInterfacePtr m = r.getModel();
+
+r.sense() // Updates all kinematic chains with data from /joint_states, IMUs, FTs, ...
+m.setPosition(r) // Align model with actual robot q (same for velocity, ...)
+
+Eigen::Affine3d r.getTransform(r.floatingBaseName(), r.leg(0).tipLinkName()); // ros tf abstraction, notice that each kinematic chains has a getter for link names/joint names/etc (this is useful for specifying frame names from their semantics (I want to avoid hard-coded names!)
+
+for(int i = 0; i<r.legs(); i++){
+ Eigen::VectorXd q_leg;
+ r.leg(i).getJointPosition(q_leg);
+ r.leg(i).setJointPositionReference(q_leg*2); // command twice the current position to quickly   break the robot
+}
+
+r.write();// Send ref to low level controller
+
+Eigen::VectorXd q = m.q(), q_dot; // get model joint positions
+// Do some computations....
+m.q() += q_dot*deltaT; // Add a vector to model configuration
+r.setPosition(m) // Set a reference joint position to the whole actual robot from the model
+r.write(); // Send it to low level controller
+
+Eigen::Vector6d wrench;
+r.ft.leg(0).getWrench(wrench); // Access FT sensor from its semantics, get measured wrench
+r.ft("ft_leg_1").getWrench(wrench); // Access by name (hard-coded names :( )
+
+
+
+
