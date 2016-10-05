@@ -1,12 +1,12 @@
 Interactive Requirements
 
 XBotInterface& r = *XBotInterfacePtr::getRobot(path_to_cfg);
-ModelInterfacePtr m = r.getModel();
+DynamicModel& m = *r.getModel("RBDL"); //default 2 arg :  non sync, lib type from cfg
 
 r.sense() // Updates all kinematic chains with data from /joint_states, IMUs, FTs, ...
 m.setPosition(r) // Align model with actual robot q (same for velocity, ...)
 
-Eigen::Affine3d r.getTransform(r.floatingBaseName(), r.leg(0).tipLinkName()); // ros tf abstraction, notice that each kinematic chains has a getter for link names/joint names/etc (this is useful for specifying frame names from their semantics (I want to avoid hard-coded names!)
+Eigen::Affine3d m.getTransform(r.floatingBaseName(), r.leg(0).tipLinkName()); // ros tf abstraction, notice that each kinematic chains has a getter for link names/joint names/etc (this is useful for specifying frame names from their semantics (I want to avoid hard-coded names!)
 
 for(int i = 0; i<r.legs(); i++){
  Eigen::VectorXd q_leg;
