@@ -28,38 +28,147 @@
 #include<XBotInterface/Joint.h>
 #include<XBotCoreModel.h>
 
-namespace XBot
-{
+namespace XBot {
 
-    class KinematicChain {
-    private:
-        
-        std::map<std::string, XBot::Joint::Ptr> _joint_name_map;
-        std::map<int, XBot::Joint::Ptr> _joint_id_map;
-        std::vector<XBot::Joint::Ptr> _joint_vector;
-        
-        std::vector<std::string> _ordered_joint_name;
-        std::vector<int> _ordered_joint_id;
-        
-        XBot::XBotCoreModel _XBotModel;
-        
-        std::string _chain_name;
-        int _joint_num;
-        
-    protected:
-        
-    public:
-        
-        typedef std::shared_ptr<KinematicChain> Ptr;
-        
-        KinematicChain();
-        KinematicChain( const std::string& chain_name, 
-                        const XBot::XBotCoreModel& XBotModel);
-        // TBD copy constructor and =
-        
-        int getJointNum();
-        
-    };
+class KinematicChain {
+  
+  public:
+
+    /**
+     * @brief Default constructor
+     * 
+     */
+    KinematicChain();
+    
+    KinematicChain(const std::string& chain_name, 
+		   const XBot::XBotCoreModel& XBotModel);
+    
+    // TBD: copy constructor and copy assignment
+    
+    /**
+     * @brief Method returning the name of the chain
+     * 
+     * @return Chain name as const std::string&
+     */
+    const std::string& chainName() const;
+    
+    
+    /**
+     * @brief Method returning the name of the chain base link
+     * 
+     * @return Base link name as const std::string&
+     */
+    const std::string& baseLinkName() const;
+    
+    
+    /**
+     * @brief Method returning the name of the chain tip link
+     * 
+     * @return Tip link name as const std::string&
+     */
+    const std::string& tipLinkName() const;
+    
+    
+    /**
+     * @brief Method returning the name of the child link corresponding
+     * to the id-th joint of the chain
+     * 
+     * @param id The id of the joint along the chain (id = 0 refers to the joint attached to the base link)
+     * 
+     * @return The name of the child link of joint n° id
+     */
+    const std::string& childLinkName(int id) const;
+    
+    
+    /**
+     * @brief Method returning the name of the parent link corresponding
+     * to the id-th joint of the chain
+     * 
+     * @param id The id of the joint along the chain (id = 0 refers to the joint attached to the base link)
+     * 
+     * @return The name of the parent link of joint n° id
+     */
+    const std::string& parentLinkName(int id) const;
+    
+    
+    /**
+     * @brief Method returning the name of the id-th joint of the chain
+     * 
+     * @param id The id of the joint whose name is queried (id = 0 refers to the joint attached to the base link)
+     * 
+     * @return The name of the joint n° id
+     */
+    const std::string& jointName(int id) const;
+    
+    
+    /**
+     * @brief Method returning the number of active joints (TBD: is it correct?)
+     * belonging to the chain
+     * 
+     * @return The number of active joints (TBD: is it correct?)
+     * belonging to the chain
+     */
+    int getJointNum() const;
+    
+    
+    /**
+     * @brief Method returning the vector of urdf::Joints corresponding to the chain.
+     * 
+     * @return const std::vector< urdf::JointConstSharedPtr>&
+     */
+    const std::vector< urdf::JointConstSharedPtr >& getJoints() const;
+    
+    /**
+     * @brief Method returning the vector of urdf::Links corresponding to the chain.
+     * 
+     * @return const std::vector< urdf::LinkConstSharedPtr>&
+     */
+    const std::vector< urdf::LinkConstSharedPtr >& getLinks() const;
+    
+//     bool setJointPosition(const Eigen::VectorXd& q);
+//     bool setJointVelocity(const Eigen::VectorXd& qdot);
+//     bool setJointAcceleration(const Eigen::VectorXd& qddot);
+//     bool setJointEffort(const Eigen::VectorXd& tau);
+//     bool setJointImpedance(const Eigen::VectorXd& K, const Eigen::VectorXd& D);
+//     
+//     bool getJointPosition(Eigen::VectorXd& q) const;
+//     bool getJointVelocity(Eigen::VectorXd& qdot) const;
+//     bool getJointAcceleration(Eigen::VectorXd& qddot) const;
+//     bool getJointEffort(Eigen::VectorXd& tau) const;
+//     bool getJointImpedance(Eigen::VectorXd& K, Eigen::VectorXd& D) const;
+//     
+//     const Eigen::VectorXd& getJointPosition() const;
+//     const Eigen::VectorXd& getJointVelocity() const;
+//     const Eigen::VectorXd& getJointAcceleration() const;
+//     const Eigen::VectorXd& getJointEffort() const;
+    
+    
+    typedef std::shared_ptr<KinematicChain> Ptr;
+
+    
+  protected:
+  
+  private:
+    
+    std::map<std::string, XBot::Joint::Ptr> _joint_name_map;
+    std::map<int, XBot::Joint::Ptr> _joint_id_map;
+    std::vector<XBot::Joint::Ptr> _joint_vector;
+    
+    std::vector<urdf::JointConstSharedPtr> urdf_joints_;
+    std::vector<urdf::LinkConstSharedPtr> urdf_links_;
+    
+    std::vector<std::string> _ordered_joint_name;
+    std::vector<int> _ordered_joint_id;
+    
+    XBot::XBotCoreModel _XBotModel;
+    
+    std::string _chain_name;
+    int _joint_num;
+    
+
+    
+};
+
 }
 
 #endif // __KIN_CHAIN_H__

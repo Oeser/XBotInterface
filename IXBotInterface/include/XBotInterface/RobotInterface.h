@@ -27,15 +27,16 @@
 
 namespace XBot
 {
-    class RobotInterface;
+  class RobotInterface;
 }
 
 class RobotInterface : public IXBotInterface {
-private:
-    
-protected:
-    
-public:
+  
+  private:
+      
+  protected:
+      
+  public:
     
 };
 
