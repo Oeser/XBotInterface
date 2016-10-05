@@ -7,24 +7,25 @@ XBot::Joint::Joint() :
 
 }
 
-XBot::Joint::Joint(std::string joint_name, int joint_id) :
+XBot::Joint::Joint(const std::string& joint_name, 
+                   int joint_id) :
     _joint_name(joint_name),
     _joint_id(joint_id)
 {
 
 }
 
-std::string XBot::Joint::getJointName()
+const std::string& XBot::Joint::getJointName() const
 {
     return _joint_name;
 }
 
-int XBot::Joint::getJointId()
+int XBot::Joint::getJointId() const
 {
     return _joint_id;
 }
 
-void XBot::Joint::setJointName(std::string joint_name)
+void XBot::Joint::setJointName(const std::string& joint_name)
 {
     _joint_name = joint_name;
 }
@@ -36,32 +37,32 @@ void XBot::Joint::setJointId(int joint_id)
 
 
 
-double XBot::Joint::getLinkPos()
+double XBot::Joint::getLinkPos() const
 {
     return _link_pos;
 }
 
-double XBot::Joint::getMotorPos()
+double XBot::Joint::getMotorPos() const
 {
     return _motor_pos;
 }
 
-double XBot::Joint::getLinkVel()
+double XBot::Joint::getLinkVel() const
 {
     return _link_vel;
 }
 
-double XBot::Joint::getMotorVel()
+double XBot::Joint::getMotorVel() const
 {
     return _motor_vel;
 }
 
-double XBot::Joint::getEffort()
+double XBot::Joint::getEffort() const
 {
     return _effort;
 }
 
-double XBot::Joint::getTemperature()
+double XBot::Joint::getTemperature() const
 {
     return _temperature;
 }

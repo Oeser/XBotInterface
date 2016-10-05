@@ -31,21 +31,28 @@ namespace XBot
     * 
     */
     class Joint {
-    private:
         
-        std::string _joint_name;
-        int _joint_id;
+    public:
+
+        Joint();
+        Joint(const std::string& joint_name, 
+              int joint_id); 
+
+        const std::string& getJointName() const;
+        int getJointId() const;
         
-        double _link_pos;
-        double _motor_pos;
-        double _link_vel;
-        double _motor_vel;
-        double _effort;
-        double _temperature;
+        double getLinkPos() const;
+        double getMotorPos() const;
+        double getLinkVel() const;
+        double getMotorVel() const;
+        double getEffort() const;
+        double getTemperature() const;
+
+        typedef std::shared_ptr<Joint> Ptr;
         
     protected:
         
-        void setJointName(std::string joint_name);
+        void setJointName(const std::string& joint_name);
         void setJointId(int joint_id);
         
         void setLinkPos(double link_pos);
@@ -55,23 +62,43 @@ namespace XBot
         void setEffort(double effort);
         void setTemperature(double temperature);
         
-    public:
+    private:
+        ////////////////
+        // Joint info //
+        ////////////////
         
-        typedef std::shared_ptr<Joint> Ptr;
-
-        std::string getJointName();
-        int getJointId();
+        /**
+         * @brief the name of the joint
+         * 
+         */
+        std::string _joint_name;
         
-        double getLinkPos();
-        double getMotorPos();
-        double getLinkVel();
-        double getMotorVel();
-        double getEffort();
-        double getTemperature();
-
+        /**
+         * @brief the id of the joint
+         * 
+         */
+        int _joint_id;
         
-        Joint();
-        Joint(std::string joint_name, int joint_id); 
+        ///////////////////
+        // RX from board //
+        ///////////////////
+        
+        double _link_pos;
+        double _motor_pos;
+        double _link_vel;
+        double _motor_vel;
+        double _effort;
+        double _temperature;
+        
+        /////////////////
+        // TX to board //
+        /////////////////
+        // TBD setters and getters
+        double _pos_ref;
+        double _vel_ref;
+        double _effort_ref;
+        double _stiffness;
+        double _damping;
         
         
     };
