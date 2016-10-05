@@ -56,3 +56,6 @@ install_basic_package_files(XBotInterface VARS_PREFIX ${VARS_PREFIX}
                                     NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
 include(AddUninstallTarget)
+
+# doc
+optional_build(doc doc ON)
