@@ -9,7 +9,7 @@ file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *
 add_library(XBotInterface SHARED ${XBotInterface_INCLUDES} 
                                  src/XBotInterface.cpp
                                  src/Joint.cpp
-                                 src/KinChain.cpp)
+                                 src/KinematicChain.cpp)
                                  
 target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES})
 

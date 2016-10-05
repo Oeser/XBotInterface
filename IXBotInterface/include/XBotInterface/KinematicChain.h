@@ -17,8 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef __KIN_CHAIN_H__
-#define __KIN_CHAIN_H__
+#ifndef __KINEMATIC_CHAIN_H__
+#define __KINEMATIC_CHAIN_H__
 
 #include <string>
 #include <vector>
@@ -26,31 +26,36 @@
 #include <memory>
 
 #include<XBotInterface/Joint.h>
+#include<XBotCoreModel.h>
 
 namespace XBot
 {
 
-    class KinChain {
+    class KinematicChain {
     private:
         
         std::map<std::string, XBot::Joint::Ptr> _joint_name_map;
         std::map<int, XBot::Joint::Ptr> _joint_id_map;
         std::vector<XBot::Joint::Ptr> _joint_vector;
         
+        std::vector<std::string> _ordered_joint_name;
+        std::vector<int> _ordered_joint_id;
+        
+        XBot::XBotCoreModel _XBotModel;
+        
         std::string _chain_name;
         int _joint_num;
-        
-        void initialize_joint_vector();
         
     protected:
         
     public:
         
-        typedef std::shared_ptr<KinChain> Ptr;
+        typedef std::shared_ptr<KinematicChain> Ptr;
         
-        KinChain();
-        KinChain(std::string chain_name, 
-                std::map<std::string, int> joint_name_id_map);
+        KinematicChain();
+        KinematicChain( const std::string& chain_name, 
+                        const XBot::XBotCoreModel& XBotModel);
+        // TBD copy constructor and =
         
         int getJointNum();
         
