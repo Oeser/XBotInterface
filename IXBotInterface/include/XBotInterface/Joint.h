@@ -46,7 +46,7 @@ namespace XBot
     protected:
         
         void setJointName(std::string joint_name);
-        void setJoitId(int joint_id);
+        void setJointId(int joint_id);
         
         void setLinkPos(double link_pos);
         void setMotorPos(double motor_pos);
