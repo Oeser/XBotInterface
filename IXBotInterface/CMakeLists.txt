@@ -11,7 +11,11 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/Joint.cpp
                                  src/KinematicChain.cpp)
                                  
-target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES})
+target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
+                                    yaml-cpp)
+
+add_executable(test src/main_test.cpp)
+target_link_libraries(test XBotInterface)
 
 ########################################################################
 
