@@ -46,7 +46,20 @@ class KinematicChain {
     KinematicChain(const std::string& chain_name, 
 		   const XBot::XBotCoreModel& XBotModel);
     
-    // TBD: copy constructor and copy assignment
+    /**
+     * @brief Custom copy constructor, which guarantees independence between
+     * copies by performing a deep copy
+     * 
+     */
+    KinematicChain(const KinematicChain& other);
+    
+    
+    /**
+     * @brief Custom copy assignment, which guarantees independence between
+     * copies by performing a deep copy
+     * 
+     */
+    KinematicChain& operator= (const KinematicChain& rhs);
     
     /**
      * @brief Method returning the name of the chain

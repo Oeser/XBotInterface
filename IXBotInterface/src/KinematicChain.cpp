@@ -50,6 +50,59 @@ KinematicChain::KinematicChain(const std::string& chain_name,
 
 }
 
+KinematicChain::KinematicChain(const KinematicChain& other):
+// Default copy of all non-ptr members
+_urdf_joints(other._urdf_joints),
+_urdf_links(other._urdf_links),
+_ordered_joint_name(other._ordered_joint_name),
+_ordered_joint_id(other._ordered_joint_id),
+_XBotModel(other._XBotModel),
+_chain_name(other._chain_name),
+_joint_num(other._joint_num)
+{
+  
+  
+  for( const Joint::Ptr& other_jptr : other._joint_vector ){
+    
+    Joint::Ptr jptr = std::make_shared<Joint>(); 
+    *jptr = *other_jptr;
+    
+    _joint_vector.push_back(jptr);
+    _joint_name_map[jptr->getJointName()] = jptr;
+    _joint_id_map[jptr->getJointId()] = jptr;
+    
+  }
+  
+
+}
+
+
+KinematicChain& KinematicChain::operator=(const KinematicChain& rhs)
+{
+  
+  // First, make a copy of rhs exploiting the custom copy constructor
+  KinematicChain tmp(rhs);
+  
+  // Swap all elements
+  std::swap(_urdf_joints, tmp._urdf_joints);
+  std::swap(_urdf_links, tmp._urdf_links);
+  std::swap(_ordered_joint_name, tmp._ordered_joint_name);
+  std::swap(_ordered_joint_id, tmp._ordered_joint_id);
+  std::swap(_XBotModel, tmp._XBotModel);
+  std::swap(_chain_name, tmp._chain_name);
+  std::swap(_joint_num, tmp._joint_num);
+  std::swap(_joint_vector, tmp._joint_vector);
+  std::swap(_joint_name_map, tmp._joint_name_map);
+  std::swap(_joint_id_map, tmp._joint_id_map);
+  
+  // Return this
+  return *this;
+  
+}
+
+
+
+
 const std::vector< XBot::JointConstSharedPtr >& KinematicChain::getJoints() const
 {
   return _urdf_joints;
