@@ -1,0 +1,6 @@
+# WALK-MAN config
+x_bot_interface:
+  framework: YARP
+  urdf_path: /home/lucamuratore/src/centauro-superbuild/external/XBotInterface/IXBotInterface/configs/urdf/bigman.urdf
+  srdf_path: /home/lucamuratore/src/centauro-superbuild/external/XBotInterface/IXBotInterface/configs/srdf/bigman_config.srdf
+  joint_map_config: /home/lucamuratore/src/centauro-superbuild/external/XBotInterface/IXBotInterface/configs/joint_map/bigman_ecat_joint_map.yaml
