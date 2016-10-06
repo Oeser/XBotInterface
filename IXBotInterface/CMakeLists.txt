@@ -1,8 +1,9 @@
 project(IXBotCoreModel)
 
 find_package(XBotCoreModel REQUIRED)
+FIND_PACKAGE(kdl_parser REQUIRED)
 
-include_directories(include ${XBotCoreModel_INCLUDE_DIRS})
+include_directories(include ${XBotCoreModel_INCLUDE_DIRS} ${kdl_parser_INCLUDE_DIRS})
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
