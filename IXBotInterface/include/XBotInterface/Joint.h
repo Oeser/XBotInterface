@@ -47,6 +47,18 @@ namespace XBot
         double getMotorVel() const;
         double getEffort() const;
         double getTemperature() const;
+        
+        double getPosRef() const;
+        double getVelRef() const;
+        double getEffortRef() const;
+        double getStiffness() const;
+        double getDamping() const;
+        
+        void setPosRef(double pos_ref);
+        void setVelRef(double vel_ref);
+        void setEffortRef(double effort_ref);
+        void setStiffness(double stiffness);
+        void setDamping(double damping);
 
         typedef std::shared_ptr<Joint> Ptr;
         
@@ -93,7 +105,7 @@ namespace XBot
         /////////////////
         // TX to board //
         /////////////////
-        // TBD setters and getters
+        
         double _pos_ref;
         double _vel_ref;
         double _effort_ref;

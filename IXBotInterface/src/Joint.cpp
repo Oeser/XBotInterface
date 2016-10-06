@@ -98,6 +98,64 @@ void XBot::Joint::setTemperature(double temperature)
     _temperature = temperature;
 }
 
+double XBot::Joint::getPosRef() const
+{
+    return _pos_ref;
+}
+
+double XBot::Joint::getVelRef() const
+{
+    return _vel_ref;
+}
+
+double XBot::Joint::getEffortRef() const
+{
+    return _effort_ref;
+}
+
+double XBot::Joint::getStiffness() const
+{
+    return _stiffness;
+}
+
+double XBot::Joint::getDamping() const
+{
+    return _damping;
+}
+
+void XBot::Joint::setPosRef(double pos_ref)
+{
+    _pos_ref = pos_ref;
+}
+
+void XBot::Joint::setVelRef(double vel_ref)
+{
+    _vel_ref = vel_ref;
+}
+
+void XBot::Joint::setEffortRef(double effort_ref)
+{
+    _effort_ref = effort_ref;
+}
+
+void XBot::Joint::setStiffness(double stiffness)
+{
+    _stiffness = stiffness;
+}
+
+void XBot::Joint::setDamping(double damping)
+{
+    _damping = damping;
+}
+
+
+
+
+
+
+
+
+
 
 
 
