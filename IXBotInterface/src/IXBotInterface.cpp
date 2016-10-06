@@ -7,6 +7,8 @@ XBot::IXBotInterface::IXBotInterface(const XBot::XBotCoreModel& XBotModel) :
     _XBotModel(XBotModel)
 {
     _joint_num = XBotModel.get_joint_num();
+    _urdf_string = XBotModel.get_urdf_string();
+    _srdf_string = XBotModel.get_srdf_string();
     XBotModel.get_enabled_joint_ids(_ordered_joint_id);
     XBotModel.get_enabled_joint_names(_ordered_joint_name);
     
@@ -22,7 +24,9 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface& other):
   _joint_num(other._joint_num),
   _ordered_joint_name(other._ordered_joint_name),
   _ordered_joint_id(other._ordered_joint_id),
-  _XBotModel(other._XBotModel)
+  _XBotModel(other._XBotModel),
+  _urdf_string(other._urdf_string),
+  _srdf_string(other._srdf_string)
 {
   
   for( const auto& chain_name_ptr_pair : other._chain_map ){
@@ -71,6 +75,8 @@ XBot::IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg)
     }
 
 }
+
+
 
 void XBot::YARPInterface::test()
 {

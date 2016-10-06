@@ -37,8 +37,6 @@ class IXBotInterface {
     explicit IXBotInterface(const XBotCoreModel& XBotModel);
     
     IXBotInterface(const IXBotInterface& other);
-    
-    IXBotInterface& operator= (const IXBotInterface& rhs) = delete;
 
     static IXBotInterface::Ptr getRobot(const std::string& cfg);
 
@@ -46,16 +44,42 @@ class IXBotInterface {
     
     virtual ~IXBotInterface();
     
+        // TODO: bool hasVelocity(), hasImpedance(), ....
+    
+    const urdf::ModelInterface& getUrdf() const;
+    const srdf::Model& getSrdf() const;
+    const std::string& getUrdfString() const;
+    const std::string& getSrdfString() const;
+    std::vector<std::string> getChainNames() const;
+    
+    KinematicChain& operator()(const std::string& group_name, int id);
+    KinematicChain& operator()(const std::string& chain_name);
+    KinematicChain& leg(int id);
+    KinematicChain& arm(int id);
+
+    
+    int legs() const;
+    int arms() const;
+    bool findGroup(const std::string& group_name) const;
+    
+    bool setJointPosition    (const IXBotInterface& other);
+    bool setJointVelocity    (const IXBotInterface& other);
+    bool setJointEffort      (const IXBotInterface& other);
+    bool setJointImpedance   (const IXBotInterface& other);
+    bool setJointAll         (const IXBotInterface& other);
+    
     
 
   protected:
     
+    IXBotInterface& operator= (const IXBotInterface& rhs);
     
 
   private:
 
     int _joint_num;
     XBotCoreModel _XBotModel;
+    std::string _urdf_string, _srdf_string;
     
     std::vector<std::string> _ordered_joint_name;
     std::vector<int> _ordered_joint_id;
