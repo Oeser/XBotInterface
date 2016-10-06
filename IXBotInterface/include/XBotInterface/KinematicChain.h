@@ -29,6 +29,9 @@
 #include<XBotCoreModel.h>
 
 namespace XBot {
+    // TBD update liburdf-headers-dev to version >0.4
+    typedef boost::shared_ptr<urdf::Joint const> JointConstSharedPtr;
+    typedef boost::shared_ptr<urdf::Link const> LinkConstSharedPtr;
 
 class KinematicChain {
   
@@ -102,10 +105,10 @@ class KinematicChain {
     
     
     /**
-     * @brief Method returning the number of active joints (TBD: is it correct?)
+     * @brief Method returning the number of enabled joints
      * belonging to the chain
      * 
-     * @return The number of active joints (TBD: is it correct?)
+     * @return The number of enabled joints
      * belonging to the chain
      */
     int getJointNum() const;
@@ -114,17 +117,19 @@ class KinematicChain {
     /**
      * @brief Method returning the vector of urdf::Joints corresponding to the chain.
      * 
-     * @return const std::vector< urdf::JointConstSharedPtr>&
+     * @return const std::vector< XBot::JointConstSharedPtr>&
      */
-    const std::vector< urdf::JointConstSharedPtr >& getJoints() const;
+    const std::vector< XBot::JointConstSharedPtr >& getJoints() const;
     
     /**
-     * @brief Method returning the vector of urdf::Links corresponding to the chain.
+     * @brief Method returning the vector of XBot::Links corresponding to the chain.
      * 
-     * @return const std::vector< urdf::LinkConstSharedPtr>&
+     * @return const std::vector< XBot::LinkConstSharedPtr>&
      */
-    const std::vector< urdf::LinkConstSharedPtr >& getLinks() const;
+    const std::vector< XBot::LinkConstSharedPtr >& getLinks() const;
     
+    
+    // TBD  implement it
 //     bool setJointPosition(const Eigen::VectorXd& q);
 //     bool setJointVelocity(const Eigen::VectorXd& qdot);
 //     bool setJointAcceleration(const Eigen::VectorXd& qddot);
@@ -145,7 +150,6 @@ class KinematicChain {
     
     typedef std::shared_ptr<KinematicChain> Ptr;
 
-    
   protected:
   
   private:
@@ -154,8 +158,8 @@ class KinematicChain {
     std::map<int, XBot::Joint::Ptr> _joint_id_map;
     std::vector<XBot::Joint::Ptr> _joint_vector;
     
-    std::vector<urdf::JointConstSharedPtr> urdf_joints_;
-    std::vector<urdf::LinkConstSharedPtr> urdf_links_;
+    std::vector<XBot::JointConstSharedPtr> _urdf_joints;
+    std::vector<XBot::LinkConstSharedPtr> _urdf_links;
     
     std::vector<std::string> _ordered_joint_name;
     std::vector<int> _ordered_joint_id;
@@ -164,9 +168,7 @@ class KinematicChain {
     
     std::string _chain_name;
     int _joint_num;
-    
 
-    
 };
 
 }
