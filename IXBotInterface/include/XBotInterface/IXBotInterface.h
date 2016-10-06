@@ -28,40 +28,53 @@
 
 namespace XBot {
     
-    class IXBotInterface {
-    public:
-        
-        typedef std::shared_ptr<IXBotInterface> Ptr;
-        static IXBotInterface::Ptr getRobot(const std::string& cfg);
-        IXBotInterface(const XBotCoreModel& XBotModel);
-        virtual ~IXBotInterface();
-        
-        virtual void test() = 0;
+class IXBotInterface {
+  
+  public:
+    
+    typedef std::shared_ptr<IXBotInterface> Ptr;
+    
+    explicit IXBotInterface(const XBotCoreModel& XBotModel);
+    
+    IXBotInterface(const IXBotInterface& other);
+    
+    IXBotInterface& operator= (const IXBotInterface& rhs) = delete;
 
+    static IXBotInterface::Ptr getRobot(const std::string& cfg);
+
+    virtual void test() = 0;
     
-    private:
-        
-        int _joint_num;
-        XBotCoreModel _XBotModel;
-        
-        std::vector<std::string> _ordered_joint_name;
-        std::vector<int> _ordered_joint_id;
-        
-        std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
-    
-    };
+    virtual ~IXBotInterface();
     
     
-    class YARPInterface : public IXBotInterface {
-        friend IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg); // NOTE careful
-    public:
-        virtual void test();
-        
-        virtual ~YARPInterface();
+
+  protected:
     
-    protected:
-        YARPInterface(const XBotCoreModel& XBotModel);
-    };
+    
+
+  private:
+
+    int _joint_num;
+    XBotCoreModel _XBotModel;
+    
+    std::vector<std::string> _ordered_joint_name;
+    std::vector<int> _ordered_joint_id;
+    
+    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
+
+};
+
+
+class YARPInterface : public IXBotInterface {
+  friend IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg); // NOTE careful
+public:
+  virtual void test();
+  
+  virtual ~YARPInterface();
+
+protected:
+  YARPInterface(const XBotCoreModel& XBotModel);
+};
 }
 
 #endif // __I_XBOT_INTERFACE_H__

@@ -15,7 +15,30 @@ XBot::IXBotInterface::IXBotInterface(const XBot::XBotCoreModel& XBotModel) :
                                                                                   XBotModel);
         _chain_map[chain_name] = actual_chain;
     }
+    
 }
+
+XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface& other):
+  _joint_num(other._joint_num),
+  _ordered_joint_name(other._ordered_joint_name),
+  _ordered_joint_id(other._ordered_joint_id),
+  _XBotModel(other._XBotModel)
+{
+  
+  for( const auto& chain_name_ptr_pair : other._chain_map ){
+   
+    const std::string& chain_name = chain_name_ptr_pair.first;
+    const XBot::KinematicChain::Ptr& other_chainptr = chain_name_ptr_pair.second;
+    
+    XBot::KinematicChain::Ptr chainptr = std::make_shared<XBot::KinematicChain>();
+    *chainptr = *other_chainptr;
+    
+    _chain_map[chain_name] = chainptr;
+    
+  }
+
+}
+
 
 
 XBot::IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg)

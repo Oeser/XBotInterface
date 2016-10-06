@@ -80,7 +80,7 @@ _joint_num(other._joint_num)
 KinematicChain& KinematicChain::operator=(const KinematicChain& rhs)
 {
   
-  // First, make a copy of rhs exploiting the custom copy constructor
+  // First, make a copy of rhs exploiting the custom (deep) copy constructor
   KinematicChain tmp(rhs);
   
   // Swap all elements
