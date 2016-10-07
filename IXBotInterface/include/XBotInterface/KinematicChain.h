@@ -24,6 +24,9 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <iostream>
+
+#include <eigen3/Eigen/Dense>
 
 #include<XBotInterface/Joint.h>
 #include<XBotCoreModel.h>
@@ -43,8 +46,14 @@ class KinematicChain {
      */
     KinematicChain();
     
+    /**
+     * @brief Construct a Kinematic Chain using the chain name and the XBotCoreModel
+     * 
+     * @param chain_name the name of the chain
+     * @param XBotModel the model built using XBotModel
+     */
     KinematicChain(const std::string& chain_name, 
-		   const XBot::XBotCoreModel& XBotModel);
+                   const XBot::XBotCoreModel& XBotModel);
     
     /**
      * @brief Custom copy constructor, which guarantees independence between
@@ -61,13 +70,14 @@ class KinematicChain {
      */
     KinematicChain& operator= (const KinematicChain& rhs);
     
+    typedef std::shared_ptr<KinematicChain> Ptr;
+    
     /**
      * @brief Method returning the name of the chain
      * 
      * @return Chain name as const std::string&
      */
     const std::string& chainName() const;
-    
     
     /**
      * @brief Method returning the name of the chain base link
@@ -76,14 +86,12 @@ class KinematicChain {
      */
     const std::string& baseLinkName() const;
     
-    
     /**
      * @brief Method returning the name of the chain tip link
      * 
      * @return Tip link name as const std::string&
      */
     const std::string& tipLinkName() const;
-    
     
     /**
      * @brief Method returning the name of the child link corresponding
@@ -95,7 +103,6 @@ class KinematicChain {
      */
     const std::string& childLinkName(int id) const;
     
-    
     /**
      * @brief Method returning the name of the parent link corresponding
      * to the id-th joint of the chain
@@ -106,7 +113,6 @@ class KinematicChain {
      */
     const std::string& parentLinkName(int id) const;
     
-    
     /**
      * @brief Method returning the name of the id-th joint of the chain
      * 
@@ -116,7 +122,6 @@ class KinematicChain {
      */
     const std::string& jointName(int id) const;
     
-    
     /**
      * @brief Method returning the number of enabled joints
      * belonging to the chain
@@ -125,7 +130,6 @@ class KinematicChain {
      * belonging to the chain
      */
     int getJointNum() const;
-    
     
     /**
      * @brief Method returning the vector of urdf::Joints corresponding to the chain.
@@ -142,26 +146,104 @@ class KinematicChain {
     const std::vector< XBot::LinkConstSharedPtr >& getLinks() const;
     
     
-    // TBD  implement it
-//     bool setJointPosition(const Eigen::VectorXd& q);
-//     bool setJointVelocity(const Eigen::VectorXd& qdot);
-//     bool setJointAcceleration(const Eigen::VectorXd& qddot);
-//     bool setJointEffort(const Eigen::VectorXd& tau);
-//     bool setJointImpedance(const Eigen::VectorXd& K, const Eigen::VectorXd& D);
-//     
-//     bool getJointPosition(Eigen::VectorXd& q) const;
-//     bool getJointVelocity(Eigen::VectorXd& qdot) const;
-//     bool getJointAcceleration(Eigen::VectorXd& qddot) const;
-//     bool getJointEffort(Eigen::VectorXd& tau) const;
-//     bool getJointImpedance(Eigen::VectorXd& K, Eigen::VectorXd& D) const;
-//     
-//     const Eigen::VectorXd& getJointPosition() const;
-//     const Eigen::VectorXd& getJointVelocity() const;
-//     const Eigen::VectorXd& getJointAcceleration() const;
-//     const Eigen::VectorXd& getJointEffort() const;
+    bool getLinkPos(Eigen::VectorXd& q) const;
+    bool getMotorPos(Eigen::VectorXd& q) const;
+    bool getLinkVel(Eigen::VectorXd& qdot) const;
+    bool getMotorVel(Eigen::VectorXd& qdot) const;
+    bool getEffort(Eigen::VectorXd& tau) const;
+    bool getTemperature(Eigen::VectorXd& temp) const;
+    
+    bool getLinkPos(std::map<int, double>& q) const;
+    bool getMotorPos(std::map<int, double>& q) const;
+    bool getLinkVel(std::map<int, double>& qdot) const;
+    bool getMotorVel(std::map<int, double>& qdot) const;
+    bool getEffort(std::map<int, double>& tau) const;
+    bool getTemperature(std::map<int, double>& temp) const;
+    
+    bool getLinkPos(std::map<std::string, double>& q) const;
+    bool getMotorPos(std::map<std::string, double>& q) const;
+    bool getLinkVel(std::map<std::string, double>& qdot) const;
+    bool getMotorVel(std::map<std::string, double>& qdot) const;
+    bool getEffort(std::map<std::string, double>& tau) const;
+    bool getTemperature(std::map<std::string, double>& temp) const;
+    
+    // TBD do it for other subgroups
+    double getLinkPos(int index) const;
+    double getMotorPos(int index) const;
+    double getLinkVel(int index) const;
+    double getMotorVel(int index) const;
+    double getEffort(int index) const;
+    double getTemperature(int index) const;
     
     
-    typedef std::shared_ptr<KinematicChain> Ptr;
+    
+    bool getPosRef(Eigen::VectorXd& q) const;
+    bool getVelRef(Eigen::VectorXd& qdot) const;
+    bool getEffortRef(Eigen::VectorXd& tau) const;
+    bool getStiffness(Eigen::VectorXd& K) const;
+    bool getDamping(Eigen::VectorXd& D) const;
+    
+    bool getPosRef(std::map<int, double>& q) const;
+    bool getVelRef(std::map<int, double>& qdot) const;
+    bool getEffortRef(std::map<int, double>& tau) const;
+    bool getStiffness(std::map<int, double>& K) const;
+    bool getDamping(std::map<int, double>& D) const;
+    
+    bool getPosRef(std::map<std::string, double>& q) const;
+    bool getVelRef(std::map<std::string, double>& qdot) const;
+    bool getEffortRef(std::map<std::string, double>& tau) const;
+    bool getStiffness(std::map<std::string, double>& K) const;
+    bool getDamping(std::map<std::string, double>& D) const;
+    
+    
+    
+    bool setLinkPos(const Eigen::VectorXd& q);
+    bool setMotorPos(const Eigen::VectorXd& q);
+    bool setLinkVel(const Eigen::VectorXd& qdot);
+    bool setMotorVel(const Eigen::VectorXd& qdot);
+    bool setEffort(const Eigen::VectorXd& tau);
+    bool setTemperature(const Eigen::VectorXd& temp);
+    
+    bool setLinkPos(const std::map<int, double>& q);
+    bool setMotorPos(const std::map<int, double>& q);
+    bool setLinkVel(const std::map<int, double>& qdot);
+    bool setMotorVel(const std::map<int, double>& qdot);
+    bool setEffort(const std::map<int, double>& tau);
+    bool setTemperature(const std::map<int, double>& temp);
+    
+    bool setLinkPos(const std::map<std::string, double>& q);
+    bool setMotorPos(const std::map<std::string, double>& q);
+    bool setLinkVel(const std::map<std::string, double>& qdot);
+    bool setMotorVel(const std::map<std::string, double>& qdot);
+    bool setEffort(const std::map<std::string, double>& tau);
+    bool setTemperature(const std::map<std::string, double>& temp);
+    
+    
+    
+    bool setPosRef(const Eigen::VectorXd& q);
+    bool setVelRef(const Eigen::VectorXd& qdot);
+    bool setEffortRef(const Eigen::VectorXd& tau);
+    bool setStiffness(const Eigen::VectorXd& K);
+    bool setDamping(const Eigen::VectorXd& D);
+    
+    bool setPosRef(const std::map<int, double>& q);
+    bool setVelRef(const std::map<int, double>& qdot);
+    bool setEffortRef(const std::map<int, double>& tau);
+    bool setStiffness(const std::map<int, double>& K);
+    bool setDamping(const std::map<int, double>& D);
+    
+    bool setPosRef(const std::map<std::string, double>& q);
+    bool setVelRef(const std::map<std::string, double>& qdot);
+    bool setEffortRef(const std::map<std::string, double>& tau);
+    bool setStiffness(const std::map<std::string, double>& K);
+    bool setDamping(const std::map<std::string, double>& D);
+    
+    
+    
+    bool sync(const KinematicChain& other);
+    
+//     std::ostream& operator<<(std::ostream& os, const KinematicChain& obj);
+
 
   protected:
   
@@ -186,4 +268,4 @@ class KinematicChain {
 
 }
 
-#endif // __KIN_CHAIN_H__
+#endif // __KINEMATIC_CHAIN_H__

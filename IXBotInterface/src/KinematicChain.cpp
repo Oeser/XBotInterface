@@ -1,4 +1,5 @@
 #include <XBotInterface/KinematicChain.h>
+#include <eigen3/Eigen/Dense>
 
 namespace XBot {
 
@@ -80,23 +81,23 @@ _joint_num(other._joint_num)
 KinematicChain& KinematicChain::operator=(const KinematicChain& rhs)
 {
   
-  // First, make a copy of rhs exploiting the custom (deep) copy constructor
-  KinematicChain tmp(rhs);
-  
-  // Swap all elements
-  std::swap(_urdf_joints, tmp._urdf_joints);
-  std::swap(_urdf_links, tmp._urdf_links);
-  std::swap(_ordered_joint_name, tmp._ordered_joint_name);
-  std::swap(_ordered_joint_id, tmp._ordered_joint_id);
-  std::swap(_XBotModel, tmp._XBotModel);
-  std::swap(_chain_name, tmp._chain_name);
-  std::swap(_joint_num, tmp._joint_num);
-  std::swap(_joint_vector, tmp._joint_vector);
-  std::swap(_joint_name_map, tmp._joint_name_map);
-  std::swap(_joint_id_map, tmp._joint_id_map);
-  
-  // Return this
-  return *this;
+    // First, make a copy of rhs exploiting the custom (deep) copy constructor
+    KinematicChain tmp(rhs);
+    
+    // Swap all elements
+    std::swap(_urdf_joints, tmp._urdf_joints);
+    std::swap(_urdf_links, tmp._urdf_links);
+    std::swap(_ordered_joint_name, tmp._ordered_joint_name);
+    std::swap(_ordered_joint_id, tmp._ordered_joint_id);
+    std::swap(_XBotModel, tmp._XBotModel);
+    std::swap(_chain_name, tmp._chain_name);
+    std::swap(_joint_num, tmp._joint_num);
+    std::swap(_joint_vector, tmp._joint_vector);
+    std::swap(_joint_name_map, tmp._joint_name_map);
+    std::swap(_joint_id_map, tmp._joint_id_map);
+    
+    // Return this
+    return *this;
   
 }
 
@@ -147,6 +148,48 @@ const std::string& KinematicChain::jointName(int id) const
 {
   return _urdf_joints[id]->name;
 }
+
+double KinematicChain::getLinkPos(int index) const
+{
+    return _joint_vector[index]->getLinkPos();
+}
+
+
+bool XBot::KinematicChain::getLinkPos(Eigen::VectorXd& q) const
+{
+    if(q.rows() != _joint_num) {
+        q.resize(_joint_num);
+    }
+    int pos = 0;
+    for( const XBot::Joint::Ptr& j : _joint_vector) {
+        q[pos++] = j->getLinkPos();
+    }
+    return true;
+}
+
+bool KinematicChain::setLinkPos(const Eigen::VectorXd& q)
+{
+    if(q.rows() != _joint_num) {
+        std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != chain joint number " << _joint_num << std::endl;
+        return false;
+    }
+    int pos = 0;
+    for( const XBot::Joint::Ptr& j : _joint_vector) {
+        j->setLinkPos(q[pos++]);
+    }
+    return true;
+}
+
+bool XBot::KinematicChain::sync(const KinematicChain& other)
+{
+    int pos = 0;
+    for( const XBot::Joint::Ptr& j : other._joint_vector) {
+        _joint_vector[pos++]->sync(*j);
+    }
+}
+
+
+
 
 
 
