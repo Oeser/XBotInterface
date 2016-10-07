@@ -40,8 +40,6 @@ namespace XBot {
         
         IXBotInterface& operator= (const IXBotInterface& rhs);
         
-        static IXBotInterface::Ptr getRobot(const std::string& path_to_cfg);
-        
         virtual ~IXBotInterface();
         
             // TODO: bool hasVelocity(), hasImpedance(), ....

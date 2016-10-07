@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 #include <XBotInterface/IXBotInterface.h>
 
@@ -31,9 +32,24 @@ namespace XBot
     class RobotInterface : public IXBotInterface {
     
     public:
+        explicit RobotInterface(const XBotCoreModel& XBotModel);
+        
+        typedef std::shared_ptr<RobotInterface> Ptr;
+        
+        static RobotInterface::Ptr getRobot(const std::string& path_to_cfg);
+        
+        bool sense( bool sync_model = true );
+        bool move( bool sync_model = true );
 
+        
+    protected:
+        virtual bool sense_internal() = 0;
+        virtual bool move_internal() = 0;
+        
     private:
-        static bool _is_created;
+        
+        IXBotInterface model; // TBD it is going to be the ModelInterface inside the RobotInterface
+
     };
 }
 
