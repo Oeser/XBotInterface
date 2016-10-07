@@ -27,78 +27,147 @@
 #include <XBotInterface/KinematicChain.h>
 
 namespace XBot {
+    // TBD XBotState
+    class IXBotInterface {
     
-class IXBotInterface {
-  
-  public:
-    
-    typedef std::shared_ptr<IXBotInterface> Ptr;
-    
-    explicit IXBotInterface(const XBotCoreModel& XBotModel);
-    
-    IXBotInterface(const IXBotInterface& other);
+    public:
+        
+        typedef std::shared_ptr<IXBotInterface> Ptr;
+        
+        explicit IXBotInterface(const XBotCoreModel& XBotModel);
+        
+        IXBotInterface(const IXBotInterface& other);
+        
+        IXBotInterface& operator= (const IXBotInterface& rhs);
+        
+        static IXBotInterface::Ptr getRobot(const std::string& path_to_cfg);
+        
+        virtual ~IXBotInterface();
+        
+            // TODO: bool hasVelocity(), hasImpedance(), ....
+        
+        const urdf::ModelInterface& getUrdf() const;
+        const srdf::Model& getSrdf() const;
+        const std::string& getUrdfString() const;
+        const std::string& getSrdfString() const;
+        std::vector<std::string> getChainNames() const;
+        
+        KinematicChain& operator()(const std::string& chain_name);
+        KinematicChain& leg(int id);
+        KinematicChain& arm(int id);
+        
+        int legs() const;
+        int arms() const;
+        
+        // TBD sync all the joints and sensors information
+        bool sync(const IXBotInterface& other);
+        
+        
+        bool getLinkPos(Eigen::VectorXd& q) const;
+        bool getMotorPos(Eigen::VectorXd& q) const;
+        bool getLinkVel(Eigen::VectorXd& qdot) const;
+        bool getMotorVel(Eigen::VectorXd& qdot) const;
+        bool getEffort(Eigen::VectorXd& tau) const;
+        bool getTemperature(Eigen::VectorXd& temp) const;
+        
+        bool getLinkPos(std::map<int, double>& q) const;
+        bool getMotorPos(std::map<int, double>& q) const;
+        bool getLinkVel(std::map<int, double>& qdot) const;
+        bool getMotorVel(std::map<int, double>& qdot) const;
+        bool getEffort(std::map<int, double>& tau) const;
+        bool getTemperature(std::map<int, double>& temp) const;
+        
+        bool getLinkPos(std::map<std::string, double>& q) const;
+        bool getMotorPos(std::map<std::string, double>& q) const;
+        bool getLinkVel(std::map<std::string, double>& qdot) const;
+        bool getMotorVel(std::map<std::string, double>& qdot) const;
+        bool getEffort(std::map<std::string, double>& tau) const;
+        bool getTemperature(std::map<std::string, double>& temp) const;
+        
+        
+        
+        bool getPosRef(Eigen::VectorXd& q) const;
+        bool getVelRef(Eigen::VectorXd& qdot) const;
+        bool getEffortRef(Eigen::VectorXd& tau) const;
+        bool getStiffness(Eigen::VectorXd& K) const;
+        bool getDamping(Eigen::VectorXd& D) const;
+        
+        bool getPosRef(std::map<int, double>& q) const;
+        bool getVelRef(std::map<int, double>& qdot) const;
+        bool getEffortRef(std::map<int, double>& tau) const;
+        bool getStiffness(std::map<int, double>& K) const;
+        bool getDamping(std::map<int, double>& D) const;
+        
+        bool getPosRef(std::map<std::string, double>& q) const;
+        bool getVelRef(std::map<std::string, double>& qdot) const;
+        bool getEffortRef(std::map<std::string, double>& tau) const;
+        bool getStiffness(std::map<std::string, double>& K) const;
+        bool getDamping(std::map<std::string, double>& D) const;
+        
+        
+        
+        bool setLinkPos(const Eigen::VectorXd& q);
+        bool setMotorPos(const Eigen::VectorXd& q);
+        bool setLinkVel(const Eigen::VectorXd& qdot);
+        bool setMotorVel(const Eigen::VectorXd& qdot);
+        bool setEffort(const Eigen::VectorXd& tau);
+        bool setTemperature(const Eigen::VectorXd& temp);
+        
+        bool setLinkPos(const std::map<int, double>& q);
+        bool setMotorPos(const std::map<int, double>& q);
+        bool setLinkVel(const std::map<int, double>& qdot);
+        bool setMotorVel(const std::map<int, double>& qdot);
+        bool setEffort(const std::map<int, double>& tau);
+        bool setTemperature(const std::map<int, double>& temp);
+        
+        bool setLinkPos(const std::map<std::string, double>& q);
+        bool setMotorPos(const std::map<std::string, double>& q);
+        bool setLinkVel(const std::map<std::string, double>& qdot);
+        bool setMotorVel(const std::map<std::string, double>& qdot);
+        bool setEffort(const std::map<std::string, double>& tau);
+        bool setTemperature(const std::map<std::string, double>& temp);
+        
+        
+        
+        bool setPosRef(const Eigen::VectorXd& q);
+        bool setVelRef(const Eigen::VectorXd& qdot);
+        bool setEffortRef(const Eigen::VectorXd& tau);
+        bool setStiffness(const Eigen::VectorXd& K);
+        bool setDamping(const Eigen::VectorXd& D);
+        
+        bool setPosRef(const std::map<int, double>& q);
+        bool setVelRef(const std::map<int, double>& qdot);
+        bool setEffortRef(const std::map<int, double>& tau);
+        bool setStiffness(const std::map<int, double>& K);
+        bool setDamping(const std::map<int, double>& D);
+        
+        bool setPosRef(const std::map<std::string, double>& q);
+        bool setVelRef(const std::map<std::string, double>& qdot);
+        bool setEffortRef(const std::map<std::string, double>& tau);
+        bool setStiffness(const std::map<std::string, double>& K);
+        bool setDamping(const std::map<std::string, double>& D);
+        
+        
 
-    static IXBotInterface::Ptr getRobot(const std::string& cfg);
+    protected:
+        
+        
+        
 
-    virtual void test() = 0;
-    
-    virtual ~IXBotInterface();
-    
-        // TODO: bool hasVelocity(), hasImpedance(), ....
-    
-    const urdf::ModelInterface& getUrdf() const;
-    const srdf::Model& getSrdf() const;
-    const std::string& getUrdfString() const;
-    const std::string& getSrdfString() const;
-    std::vector<std::string> getChainNames() const;
-    
-    KinematicChain& operator()(const std::string& group_name, int id);
-    KinematicChain& operator()(const std::string& chain_name);
-    KinematicChain& leg(int id);
-    KinematicChain& arm(int id);
+    private:
 
-    
-    int legs() const;
-    int arms() const;
-    bool findGroup(const std::string& group_name) const;
-    
-    bool setJointPosition    (const IXBotInterface& other);
-    bool setJointVelocity    (const IXBotInterface& other);
-    bool setJointEffort      (const IXBotInterface& other);
-    bool setJointImpedance   (const IXBotInterface& other);
-    bool setJointAll         (const IXBotInterface& other);
-    
-    
+        int _joint_num;
+        XBotCoreModel _XBotModel;
+        std::string _urdf_string, _srdf_string;
+        
+        std::vector<std::string> _ordered_joint_name;
+        std::vector<int> _ordered_joint_id;
+        
+        std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
+        XBot::KinematicChain _dummy_chain;
 
-  protected:
-    
-    IXBotInterface& operator= (const IXBotInterface& rhs);
-    
+    };
 
-  private:
-
-    int _joint_num;
-    XBotCoreModel _XBotModel;
-    std::string _urdf_string, _srdf_string;
-    
-    std::vector<std::string> _ordered_joint_name;
-    std::vector<int> _ordered_joint_id;
-    
-    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
-
-};
-
-
-class YARPInterface : public IXBotInterface {
-  friend IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg); // NOTE careful
-public:
-  virtual void test();
-  
-  virtual ~YARPInterface();
-
-protected:
-  YARPInterface(const XBotCoreModel& XBotModel);
-};
 }
 
 #endif // __I_XBOT_INTERFACE_H__

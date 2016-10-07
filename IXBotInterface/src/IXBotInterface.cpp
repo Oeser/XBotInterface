@@ -43,17 +43,15 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface& other):
 
 }
 
-
-
-XBot::IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg)
+XBot::IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& path_to_cfg)
 {
-    std::ifstream fin ( cfg );
+    std::ifstream fin ( path_to_cfg );
     if ( fin.fail() ) {
-        printf ( "Can not open %s\n", cfg.c_str() ); //TBD change it
+        printf ( "Can not open %s\n", path_to_cfg.c_str() ); //TBD change it
         return XBot::IXBotInterface::Ptr();
     }
 
-    YAML::Node root_cfg = YAML::LoadFile ( cfg );
+    YAML::Node root_cfg = YAML::LoadFile ( path_to_cfg );
     const YAML::Node& x_bot_interface = root_cfg["x_bot_interface"]; // TBD check if exists
     std::string _urdf_path = x_bot_interface["urdf_path"].as<std::string>();
     std::string _srdf_path = x_bot_interface["srdf_path"].as<std::string>();
@@ -71,32 +69,86 @@ XBot::IXBotInterface::Ptr XBot::IXBotInterface::getRobot(const std::string& cfg)
      std::string _framework = x_bot_interface["framework"].as<std::string>();
      // TBD ifdef MACRO
      if( _framework == "YARP" ) {
-        return XBot::IXBotInterface::Ptr(new YARPInterface(XBotModel));
+//         return XBot::IXBotInterface::Ptr(new YARPInterface(XBotModel));
     }
 
 }
 
-
-
-void XBot::YARPInterface::test()
+XBot::KinematicChain& XBot::IXBotInterface::operator()(const std::string& chain_name)
 {
-    std::cout << "test from YARP called" << std::endl;
+    if(_chain_map.count(chain_name)) {
+        return *_chain_map.at(chain_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
+    return _dummy_chain;
 }
 
-XBot::YARPInterface::YARPInterface(const XBot::XBotCoreModel& XBotModel) : 
-    IXBotInterface(XBotModel)
+
+XBot::KinematicChain& XBot::IXBotInterface::leg(int id)
 {
-        std::cout << "YARP created" << std::endl;
+    if(_XBotModel.get_legs_chain().size() > id) {
+        const std::string& requested_leg_name = _XBotModel.get_legs_chain().at(id);
+        return *_chain_map.at(requested_leg_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a legs with id " << id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
 }
 
+int XBot::IXBotInterface::legs() const
+{
+    return _XBotModel.get_legs_chain().size();
+}
+
+XBot::KinematicChain& XBot::IXBotInterface::arm(int id)
+{
+    if(_XBotModel.get_arms_chain().size() > id) {
+        const std::string& requested_arm_name = _XBotModel.get_arms_chain().at(id);
+        return *_chain_map.at(requested_arm_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a arms with id " << id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+int XBot::IXBotInterface::arms() const
+{
+    return _XBotModel.get_arms_chain().size();
+}
+
+bool XBot::IXBotInterface::sync(const XBot::IXBotInterface& other)
+{
+    for(const auto& c : other._chain_map) {
+        const std::string& chain_name = c.first;
+        const KinematicChain& chain = *c.second;
+        if(_chain_map.count(chain_name)) {
+            _chain_map.at(chain_name)->sync(chain);
+        }
+        else {
+            std::cerr << "ERROR " << __func__ << " : you are trying to synchronize IXBotInterfaces with different chains!!" << std::endl;
+        }
+    }
+}
+
+
+
+
+
+
+
+bool XBot::IXBotInterface::getLinkPos(Eigen::VectorXd& q) const
+{
+    if(q.rows() != _joint_num) {
+        q.resize(_joint_num);
+    }
+    int q_index = 0;
+    for( const std::string& chain_name : _XBotModel.get_ordered_chain_names()) {
+        for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
+            q[q_index++] = _chain_map.at(chain_name)->getLinkPos(i);
+        }
+    }
+    return true;
+}
 
 
 XBot::IXBotInterface::~IXBotInterface()
 {
-
-}
-
-XBot::YARPInterface::~YARPInterface()
-{
-
 }
