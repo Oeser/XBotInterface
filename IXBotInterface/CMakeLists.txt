@@ -1,9 +1,12 @@
 project(IXBotCoreModel)
 
 find_package(XBotCoreModel REQUIRED)
-FIND_PACKAGE(kdl_parser REQUIRED)
+find_package(kdl_parser REQUIRED) # TBD check it
+find_package(Eigen3 REQUIRED)
 
-include_directories(include ${XBotCoreModel_INCLUDE_DIRS} ${kdl_parser_INCLUDE_DIRS})
+include_directories(include ${XBotCoreModel_INCLUDE_DIRS} 
+                            ${kdl_parser_INCLUDE_DIRS}
+                            ${EIGEN3_INCLUDE_DIRS})                       
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
@@ -17,6 +20,28 @@ target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
 
 add_executable(test src/main_test.cpp)
 target_link_libraries(test XBotInterface)
+
+# Enable srdf generation from xacro
+set(ENABLE_SRDF_FROM_XACRO_GENERATION CACHE BOOL "ON")
+if ( ${ENABLE_SRDF_FROM_XACRO_GENERATION} )
+    # xacro
+    find_package(xacro REQUIRED)
+    # iterate over xacro files
+    file(GLOB xacro_files ${CMAKE_CURRENT_SOURCE_DIR}/configs/srdf/*.xacro)
+    foreach(it ${xacro_files})
+        # remove .xacro extension
+        string(REGEX MATCH "(.*)[.]xacro$" unused ${it})
+        set(output_filename ${CMAKE_MATCH_1})
+
+        # create a rule to generate ${output_filename} from {it}
+        xacro_add_xacro_file(${it} ${output_filename})
+
+        list(APPEND srdf_files ${output_filename})
+    endforeach(it)
+
+    # add an abstract target to actually trigger the builds
+    add_custom_target(media_files ALL DEPENDS ${srdf_files})
+endif()
 
 ########################################################################
 

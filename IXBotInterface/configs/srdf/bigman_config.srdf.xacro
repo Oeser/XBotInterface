@@ -120,6 +120,32 @@
 <!--     <disabled_joint name="LForearmPlate"/> -->
 <!--     <disabled_joint name="LWrj1"/> -->
     <!-- END Disabled Joint -->
+    
+    <!-- CONSTRAINT: first left then right --> 
+    <group name="arms"> 
+        <!-- LEFT LEG -->
+       <xacro:if value="${BIGMAN_LEFT_ARM}">
+                <group name="left_arm"/>
+        </xacro:if>
+
+        <!-- RIGHT LEG -->
+       <xacro:if value="${BIGMAN_RIGHT_ARM}">
+                <group name="right_arm"/>
+        </xacro:if>
+   </group>
+    
+    <!-- CONSTRAINT: first left then right --> 
+    <group name="legs"> 
+        <!-- LEFT LEG -->
+       <xacro:if value="${BIGMAN_LEFT_LEG}">
+                <group name="left_leg"/>
+        </xacro:if>
+
+        <!-- RIGHT LEG -->
+       <xacro:if value="${BIGMAN_RIGHT_LEG}">
+                <group name="right_leg"/>
+        </xacro:if>
+   </group>
 .
     <!-- CHAINS -->
     <!-- CONSTRAINT: keep it in the end, it refers to already defined groups --> 
