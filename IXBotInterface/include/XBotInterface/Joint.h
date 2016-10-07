@@ -34,11 +34,35 @@ namespace XBot
         
     public:
 
+        /**
+         * @brief Default constructor
+         * 
+         */
         Joint();
+        
+        /**
+         * @brief Construct using the joint name and id
+         * 
+         * @param joint_name the joint name
+         * @param joint_id the joint id
+         */
         Joint(const std::string& joint_name, 
               int joint_id); 
+        
+        typedef std::shared_ptr<Joint> Ptr;
 
+        /**
+         * @brief Getter for the joint name
+         * 
+         * @return const std::string& joint name
+         */
         const std::string& getJointName() const;
+        
+        /**
+         * @brief Getter for the joint id
+         * 
+         * @return int joint id
+         */
         int getJointId() const;
         
         double getLinkPos() const;
@@ -54,25 +78,27 @@ namespace XBot
         double getStiffness() const;
         double getDamping() const;
         
-        void setPosRef(double pos_ref);
-        void setVelRef(double vel_ref);
-        void setEffortRef(double effort_ref);
-        void setStiffness(double stiffness);
-        void setDamping(double damping);
-
-        typedef std::shared_ptr<Joint> Ptr;
-        
-    protected:
-        
-        void setJointName(const std::string& joint_name);
-        void setJointId(int joint_id);
-        
         void setLinkPos(double link_pos);
         void setMotorPos(double motor_pos);
         void setLinkVel(double link_vel);
         void setMotorVel(double motor_vel);
         void setEffort(double effort);
         void setTemperature(double temperature);
+        
+        void setPosRef(double pos_ref);
+        void setVelRef(double vel_ref);
+        void setEffortRef(double effort_ref);
+        void setStiffness(double stiffness);
+        void setDamping(double damping);
+        
+        bool sync(const Joint& other);
+        
+//         std::ostream& operator<<(std::ostream& os, const Joint& obj);
+        
+    protected:
+        
+        void setJointName(const std::string& joint_name);
+        void setJointId(int joint_id);
         
     private:
         ////////////////
