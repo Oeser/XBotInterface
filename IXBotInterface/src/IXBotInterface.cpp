@@ -121,3 +121,17 @@ bool XBot::IXBotInterface::getLinkPos(Eigen::VectorXd& q) const
 XBot::IXBotInterface::~IXBotInterface()
 {
 }
+
+XBot::IXBotInterface& XBot::IXBotInterface::operator=(const XBot::IXBotInterface& rhs)
+{
+  IXBotInterface tmp(rhs);
+  std::swap(_joint_num, tmp._joint_num);
+  std::swap(_XBotModel, tmp._XBotModel);
+  std::swap(_urdf_string, tmp._urdf_string);
+  std::swap(_srdf_string, tmp._srdf_string);
+  std::swap(_ordered_joint_name, tmp._ordered_joint_name);
+  std::swap(_ordered_joint_id, tmp._ordered_joint_id);
+  std::swap(_chain_map, tmp._chain_map);
+  std::swap(_dummy_chain, tmp._dummy_chain);
+
+}
