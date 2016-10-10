@@ -98,6 +98,10 @@ bool XBot::IXBotInterface::sync(const XBot::IXBotInterface& other)
 }
 
 
+bool XBot::IXBotInterface::hasJoint(const std::string& joint_name) const
+{
+	return std::find(_ordered_joint_name.begin(), _ordered_joint_name.end(), joint_name) !=  _ordered_joint_name.end();
+}
 
 
 
@@ -134,4 +138,10 @@ XBot::IXBotInterface& XBot::IXBotInterface::operator=(const XBot::IXBotInterface
   std::swap(_chain_map, tmp._chain_map);
   std::swap(_dummy_chain, tmp._dummy_chain);
 
+}
+
+
+const std::vector< std::string >& XBot::IXBotInterface::getEnabledJointNames() const
+{
+	return _ordered_joint_name;
 }

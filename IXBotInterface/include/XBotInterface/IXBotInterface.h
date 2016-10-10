@@ -23,7 +23,7 @@
 #include <vector>
 #include <map>
 #include <memory>
-
+#include <algorithm>
 #include <XBotInterface/KinematicChain.h>
 
 namespace XBot {
@@ -49,6 +49,8 @@ namespace XBot {
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
         std::vector<std::string> getChainNames() const;
+		const std::vector<std::string>& getEnabledJointNames() const;
+		bool hasJoint(const std::string& joint_name) const;
         
         KinematicChain& operator()(const std::string& chain_name);
         KinematicChain& leg(int id);
@@ -82,8 +84,7 @@ namespace XBot {
         bool getEffort(std::map<std::string, double>& tau) const;
         bool getTemperature(std::map<std::string, double>& temp) const;
         
-        
-        
+
         bool getPosRef(Eigen::VectorXd& q) const;
         bool getVelRef(Eigen::VectorXd& qdot) const;
         bool getEffortRef(Eigen::VectorXd& tau) const;
