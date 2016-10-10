@@ -1,3 +1,4 @@
 joint_state_name: "/centauro/joint_states"
 joint_service_name: "/centauro/position_controller/get_joint_names"
+command_topic_name: "/centauro/position_controller/command"
 
