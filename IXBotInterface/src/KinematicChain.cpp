@@ -167,6 +167,37 @@ bool XBot::KinematicChain::getLinkPos(Eigen::VectorXd& q) const
     return true;
 }
 
+bool KinematicChain::getLinkPos(std::map< std::string, double >& q) const
+{
+	// NOTE should we clear the map first???
+	
+	for( const auto& name_joint_pair : _joint_name_map ){
+		
+		const std::string& joint_name = name_joint_pair.first;
+		const Joint& joint = *name_joint_pair.second;
+		
+		q[joint_name] = joint.getLinkPos();
+		
+	}
+		
+}
+
+bool KinematicChain::getLinkPos(std::map< int, double >& q) const
+{
+	// NOTE should we clear the map first???
+	
+	for( const auto& id_joint_pair : _joint_id_map ){
+		
+		int joint_id = id_joint_pair.first;
+		const Joint& joint = *id_joint_pair.second;
+		
+		q[joint_id] = joint.getLinkPos();
+		
+	}
+		
+}
+
+
 bool KinematicChain::setLinkPos(const Eigen::VectorXd& q)
 {
     if(q.rows() != _joint_num) {
