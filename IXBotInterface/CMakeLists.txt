@@ -1,4 +1,4 @@
-project(IXBotCoreModel)
+project(IXBotCoreInterface)
 
 find_package(XBotCoreModel REQUIRED)
 find_package(kdl_parser REQUIRED) # TBD check it
@@ -58,7 +58,7 @@ include(YCMDefaultDirs)
 ycm_default_dirs(${VARS_PREFIX})
 
 target_include_directories(XBotInterface PUBLIC "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>"
-                                          "$<INSTALL_INTERFACE:${${VARS_PREFIX}_INSTALL_INCLUDEDIR}>")
+                                                "$<INSTALL_INTERFACE:${${VARS_PREFIX}_INSTALL_INCLUDEDIR}>")
 
 set_target_properties(XBotInterface PROPERTIES VERSION ${${VARS_PREFIX}_VERSION}
                                                SOVERSION ${${VARS_PREFIX}_VERSION})
