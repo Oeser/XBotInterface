@@ -127,11 +127,11 @@ bool XBot::RobotInterfaceROS::move_internal()
 	this->getDamping(_command_msg_map_damping);
 	
 	// Make sure we allocated enough memory (assumes consecutive indices) TBD support non-consecutive idx??
-	_controller_msg.position.reserve(_controller_ids.size());
-	_controller_msg.velocity.reserve(_controller_ids.size());
-	_controller_msg.effort.reserve(_controller_ids.size());
-	_controller_msg.onlineGain1.reserve(_controller_ids.size());
-	_controller_msg.onlineGain2.reserve(_controller_ids.size());
+	_controller_msg.position.resize(_controller_ids.size());
+	_controller_msg.velocity.resize(_controller_ids.size());
+	_controller_msg.effort.resize(_controller_ids.size());
+	_controller_msg.onlineGain1.resize(_controller_ids.size());
+	_controller_msg.onlineGain2.resize(_controller_ids.size());
 	
 	// Fill the command message
 	for( const auto& jointname_id_pair : _controller_ids ) {
