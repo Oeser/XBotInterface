@@ -2,7 +2,7 @@
 
 XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) : 
     IXBotInterface(XBotModel),
-    model(XBotModel)
+    model(new IXBotInterface(XBotModel))
 {
 }
 
@@ -41,7 +41,7 @@ bool XBot::RobotInterface::sense(bool sync_model)
 {
     bool sense_ok = sense_internal();
     if(sync_model) {
-        return sense_ok && sync(model);
+        return sense_ok && sync(*model);
     }
     return sense_ok;
 }
@@ -51,7 +51,7 @@ bool XBot::RobotInterface::move(bool sync_model)
 {
     bool sync_ok = true;
     if(sync_model) {
-        sync_ok = sync(model);
+        sync_ok = sync(*model);
     }
     return sync_ok && move_internal();
 }
