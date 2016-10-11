@@ -1,5 +1,8 @@
 #include <XBotInterface/RobotInterface.h>
 
+// Static members need to be declared in the cpp as well
+XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
+
 XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) : 
     IXBotInterface(XBotModel),
     model(new IXBotInterface(XBotModel))
@@ -8,6 +11,12 @@ XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) :
 
 XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg)
 {
+	
+	
+	
+	if( _instance_ptr ){ return _instance_ptr; }
+	
+	
     std::ifstream fin ( path_to_cfg );
     if ( fin.fail() ) {
         printf ( "Can not open %s\n", path_to_cfg.c_str() ); //TBD change it
@@ -32,6 +41,8 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
      std::string _framework = x_bot_interface["framework"].as<std::string>();
      // TBD ifdef MACRO
      if( _framework == "YARP" ) {
+// 		 _instance_ptr = RobotInterface::Ptr(new YARPInterface(XBotModel));
+		 return _instance_ptr;
 //         return XBot::RobotInterface::Ptr(new YARPInterface(XBotModel));
     }
 }

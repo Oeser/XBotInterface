@@ -122,6 +122,7 @@ class KinematicChain {
      */
     const std::string& jointName(int i) const;
 	
+	
     /**
      * @brief Method returning the ID of the i-th joint of the chain
      * 

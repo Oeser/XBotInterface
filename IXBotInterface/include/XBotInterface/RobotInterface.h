@@ -56,6 +56,8 @@ namespace XBot
     private:
 
         IXBotInterface::Ptr model; // TBD it is going to be the ModelInterface inside the RobotInterface
+        
+        static RobotInterface::Ptr _instance_ptr;
 
     };
 }
