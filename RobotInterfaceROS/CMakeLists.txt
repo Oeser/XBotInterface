@@ -20,6 +20,9 @@ add_library(RobotInterfaceROS STATIC ${XBotInterfaceROS_INCLUDES}
                                  
 target_link_libraries(RobotInterfaceROS XBotInterface
                                        yaml-cpp )
+                                       
+add_executable(ros_test_exec src/test_ros.cpp)
+target_link_libraries(ros_test_exec RobotInterfaceROS)
 
                                        
 ########################################################################

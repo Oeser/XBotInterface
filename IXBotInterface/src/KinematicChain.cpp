@@ -273,8 +273,77 @@ bool XBot::KinematicChain::sync(const KinematicChain& other)
 }
 
 
+bool KinematicChain::setLinkPos(int i, double q){
+	if( i >= this->getJointNum() ){ 
+		std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i+1 << " joints!" << std::endl;
+		return false;
+	}
+	_joint_vector[i]->setLinkPos(q);
+}
 
+bool KinematicChain::setEffort(int i, double tau)
+{
+	if( i >= this->getJointNum() ){ 
+		std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i+1 << " joints!" << std::endl;
+		return false;
+	}
+	_joint_vector[i]->setEffort(tau);
+}
 
+bool KinematicChain::setLinkVel(int i, double qdot)
+{
+	if( i >= this->getJointNum() ){ 
+		std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i+1 << " joints!" << std::endl;
+		return false;
+	}
+	_joint_vector[i]->setLinkVel(qdot);
+}
+
+bool KinematicChain::setMotorPos(int i, double q)
+{
+	if( i >= this->getJointNum() ){ 
+		std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i+1 << " joints!" << std::endl;
+		return false;
+	}
+	_joint_vector[i]->setMotorPos(q);
+}
+
+bool KinematicChain::setMotorVel(int i, double qdot)
+{
+	if( i >= this->getJointNum() ){ 
+		std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i+1 << " joints!" << std::endl;
+		return false;
+	}
+	_joint_vector[i]->setMotorVel(qdot);
+}
+
+bool KinematicChain::setTemperature(int i, double temp)
+{
+	if( i >= this->getJointNum() ){ 
+		std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i+1 << " joints!" << std::endl;
+		return false;
+	}
+	_joint_vector[i]->setTemperature(temp);
+}
+
+bool KinematicChain::setLinkPos(const std::map< std::string, double >& q)
+{
+	bool success = true;
+	
+	for(const auto& jointname_value_pair : q){
+		const std::string& joint_name = jointname_value_pair.first;
+		if(_joint_name_map.count(joint_name)){
+			_joint_name_map.at(joint_name)->setLinkPos(jointname_value_pair.second);
+		}
+		else{
+			success = false;
+			std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+		}
+	
+	}
+	
+	return success;
+}
 
 
 } // end namespace XBot

@@ -196,7 +196,21 @@ bool XBot::IXBotInterface::getPosRef(Eigen::VectorXd& q) const
 }
 
 
-
+bool XBot::IXBotInterface::setLinkPos(const std::map< std::string, double >& q)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(q.count(joint_name)){
+					chain.setLinkPos(i, q.at(joint_name));
+				}
+		}
+		
+	}
+}
 
 XBot::IXBotInterface::~IXBotInterface()
 {
