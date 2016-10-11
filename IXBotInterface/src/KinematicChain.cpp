@@ -264,6 +264,14 @@ bool KinematicChain::setLinkPos(const Eigen::VectorXd& q)
     return true;
 }
 
+bool KinematicChain::setLinkPos(int i, double q){
+	if( i >= this->getJointNum() ){ 
+		return false;
+	}
+	_joint_vector[i]->setLinkPos(q);
+}
+
+
 bool XBot::KinematicChain::sync(const KinematicChain& other)
 {
     int pos = 0;
