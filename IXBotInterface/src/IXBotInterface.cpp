@@ -121,6 +121,82 @@ bool XBot::IXBotInterface::getLinkPos(Eigen::VectorXd& q) const
     return true;
 }
 
+bool XBot::IXBotInterface::getLinkPos(std::map< std::string, double >& q) const
+{
+	q.clear();
+	
+	for( const auto& chain_name_ptr_pair : _chain_map ){
+		
+		const KinematicChain& chain = *chain_name_ptr_pair.second;
+		
+		for(int j=0; j<chain.getJointNum(); j++){
+			q[chain.jointName(j)] = chain.getLinkPos(j);
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::getLinkPos(std::map< int, double >& q) const
+{
+	q.clear();
+	
+	for( const auto& chain_name_ptr_pair : _chain_map ){
+		
+		const KinematicChain& chain = *chain_name_ptr_pair.second;
+		
+		for(int j=0; j<chain.getJointNum(); j++){
+			q[chain.jointId(j)] = chain.getLinkPos(j);
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::getPosRef(std::map< std::string, double >& q) const
+{
+	q.clear();
+	
+	for( const auto& chain_name_ptr_pair : _chain_map ){
+		
+		const KinematicChain& chain = *chain_name_ptr_pair.second;
+		
+		for(int j=0; j<chain.getJointNum(); j++){
+			q[chain.jointName(j)] = chain.getPosRef(j);
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::getPosRef(std::map< int, double >& q) const
+{
+	q.clear();
+	
+	for( const auto& chain_name_ptr_pair : _chain_map ){
+		
+		const KinematicChain& chain = *chain_name_ptr_pair.second;
+		
+		for(int j=0; j<chain.getJointNum(); j++){
+			q[chain.jointId(j)] = chain.getPosRef(j);
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::getPosRef(Eigen::VectorXd& q) const
+{
+    if(q.rows() != _joint_num) {
+        q.resize(_joint_num);
+    }
+    int q_index = 0;
+    for( const std::string& chain_name : _XBotModel.get_ordered_chain_names()) {
+        for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
+            q[q_index++] = _chain_map.at(chain_name)->getPosRef(i);
+        }
+    }
+    return true;
+}
+
+
+
 
 XBot::IXBotInterface::~IXBotInterface()
 {
