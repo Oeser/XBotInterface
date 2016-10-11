@@ -1,4 +1,5 @@
 #include <XBotInterface/RobotInterface.h>
+#include <RobotInterfaceROS/RobotInterfaceROS.h>
 
 // Static members need to be declared in the cpp as well
 XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
@@ -11,9 +12,7 @@ XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) :
 
 XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg)
 {
-	
-	
-	
+
 	if( _instance_ptr ){ return _instance_ptr; }
 	
 	
@@ -45,6 +44,10 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
 		 return _instance_ptr;
 //         return XBot::RobotInterface::Ptr(new YARPInterface(XBotModel));
     }
+    if(_framework == "ROS" ){
+			_instance_ptr = RobotInterface::Ptr(new RobotInterfaceROS(XBotModel));
+			return _instance_ptr;
+	}
 }
 
 

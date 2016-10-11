@@ -10,13 +10,15 @@ XBot::RobotInterfaceROS::RobotInterfaceROS(const XBot::XBotCoreModel& XBotModel)
 	}
 }
 
-bool XBot::RobotInterfaceROS::init(const std::string& path_to_cfg)
+bool XBot::RobotInterfaceROS::init(const std::string& path_to_cfg, int argc, char **argv)
 {
     std::ifstream fin ( path_to_cfg );
     if ( fin.fail() ) {
         printf ( "Can not open %s\n", path_to_cfg.c_str() ); //TBD change it
         return false;
     }
+    
+    ros::init(argc, argv, "name_from_cfg");
 
     YAML::Node root_cfg = YAML::LoadFile ( path_to_cfg ); 
     // TBD check if they exist
@@ -109,8 +111,8 @@ bool XBot::RobotInterfaceROS::sense_internal()
 	}
 	
 	this->setLinkPos(_jointstate_msg_map_position);
-	this->setLinkVel(_jointstate_msg_map_velocity);
-	this->setEffort(_jointstate_msg_map_effort);
+// 	this->setLinkVel(_jointstate_msg_map_velocity);
+// 	this->setEffort(_jointstate_msg_map_effort);
 	
 	_joint_state_received = false;
     
@@ -121,10 +123,10 @@ bool XBot::RobotInterfaceROS::move_internal()
 {
 	// Get references from chains
 	this->getPosRef(_command_msg_map_position);
-	this->getVelRef(_command_msg_map_velocity);
-	this->getEffortRef(_command_msg_map_effort);
-	this->getStiffness(_command_msg_map_stiffness);
-	this->getDamping(_command_msg_map_damping);
+// 	this->getVelRef(_command_msg_map_velocity);
+// 	this->getEffortRef(_command_msg_map_effort);
+// 	this->getStiffness(_command_msg_map_stiffness);
+// 	this->getDamping(_command_msg_map_damping);
 	
 	// Make sure we allocated enough memory (assumes consecutive indices) TBD support non-consecutive idx??
 	_controller_msg.position.resize(_controller_ids.size());
@@ -140,11 +142,11 @@ bool XBot::RobotInterfaceROS::move_internal()
 		int id = jointname_id_pair.second;
 		
 		_controller_msg.position[id] = _command_msg_map_position.at(joint_name);
-		_controller_msg.velocity[id] = _command_msg_map_velocity.at(joint_name);
-		_controller_msg.effort[id] = _command_msg_map_effort.at(joint_name);
-		_controller_msg.onlineGain1[id] = _command_msg_map_stiffness.at(joint_name);
-		_controller_msg.onlineGain2[id] = _command_msg_map_damping.at(joint_name);
-		
+// 		_controller_msg.velocity[id] = _command_msg_map_velocity.at(joint_name);
+// 		_controller_msg.effort[id] = _command_msg_map_effort.at(joint_name);
+// 		_controller_msg.onlineGain1[id] = _command_msg_map_stiffness.at(joint_name);
+// 		_controller_msg.onlineGain2[id] = _command_msg_map_damping.at(joint_name);
+// 		
 	}
 	
 	// Send the command message

@@ -10,14 +10,15 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
-add_library(XBotInterface SHARED ${XBotInterface_INCLUDES} 
+add_library(XBotInterface STATIC ${XBotInterface_INCLUDES} 
                                  src/IXBotInterface.cpp
                                  src/RobotInterface.cpp
                                  src/KinematicChain.cpp
                                  src/Joint.cpp)
                                  
 target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
-                                    yaml-cpp)
+                                    yaml-cpp
+                                    RobotInterfaceROS)
 
 add_executable(test src/main_test.cpp)
 target_link_libraries(test XBotInterface)

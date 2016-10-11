@@ -15,7 +15,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterfaceROS_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
-add_library(RobotInterfaceROS SHARED ${XBotInterfaceROS_INCLUDES} 
+add_library(RobotInterfaceROS STATIC ${XBotInterfaceROS_INCLUDES} 
                                     src/RobotInterfaceROS.cpp)
                                  
 target_link_libraries(RobotInterfaceROS XBotInterface

@@ -10,13 +10,15 @@
 namespace XBot {
 
         class RobotInterfaceROS : public RobotInterface {
+			
+			friend RobotInterface;
 
         public:
 			
-			static const std::string control_mode_TORQUE;
-			static const std::string control_mode_IDLE;
-			static const std::string control_mode_POS;
-			static const std::string control_mode_POS_FFTORQUE;
+			std::string control_mode_TORQUE;
+			std::string control_mode_IDLE;
+			std::string control_mode_POS;
+			std::string control_mode_POS_FFTORQUE;
 			
 
 			virtual bool getControlMode(std::map< std::string, std::string >& joint_control_mode_map); 
@@ -26,7 +28,7 @@ namespace XBot {
                 
         protected:
             
-            virtual bool init(const std::string& path_to_cfg);
+            virtual bool init(const std::string& path_to_cfg, int argc, char **argv);
             virtual bool move_internal();
             virtual bool sense_internal();
                 
@@ -73,9 +75,9 @@ namespace XBot {
                 
         };
 		
-		const std::string RobotInterfaceROS::control_mode_TORQUE = "TORQUE";
-		const std::string RobotInterfaceROS::control_mode_IDLE = "IDLE";
-		const std::string RobotInterfaceROS::control_mode_POS = "POSITION";
-		const std::string RobotInterfaceROS::control_mode_POS_FFTORQUE = "POS_FFTORQUE";
+// 		const std::string RobotInterfaceROS::control_mode_TORQUE = "TORQUE";
+// 		const std::string RobotInterfaceROS::control_mode_IDLE = "IDLE";
+// 		const std::string RobotInterfaceROS::control_mode_POS = "POSITION";
+// 		const std::string RobotInterfaceROS::control_mode_POS_FFTORQUE = "POS_FFTORQUE";
 }
 #endif
