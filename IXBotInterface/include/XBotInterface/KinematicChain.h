@@ -219,6 +219,13 @@ class KinematicChain {
     bool setMotorVel(const Eigen::VectorXd& qdot);
     bool setEffort(const Eigen::VectorXd& tau);
     bool setTemperature(const Eigen::VectorXd& temp);
+	
+	bool setLinkPos(int i, double q);
+    bool setMotorPos(int i, double q);
+    bool setLinkVel(int i, double qdot);
+    bool setMotorVel(int i, double qdot);
+    bool setEffort(int i, double tau);
+    bool setTemperature(int i, double temp);
     
     bool setLinkPos(const std::map<int, double>& q);
     bool setMotorPos(const std::map<int, double>& q);
@@ -253,13 +260,7 @@ class KinematicChain {
     bool setEffortRef(const std::map<std::string, double>& tau);
     bool setStiffness(const std::map<std::string, double>& K);
     bool setDamping(const std::map<std::string, double>& D);
-	
-	bool setLinkPos(int i, double q);
-    bool setMotorPos(int i, double q);
-    bool setLinkVel(int i, double qdot);
-    bool setMotorVel(int i, double qdot);
-    bool setEffort(int i, double tau);
-    bool setTemperature(int i, double temp);
+
     
     
     

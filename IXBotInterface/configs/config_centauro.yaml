@@ -1,0 +1,6 @@
+# CENTAURO config
+x_bot_interface:
+  framework: ROS
+  urdf_path: /home/alaurenzi/Code/robotology-superbuild/external/XBotInterface/IXBotInterface/configs/urdf/centauro.urdf
+  srdf_path: /home/alaurenzi/Code/robotology-superbuild/external/XBotInterface/IXBotInterface/configs/srdf/centauro.srdf
+  joint_map_config: /home/alaurenzi/Code/robotology-superbuild/external/XBotInterface/IXBotInterface/configs/joint_map/centauro_test_joint_map.yaml
