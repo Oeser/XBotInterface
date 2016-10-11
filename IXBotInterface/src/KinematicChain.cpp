@@ -134,6 +134,13 @@ const std::string& KinematicChain::chainName() const
   return _chain_name;
 }
 
+int XBot::KinematicChain::jointId(int i) const
+{
+	return _joint_vector[i]->getJointId();
+}
+
+
+
 const std::string& KinematicChain::childLinkName(int id) const
 {
   return _urdf_joints[id]->child_link_name;
@@ -169,7 +176,7 @@ bool XBot::KinematicChain::getLinkPos(Eigen::VectorXd& q) const
 
 bool KinematicChain::getLinkPos(std::map< std::string, double >& q) const
 {
-	// NOTE should we clear the map first???
+	q.clear();
 	
 	for( const auto& name_joint_pair : _joint_name_map ){
 		
@@ -184,7 +191,7 @@ bool KinematicChain::getLinkPos(std::map< std::string, double >& q) const
 
 bool KinematicChain::getLinkPos(std::map< int, double >& q) const
 {
-	// NOTE should we clear the map first???
+	q.clear();
 	
 	for( const auto& id_joint_pair : _joint_id_map ){
 		
@@ -196,6 +203,52 @@ bool KinematicChain::getLinkPos(std::map< int, double >& q) const
 	}
 		
 }
+
+bool KinematicChain::getPosRef(Eigen::VectorXd& q) const
+{
+    if(q.rows() != _joint_num) {
+        q.resize(_joint_num);
+    }
+    int pos = 0;
+    for( const XBot::Joint::Ptr& j : _joint_vector) {
+        q[pos++] = j->getPosRef();
+    }
+    return true;	
+}
+
+bool KinematicChain::getPosRef(std::map< std::string, double >& q) const
+{
+	q.clear();
+	
+	for( const auto& name_joint_pair : _joint_name_map ){
+		
+		const std::string& joint_name = name_joint_pair.first;
+		const Joint& joint = *name_joint_pair.second;
+		
+		q[joint_name] = joint.getPosRef();
+		
+	}
+}
+
+bool KinematicChain::getPosRef(std::map< int, double >& q) const
+{
+	q.clear();
+	
+	for( const auto& id_joint_pair : _joint_id_map ){
+		
+		int joint_id = id_joint_pair.first;
+		const Joint& joint = *id_joint_pair.second;
+		
+		q[joint_id] = joint.getPosRef();
+		
+	}
+}
+
+double KinematicChain::getPosRef(int index) const
+{
+	return _joint_vector[index]->getPosRef();
+}
+
 
 
 bool KinematicChain::setLinkPos(const Eigen::VectorXd& q)

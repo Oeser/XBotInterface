@@ -95,32 +95,41 @@ class KinematicChain {
     
     /**
      * @brief Method returning the name of the child link corresponding
-     * to the id-th joint of the chain
+     * to the i-th joint of the chain
      * 
-     * @param id The id of the joint along the chain (id = 0 refers to the joint attached to the base link)
+     * @param i The position of the joint along the chain (i = 0 refers to the joint attached to the base link)
      * 
-     * @return The name of the child link of joint n° id
+     * @return The name of the child link of joint n° i
      */
-    const std::string& childLinkName(int id) const;
+    const std::string& childLinkName(int i) const;
     
     /**
      * @brief Method returning the name of the parent link corresponding
-     * to the id-th joint of the chain
+     * to the i-th joint of the chain
      * 
-     * @param id The id of the joint along the chain (id = 0 refers to the joint attached to the base link)
+     * @param i The position of the joint along the chain (i = 0 refers to the joint attached to the base link)
      * 
-     * @return The name of the parent link of joint n° id
+     * @return The name of the parent link of joint n° i
      */
-    const std::string& parentLinkName(int id) const;
+    const std::string& parentLinkName(int i) const;
     
     /**
-     * @brief Method returning the name of the id-th joint of the chain
+     * @brief Method returning the name of the i-th joint of the chain
      * 
-     * @param id The id of the joint whose name is queried (id = 0 refers to the joint attached to the base link)
+     * @param i The position of the joint whose name is queried (i = 0 refers to the joint attached to the base link)
      * 
-     * @return The name of the joint n° id
+     * @return The name of the joint n° i
      */
-    const std::string& jointName(int id) const;
+    const std::string& jointName(int i) const;
+	
+    /**
+     * @brief Method returning the ID of the i-th joint of the chain
+     * 
+     * @param i The position of the joint whose ID is queried (i = 0 refers to the joint attached to the base link)
+     * 
+     * @return The ID of the joint n° i
+     */
+	int jointId(int i) const;
     
     /**
      * @brief Method returning the number of enabled joints
@@ -194,6 +203,12 @@ class KinematicChain {
     bool getEffortRef(std::map<std::string, double>& tau) const;
     bool getStiffness(std::map<std::string, double>& K) const;
     bool getDamping(std::map<std::string, double>& D) const;
+	
+	double getPosRef(int index) const;
+    double getVelRef(int index) const;
+    double getEffortRef(int index) const;
+    double getStiffness(int index) const;
+    double getDamping(int index) const;
     
     
     
