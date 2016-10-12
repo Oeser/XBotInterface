@@ -1,6 +1,12 @@
 #include <XBotInterface/RobotInterface.h>
 #include <RobotInterfaceROS/RobotInterfaceROS.h>
 
+// plugin system
+#include <SharedLibraryClass.h>
+#include <SharedLibrary.h>
+// plugin test
+#include <MyMath.h>
+
 // NOTE Static members need to be declared in the cpp as well
 XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
 
@@ -47,6 +53,21 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
     if(_framework == "ROS" ){
 //         ros::init(argc, argv, "from_config");
 //         _instance_ptr = RobotInterface::Ptr(new RobotInterfaceROS(XBotModel));
+        
+        printf("Loading the shared library... \n");
+        shlibpp::SharedLibraryClassFactory<MyMath> myMathFactory("libmymath.so", "my_math");
+        if (!myMathFactory.isValid()) {
+            printf("error (%s) : %s\n", shlibpp::Vocab::decode(myMathFactory.getStatus()).c_str(),
+                                        myMathFactory.getLastNativeError().c_str());
+        }
+
+        // create an instance of the class and call its functions
+        shlibpp::SharedLibraryClass<MyMath> myMath(myMathFactory);    
+        printf("Calling some of its functions... \n");
+        printf("15 + 12 = %d\n", myMath->add(15, 12));
+        printf("15 - 12 = %d\n", myMath->sub(15, 12));
+        
+        
         return _instance_ptr;
     }
 }
