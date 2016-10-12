@@ -1,7 +1,7 @@
 #include <XBotInterface/RobotInterface.h>
 #include <RobotInterfaceROS/RobotInterfaceROS.h>
 
-// Static members need to be declared in the cpp as well
+// NOTE Static members need to be declared in the cpp as well
 XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
 
 XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) : 
@@ -13,9 +13,9 @@ XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) :
 XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg, int argc, char **argv)
 {
 
-	if( _instance_ptr ){ return _instance_ptr; }
-	
-	
+    if( _instance_ptr ){ return _instance_ptr; }
+    
+    
     std::ifstream fin ( path_to_cfg );
     if ( fin.fail() ) {
         printf ( "Can not open %s\n", path_to_cfg.c_str() ); //TBD change it
@@ -40,15 +40,15 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
      std::string _framework = x_bot_interface["framework"].as<std::string>();
      // TBD ifdef MACRO
      if( _framework == "YARP" ) {
-// 		 _instance_ptr = RobotInterface::Ptr(new YARPInterface(XBotModel));
-		 return _instance_ptr;
+//         _instance_ptr = RobotInterface::Ptr(new YARPInterface(XBotModel));
+        return _instance_ptr;
 //         return XBot::RobotInterface::Ptr(new YARPInterface(XBotModel));
     }
     if(_framework == "ROS" ){
-			ros::init(argc, argv, "from_config");
-			_instance_ptr = RobotInterface::Ptr(new RobotInterfaceROS(XBotModel));
-			return _instance_ptr;
-	}
+//         ros::init(argc, argv, "from_config");
+//         _instance_ptr = RobotInterface::Ptr(new RobotInterfaceROS(XBotModel));
+        return _instance_ptr;
+    }
 }
 
 
