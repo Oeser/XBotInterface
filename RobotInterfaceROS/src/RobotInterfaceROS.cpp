@@ -10,7 +10,7 @@ XBot::RobotInterfaceROS::RobotInterfaceROS(const XBot::XBotCoreModel& XBotModel)
 	}
 }
 
-bool XBot::RobotInterfaceROS::init(const std::string& path_to_cfg, int argc, char **argv)
+bool XBot::RobotInterfaceROS::init(const std::string& path_to_cfg)
 {
     std::ifstream fin ( path_to_cfg );
     if ( fin.fail() ) {
@@ -18,7 +18,7 @@ bool XBot::RobotInterfaceROS::init(const std::string& path_to_cfg, int argc, cha
         return false;
     }
     
-    ros::init(argc, argv, "name_from_cfg");
+
 
     YAML::Node root_cfg = YAML::LoadFile ( path_to_cfg ); 
     // TBD check if they exist
@@ -29,7 +29,7 @@ bool XBot::RobotInterfaceROS::init(const std::string& path_to_cfg, int argc, cha
     bool joint_state_ok = parseJointStateIds();
     bool controller_ok = parseControllerIds();
 	
-	_control_command_pub = _nh.advertise<custom_messages::CustomCmnd>(_command_topic_name, 1);
+	_control_command_pub = _nh.advertise<custom_messages::CustomCmnd>(_command_topic_name, 1, true);
 
     return joint_state_ok && controller_ok;
 }
@@ -66,7 +66,9 @@ bool XBot::RobotInterfaceROS::parseJointStateIds()
     
     _joint_state_sub = _nh.subscribe(_joint_state_name, 1, &RobotInterfaceROS::jointStateCallback, this);
 
+
     while(!_joint_state_received && attempt < max_connect_attempts){
+		ros::spinOnce();
         ros::Duration(sleep_duration).sleep();
         attempt++;
     }

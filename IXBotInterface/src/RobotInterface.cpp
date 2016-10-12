@@ -10,7 +10,7 @@ XBot::RobotInterface::RobotInterface(const XBot::XBotCoreModel& XBotModel) :
 {
 }
 
-XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg)
+XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg, int argc, char **argv)
 {
 
 	if( _instance_ptr ){ return _instance_ptr; }
@@ -45,6 +45,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
 //         return XBot::RobotInterface::Ptr(new YARPInterface(XBotModel));
     }
     if(_framework == "ROS" ){
+			ros::init(argc, argv, "from_config");
 			_instance_ptr = RobotInterface::Ptr(new RobotInterfaceROS(XBotModel));
 			return _instance_ptr;
 	}

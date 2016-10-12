@@ -37,11 +37,11 @@ namespace XBot
 
         typedef std::shared_ptr<RobotInterface> Ptr;
 
-        static RobotInterface::Ptr getRobot(const std::string& path_to_cfg);
+        static RobotInterface::Ptr getRobot(const std::string& path_to_cfg, int argc, char **argv);
 
         bool sense( bool sync_model = true );
         bool move( bool sync_model = true );
-		virtual bool init(const std::string& path_to_cfg, int argc, char** argv) = 0;
+		virtual bool init(const std::string& path_to_cfg) = 0;
 		virtual bool setControlMode(const std::map<std::string, std::string>& joint_control_mode_map) = 0;
 		virtual bool setControlMode(const std::string& robot_control_mode) = 0;
 		virtual bool getControlMode(std::map<std::string, std::string>& joint_control_mode_map) = 0;

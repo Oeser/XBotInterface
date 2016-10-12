@@ -28,7 +28,7 @@ namespace XBot {
                 
         protected:
             
-            virtual bool init(const std::string& path_to_cfg, int argc, char **argv);
+            virtual bool init(const std::string& path_to_cfg);
             virtual bool move_internal();
             virtual bool sense_internal();
                 
