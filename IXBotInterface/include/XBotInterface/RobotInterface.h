@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <SharedLibraryClass.h>
 
 #include <XBotInterface/IXBotInterface.h>
 
@@ -60,7 +61,8 @@ namespace XBot
         IXBotInterface::Ptr model; // TBD it is going to be the ModelInterface inside the RobotInterface
         
         static RobotInterface::Ptr _instance_ptr;
-
+		static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
+		
     };
 }
 
