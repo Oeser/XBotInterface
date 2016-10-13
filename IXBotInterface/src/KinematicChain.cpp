@@ -1,5 +1,4 @@
 #include <XBotInterface/KinematicChain.h>
-#include <eigen3/Eigen/Dense>
 
 namespace XBot {
 
