@@ -24,6 +24,11 @@
 #include <map>
 #include <memory>
 #include <algorithm>
+
+#include <yaml-cpp/yaml.h>
+
+#include <XBotCoreModel.h>
+
 #include <XBotInterface/KinematicChain.h>
 
 namespace XBot {

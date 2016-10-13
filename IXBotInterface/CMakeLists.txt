@@ -22,14 +22,12 @@ project(IXBotCoreInterface)
 
 find_package(XBotCoreModel REQUIRED)
 find_package(RobotInterfaceROS REQUIRED)
-find_package(kdl_parser REQUIRED) # TBD check it
 find_package(Eigen3 REQUIRED)
 
 find_package(sharedlib++ REQUIRED)
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${RobotInterfaceROS_INCLUDE_DIRS}
-                            ${kdl_parser_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIRS}
                             ${sharedlib++_INCLUDE_DIRS}
                             )                       

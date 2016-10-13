@@ -1,8 +1,5 @@
 #include <XBotInterface/IXBotInterface.h>
 
-#include <yaml-cpp/yaml.h>
-#include <XBotCoreModel.h>
-
 XBot::IXBotInterface::IXBotInterface(const XBot::XBotCoreModel& XBotModel) : 
     _XBotModel(XBotModel)
 {
