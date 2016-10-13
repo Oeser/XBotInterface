@@ -3,21 +3,8 @@
 #include <yaml-cpp/yaml.h>
 #include <XBotCoreModel.h>
 
-XBot::IXBotInterface::IXBotInterface(const XBot::XBotCoreModel& XBotModel) : 
-    _XBotModel(XBotModel)
+XBot::IXBotInterface::IXBotInterface()
 {
-    _joint_num = XBotModel.get_joint_num();
-    _urdf_string = XBotModel.get_urdf_string();
-    _srdf_string = XBotModel.get_srdf_string();
-    XBotModel.get_enabled_joint_ids(_ordered_joint_id);
-    XBotModel.get_enabled_joint_names(_ordered_joint_name);
-    
-    for( const std::string& chain_name : XBotModel.get_chain_names() ) {
-        XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name, 
-                                                                                  XBotModel);
-        _chain_map[chain_name] = actual_chain;
-    }
-    
 }
 
 XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface& other):
@@ -42,6 +29,46 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface& other):
   }
 
 }
+
+bool XBot::IXBotInterface::init(const std::string& path_to_cfg)
+{
+	std::ifstream fin ( path_to_cfg );
+    if ( fin.fail() ) {
+        printf ( "Can not open %s\n", path_to_cfg.c_str() ); //TBD change it
+        return false;
+    }
+
+    YAML::Node root_cfg = YAML::LoadFile ( path_to_cfg );
+    const YAML::Node& x_bot_interface = root_cfg["x_bot_interface"]; // TBD check if exists
+    std::string _urdf_path = x_bot_interface["urdf_path"].as<std::string>();
+    std::string _srdf_path = x_bot_interface["srdf_path"].as<std::string>();
+    std::string _joint_map_config = x_bot_interface["joint_map_config"].as<std::string>();
+    
+    // initialize the model
+    if( !_XBotModel.init( _urdf_path, _srdf_path, _joint_map_config ) ) {
+        printf("ERROR: model initialization failed, please check the urdf_path and srdf_path in your YAML config file.\n"); //TBD change it
+        return false;
+    }
+    // generate the robot
+    _XBotModel.generate_robot();
+	
+	// construct class
+	_joint_num = _XBotModel.get_joint_num();
+    _urdf_string = _XBotModel.get_urdf_string();
+    _srdf_string = _XBotModel.get_srdf_string();
+    _XBotModel.get_enabled_joint_ids(_ordered_joint_id);
+    _XBotModel.get_enabled_joint_names(_ordered_joint_name);
+    
+    for( const std::string& chain_name : _XBotModel.get_chain_names() ) {
+        XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name, 
+                                                                                  _XBotModel);
+        _chain_map[chain_name] = actual_chain;
+    }
+    
+    // call virtual init_internal
+    return init_internal(path_to_cfg);
+}
+
 
 XBot::KinematicChain& XBot::IXBotInterface::operator()(const std::string& chain_name)
 {
