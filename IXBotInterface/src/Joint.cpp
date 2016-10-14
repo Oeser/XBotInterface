@@ -7,7 +7,7 @@ XBot::Joint::Joint() :
 
 }
 
-XBot::Joint::Joint(const std::string& joint_name, 
+XBot::Joint::Joint(const std::string &joint_name,
                    int joint_id) :
     _joint_name(joint_name),
     _joint_id(joint_id)
@@ -15,7 +15,7 @@ XBot::Joint::Joint(const std::string& joint_name,
 
 }
 
-const std::string& XBot::Joint::getJointName() const
+const std::string &XBot::Joint::getJointName() const
 {
     return _joint_name;
 }
@@ -25,7 +25,7 @@ int XBot::Joint::getJointId() const
     return _joint_id;
 }
 
-void XBot::Joint::setJointName(const std::string& joint_name)
+void XBot::Joint::setJointName(const std::string &joint_name)
 {
     _joint_name = joint_name;
 }
@@ -148,30 +148,30 @@ void XBot::Joint::setDamping(double damping)
     _damping = damping;
 }
 
-bool XBot::Joint::sync(const XBot::Joint& other)
+bool XBot::Joint::sync(const XBot::Joint &other)
 {
-        _joint_name = other._joint_name;
-        _joint_id = other._joint_id;
-        
-        ///////////////////
-        // RX from board //
-        ///////////////////
-        
-        _link_pos = other._link_pos;
-        _motor_pos = other._motor_pos;
-        _link_vel = other._link_vel;
-        _motor_vel = other._motor_vel;
-        _effort = other._effort;
-        _temperature = other._temperature;
-        
-        /////////////////
-        // TX to board //
-        /////////////////
-        
-        _pos_ref = other._pos_ref;
-        _vel_ref = other._vel_ref;
-        _effort_ref = other._effort_ref;
-        _stiffness = other._stiffness;
-        _damping = other._damping;
+    _joint_name = other._joint_name;
+    _joint_id = other._joint_id;
+
+    ///////////////////
+    // RX from board //
+    ///////////////////
+
+    _link_pos = other._link_pos;
+    _motor_pos = other._motor_pos;
+    _link_vel = other._link_vel;
+    _motor_vel = other._motor_vel;
+    _effort = other._effort;
+    _temperature = other._temperature;
+
+    /////////////////
+    // TX to board //
+    /////////////////
+
+    _pos_ref = other._pos_ref;
+    _vel_ref = other._vel_ref;
+    _effort_ref = other._effort_ref;
+    _stiffness = other._stiffness;
+    _damping = other._damping;
 }
 
