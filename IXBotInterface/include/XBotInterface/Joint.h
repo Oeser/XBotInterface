@@ -139,6 +139,8 @@ private:
     double _effort_ref;
     double _stiffness;
     double _damping;
+    
+    void init();
 
 
 };

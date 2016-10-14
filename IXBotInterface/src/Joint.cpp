@@ -4,7 +4,7 @@ XBot::Joint::Joint() :
     _joint_name(""),
     _joint_id(-1)
 {
-
+    init();
 }
 
 XBot::Joint::Joint(const std::string &joint_name,
@@ -12,7 +12,31 @@ XBot::Joint::Joint(const std::string &joint_name,
     _joint_name(joint_name),
     _joint_id(joint_id)
 {
+    init();
+}
 
+void XBot::Joint::init()
+{
+    ///////////////////
+    // RX from board //
+    ///////////////////
+
+    _link_pos = 0;
+    _motor_pos = 0;
+    _link_vel = 0;
+    _motor_vel = 0;
+    _effort = 0;
+    _temperature = 0;
+
+    /////////////////
+    // TX to board //
+    /////////////////
+
+    _pos_ref = 0;
+    _vel_ref = 0;
+    _effort_ref = 0;
+    _stiffness = 0;
+    _damping = 0;
 }
 
 const std::string &XBot::Joint::getJointName() const
