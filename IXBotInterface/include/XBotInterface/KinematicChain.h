@@ -121,8 +121,8 @@ class KinematicChain {
      * @return The name of the joint n° i
      */
     const std::string& jointName(int i) const;
-	
-	
+    
+    
     /**
      * @brief Method returning the ID of the i-th joint of the chain
      * 
@@ -130,7 +130,7 @@ class KinematicChain {
      * 
      * @return The ID of the joint n° i
      */
-	int jointId(int i) const;
+    int jointId(int i) const;
     
     /**
      * @brief Method returning the number of enabled joints
@@ -204,8 +204,8 @@ class KinematicChain {
     bool getEffortRef(std::map<std::string, double>& tau) const;
     bool getStiffness(std::map<std::string, double>& K) const;
     bool getDamping(std::map<std::string, double>& D) const;
-	
-	double getPosRef(int index) const;
+    
+    double getPosRef(int index) const;
     double getVelRef(int index) const;
     double getEffortRef(int index) const;
     double getStiffness(int index) const;
@@ -219,8 +219,8 @@ class KinematicChain {
     bool setMotorVel(const Eigen::VectorXd& qdot);
     bool setEffort(const Eigen::VectorXd& tau);
     bool setTemperature(const Eigen::VectorXd& temp);
-	
-	bool setLinkPos(int i, double q);
+    
+    bool setLinkPos(int i, double q);
     bool setMotorPos(int i, double q);
     bool setLinkVel(int i, double qdot);
     bool setMotorVel(int i, double qdot);
