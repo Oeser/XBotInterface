@@ -622,12 +622,203 @@ bool XBot::IXBotInterface::setLinkPos(const std::map< std::string, double >& q)
 				if(q.count(joint_name)){
 					chain.setLinkPos(i, q.at(joint_name));
 				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
 		}
 		
 	}
 }
 
+bool XBot::IXBotInterface::setMotorPos(const std::map< std::string, double >& q)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(q.count(joint_name)){
+					chain.setMotorPos(i, q.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
 
+bool XBot::IXBotInterface::setPosRef(const std::map< std::string, double >& q)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(q.count(joint_name)){
+					chain.setPosRef(i, q.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setEffort(const std::map< std::string, double >& tau)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(tau.count(joint_name)){
+					chain.setEffort(i, tau.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setEffortRef(const std::map< std::string, double >& tau)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(tau.count(joint_name)){
+					chain.setEffortRef(i, tau.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setLinkVel(const std::map< std::string, double >& qdot)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(qdot.count(joint_name)){
+					chain.setLinkVel(i, qdot.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setMotorVel(const std::map< std::string, double >& qdot)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(qdot.count(joint_name)){
+					chain.setMotorVel(i, qdot.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setVelRef(const std::map< std::string, double >& qdot)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(qdot.count(joint_name)){
+					chain.setVelRef(i, qdot.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setTemperature(const std::map< std::string, double >& temp)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(temp.count(joint_name)){
+					chain.setTemperature(i, temp.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setStiffness(const std::map< std::string, double >& K)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(K.count(joint_name)){
+					chain.setStiffness(i, K.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
+
+bool XBot::IXBotInterface::setDamping(const std::map< std::string, double >& D)
+{
+	for( const auto& chainname_ptr_pair : _chain_map ){
+		
+		KinematicChain& chain = *chainname_ptr_pair.second;
+		
+		for(int i = 0; i<chain.getJointNum(); i++){
+			const std::string& joint_name = chain.jointName(i);
+				if(D.count(joint_name)){
+					chain.setDamping(i, D.at(joint_name));
+				}
+				else{
+					std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is not defined!" << std::endl;
+				}
+		}
+		
+	}
+}
 
 XBot::IXBotInterface::~IXBotInterface()
 {
