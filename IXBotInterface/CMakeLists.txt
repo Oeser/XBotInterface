@@ -1,12 +1,37 @@
+# 
+#  Copyright (C) 2016 IIT-ADVR
+#  Author: Luca Muratore
+#  email: luca.muratore@iit.it
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with this program. If not, see <http://www.gnu.org/licenses/>
+#
+
+
 project(IXBotCoreInterface)
 
 find_package(XBotCoreModel REQUIRED)
-find_package(kdl_parser REQUIRED) # TBD check it
+find_package(RobotInterfaceROS REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(kdl_parser REQUIRED)
+find_package(sharedlib++ REQUIRED)
 
-include_directories(include ${XBotCoreModel_INCLUDE_DIRS} 
+include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
+                            ${RobotInterfaceROS_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
-                            ${EIGEN3_INCLUDE_DIRS})                       
+                            ${EIGEN3_INCLUDE_DIRS}
+                            ${sharedlib++_INCLUDE_DIRS}
+                            )                       
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
@@ -17,7 +42,9 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/Joint.cpp)
                                  
 target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
-                                    yaml-cpp)
+                                    yaml-cpp
+                                    ${sharedlib++_LIBRARIES}
+                                    )
 
 add_executable(test src/main_test.cpp)
 target_link_libraries(test XBotInterface)
@@ -41,7 +68,7 @@ if ( ${ENABLE_SRDF_FROM_XACRO_GENERATION} )
     endforeach(it)
 
     # add an abstract target to actually trigger the builds
-    add_custom_target(media_files ALL DEPENDS ${srdf_files})
+    add_custom_target(srdf_from_xacro_files ALL DEPENDS ${srdf_files})
 endif()
 
 ########################################################################
@@ -86,7 +113,7 @@ install_basic_package_files(XBotInterface VARS_PREFIX ${VARS_PREFIX}
                                     TARGETS_PROPERTY ${VARS_PREFIX}_TARGETS
                                     NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
-# include(AddUninstallTarget)
+include(AddUninstallTarget)
 
 # doc
 optional_build(doc doc ON)

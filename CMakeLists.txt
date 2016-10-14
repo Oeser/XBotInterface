@@ -43,5 +43,3 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(MacroOptionalBuild)
 
 optional_build(IXBotInterface IXBotInterface ON)
-
-optional_build(RobotInterfaceROS RobotInterfaceROS OFF)

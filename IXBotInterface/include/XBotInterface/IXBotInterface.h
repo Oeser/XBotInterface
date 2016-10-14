@@ -24,6 +24,9 @@
 #include <map>
 #include <memory>
 #include <algorithm>
+
+#include <yaml-cpp/yaml.h>
+#include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
 
 namespace XBot {
@@ -34,7 +37,7 @@ namespace XBot {
         
         typedef std::shared_ptr<IXBotInterface> Ptr;
         
-        explicit IXBotInterface(const XBotCoreModel& XBotModel);
+        IXBotInterface();
         
         IXBotInterface(const IXBotInterface& other);
         
@@ -42,15 +45,18 @@ namespace XBot {
         
         virtual ~IXBotInterface();
         
-            // TODO: bool hasVelocity(), hasImpedance(), ....
+        bool init(const std::string& path_to_cfg);
+        
+        // TODO: bool hasVelocity(), hasImpedance(), ....
         
         const urdf::ModelInterface& getUrdf() const;
         const srdf::Model& getSrdf() const;
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
         std::vector<std::string> getChainNames() const;
-		const std::vector<std::string>& getEnabledJointNames() const;
-		bool hasJoint(const std::string& joint_name) const;
+        std::map<std::string, XBot::KinematicChain::Ptr>  getChainMap() const;
+        const std::vector<std::string>& getEnabledJointNames() const;
+        bool hasJoint(const std::string& joint_name) const;
         
         KinematicChain& operator()(const std::string& chain_name);
         KinematicChain& leg(int id);
@@ -59,7 +65,6 @@ namespace XBot {
         int legs() const;
         int arms() const;
         
-        // TBD sync all the joints and sensors information
         bool sync(const IXBotInterface& other);
         
         
@@ -146,11 +151,11 @@ namespace XBot {
         bool setStiffness(const std::map<std::string, double>& K);
         bool setDamping(const std::map<std::string, double>& D);
         
-        
+        friend std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
 
     protected:
         
-        
+        virtual bool init_internal(const std::string& path_to_cfg){ return true; }
         
 
     private:
@@ -166,6 +171,8 @@ namespace XBot {
         XBot::KinematicChain _dummy_chain;
 
     };
+    
+    std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
 
 }
 
