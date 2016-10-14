@@ -54,6 +54,7 @@ namespace XBot {
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
         std::vector<std::string> getChainNames() const;
+        std::map<std::string, XBot::KinematicChain::Ptr>  getChainMap() const;
         const std::vector<std::string>& getEnabledJointNames() const;
         bool hasJoint(const std::string& joint_name) const;
         
@@ -150,7 +151,7 @@ namespace XBot {
         bool setStiffness(const std::map<std::string, double>& K);
         bool setDamping(const std::map<std::string, double>& D);
         
-        
+        friend std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
 
     protected:
         
@@ -170,6 +171,8 @@ namespace XBot {
         XBot::KinematicChain _dummy_chain;
 
     };
+    
+    std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
 
 }
 

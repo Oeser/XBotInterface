@@ -268,13 +268,8 @@ public:
     bool setStiffness(int i, double K);
     bool setDamping(int i, double D);
 
-
-
-
     bool sync(const KinematicChain &other);
-
-//     std::ostream& operator<<(std::ostream& os, const KinematicChain& obj);
-
+    friend std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
 
 protected:
 
@@ -297,6 +292,7 @@ private:
 
 };
 
+    std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
 }
 
 #endif // __KINEMATIC_CHAIN_H__

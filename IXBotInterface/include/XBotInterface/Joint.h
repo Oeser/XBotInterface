@@ -22,6 +22,7 @@
 
 #include <string>
 #include <memory>
+#include <iostream>
 
 namespace XBot
 {
@@ -93,8 +94,8 @@ public:
     void setDamping(double damping);
 
     bool sync(const Joint &other);
-
-//         std::ostream& operator<<(std::ostream& os, const Joint& obj);
+    
+    friend std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
 
 protected:
 
@@ -141,6 +142,9 @@ private:
 
 
 };
+
+    std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
+
 }
 
 #endif // __JOINT_H__

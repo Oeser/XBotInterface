@@ -1359,6 +1359,15 @@ bool KinematicChain::setDamping(int i, double D)
 }
 
 
+std::ostream& operator<< ( std::ostream& os, const KinematicChain& c )
+{
+    os << "Chain name: " << c._chain_name << std::endl;
+    for( const auto& j : c._joint_vector ) {
+        os << *j << std::endl;
+    }
+    return os;
+}
+
 
 
 } // end namespace XBot

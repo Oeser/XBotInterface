@@ -175,3 +175,27 @@ bool XBot::Joint::sync(const XBot::Joint &other)
     _damping = other._damping;
 }
 
+
+std::ostream& XBot::operator<< ( std::ostream& os, const XBot::Joint& j ) 
+{
+    os << "Joint id: " << j.getJointId() << std::endl;
+    os << "Joint name: " << j.getJointName() << std::endl;
+    os << "RX values ###########" << std::endl;
+    os << "\tLink position: " << j.getLinkPos() << std::endl;
+    os << "\tMotor position: " << j.getMotorPos() << std::endl;
+    os << "\tLink velocity: " << j.getLinkVel() << std::endl;
+    os << "\tMotor velocity: " << j.getMotorVel() << std::endl;
+    os << "\tEffort: " << j.getEffort() << std::endl;
+    os << "\tTemperature: " << j.getTemperature() << std::endl;
+    
+    os << "TX values ###########" << std::endl;
+    os << "\tLink position ref: " << j.getPosRef() << std::endl;
+    os << "\tLink velocity ref: " << j.getVelRef() << std::endl;
+    os << "\tEffort ref: " << j.getEffortRef() << std::endl;
+    os << "\tStiffness: " << j.getStiffness() << std::endl;
+    os << "\tDamping: " << j.getDamping() << std::endl;
+    
+    return os;
+}
+
+

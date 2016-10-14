@@ -1261,6 +1261,12 @@ std::vector< std::string > XBot::IXBotInterface::getChainNames() const
     return _XBotModel.get_chain_names();
 }
 
+std::map< std::string, XBot::KinematicChain::Ptr > XBot::IXBotInterface::getChainMap() const
+{
+    return _chain_map;
+}
+
+
 const srdf::Model& XBot::IXBotInterface::getSrdf() const
 {
     return _XBotModel;
@@ -1305,6 +1311,15 @@ XBot::IXBotInterface &XBot::IXBotInterface::operator=(const XBot::IXBotInterface
 const std::vector< std::string > &XBot::IXBotInterface::getEnabledJointNames() const
 {
     return _ordered_joint_name;
+}
+
+std::ostream& XBot::operator<< ( std::ostream& os, const XBot::IXBotInterface& robot )
+{
+    os << "Robot name: " << std::endl;
+    for( const auto& c : robot.getChainMap() ) {
+        os << (*c.second) << std::endl;
+    }
+    return os;
 }
 
 
