@@ -177,7 +177,6 @@ class KinematicChain {
     bool getEffort(std::map<std::string, double>& tau) const;
     bool getTemperature(std::map<std::string, double>& temp) const;
     
-    // TBD do it for other subgroups
     double getLinkPos(int index) const;
     double getMotorPos(int index) const;
     double getLinkVel(int index) const;
@@ -220,13 +219,6 @@ class KinematicChain {
     bool setEffort(const Eigen::VectorXd& tau);
     bool setTemperature(const Eigen::VectorXd& temp);
     
-    bool setLinkPos(int i, double q);
-    bool setMotorPos(int i, double q);
-    bool setLinkVel(int i, double qdot);
-    bool setMotorVel(int i, double qdot);
-    bool setEffort(int i, double tau);
-    bool setTemperature(int i, double temp);
-    
     bool setLinkPos(const std::map<int, double>& q);
     bool setMotorPos(const std::map<int, double>& q);
     bool setLinkVel(const std::map<int, double>& qdot);
@@ -240,6 +232,13 @@ class KinematicChain {
     bool setMotorVel(const std::map<std::string, double>& qdot);
     bool setEffort(const std::map<std::string, double>& tau);
     bool setTemperature(const std::map<std::string, double>& temp);
+    
+    bool setLinkPos(int i, double q);
+    bool setMotorPos(int i, double q);
+    bool setLinkVel(int i, double qdot);
+    bool setMotorVel(int i, double qdot);
+    bool setEffort(int i, double tau);
+    bool setTemperature(int i, double temp);
     
     
     
@@ -260,6 +259,12 @@ class KinematicChain {
     bool setEffortRef(const std::map<std::string, double>& tau);
     bool setStiffness(const std::map<std::string, double>& K);
     bool setDamping(const std::map<std::string, double>& D);
+    
+    bool setPosRef(int i, double q);
+    bool setVelRef(int i, double qdot);
+    bool setEffortRef(int i, double tau);
+    bool setStiffness(int i, double K);
+    bool setDamping(int i, double D);
 
     
     
