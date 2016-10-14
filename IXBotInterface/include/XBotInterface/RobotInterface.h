@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <SharedLibraryClass.h>
 
 #include <XBotInterface/IXBotInterface.h>
 
@@ -33,18 +34,18 @@ namespace XBot
 
     public:
 		
-        explicit RobotInterface(const XBotCoreModel& XBotModel);
+        RobotInterface();
 
         typedef std::shared_ptr<RobotInterface> Ptr;
 
-        static RobotInterface::Ptr getRobot(const std::string& path_to_cfg);
+        static RobotInterface::Ptr getRobot(const std::string& path_to_cfg, int argc, char **argv);
 
         bool sense( bool sync_model = true );
         bool move( bool sync_model = true );
-		virtual bool init(const std::string& path_to_cfg) = 0;
-		virtual bool setControlMode(const std::map<std::string, std::string>& joint_control_mode_map) = 0;
-		virtual bool setControlMode(const std::string& robot_control_mode) = 0;
-		virtual bool getControlMode(std::map<std::string, std::string>& joint_control_mode_map) = 0;
+        
+        virtual bool setControlMode(const std::map<std::string, std::string>& joint_control_mode_map) = 0;
+        virtual bool setControlMode(const std::string& robot_control_mode) = 0;
+        virtual bool getControlMode(std::map<std::string, std::string>& joint_control_mode_map) = 0;
 
         
     protected:
@@ -52,11 +53,16 @@ namespace XBot
         
         virtual bool sense_internal() = 0;
         virtual bool move_internal() = 0;
+		virtual bool init_internal(const std::string& path_to_cfg) = 0;
+		
 
     private:
 
         IXBotInterface::Ptr model; // TBD it is going to be the ModelInterface inside the RobotInterface
-
+        
+        static RobotInterface::Ptr _instance_ptr;
+		static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
+		
     };
 }
 

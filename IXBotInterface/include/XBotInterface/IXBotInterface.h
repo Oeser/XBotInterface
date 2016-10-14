@@ -24,6 +24,9 @@
 #include <map>
 #include <memory>
 #include <algorithm>
+
+#include <yaml-cpp/yaml.h>
+#include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
 
 namespace XBot {
@@ -34,13 +37,15 @@ namespace XBot {
         
         typedef std::shared_ptr<IXBotInterface> Ptr;
         
-        explicit IXBotInterface(const XBotCoreModel& XBotModel);
+        IXBotInterface();
         
         IXBotInterface(const IXBotInterface& other);
         
         IXBotInterface& operator= (const IXBotInterface& rhs);
         
         virtual ~IXBotInterface();
+		
+		bool init(const std::string& path_to_cfg);
         
             // TODO: bool hasVelocity(), hasImpedance(), ....
         
@@ -150,7 +155,7 @@ namespace XBot {
 
     protected:
         
-        
+        virtual bool init_internal(const std::string& path_to_cfg){ return true; }
         
 
     private:
