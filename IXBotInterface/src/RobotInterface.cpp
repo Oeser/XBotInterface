@@ -51,7 +51,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     printf("Calling some of its functions... \n");
     _robot_interface_instance->init(path_to_cfg);
 
-    _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent()); // TBD: very wrong!!!
+    _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;}); // TBD: very wrong!!!
 
     return _instance_ptr;
 
