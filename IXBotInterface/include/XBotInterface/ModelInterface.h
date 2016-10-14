@@ -27,16 +27,14 @@
 
 namespace XBot
 {
-    class ModelInterface;
-}
-
-class ModelInterface : public IXBotInterface {
-private:
-    
-protected:
-    
-public:
-    
+    class ModelInterface : public IXBotInterface {
+    private:
+        
+    protected:
+        
+    public:
+        
+    };
 };
 
 #endif // __MODEL_INTERFACE_H__

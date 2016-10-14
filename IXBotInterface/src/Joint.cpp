@@ -175,18 +175,3 @@ bool XBot::Joint::sync(const XBot::Joint& other)
         _damping = other._damping;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

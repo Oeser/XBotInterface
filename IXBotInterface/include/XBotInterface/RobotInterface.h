@@ -33,7 +33,7 @@ namespace XBot
     class RobotInterface : public IXBotInterface {
 
     public:
-		
+        
         RobotInterface();
 
         typedef std::shared_ptr<RobotInterface> Ptr;
@@ -46,23 +46,20 @@ namespace XBot
         virtual bool setControlMode(const std::map<std::string, std::string>& joint_control_mode_map) = 0;
         virtual bool setControlMode(const std::string& robot_control_mode) = 0;
         virtual bool getControlMode(std::map<std::string, std::string>& joint_control_mode_map) = 0;
-
         
     protected:
       
-        
         virtual bool sense_internal() = 0;
         virtual bool move_internal() = 0;
-		virtual bool init_internal(const std::string& path_to_cfg) = 0;
-		
-
+        virtual bool init_internal(const std::string& path_to_cfg) = 0;
+        
     private:
 
         IXBotInterface::Ptr model; // TBD it is going to be the ModelInterface inside the RobotInterface
         
         static RobotInterface::Ptr _instance_ptr;
-		static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
-		
+        static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
+        
     };
 }
 

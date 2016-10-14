@@ -44,18 +44,18 @@ namespace XBot {
         IXBotInterface& operator= (const IXBotInterface& rhs);
         
         virtual ~IXBotInterface();
-		
-		bool init(const std::string& path_to_cfg);
         
-            // TODO: bool hasVelocity(), hasImpedance(), ....
+        bool init(const std::string& path_to_cfg);
+        
+        // TODO: bool hasVelocity(), hasImpedance(), ....
         
         const urdf::ModelInterface& getUrdf() const;
         const srdf::Model& getSrdf() const;
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
         std::vector<std::string> getChainNames() const;
-		const std::vector<std::string>& getEnabledJointNames() const;
-		bool hasJoint(const std::string& joint_name) const;
+        const std::vector<std::string>& getEnabledJointNames() const;
+        bool hasJoint(const std::string& joint_name) const;
         
         KinematicChain& operator()(const std::string& chain_name);
         KinematicChain& leg(int id);
@@ -64,7 +64,6 @@ namespace XBot {
         int legs() const;
         int arms() const;
         
-        // TBD sync all the joints and sensors information
         bool sync(const IXBotInterface& other);
         
         
