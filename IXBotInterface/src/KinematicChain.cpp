@@ -177,7 +177,7 @@ bool KinematicChain::getLinkPos(Eigen::VectorXd &q) const
 
 bool KinematicChain::getLinkPos(std::map< std::string, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -192,7 +192,7 @@ bool KinematicChain::getLinkPos(std::map< std::string, double > &q) const
 
 bool KinematicChain::getDamping(std::map< std::string, double > &D) const
 {
-    D.clear();
+//     D.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -206,7 +206,7 @@ bool KinematicChain::getDamping(std::map< std::string, double > &D) const
 
 bool KinematicChain::getEffort(std::map< std::string, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -220,7 +220,7 @@ bool KinematicChain::getEffort(std::map< std::string, double > &tau) const
 
 bool KinematicChain::getEffortRef(std::map< std::string, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -234,7 +234,7 @@ bool KinematicChain::getEffortRef(std::map< std::string, double > &tau) const
 
 bool KinematicChain::getLinkVel(std::map< std::string, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -248,7 +248,7 @@ bool KinematicChain::getLinkVel(std::map< std::string, double > &qdot) const
 
 bool KinematicChain::getMotorPos(std::map< std::string, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -262,7 +262,7 @@ bool KinematicChain::getMotorPos(std::map< std::string, double > &q) const
 
 bool KinematicChain::getMotorVel(std::map< std::string, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -276,7 +276,7 @@ bool KinematicChain::getMotorVel(std::map< std::string, double > &qdot) const
 
 bool KinematicChain::getStiffness(std::map< std::string, double > &K) const
 {
-    K.clear();
+//     K.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -290,7 +290,7 @@ bool KinematicChain::getStiffness(std::map< std::string, double > &K) const
 
 bool KinematicChain::getTemperature(std::map< std::string, double > &temp) const
 {
-    temp.clear();
+//     temp.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -304,7 +304,7 @@ bool KinematicChain::getTemperature(std::map< std::string, double > &temp) const
 
 bool KinematicChain::getVelRef(std::map< std::string, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -321,7 +321,7 @@ bool KinematicChain::getVelRef(std::map< std::string, double > &qdot) const
 
 bool KinematicChain::getLinkPos(std::map< int, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -348,7 +348,7 @@ bool KinematicChain::getPosRef(Eigen::VectorXd &q) const
 
 bool KinematicChain::getPosRef(std::map< std::string, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -362,7 +362,7 @@ bool KinematicChain::getPosRef(std::map< std::string, double > &q) const
 
 bool KinematicChain::getPosRef(std::map< int, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -376,7 +376,7 @@ bool KinematicChain::getPosRef(std::map< int, double > &q) const
 
 bool KinematicChain::getDamping(std::map< int, double > &D) const
 {
-    D.clear();
+//     D.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -390,7 +390,7 @@ bool KinematicChain::getDamping(std::map< int, double > &D) const
 
 bool KinematicChain::getEffort(std::map< int, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -404,7 +404,7 @@ bool KinematicChain::getEffort(std::map< int, double > &tau) const
 
 bool KinematicChain::getEffortRef(std::map< int, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -418,7 +418,7 @@ bool KinematicChain::getEffortRef(std::map< int, double > &tau) const
 
 bool KinematicChain::getLinkVel(std::map< int, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -432,7 +432,7 @@ bool KinematicChain::getLinkVel(std::map< int, double > &qdot) const
 
 bool KinematicChain::getMotorPos(std::map< int, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -446,7 +446,7 @@ bool KinematicChain::getMotorPos(std::map< int, double > &q) const
 
 bool KinematicChain::getMotorVel(std::map< int, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -460,7 +460,7 @@ bool KinematicChain::getMotorVel(std::map< int, double > &qdot) const
 
 bool KinematicChain::getStiffness(std::map< int, double > &K) const
 {
-    K.clear();
+//     K.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -474,7 +474,7 @@ bool KinematicChain::getStiffness(std::map< int, double > &K) const
 
 bool KinematicChain::getTemperature(std::map< int, double > &temp) const
 {
-    temp.clear();
+//     temp.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -488,7 +488,7 @@ bool KinematicChain::getTemperature(std::map< int, double > &temp) const
 
 bool KinematicChain::getVelRef(std::map< int, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -1366,6 +1366,48 @@ std::ostream& operator<< ( std::ostream& os, const KinematicChain& c )
         os << *j << std::endl;
     }
     return os;
+}
+
+const std::vector< int >& XBot::KinematicChain::jointIds() const
+{
+    return _ordered_joint_id;
+}
+
+const std::vector< std::string >& XBot::KinematicChain::jointNames() const
+{
+    return _ordered_joint_name;
+}
+
+XBot::Joint::ConstPtr XBot::KinematicChain::getJointById(int id) const
+{
+    if(_joint_id_map.count(id)){
+        return _joint_id_map.at(id);
+    }
+    else{
+        std::cerr << "ERROR chain " << _chain_name << " does not contain joint ID " << id << "!" << std::endl;
+        return XBot::Joint::ConstPtr();
+    }
+}
+
+XBot::Joint::ConstPtr XBot::KinematicChain::getJointByName(const std::string& joint_name) const
+{
+    if(_joint_name_map.count(joint_name)){
+        return _joint_name_map.at(joint_name);
+    }
+    else{
+        std::cerr << "ERROR chain " << _chain_name << " does not contain joint " << joint_name << "!" << std::endl;
+        return XBot::Joint::ConstPtr();
+    }
+}
+
+bool XBot::KinematicChain::hasJoint(const std::string& joint_name) const
+{
+    return _joint_name_map.count(joint_name) > 0;
+}
+
+bool XBot::KinematicChain::hasJoint(int id) const
+{
+    return _joint_id_map.count(id) > 0;
 }
 
 

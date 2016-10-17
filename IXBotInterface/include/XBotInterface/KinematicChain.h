@@ -31,6 +31,7 @@
 #include<XBotInterface/Joint.h>
 #include<XBotCoreModel.h>
 
+class B;
 namespace XBot
 {
 // TBD update liburdf-headers-dev to version >0.4
@@ -123,7 +124,15 @@ public:
      * @return The name of the joint n° i
      */
     const std::string &jointName(int i) const;
-
+    
+    
+    /**
+     * @brief Returns a vector containing the namess of all joints in the chain, from
+     * base link to tip link
+     * 
+     * @return a const reference to the vector of joint names
+     */
+    const std::vector<std::string>& jointNames() const;
 
     /**
      * @brief Method returning the ID of the i-th joint of the chain
@@ -133,6 +142,18 @@ public:
      * @return The ID of the joint n° i
      */
     int jointId(int i) const;
+    
+    bool hasJoint(int id) const;
+    
+    bool hasJoint(const std::string& joint_name) const;
+    
+    /**
+     * @brief Returns a vector containing the IDs of all joints in the chain, from
+     * base link to tip link
+     * 
+     * @return a const reference to the vector of joint IDs
+     */
+    const std::vector<int>& jointIds() const;
 
     /**
      * @brief Method returning the number of enabled joints
@@ -142,6 +163,9 @@ public:
      * belonging to the chain
      */
     int getJointNum() const;
+    
+    XBot::Joint::ConstPtr getJointByName(const std::string& joint_name) const;
+    XBot::Joint::ConstPtr getJointById(int id) const;
 
     /**
      * @brief Method returning the vector of urdf::Joints corresponding to the chain.
