@@ -129,6 +129,18 @@ bool XBot::IXBotInterface::hasJoint(const std::string &joint_name) const
 }
 
 
+XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& joint_name) const
+{
+    for(const auto& c : _chain_map){
+     
+        const XBot::KinematicChain& chain = *c.second;
+        if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
+        
+    }
+    
+    std::cerr << "ERROR in " << __func__ << ". Joint " << joint_name << " is NOT defined!" << std::endl;
+    return XBot::Joint::ConstPtr();
+}
 
 
 
@@ -139,8 +151,12 @@ bool XBot::IXBotInterface::getLinkPos(Eigen::VectorXd &q) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            q[q_index++] = _chain_map.at(chain_name)->getLinkPos(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            q[q_index++] = chain.getLinkPos(i);
         }
     }
     return true;
@@ -148,7 +164,7 @@ bool XBot::IXBotInterface::getLinkPos(Eigen::VectorXd &q) const
 
 bool XBot::IXBotInterface::getLinkPos(std::map< std::string, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -163,7 +179,7 @@ bool XBot::IXBotInterface::getLinkPos(std::map< std::string, double > &q) const
 
 bool XBot::IXBotInterface::getLinkPos(std::map< int, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -178,7 +194,7 @@ bool XBot::IXBotInterface::getLinkPos(std::map< int, double > &q) const
 
 bool XBot::IXBotInterface::getPosRef(std::map< std::string, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -193,7 +209,7 @@ bool XBot::IXBotInterface::getPosRef(std::map< std::string, double > &q) const
 
 bool XBot::IXBotInterface::getPosRef(std::map< int, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -213,8 +229,12 @@ bool XBot::IXBotInterface::getPosRef(Eigen::VectorXd &q) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            q[q_index++] = _chain_map.at(chain_name)->getPosRef(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            q[q_index++] = chain.getPosRef(i);
         }
     }
     return true;
@@ -222,7 +242,7 @@ bool XBot::IXBotInterface::getPosRef(Eigen::VectorXd &q) const
 
 bool XBot::IXBotInterface::getDamping(std::map< std::string, double > &D) const
 {
-    D.clear();
+//     D.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -237,7 +257,7 @@ bool XBot::IXBotInterface::getDamping(std::map< std::string, double > &D) const
 
 bool XBot::IXBotInterface::getEffort(std::map< std::string, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -252,7 +272,7 @@ bool XBot::IXBotInterface::getEffort(std::map< std::string, double > &tau) const
 
 bool XBot::IXBotInterface::getEffortRef(std::map< std::string, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -267,7 +287,7 @@ bool XBot::IXBotInterface::getEffortRef(std::map< std::string, double > &tau) co
 
 bool XBot::IXBotInterface::getLinkVel(std::map< std::string, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -282,7 +302,7 @@ bool XBot::IXBotInterface::getLinkVel(std::map< std::string, double > &qdot) con
 
 bool XBot::IXBotInterface::getMotorPos(std::map< std::string, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -297,7 +317,7 @@ bool XBot::IXBotInterface::getMotorPos(std::map< std::string, double > &q) const
 
 bool XBot::IXBotInterface::getStiffness(std::map< std::string, double > &K) const
 {
-    K.clear();
+//     K.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -312,7 +332,7 @@ bool XBot::IXBotInterface::getStiffness(std::map< std::string, double > &K) cons
 
 bool XBot::IXBotInterface::getTemperature(std::map< std::string, double > &temp) const
 {
-    temp.clear();
+//     temp.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -327,7 +347,7 @@ bool XBot::IXBotInterface::getTemperature(std::map< std::string, double > &temp)
 
 bool XBot::IXBotInterface::getVelRef(std::map< std::string, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -342,7 +362,7 @@ bool XBot::IXBotInterface::getVelRef(std::map< std::string, double > &qdot) cons
 
 bool XBot::IXBotInterface::getMotorVel(std::map< std::string, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -359,7 +379,7 @@ bool XBot::IXBotInterface::getMotorVel(std::map< std::string, double > &qdot) co
 
 bool XBot::IXBotInterface::getDamping(std::map< int, double > &D) const
 {
-    D.clear();
+//     D.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -374,7 +394,7 @@ bool XBot::IXBotInterface::getDamping(std::map< int, double > &D) const
 
 bool XBot::IXBotInterface::getEffort(std::map< int, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -389,7 +409,7 @@ bool XBot::IXBotInterface::getEffort(std::map< int, double > &tau) const
 
 bool XBot::IXBotInterface::getEffortRef(std::map< int, double > &tau) const
 {
-    tau.clear();
+//     tau.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -405,7 +425,7 @@ bool XBot::IXBotInterface::getEffortRef(std::map< int, double > &tau) const
 
 bool XBot::IXBotInterface::getVelRef(std::map< int, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -421,7 +441,7 @@ bool XBot::IXBotInterface::getVelRef(std::map< int, double > &qdot) const
 
 bool XBot::IXBotInterface::getLinkVel(std::map< int, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -436,7 +456,7 @@ bool XBot::IXBotInterface::getLinkVel(std::map< int, double > &qdot) const
 
 bool XBot::IXBotInterface::getMotorPos(std::map< int, double > &q) const
 {
-    q.clear();
+//     q.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -451,7 +471,7 @@ bool XBot::IXBotInterface::getMotorPos(std::map< int, double > &q) const
 
 bool XBot::IXBotInterface::getMotorVel(std::map< int, double > &qdot) const
 {
-    qdot.clear();
+//     qdot.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -466,7 +486,7 @@ bool XBot::IXBotInterface::getMotorVel(std::map< int, double > &qdot) const
 
 bool XBot::IXBotInterface::getStiffness(std::map< int, double > &K) const
 {
-    K.clear();
+//     K.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -481,7 +501,7 @@ bool XBot::IXBotInterface::getStiffness(std::map< int, double > &K) const
 
 bool XBot::IXBotInterface::getTemperature(std::map< int, double > &temp) const
 {
-    temp.clear();
+//     temp.clear();
 
     for (const auto & chain_name_ptr_pair : _chain_map) {
 
@@ -504,8 +524,12 @@ bool XBot::IXBotInterface::getDamping(Eigen::VectorXd &D) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            D[q_index++] = _chain_map.at(chain_name)->getDamping(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            D[q_index++] = chain.getDamping(i);
         }
     }
     return true;
@@ -518,8 +542,12 @@ bool XBot::IXBotInterface::getEffort(Eigen::VectorXd &tau) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            tau[q_index++] = _chain_map.at(chain_name)->getEffort(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            tau[q_index++] = chain.getEffort(i);
         }
     }
     return true;
@@ -532,8 +560,12 @@ bool XBot::IXBotInterface::getEffortRef(Eigen::VectorXd &tau) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            tau[q_index++] = _chain_map.at(chain_name)->getEffortRef(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            tau[q_index++] = chain.getEffortRef(i);
         }
     }
     return true;
@@ -546,8 +578,12 @@ bool XBot::IXBotInterface::getLinkVel(Eigen::VectorXd &qdot) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            qdot[q_index++] = _chain_map.at(chain_name)->getLinkVel(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            qdot[q_index++] = chain.getLinkVel(i);
         }
     }
     return true;
@@ -560,8 +596,12 @@ bool XBot::IXBotInterface::getMotorPos(Eigen::VectorXd &q) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            q[q_index++] = _chain_map.at(chain_name)->getMotorPos(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            q[q_index++] = chain.getMotorPos(i);
         }
     }
     return true;
@@ -574,8 +614,12 @@ bool XBot::IXBotInterface::getMotorVel(Eigen::VectorXd &qdot) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            qdot[q_index++] = _chain_map.at(chain_name)->getMotorVel(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            qdot[q_index++] = chain.getMotorVel(i);
         }
     }
     return true;
@@ -588,8 +632,12 @@ bool XBot::IXBotInterface::getStiffness(Eigen::VectorXd &K) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            K[q_index++] = _chain_map.at(chain_name)->getStiffness(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            K[q_index++] = chain.getStiffness(i);
         }
     }
     return true;
@@ -602,8 +650,12 @@ bool XBot::IXBotInterface::getTemperature(Eigen::VectorXd &temp) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            temp[q_index++] = _chain_map.at(chain_name)->getTemperature(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            temp[q_index++] = chain.getTemperature(i);
         }
     }
     return true;
@@ -616,8 +668,12 @@ bool XBot::IXBotInterface::getVelRef(Eigen::VectorXd &qdot) const
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            qdot[q_index++] = _chain_map.at(chain_name)->getVelRef(i);
+        
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            qdot[q_index++] = chain.getVelRef(i);
         }
     }
     return true;
@@ -840,8 +896,12 @@ bool XBot::IXBotInterface::setDamping ( const Eigen::VectorXd& D )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setDamping(i, D[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setDamping(i, D[q_index++]);
         }
     }
     return true;
@@ -855,8 +915,12 @@ bool XBot::IXBotInterface::setEffort ( const Eigen::VectorXd& tau )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setEffort(i, tau[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setEffort(i, tau[q_index++]);
         }
     }
     return true;
@@ -870,8 +934,12 @@ bool XBot::IXBotInterface::setEffortRef ( const Eigen::VectorXd& tau )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setEffort(i, tau[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setEffortRef(i, tau[q_index++]);
         }
     }
     return true;
@@ -885,8 +953,12 @@ bool XBot::IXBotInterface::setLinkPos ( const Eigen::VectorXd& q )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setLinkPos(i, q[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setLinkPos(i, q[q_index++]);
         }
     }
     return true;
@@ -900,8 +972,12 @@ bool XBot::IXBotInterface::setLinkVel ( const Eigen::VectorXd& qdot )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setLinkVel(i, qdot[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setLinkVel(i, qdot[q_index++]);
         }
     }
     return true;
@@ -915,8 +991,12 @@ bool XBot::IXBotInterface::setMotorPos ( const Eigen::VectorXd& q )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setMotorPos(i, q[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setMotorPos(i, q[q_index++]);
         }
     }
     return true;
@@ -930,8 +1010,12 @@ bool XBot::IXBotInterface::setMotorVel ( const Eigen::VectorXd& qdot )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setMotorVel(i, qdot[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setMotorVel(i, qdot[q_index++]);
         }
     }
     return true;
@@ -945,8 +1029,12 @@ bool XBot::IXBotInterface::setPosRef ( const Eigen::VectorXd& q )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setPosRef(i, q[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setPosRef(i, q[q_index++]);
         }
     }
     return true;
@@ -960,8 +1048,12 @@ bool XBot::IXBotInterface::setStiffness ( const Eigen::VectorXd& K )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setStiffness(i, K[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setStiffness(i, K[q_index++]);
         }
     }
     return true;
@@ -975,8 +1067,12 @@ bool XBot::IXBotInterface::setTemperature ( const Eigen::VectorXd& temp )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setTemperature(i, temp[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setTemperature(i, temp[q_index++]);
         }
     }
     return true;
@@ -990,8 +1086,12 @@ bool XBot::IXBotInterface::setVelRef ( const Eigen::VectorXd& qdot )
     }
     int q_index = 0;
     for (const std::string & chain_name : _XBotModel.get_ordered_chain_names()) {
-        for (int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _chain_map.at(chain_name)->setVelRef(i, qdot[q_index++]);
+        
+        XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        int chain_joint_num = chain.getJointNum();
+        
+        for (int i = 0; i < chain_joint_num; i++) {
+            chain.setVelRef(i, qdot[q_index++]);
         }
     }
     return true;
