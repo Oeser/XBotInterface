@@ -174,8 +174,11 @@ void XBot::Joint::setDamping(double damping)
 
 bool XBot::Joint::sync(const XBot::Joint &other)
 {
-    _joint_name = other._joint_name;
-    _joint_id = other._joint_id;
+
+    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
+        std::cerr << "ERROR in " << __func__ << "! Attempt to synchronize joints with different names/ids!" << std::endl;
+        return false;
+    }
 
     ///////////////////
     // RX from board //

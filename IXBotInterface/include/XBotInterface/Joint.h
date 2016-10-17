@@ -52,6 +52,7 @@ public:
           int joint_id);
 
     typedef std::shared_ptr<Joint> Ptr;
+    typedef std::shared_ptr<const Joint> ConstPtr;
 
     /**
      * @brief Getter for the joint name
