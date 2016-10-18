@@ -31,17 +31,22 @@
 #include<XBotInterface/Joint.h>
 #include<XBotCoreModel.h>
 
-class B;
+
 namespace XBot
 {
 // TBD update liburdf-headers-dev to version >0.4
 typedef boost::shared_ptr<urdf::Joint const> JointConstSharedPtr;
 typedef boost::shared_ptr<urdf::Link const> LinkConstSharedPtr;
 
+// NOTE forward declaration because of friendship
+class IXBotInterface;
+
 class KinematicChain
 {
 
 public:
+    
+    friend XBot::IXBotInterface;
 
     /**
      * @brief Default constructor
@@ -182,113 +187,87 @@ public:
     const std::vector< XBot::LinkConstSharedPtr > &getLinks() const;
 
 
-    bool getLinkPos(Eigen::VectorXd &q) const;
-    bool getMotorPos(Eigen::VectorXd &q) const;
-    bool getLinkVel(Eigen::VectorXd &qdot) const;
-    bool getMotorVel(Eigen::VectorXd &qdot) const;
-    bool getEffort(Eigen::VectorXd &tau) const;
+    bool getJointPosition(Eigen::VectorXd &q) const;
+    bool getMotorPosition(Eigen::VectorXd &q) const;
+    bool getJointVelocity(Eigen::VectorXd &qdot) const;
+    bool getMotorVelocity(Eigen::VectorXd &qdot) const;
+    bool getJointEffort(Eigen::VectorXd &tau) const;
     bool getTemperature(Eigen::VectorXd &temp) const;
 
-    bool getLinkPos(std::map<int, double> &q) const;
-    bool getMotorPos(std::map<int, double> &q) const;
-    bool getLinkVel(std::map<int, double> &qdot) const;
-    bool getMotorVel(std::map<int, double> &qdot) const;
-    bool getEffort(std::map<int, double> &tau) const;
+    bool getJointPosition(std::map<int, double> &q) const;
+    bool getMotorPosition(std::map<int, double> &q) const;
+    bool getJointVelocity(std::map<int, double> &qdot) const;
+    bool getMotorVelocity(std::map<int, double> &qdot) const;
+    bool getJointEffort(std::map<int, double> &tau) const;
     bool getTemperature(std::map<int, double> &temp) const;
 
-    bool getLinkPos(std::map<std::string, double> &q) const;
-    bool getMotorPos(std::map<std::string, double> &q) const;
-    bool getLinkVel(std::map<std::string, double> &qdot) const;
-    bool getMotorVel(std::map<std::string, double> &qdot) const;
-    bool getEffort(std::map<std::string, double> &tau) const;
+    bool getJointPosition(std::map<std::string, double> &q) const;
+    bool getMotorPosition(std::map<std::string, double> &q) const;
+    bool getJointVelocity(std::map<std::string, double> &qdot) const;
+    bool getMotorVelocity(std::map<std::string, double> &qdot) const;
+    bool getJointEffort(std::map<std::string, double> &tau) const;
     bool getTemperature(std::map<std::string, double> &temp) const;
 
-    double getLinkPos(int index) const;
-    double getMotorPos(int index) const;
-    double getLinkVel(int index) const;
-    double getMotorVel(int index) const;
-    double getEffort(int index) const;
+    double getJointPosition(int index) const;
+    double getMotorPosition(int index) const;
+    double getJointVelocity(int index) const;
+    double getMotorVelocity(int index) const;
+    double getJointEffort(int index) const;
     double getTemperature(int index) const;
 
 
 
-    bool getPosRef(Eigen::VectorXd &q) const;
-    bool getVelRef(Eigen::VectorXd &qdot) const;
-    bool getEffortRef(Eigen::VectorXd &tau) const;
+    bool getPositionReference(Eigen::VectorXd &q) const;
+    bool getVelocityReference(Eigen::VectorXd &qdot) const;
+    bool getEffortReference(Eigen::VectorXd &tau) const;
     bool getStiffness(Eigen::VectorXd &K) const;
     bool getDamping(Eigen::VectorXd &D) const;
 
-    bool getPosRef(std::map<int, double> &q) const;
-    bool getVelRef(std::map<int, double> &qdot) const;
-    bool getEffortRef(std::map<int, double> &tau) const;
+    bool getPositionReference(std::map<int, double> &q) const;
+    bool getVelocityReference(std::map<int, double> &qdot) const;
+    bool getEffortReference(std::map<int, double> &tau) const;
     bool getStiffness(std::map<int, double> &K) const;
     bool getDamping(std::map<int, double> &D) const;
 
-    bool getPosRef(std::map<std::string, double> &q) const;
-    bool getVelRef(std::map<std::string, double> &qdot) const;
-    bool getEffortRef(std::map<std::string, double> &tau) const;
+    bool getPositionReference(std::map<std::string, double> &q) const;
+    bool getVelocityReference(std::map<std::string, double> &qdot) const;
+    bool getEffortReference(std::map<std::string, double> &tau) const;
     bool getStiffness(std::map<std::string, double> &K) const;
     bool getDamping(std::map<std::string, double> &D) const;
 
-    double getPosRef(int index) const;
-    double getVelRef(int index) const;
-    double getEffortRef(int index) const;
+    double getPositionReference(int index) const;
+    double getVelocityReference(int index) const;
+    double getEffortReference(int index) const;
     double getStiffness(int index) const;
     double getDamping(int index) const;
 
 
 
-    bool setLinkPos(const Eigen::VectorXd &q);
-    bool setMotorPos(const Eigen::VectorXd &q);
-    bool setLinkVel(const Eigen::VectorXd &qdot);
-    bool setMotorVel(const Eigen::VectorXd &qdot);
-    bool setEffort(const Eigen::VectorXd &tau);
-    bool setTemperature(const Eigen::VectorXd &temp);
-
-    bool setLinkPos(const std::map<int, double> &q);
-    bool setMotorPos(const std::map<int, double> &q);
-    bool setLinkVel(const std::map<int, double> &qdot);
-    bool setMotorVel(const std::map<int, double> &qdot);
-    bool setEffort(const std::map<int, double> &tau);
-    bool setTemperature(const std::map<int, double> &temp);
-
-    bool setLinkPos(const std::map<std::string, double> &q);
-    bool setMotorPos(const std::map<std::string, double> &q);
-    bool setLinkVel(const std::map<std::string, double> &qdot);
-    bool setMotorVel(const std::map<std::string, double> &qdot);
-    bool setEffort(const std::map<std::string, double> &tau);
-    bool setTemperature(const std::map<std::string, double> &temp);
-
-    bool setLinkPos(int i, double q);
-    bool setMotorPos(int i, double q);
-    bool setLinkVel(int i, double qdot);
-    bool setMotorVel(int i, double qdot);
-    bool setEffort(int i, double tau);
-    bool setTemperature(int i, double temp);
+   
 
 
 
-    bool setPosRef(const Eigen::VectorXd &q);
-    bool setVelRef(const Eigen::VectorXd &qdot);
-    bool setEffortRef(const Eigen::VectorXd &tau);
+    bool setPositionReference(const Eigen::VectorXd &q);
+    bool setVelocityReference(const Eigen::VectorXd &qdot);
+    bool setEffortReference(const Eigen::VectorXd &tau);
     bool setStiffness(const Eigen::VectorXd &K);
     bool setDamping(const Eigen::VectorXd &D);
 
-    bool setPosRef(const std::map<int, double> &q);
-    bool setVelRef(const std::map<int, double> &qdot);
-    bool setEffortRef(const std::map<int, double> &tau);
+    bool setPositionReference(const std::map<int, double> &q);
+    bool setVelocityReference(const std::map<int, double> &qdot);
+    bool setEffortReference(const std::map<int, double> &tau);
     bool setStiffness(const std::map<int, double> &K);
     bool setDamping(const std::map<int, double> &D);
 
-    bool setPosRef(const std::map<std::string, double> &q);
-    bool setVelRef(const std::map<std::string, double> &qdot);
-    bool setEffortRef(const std::map<std::string, double> &tau);
+    bool setPositionReference(const std::map<std::string, double> &q);
+    bool setVelocityReference(const std::map<std::string, double> &qdot);
+    bool setEffortReference(const std::map<std::string, double> &tau);
     bool setStiffness(const std::map<std::string, double> &K);
     bool setDamping(const std::map<std::string, double> &D);
 
-    bool setPosRef(int i, double q);
-    bool setVelRef(int i, double qdot);
-    bool setEffortRef(int i, double tau);
+    bool setPositionReference(int i, double q);
+    bool setVelocityReference(int i, double qdot);
+    bool setEffortReference(int i, double tau);
     bool setStiffness(int i, double K);
     bool setDamping(int i, double D);
 
@@ -296,6 +275,34 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
 
 protected:
+    
+    bool setJointPosition(const Eigen::VectorXd &q);
+    bool setMotorPosition(const Eigen::VectorXd &q);
+    bool setJointVelocity(const Eigen::VectorXd &qdot);
+    bool setMotorVelocity(const Eigen::VectorXd &qdot);
+    bool setJointEffort(const Eigen::VectorXd &tau);
+    bool setTemperature(const Eigen::VectorXd &temp);
+
+    bool setJointPosition(const std::map<int, double> &q);
+    bool setMotorPosition(const std::map<int, double> &q);
+    bool setJointVelocity(const std::map<int, double> &qdot);
+    bool setMotorVelocity(const std::map<int, double> &qdot);
+    bool setJointEffort(const std::map<int, double> &tau);
+    bool setTemperature(const std::map<int, double> &temp);
+
+    bool setJointPosition(const std::map<std::string, double> &q);
+    bool setMotorPosition(const std::map<std::string, double> &q);
+    bool setJointVelocity(const std::map<std::string, double> &qdot);
+    bool setMotorVelocity(const std::map<std::string, double> &qdot);
+    bool setJointEffort(const std::map<std::string, double> &tau);
+    bool setTemperature(const std::map<std::string, double> &temp);
+
+    bool setJointPosition(int i, double q);
+    bool setMotorPosition(int i, double q);
+    bool setJointVelocity(int i, double qdot);
+    bool setMotorVelocity(int i, double qdot);
+    bool setJointEffort(int i, double tau);
+    bool setTemperature(int i, double temp);
 
 private:
 
