@@ -161,18 +161,28 @@ namespace XBot {
         bool setJointEffort(const std::map<std::string, double>& tau);
         bool setTemperature(const std::map<std::string, double>& temp);
         
+        
+        static bool computeAbsolutePath( const std::string& input_path,
+                                         const std::string& midlle_path,
+                                         std::string& absolute_path,
+                                         std::string extension = "");
 
     private:
 
         int _joint_num;
         XBotCoreModel _XBotModel;
         std::string _urdf_string, _srdf_string;
+        std::string _urdf_path;
+        std::string _srdf_path;
+        std::string _joint_map_config;
         
         std::vector<std::string> _ordered_joint_name;
         std::vector<int> _ordered_joint_id;
         
         std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
         XBot::KinematicChain _dummy_chain;
+        
+        bool parseYAML(const std::string &path_to_cfg);
 
     };
     

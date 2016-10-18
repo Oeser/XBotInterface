@@ -1,14 +1,14 @@
 # CENTAURO config
 x_bot_interface:
-  framework: ROS
-  urdf_path: /home/alaurenzi/Code/robotology-superbuild/external/XBotInterface/IXBotInterface/configs/urdf/centauro.urdf
-  srdf_path: /home/alaurenzi/Code/robotology-superbuild/external/XBotInterface/IXBotInterface/configs/srdf/centauro.srdf
-  joint_map_config: "/home/alaurenzi/Code/robotology-superbuild/external/XBotInterface/IXBotInterface/configs/joint_map/centauro_test_joint_map.yaml"
+  framework: "ROS"
+  urdf_filename: "urdf/centauro.urdf"
+  srdf_filename: "srdf/centauro.srdf"
+  joint_map_config: "joint_map/centauro_test_joint_map.yaml"
 
 
 RobotInterfaceROS:
   subclass_name: "RobotInterfaceROS"
-  path_to_shared_lib: "/home/alaurenzi/Code/robotology-superbuild/build/external/RobotInterfaceROS/libRobotInterfaceROS.so"
+  path_to_shared_lib: "/home/lucamuratore/src/centauro-superbuild/build/external/RobotInterfaceROS/libRobotInterfaceROS.so"
   subclass_factory_name: "robot_interface_ros"
   joint_state_name: "/centauro/joint_states"
   joint_service_name: "/centauro/position_controller/get_joint_names"

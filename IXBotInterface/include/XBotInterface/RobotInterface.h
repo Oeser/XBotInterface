@@ -25,6 +25,8 @@
 #include <memory>
 #include <SharedLibraryClass.h>
 
+#include <cstdlib>
+
 #include <XBotInterface/IXBotInterface.h>
 
 namespace XBot
@@ -57,6 +59,13 @@ protected:
 private:
 
     IXBotInterface::Ptr model; // TBD it is going to be the ModelInterface inside the RobotInterface
+    
+    static std::string framework;
+    static std::string subclass_name;
+    static std::string path_to_shared_lib;
+    static std::string subclass_factory_name;
+    
+    static bool parseYAML(const std::string &path_to_cfg);
 
     static RobotInterface::Ptr _instance_ptr;
     static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;

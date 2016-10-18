@@ -1,5 +1,7 @@
 #include <XBotInterface/IXBotInterface.h>
 
+#define CONFIG_MIDDLE_PATH "/external/XBotInterface/IXBotInterface/configs/"
+
 
 XBot::IXBotInterface::IXBotInterface()
 {
@@ -29,7 +31,36 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
 
 }
 
-bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
+bool XBot::IXBotInterface::computeAbsolutePath ( const std::string& input_path,
+                                                 const std::string& middle_path,
+                                                 std::string& absolute_path, 
+                                                 std::string extension)
+{
+    // if not an absolute path
+    if(!(input_path.at(0) == '/')) {
+        // if you are working with the Robotology Superbuild
+        const char* env_p = std::getenv("ROBOTOLOGY_ROOT");
+        // check the env, otherwise error
+        if(env_p) {
+            std::string current_path(env_p);
+            // default relative path when working with the superbuild
+            current_path += middle_path;
+            current_path += input_path;
+            current_path += extension;
+            absolute_path = current_path;
+            return true;
+        }
+        else {
+            std::cerr << "ERROR in " << __func__ << " : the input path  " << input_path << " is neither an absolute path nor related with the robotology superbuild. Download it!" << std::endl;
+            return false;
+        }
+    }
+    // already an absolute path
+    absolute_path = input_path;
+    return true;
+}
+
+bool XBot::IXBotInterface::parseYAML ( const std::string& path_to_cfg )
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
@@ -38,14 +69,59 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     }
 
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
-    const YAML::Node &x_bot_interface = root_cfg["x_bot_interface"]; // TBD check if exists
-    std::string _urdf_path = x_bot_interface["urdf_path"].as<std::string>();
-    std::string _srdf_path = x_bot_interface["srdf_path"].as<std::string>();
-    std::string _joint_map_config = x_bot_interface["joint_map_config"].as<std::string>();
+    YAML::Node x_bot_interface;
+    if(root_cfg["x_bot_interface"]) {
+        x_bot_interface = root_cfg["x_bot_interface"]; 
+    }
+    else {
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain x_bot_interface mandatory node!!" << std::endl;
+        return false;
+    }
+   
+    // check the urdf_filename
+    if(x_bot_interface["urdf_filename"]) {
+        computeAbsolutePath(x_bot_interface["urdf_filename"].as<std::string>(), 
+                            CONFIG_MIDDLE_PATH,
+                            _urdf_path); 
+    }
+    else {
+        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain urdf_filename mandatory node!!" << std::endl;
+        return false;
+    }
+    
+    // check the srdf_filename
+    if(x_bot_interface["srdf_filename"]) {
+        computeAbsolutePath(x_bot_interface["srdf_filename"].as<std::string>(), 
+                            CONFIG_MIDDLE_PATH,
+                            _srdf_path); 
+    }
+    else {
+        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain srdf_filename mandatory node!!" << std::endl;
+        return false;
+    }
+    
+    // check joint_map_config
+    if(x_bot_interface["joint_map_config"]) {
+        computeAbsolutePath(x_bot_interface["joint_map_config"].as<std::string>(), 
+                            CONFIG_MIDDLE_PATH,
+                            _joint_map_config); 
+    }
+    else {
+        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain framework mandatory node!!" << std::endl;
+        return false;
+    }
 
+}
+
+
+
+bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
+{
+    // parse the YAML file to initialize internal variables
+    parseYAML(path_to_cfg);
     // initialize the model
     if (!_XBotModel.init(_urdf_path, _srdf_path, _joint_map_config)) {
-        printf("ERROR: model initialization failed, please check the urdf_path and srdf_path in your YAML config file.\n"); //TBD change it
+        printf("ERROR: model initialization failed, please check the urdf_path and srdf_path in your YAML config file.\n"); 
         return false;
     }
     // generate the robot
