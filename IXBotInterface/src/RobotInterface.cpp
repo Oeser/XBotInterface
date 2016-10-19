@@ -1,7 +1,7 @@
 #include <XBotInterface/RobotInterface.h>
 #include <ros/ros.h> //TBD: remove include
 
-#define LIB_MIDDLE_PATH "build/install/lib/"
+#define LIB_MIDDLE_PATH "/build/install/lib/"
 
 // NOTE Static members need to be declared in the cpp as well
 std::string XBot::RobotInterface::framework;
