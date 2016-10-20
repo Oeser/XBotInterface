@@ -28,6 +28,7 @@
 #include <cstdlib>
 
 #include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/ModelInterface.h>
 
 namespace XBot
 {
@@ -55,20 +56,28 @@ protected:
     virtual bool sense_internal() = 0;
     virtual bool move_internal() = 0;
     virtual bool init_internal(const std::string &path_to_cfg) = 0;
+    
+    virtual const std::vector<std::string>& getModelOrderedChainName() final;
 
 private:
-
-    IXBotInterface::Ptr model; // TBD it is going to be the ModelInterface inside the RobotInterface
     
-    static std::string framework;
-    static std::string subclass_name;
-    static std::string path_to_shared_lib;
-    static std::string subclass_factory_name;
+    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
     
-    static bool parseYAML(const std::string &path_to_cfg);
-
     static RobotInterface::Ptr _instance_ptr;
     static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
+    static ModelInterface::Ptr _model;
+    
+    static std::string _framework;
+    static std::string _subclass_name;
+    static std::string _path_to_shared_lib;
+    static std::string _subclass_factory_name;
+            
+    std::vector<std::string> _model_ordered_chain_name;
+    
+    static bool parseYAML(const std::string &path_to_cfg);
+    
+    void fillModelOrderedChainFromOrderedJoint( const std::vector<std::string>& model_ordered_joint_name);
+
 
 };
 }
