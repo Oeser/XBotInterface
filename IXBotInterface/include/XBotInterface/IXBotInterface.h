@@ -29,6 +29,8 @@
 #include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
 
+#define LIB_MIDDLE_PATH "/build/install/lib/"
+
 namespace XBot {
     // TBD XBotState
     class IXBotInterface {
@@ -161,11 +163,15 @@ namespace XBot {
         bool setJointEffort(const std::map<std::string, double>& tau);
         bool setTemperature(const std::map<std::string, double>& temp);
         
+        const std::string& getPathToConfig() const;
         
         static bool computeAbsolutePath( const std::string& input_path,
                                          const std::string& midlle_path,
                                          std::string& absolute_path,
                                          std::string extension = "");
+        
+        virtual const std::vector<std::string>& getModelOrderedChainName();
+
 
     private:
 
@@ -182,7 +188,10 @@ namespace XBot {
         std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
         XBot::KinematicChain _dummy_chain;
         
+        std::string _path_to_cfg;
+        
         bool parseYAML(const std::string &path_to_cfg);
+
 
     };
     

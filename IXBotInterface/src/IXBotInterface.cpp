@@ -31,6 +31,12 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
 
 }
 
+const std::vector< std::string >& XBot::IXBotInterface::getModelOrderedChainName()
+{
+    return _XBotModel.get_ordered_chain_names();
+}
+
+
 bool XBot::IXBotInterface::computeAbsolutePath ( const std::string& input_path,
                                                  const std::string& middle_path,
                                                  std::string& absolute_path, 
@@ -107,16 +113,21 @@ bool XBot::IXBotInterface::parseYAML ( const std::string& path_to_cfg )
                             _joint_map_config); 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain framework mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain joint_map_config mandatory node!!" << std::endl;
         return false;
     }
 
 }
 
-
+const std::string& XBot::IXBotInterface::getPathToConfig() const
+{
+    return _path_to_cfg;
+}
 
 bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
 {
+    // store path to config
+    _path_to_cfg = path_to_cfg;
     // parse the YAML file to initialize internal variables
     parseYAML(path_to_cfg);
     // initialize the model
@@ -139,6 +150,11 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
         XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name,
                 _XBotModel);
         _chain_map[chain_name] = actual_chain;
+    }
+    
+    // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
+    if (_XBotModel.getDisabledJoints().size() > 0) {
+         std::cerr << "WARNING in " << __func__ << " : disabled joint detected in the specified SRDF. URDF must be updated accordingly (we hope you did it)." << std::endl;
     }
 
     // call virtual init_internal
