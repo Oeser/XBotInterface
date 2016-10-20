@@ -1,14 +1,9 @@
 #include <XBotInterface/ModelInterface.h>
 
 // NOTE Static members need to be defined in the cpp 
-std::string XBot::ModelInterface::_model_type;
-std::string XBot::ModelInterface::_subclass_name;
-std::string XBot::ModelInterface::_path_to_shared_lib;
-std::string XBot::ModelInterface::_subclass_factory_name;
-
 std::vector<shlibpp::SharedLibraryClass<XBot::ModelInterface> > XBot::ModelInterface::_model_interface_instance;
 
-bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg)
+bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars)
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
@@ -30,7 +25,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg)
     
     // check model type
     if(x_bot_interface["internal_model_type"]) {
-        _model_type = x_bot_interface["internal_model_type"].as<std::string>();
+        vars["model_type"] = x_bot_interface["internal_model_type"].as<std::string>();
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain internal_model_type mandatory node!!" << std::endl;
@@ -38,20 +33,21 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg)
     }
     
     // subclass forced
-    _subclass_name = std::string("ModelInterface") + _model_type;
+    vars["subclass_name"] = std::string("ModelInterface") + vars.at("model_type");
+    vars["path_to_shared_lib"] = "";
     // check the path to shared lib
-    if(root_cfg[_subclass_name]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(), 
+    if(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
+        computeAbsolutePath(root_cfg["subclass_name"]["path_to_shared_lib"].as<std::string>(), 
                             LIB_MIDDLE_PATH,
-                            _path_to_shared_lib); 
+                            vars.at("path_to_shared_lib")); 
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain path_to_shared_lib mandatory node!!" << std::endl;
         return false;
     }
     
-    if(root_cfg[_subclass_name]["subclass_factory_name"]) {
-        _subclass_factory_name = root_cfg[_subclass_name]["subclass_factory_name"].as<std::string>();
+    if(root_cfg[vars.at("subclass_name")]["subclass_factory_name"]) {
+        vars["subclass_factory_name"] = root_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
@@ -90,15 +86,17 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
 {
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
+    std::map<std::string, std::string> vars;
+    
     // parsing YAML
-    if (parseYAML(path_to_cfg)) {
+    if (parseYAML(path_to_cfg, vars)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
     
     // loading the requested robot interface
-    shlibpp::SharedLibraryClassFactory<ModelInterface> model_interface_factory( _path_to_shared_lib.c_str(),
-                                                                                _subclass_factory_name.c_str());
+    shlibpp::SharedLibraryClassFactory<ModelInterface> model_interface_factory( vars.at("path_to_shared_lib").c_str(),
+                                                                                vars.at("subclass_factory_name").c_str());
     if (!model_interface_factory.isValid()) {
         // NOTE print to celebrate the wizard
         printf("error (%s) : %s\n", shlibpp::Vocab::decode(model_interface_factory.getStatus()).c_str(),
@@ -119,11 +117,9 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
 
 const std::vector< std::string >& XBot::ModelInterface::getModelOrderedChainName()
 {
-//     std::vector<std::string> model_ordered_joint_name;
-//     _model->getModelID(model_ordered_joint_name);
-//     fillModelOrderedChainFromOrderedJoint(model_ordered_joint_name);
     return _model_ordered_chain_name;
 }
+ 
 
 
 void XBot::ModelInterface::fillModelOrderedChainFromOrderedJoint ( const std::vector< std::string >& model_ordered_joint_name )

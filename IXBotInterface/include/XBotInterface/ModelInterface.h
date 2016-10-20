@@ -345,14 +345,10 @@ private:
     
     static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
     
-    static std::string _model_type;
-    static std::string _subclass_name;
-    static std::string _path_to_shared_lib;
-    static std::string _subclass_factory_name;
+    std::vector<std::string> _model_ordered_chain_name; 
     
-    std::vector<std::string> _model_ordered_chain_name;
+    static bool parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars);
     
-    static bool parseYAML(const std::string &path_to_cfg);
     
     void fillModelOrderedChainFromOrderedJoint( const std::vector<std::string>& model_ordered_joint_name);
 
