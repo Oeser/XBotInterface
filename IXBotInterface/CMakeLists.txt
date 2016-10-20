@@ -25,13 +25,17 @@ find_package(RobotInterfaceROS REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(sharedlib++ REQUIRED)
+find_package(orocos_kdl REQUIRED)
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${RobotInterfaceROS_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIR}
                             ${kdl_parser_INCLUDE_DIRS}
+                            ${orocos_kdl_INCLUDE_DIRS}
                             ${sharedlib++_INCLUDE_DIRS}
                             )      
+                            
+message("**************************+++${orocos_kdl_INCLUDE_DIRS}")
                             
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
@@ -46,6 +50,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
 target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
                                     yaml-cpp
                                     ${sharedlib++_LIBRARIES}
+                                    ${orocos_kdl_LIBRARIES}
                                     )
 
 add_executable(test src/main_test.cpp)

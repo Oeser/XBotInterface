@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2016 Walkman
- * Author: Luca Muratore
- * email:  luca.muratore@iit.it
+ * Copyright (C) 2016 IIT-ADVR
+ * Author: Arturo Laurenzi, Luca Muratore
+ * email:  arturo.laurenzi@iit.it, luca.muratore@iit.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
