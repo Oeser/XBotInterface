@@ -120,21 +120,84 @@ const std::vector< std::string >& XBot::ModelInterface::getModelOrderedChainName
     return _model_ordered_chain_name;
 }
  
-
-
-void XBot::ModelInterface::fillModelOrderedChainFromOrderedJoint ( const std::vector< std::string >& model_ordered_joint_name )
+bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
 {
+    
+    if(!fillModelOrderedChain()){
+     
+        std::cerr << "ERROR in " << __func__ << ": model interface could not be loaded! Model joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << std::endl;
+        
+        return false;
+        
+    }
+
+    return init_model(path_to_cfg);
+}
+
+
+
+bool XBot::ModelInterface::fillModelOrderedChain()
+{
+    
+    bool success = true;
+    
+    std::vector<std::string> model_ordered_joint_name;
+    this->getModelID(model_ordered_joint_name);
+    
+    // if model is floating base add virtual chain with six virtual joints,
+    // which are the first six provided by getModelID
+    
+    int joint_idx = 0;
+    
     if(isFloatingBase()) {
-        _virtual_chain = std::make_shared<XBot::KinematicChain>();
-        _chain_map["virtual_chain"] = _virtual_chain;
+        
+        std::string virtual_chain_name("virtual_chain");
+        
+        _chain_map[virtual_chain_name] = std::make_shared<XBot::KinematicChain>(virtual_chain_name);
+        
+        for(int i=0; i<6; i++){
+            XBot::Joint::Ptr jptr = std::make_shared<Joint>(model_ordered_joint_name[i], 
+                                                            -(i+1), 
+                                                            virtual_chain_name);
+            
+            _chain_map.at(virtual_chain_name)->pushBackJoint(jptr);
+            
+            joint_idx++;
+        }
     }
     
-    // TBD do it in the base class
-    for( int i = 0; i < model_ordered_joint_name.size(); i++ ) {
+    
+    _model_ordered_chain_name.clear();
+    while( joint_idx < model_ordered_joint_name.size() ){
+     
+        // compute the chain which the joint being processed belongs to
+        std::string chain_name = getJointByName(model_ordered_joint_name[joint_idx])->getChainName();
+        _model_ordered_chain_name.push_back(chain_name);
+        
+        // check that the joint that follow are equal to the chain ones,
+        // ordered from base link to tip link
+        const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
+        
+        int chain_joint_num = chain.getJointNum();
+        
+        for( int i = 0; i < chain_joint_num; i++ ){
+            
+            if( chain.jointName(i) == model_ordered_joint_name[joint_idx] ){
+                
+                joint_idx++;
+                
+            }
+            else{
+                return false;
+            }
+        
+        }
+        
         
     }
     //_model_ordered_chain_name;
         
+    return success;
 }
 
 
