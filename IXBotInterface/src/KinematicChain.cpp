@@ -26,7 +26,8 @@ KinematicChain::KinematicChain(const std::string &chain_name,
         std::string actual_joint_name = _ordered_joint_name[i];
         int actual_joint_id = _ordered_joint_id[i];
         XBot::Joint::Ptr actual_joint = std::make_shared<Joint>(actual_joint_name,
-                                        actual_joint_id);
+                                                                actual_joint_id,
+                                                                _chain_name);
         _joint_name_map[actual_joint_name] = actual_joint;
         _joint_id_map[actual_joint_id] = actual_joint;
         _joint_vector[i] = actual_joint;
@@ -102,8 +103,12 @@ KinematicChain &KinematicChain::operator=(const KinematicChain &rhs)
 
 }
 
-
-
+void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
+{
+    _joint_name_map[joint->getJointName()] = joint;
+    _joint_id_map[joint->getJointId()] = joint;
+    _joint_vector.push_back(joint);
+}
 
 const std::vector< XBot::JointConstSharedPtr > &KinematicChain::getJoints() const
 {

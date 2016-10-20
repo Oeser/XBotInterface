@@ -78,7 +78,19 @@ public:
      */
     KinematicChain &operator= (const KinematicChain &rhs);
 
+    /**
+     * @brief shared pointer to a KinematicChain
+     * 
+     */
     typedef std::shared_ptr<KinematicChain> Ptr;
+    
+    /**
+     * @brief add a joint in the kinematic chain pushing it in the end of the chain
+     * 
+     * @param joint the joint to add
+     * @return void
+     */
+    void pushBackJoint(Joint::Ptr joint);
 
     /**
      * @brief Method returning the name of the chain
