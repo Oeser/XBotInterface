@@ -158,7 +158,16 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     }
 
     // call virtual init_internal
-    return init_internal(path_to_cfg);
+    bool success = init_internal(path_to_cfg);
+    
+    // after subclasses have done their work inside init_internal, compute joint number
+    _joint_num = 0;
+    for( const auto& c : _chain_map ){
+        _joint_num += c.second->getJointNum();
+    }
+    
+    return success;
+    
 }
 
 
