@@ -333,7 +333,8 @@ public:
 
 protected:
     
-    virtual bool init_internal(const std::string &path_to_cfg) = 0;
+    virtual bool init_internal(const std::string &path_to_cfg);
+    virtual bool init_model(const std::string &path_to_cfg) = 0;
     virtual const std::vector<std::string>& getModelOrderedChainName() final;
 
 private:
