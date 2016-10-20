@@ -76,7 +76,6 @@ private:
     
     static bool parseYAML(const std::string &path_to_cfg);
     
-    void fillModelOrderedChainFromOrderedJoint( const std::vector<std::string>& model_ordered_joint_name);
 
 
 };

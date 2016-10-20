@@ -103,23 +103,12 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
 
 }
 
-void XBot::RobotInterface::fillModelOrderedChainFromOrderedJoint ( const std::vector< std::string >& model_ordered_joint_name )
-{
-
-    // TBD do it in the base class
-    for( int i = 0; i < model_ordered_joint_name.size(); i++ ) {
-        
-    }
-    //_model_ordered_chain_name;
-}
 
 
 const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName()
 {
-//     std::vector<std::string> model_ordered_joint_name;
-//     _model->getModelID(model_ordered_joint_name);
-//     fillModelOrderedChainFromOrderedJoint(model_ordered_joint_name);
-    return _model_ordered_chain_name;
+
+    return IXBotInterface::getModelOrderedChainName();
 }
 
 
