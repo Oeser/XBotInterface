@@ -55,6 +55,14 @@ KinematicChain::KinematicChain(const std::string &chain_name,
 
 }
 
+KinematicChain::KinematicChain(const std::string& chain_name):
+_chain_name(chain_name),
+_is_virtual(false)
+{
+
+}
+
+
 KinematicChain::KinematicChain(const KinematicChain &other):
 // Default copy of all non-ptr members
     _urdf_joints(other._urdf_joints),
