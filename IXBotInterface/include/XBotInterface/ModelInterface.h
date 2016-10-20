@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 
+#include <SharedLibraryClass.h>
 #include <Eigen/Geometry>
 #include <kdl/frames.hpp>
 #include <kdl/jacobian.hpp>
@@ -34,7 +35,23 @@ namespace XBot {
 class ModelInterface : public IXBotInterface {
 
 public:
+    
+    /**
+     * @brief shared pointer to a ModelInterface
+     * 
+     */
+    typedef std::shared_ptr<ModelInterface> Ptr;
+    
+    static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
 
+    /**
+     * @brief true if the robot is floating base, false if it has a fixed base.
+     * 
+     * @return true if the robot is floating base, false if it has a fixed base.
+     */
+    
+    bool isFloatingBase() const;
+    
     /**
      * @brief Updates the kinematic variables of the model according to the current state of the model.
      * 
@@ -121,8 +138,7 @@ public:
      */
     virtual void getGravity( KDL::Vector& gravity ) const = 0;
     
-
-                             
+    
     /**
      * @brief Sets the gravity vector expressed in the world frame
      * 
@@ -165,16 +181,25 @@ public:
     virtual bool getSpatialAcceleration( const std::string& link_name, 
                                          KDL::Twist& acceleration) const = 0;
 
-    
-    
+                             
+    /**
+    * @brief Gets the joint names ordered according to the model
+    * 
+    * @param joint_name the joint names ordered according to the model
+    * @return void
+    */
+    virtual void getModelID( std::vector<std::string>& joint_name ) const = 0;
+
+ 
     /**
     * @brief Gets the model ID of the joint with joint_name name
     * 
     * @param joint_name the joint name
     * @return int the model ID of the joint with joint_name name
     */
-    virtual int getModelID( const std::string& joint_name) const = 0;
-    
+    int getModelID( const std::string& joint_name) const;
+                             
+                             
     /**
      * @brief Gets the vector of model IDs of the joints inside chain with name chain_name
      * 
@@ -182,12 +207,16 @@ public:
      * @param model_id_vector the vector of model IDs of the joints inside chain with name chain_name
      * @return True is a chain with chain_name name exists.
      */
-    virtual bool getModelID( const std::string& chain_name,
-                             std::vector<int>& model_id_vector) const = 0;
+    bool getModelID( const std::string& chain_name,
+                     std::vector<int>& model_id_vector) const;
                              
-                             
-                             
-                             
+    /**
+     * @brief Gets the vector of joints model IDs of the whole robot
+     * 
+     * @param model_id_vector the vector of model IDs of the joints inside the whole robot
+     * @return void
+     */
+    void getModelID( std::vector<int>& model_id_vector) const;
    
     bool getSpatialVelocity( const std::string& link_name, 
                              Eigen::Matrix<double,6,1>& velocity) const;
@@ -302,11 +331,29 @@ public:
                             const Eigen::Vector3d& source_point,
                             Eigen::Vector3d& target_point) const; 
 
-
-
 protected:
+    
+    virtual bool init_internal(const std::string &path_to_cfg) = 0;
+    virtual const std::vector<std::string>& getModelOrderedChainName() final;
 
 private:
+    
+    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
+        
+    XBot::KinematicChain::Ptr _virtual_chain;
+    
+    static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
+    
+    static std::string _model_type;
+    static std::string _subclass_name;
+    static std::string _path_to_shared_lib;
+    static std::string _subclass_factory_name;
+    
+    std::vector<std::string> _model_ordered_chain_name;
+    
+    static bool parseYAML(const std::string &path_to_cfg);
+    
+    void fillModelOrderedChainFromOrderedJoint( const std::vector<std::string>& model_ordered_joint_name);
 
 };
 };
