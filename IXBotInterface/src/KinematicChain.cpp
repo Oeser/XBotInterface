@@ -6,7 +6,8 @@ namespace XBot
 
 KinematicChain::KinematicChain() :
     _chain_name("dummy_chain"),
-    _joint_num(-1)
+    _joint_num(-1),
+    _is_virtual(false)
 {
 
 }
@@ -14,7 +15,8 @@ KinematicChain::KinematicChain() :
 KinematicChain::KinematicChain(const std::string &chain_name,
                                const XBot::XBotCoreModel &XBotModel) :
     _chain_name(chain_name),
-    _XBotModel(XBotModel)
+    _XBotModel(XBotModel),
+    _is_virtual(false)
 {
     _joint_num = _XBotModel.get_joint_num(chain_name);
     _XBotModel.get_enabled_joints_in_chain(chain_name, _ordered_joint_name);
@@ -61,7 +63,8 @@ KinematicChain::KinematicChain(const KinematicChain &other):
     _ordered_joint_id(other._ordered_joint_id),
     _XBotModel(other._XBotModel),
     _chain_name(other._chain_name),
-    _joint_num(other._joint_num)
+    _joint_num(other._joint_num),
+    _is_virtual(false)
 {
 
 
@@ -97,17 +100,25 @@ KinematicChain &KinematicChain::operator=(const KinematicChain &rhs)
     std::swap(_joint_vector, tmp._joint_vector);
     std::swap(_joint_name_map, tmp._joint_name_map);
     std::swap(_joint_id_map, tmp._joint_id_map);
+    std::swap(_is_virtual, tmp._is_virtual);
 
     // Return this
     return *this;
 
 }
 
+bool XBot::KinematicChain::isVirtual() const
+{
+    return _is_virtual;
+}
+
+
 void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
 {
     _joint_name_map[joint->getJointName()] = joint;
     _joint_id_map[joint->getJointId()] = joint;
     _joint_vector.push_back(joint);
+    if(joint->getJointId() < 0) _is_virtual = true;
 }
 
 const std::vector< XBot::JointConstSharedPtr > &KinematicChain::getJoints() const

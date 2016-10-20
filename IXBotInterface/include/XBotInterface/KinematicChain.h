@@ -62,6 +62,13 @@ public:
      */
     KinematicChain(const std::string &chain_name,
                    const XBot::XBotCoreModel &XBotModel);
+    
+    /**
+     * @brief Construct a Kinematic Chain using the chain name
+     * 
+     * @param chain_name the name of the chain
+     */
+    explicit KinematicChain(const std::string& chain_name);
 
     /**
      * @brief Custom copy constructor, which guarantees independence between
@@ -91,6 +98,13 @@ public:
      * @return void
      */
     void pushBackJoint(Joint::Ptr joint);
+    
+    /**
+     * @brief Method for determining whether a chain is virtual, i.e. contains all virtual joints
+     * 
+     * @return A boolean set to true if chain is virtual, false otherwise.
+     */
+    bool isVirtual() const;
 
     /**
      * @brief Method returning the name of the chain
@@ -332,6 +346,8 @@ private:
 
     std::string _chain_name;
     int _joint_num;
+    
+    bool _is_virtual;
 
 };
 
