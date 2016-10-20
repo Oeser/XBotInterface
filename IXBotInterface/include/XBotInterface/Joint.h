@@ -52,9 +52,11 @@ public:
      *
      * @param joint_name the joint name
      * @param joint_id the joint id
+     * @param joint_name the parent chain name
      */
     Joint(const std::string &joint_name,
-          int joint_id);
+          int joint_id,
+          const std::string &chain_name);
 
     /**
      * @brief Shared pointer to Joint
@@ -81,6 +83,13 @@ public:
      * @return int joint id
      */
     int getJointId() const;
+    
+    /**
+     * @brief Getter for the parent chain name
+     *
+     * @return const std::string& parent chain name
+     */
+    const std::string &getChainName() const;
 
     /**
      * @brief getter for the link side encoder reading
@@ -162,6 +171,13 @@ public:
      */
     double getDamping() const;
     
+    
+    /**
+     * @brief return true if the joint is virtual
+     * 
+     * @return true if the joint is virtual. False otherwise
+     */
+    bool isVirtualJoint();
     
     
 
@@ -265,6 +281,12 @@ private:
      *
      */
     int _joint_id;
+
+    /**
+     * @brief the name of the joint
+     *
+     */
+    std::string _chain_name;
     
     // TBD implement getter and setter
     std::string _joint_control_type; 

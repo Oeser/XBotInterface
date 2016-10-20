@@ -2,15 +2,18 @@
 
 XBot::Joint::Joint() :
     _joint_name(""),
-    _joint_id(-1)
+    _joint_id(-1),
+    _chain_name("")
 {
     init();
 }
 
-XBot::Joint::Joint(const std::string &joint_name,
-                   int joint_id) :
+XBot::Joint::Joint ( const std::string& joint_name, 
+                     int joint_id, 
+                     const std::string& chain_name ) :
     _joint_name(joint_name),
-    _joint_id(joint_id)
+    _joint_id(joint_id),
+    _chain_name(chain_name)
 {
     init();
 }
@@ -39,6 +42,12 @@ void XBot::Joint::init()
     _damping = 0;
 }
 
+bool XBot::Joint::isVirtualJoint()
+{
+    return (_joint_id < 0);
+}
+
+
 const std::string &XBot::Joint::getJointName() const
 {
     return _joint_name;
@@ -48,6 +57,12 @@ int XBot::Joint::getJointId() const
 {
     return _joint_id;
 }
+
+const std::string& XBot::Joint::getChainName() const
+{
+    return _chain_name;
+}
+
 
 void XBot::Joint::setJointName(const std::string &joint_name)
 {
