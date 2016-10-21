@@ -173,6 +173,8 @@ namespace XBot {
         virtual bool setDamping(const std::map<std::string, double>& D);       
         
         XBotCoreModel _XBotModel;
+                
+        std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
 
     private:
 
@@ -185,9 +187,6 @@ namespace XBot {
         
         std::vector<std::string> _ordered_joint_name;
         std::vector<int> _ordered_joint_id;
-        
-        std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
-        
         
         std::string _path_to_cfg;
         

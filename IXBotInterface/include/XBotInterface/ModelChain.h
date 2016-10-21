@@ -35,7 +35,6 @@ public:
     
     typedef std::shared_ptr<ModelChain> Ptr;
     
-    ModelChain();
     
     // Setters for RX
     

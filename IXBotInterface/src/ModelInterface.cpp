@@ -56,7 +56,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
     vars["path_to_shared_lib"] = "";
     // check the path to shared lib
     if(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg["subclass_name"]["path_to_shared_lib"].as<std::string>(), 
+        computeAbsolutePath(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(), 
                             LIB_MIDDLE_PATH,
                             vars.at("path_to_shared_lib")); 
     }

@@ -35,5 +35,213 @@ bool RobotChain::setReferenceFrom(const ModelChain& model_chain)
     }    
 }
 
+double RobotChain::getDamping ( int index ) const
+{
+     return XBot::KinematicChain::getDamping ( index );
+}
+
+bool RobotChain::getDamping ( std::map< std::string, double >& D ) const
+{
+     return XBot::KinematicChain::getDamping ( D );
+}
+
+bool RobotChain::getDamping ( std::map< int, double >& D ) const
+{
+     return XBot::KinematicChain::getDamping ( D );
+}
+
+bool RobotChain::getDamping ( Eigen::VectorXd& D ) const
+{
+     return XBot::KinematicChain::getDamping ( D );
+}
+
+double RobotChain::getEffortReference ( int index ) const
+{
+     return XBot::KinematicChain::getEffortReference ( index );
+}
+
+bool RobotChain::getEffortReference ( std::map< std::string, double >& tau ) const
+{
+     return XBot::KinematicChain::getEffortReference ( tau );
+}
+
+bool RobotChain::getEffortReference ( std::map< int, double >& tau ) const
+{
+     return XBot::KinematicChain::getEffortReference ( tau );
+}
+
+bool RobotChain::getEffortReference ( Eigen::VectorXd& tau ) const
+{
+     return XBot::KinematicChain::getEffortReference ( tau );
+}
+
+
+double RobotChain::getPositionReference ( int index ) const
+{
+     return XBot::KinematicChain::getPositionReference ( index );
+}
+
+bool RobotChain::getPositionReference ( std::map< std::string, double >& q ) const
+{
+     return XBot::KinematicChain::getPositionReference ( q );
+}
+
+
+bool RobotChain::getPositionReference ( std::map< int, double >& q ) const
+{
+     return XBot::KinematicChain::getPositionReference ( q );
+}
+
+
+bool RobotChain::getPositionReference ( Eigen::VectorXd& q ) const
+{
+     return XBot::KinematicChain::getPositionReference ( q );
+}
+
+
+double RobotChain::getStiffness ( int index ) const
+{
+     return XBot::KinematicChain::getStiffness ( index );
+}
+
+
+bool RobotChain::getStiffness ( std::map< std::string, double >& K ) const
+{
+     return XBot::KinematicChain::getStiffness ( K );
+}
+
+bool RobotChain::getStiffness ( std::map< int, double >& K ) const
+{
+     return XBot::KinematicChain::getStiffness ( K );
+}
+
+bool RobotChain::getStiffness ( Eigen::VectorXd& K ) const
+{
+     return XBot::KinematicChain::getStiffness ( K );
+}
+
+double RobotChain::getVelocityReference ( int index ) const
+{
+     return XBot::KinematicChain::getVelocityReference ( index );
+}
+
+bool RobotChain::getVelocityReference ( std::map< std::string, double >& qdot ) const
+{
+     return XBot::KinematicChain::getVelocityReference ( qdot );
+}
+
+bool RobotChain::getVelocityReference ( std::map< int, double >& qdot ) const
+{
+     return XBot::KinematicChain::getVelocityReference ( qdot );
+}
+
+bool RobotChain::getVelocityReference ( Eigen::VectorXd& qdot ) const
+{
+     return XBot::KinematicChain::getVelocityReference ( qdot );
+}
+
+bool RobotChain::setDamping ( int i, double D )
+{
+     return XBot::KinematicChain::setDamping ( i, D );
+}
+
+bool RobotChain::setDamping ( const std::map< std::string, double >& D )
+{
+     return XBot::KinematicChain::setDamping ( D );
+}
+
+bool RobotChain::setDamping ( const std::map< int, double >& D )
+{
+     return XBot::KinematicChain::setDamping ( D );
+}
+
+bool RobotChain::setDamping ( const Eigen::VectorXd& D )
+{
+     return XBot::KinematicChain::setDamping ( D );
+}
+
+bool RobotChain::setEffortReference ( int i, double tau )
+{
+     return XBot::KinematicChain::setEffortReference ( i, tau );
+}
+
+bool RobotChain::setEffortReference ( const std::map< std::string, double >& tau )
+{
+     return XBot::KinematicChain::setEffortReference ( tau );
+}
+
+bool RobotChain::setEffortReference ( const std::map< int, double >& tau )
+{
+     return XBot::KinematicChain::setEffortReference ( tau );
+}
+
+bool RobotChain::setEffortReference ( const Eigen::VectorXd& tau )
+{
+     return XBot::KinematicChain::setEffortReference ( tau );
+}
+
+
+bool RobotChain::setPositionReference ( int i, double q )
+{
+     return XBot::KinematicChain::setPositionReference ( i, q );
+}
+
+bool RobotChain::setPositionReference ( const std::map< std::string, double >& q )
+{
+     return XBot::KinematicChain::setPositionReference ( q );
+}
+
+
+bool RobotChain::setPositionReference ( const std::map< int, double >& q )
+{
+     return XBot::KinematicChain::setPositionReference ( q );
+}
+
+bool RobotChain::setPositionReference ( const Eigen::VectorXd& q )
+{
+     return XBot::KinematicChain::setPositionReference ( q );
+}
+
+bool RobotChain::setStiffness ( int i, double K )
+{
+     return XBot::KinematicChain::setStiffness ( i, K );
+}
+
+bool RobotChain::setStiffness ( const std::map< std::string, double >& K )
+{
+     return XBot::KinematicChain::setStiffness ( K );
+}
+
+bool RobotChain::setStiffness ( const std::map< int, double >& K )
+{
+     return XBot::KinematicChain::setStiffness ( K );
+}
+
+bool RobotChain::setStiffness ( const Eigen::VectorXd& K )
+{
+     return XBot::KinematicChain::setStiffness ( K );
+}
+
+bool RobotChain::setVelocityReference ( int i, double qdot )
+{
+     return XBot::KinematicChain::setVelocityReference ( i, qdot );
+}
+
+bool RobotChain::setVelocityReference ( const std::map< std::string, double >& qdot )
+{
+     return XBot::KinematicChain::setVelocityReference ( qdot );
+}
+
+bool RobotChain::setVelocityReference ( const std::map< int, double >& qdot )
+{
+     return XBot::KinematicChain::setVelocityReference ( qdot );
+}
+
+bool RobotChain::setVelocityReference ( const Eigen::VectorXd& qdot )
+{
+     return XBot::KinematicChain::setVelocityReference ( qdot );
+}
+
+
     
 }

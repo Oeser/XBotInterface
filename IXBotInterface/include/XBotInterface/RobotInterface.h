@@ -112,7 +112,7 @@ private:
     
     virtual bool init_internal(const std::string &path_to_cfg);
     
-    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
+    using IXBotInterface::_chain_map;
     std::map<std::string, XBot::RobotChain::Ptr> _robot_chain_map;
     XBot::RobotChain _dummy_chain;
     

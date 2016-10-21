@@ -81,6 +81,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
         std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
+    return true;
 
 }
 
@@ -92,7 +93,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
         return _instance_ptr;
     }
     // parsing YAML
-    if (parseYAML(path_to_cfg)) {
+    if (!parseYAML(path_to_cfg)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return _instance_ptr;
     }
@@ -199,3 +200,173 @@ XBot::RobotChain& XBot::RobotInterface::operator()(const std::string& chain_name
     std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
     return _dummy_chain;
 }
+
+bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model )
+{
+    bool success = true;
+    for (const auto & c : model._model_chain_map) {
+        const std::string &chain_name = c.first;
+        const ModelChain &chain = *c.second;
+        if (_robot_chain_map.count(chain_name)) {
+            _robot_chain_map.at(chain_name)->setReferenceFrom(chain);
+        } else {
+            if(!chain.isVirtual()){
+                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize IXBotInterfaces with different chains!!" << std::endl;
+                success = false;
+            }
+        }
+    }
+    return success;
+}
+
+bool XBot::RobotInterface::getDamping ( std::map< std::string, double >& D ) const
+{
+     return XBot::IXBotInterface::getDamping ( D );
+}
+
+bool XBot::RobotInterface::getDamping ( std::map< int, double >& D ) const
+{
+     return XBot::IXBotInterface::getDamping ( D );
+}
+
+bool XBot::RobotInterface::getDamping ( Eigen::VectorXd& D ) const
+{
+     return XBot::IXBotInterface::getDamping ( D );
+}
+
+bool XBot::RobotInterface::getEffortReference ( std::map< std::string, double >& tau ) const
+{
+     return XBot::IXBotInterface::getEffortReference ( tau );
+}
+
+bool XBot::RobotInterface::getEffortReference ( std::map< int, double >& tau ) const
+{
+     return XBot::IXBotInterface::getEffortReference ( tau );
+}
+
+bool XBot::RobotInterface::getEffortReference ( Eigen::VectorXd& tau ) const
+{
+     return XBot::IXBotInterface::getEffortReference ( tau );
+}
+
+bool XBot::RobotInterface::getPositionReference ( std::map< std::string, double >& q ) const
+{
+     return XBot::IXBotInterface::getPositionReference ( q );
+}
+
+bool XBot::RobotInterface::getPositionReference ( std::map< int, double >& q ) const
+{
+     return XBot::IXBotInterface::getPositionReference ( q );
+}
+
+bool XBot::RobotInterface::getPositionReference ( Eigen::VectorXd& q ) const
+{
+     return XBot::IXBotInterface::getPositionReference ( q );
+}
+
+bool XBot::RobotInterface::getStiffness ( std::map< std::string, double >& K ) const
+{
+     return XBot::IXBotInterface::getStiffness ( K );
+}
+
+bool XBot::RobotInterface::getStiffness ( std::map< int, double >& K ) const
+{
+     return XBot::IXBotInterface::getStiffness ( K );
+}
+
+bool XBot::RobotInterface::getStiffness ( Eigen::VectorXd& K ) const
+{
+     return XBot::IXBotInterface::getStiffness ( K );
+}
+
+bool XBot::RobotInterface::getVelocityReference ( std::map< std::string, double >& qdot ) const
+{
+     return XBot::IXBotInterface::getVelocityReference ( qdot );
+}
+
+bool XBot::RobotInterface::getVelocityReference ( std::map< int, double >& qdot ) const
+{
+     return XBot::IXBotInterface::getVelocityReference ( qdot );
+}
+
+bool XBot::RobotInterface::getVelocityReference ( Eigen::VectorXd& qdot ) const
+{
+     return XBot::IXBotInterface::getVelocityReference ( qdot );
+}
+
+bool XBot::RobotInterface::setDamping ( const std::map< std::string, double >& D )
+{
+     return XBot::IXBotInterface::setDamping ( D );
+}
+
+bool XBot::RobotInterface::setDamping ( const std::map< int, double >& D )
+{
+     return XBot::IXBotInterface::setDamping ( D );
+}
+
+bool XBot::RobotInterface::setDamping ( const Eigen::VectorXd& D )
+{
+     return XBot::IXBotInterface::setDamping ( D );
+}
+
+bool XBot::RobotInterface::setEffortReference ( const std::map< std::string, double >& tau )
+{
+     return XBot::IXBotInterface::setEffortReference ( tau );
+}
+
+bool XBot::RobotInterface::setEffortReference ( const std::map< int, double >& tau )
+{
+     return XBot::IXBotInterface::setEffortReference ( tau );
+}
+
+bool XBot::RobotInterface::setEffortReference ( const Eigen::VectorXd& tau )
+{
+     return XBot::IXBotInterface::setEffortReference ( tau );
+}
+
+bool XBot::RobotInterface::setPositionReference ( const std::map< std::string, double >& q )
+{
+     return XBot::IXBotInterface::setPositionReference ( q );
+}
+
+bool XBot::RobotInterface::setPositionReference ( const std::map< int, double >& q )
+{
+     return XBot::IXBotInterface::setPositionReference ( q );
+}
+
+bool XBot::RobotInterface::setPositionReference ( const Eigen::VectorXd& q )
+{
+     return XBot::IXBotInterface::setPositionReference ( q );
+}
+
+bool XBot::RobotInterface::setStiffness ( const std::map< std::string, double >& K )
+{
+     return XBot::IXBotInterface::setStiffness ( K );
+}
+
+bool XBot::RobotInterface::setStiffness ( const std::map< int, double >& K )
+{
+     return XBot::IXBotInterface::setStiffness ( K );
+}
+
+bool XBot::RobotInterface::setStiffness ( const Eigen::VectorXd& K )
+{
+     return XBot::IXBotInterface::setStiffness ( K );
+}
+
+bool XBot::RobotInterface::setVelocityReference ( const std::map< std::string, double >& qdot )
+{
+     return XBot::IXBotInterface::setVelocityReference ( qdot );
+}
+
+bool XBot::RobotInterface::setVelocityReference ( const std::map< int, double >& qdot )
+{
+     return XBot::IXBotInterface::setVelocityReference ( qdot );
+}
+
+bool XBot::RobotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
+{
+     return XBot::IXBotInterface::setVelocityReference ( qdot );
+}
+
+

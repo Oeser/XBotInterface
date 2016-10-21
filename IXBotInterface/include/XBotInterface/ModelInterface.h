@@ -33,9 +33,14 @@
 #include <XBotInterface/ModelChain.h>
 
 namespace XBot {
+
+class RobotInterface;
+
 class ModelInterface : public IXBotInterface {
 
 public:
+    
+    friend XBot::RobotInterface;
     
     /**
      * @brief shared pointer to a ModelInterface
@@ -346,7 +351,7 @@ protected:
 
 private:
     
-    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
+    using IXBotInterface::_chain_map;
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
     XBot::ModelChain _dummy_chain;
     

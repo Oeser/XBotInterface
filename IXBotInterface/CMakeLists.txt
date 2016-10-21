@@ -35,7 +35,6 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${sharedlib++_INCLUDE_DIRS}
                             )      
                             
-message("**************************+++${orocos_kdl_INCLUDE_DIRS}")
                             
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
@@ -45,6 +44,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/RobotInterface.cpp
                                  src/KinematicChain.cpp
                                  src/RobotChain.cpp
+                                 src/ModelChain.cpp
                                  src/Joint.cpp
                                  src/ModelInterface.cpp)
                                  
