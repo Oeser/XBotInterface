@@ -26,6 +26,7 @@ find_package(kdl_parser REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(sharedlib++ REQUIRED)
 find_package(orocos_kdl REQUIRED)
+find_package(eigen_conversions REQUIRED)
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${RobotInterfaceROS_INCLUDE_DIRS}
@@ -52,6 +53,7 @@ target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
                                     yaml-cpp
                                     ${sharedlib++_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
+                                    ${eigen_conversions_LIBRARIES}
                                     )
 
 add_executable(test src/main_test.cpp)
