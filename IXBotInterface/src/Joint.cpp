@@ -234,6 +234,26 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other)
     _damping = other._damping;
 }
 
+bool XBot::Joint::setReferenceFrom(const XBot::Joint& other)
+{
+    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
+        std::cerr << "ERROR in " << __func__ << "! Attempt to set reference from joint with different name/id!" << std::endl;
+        return false;
+    }
+
+
+    /////////////////
+    // TX to board //
+    /////////////////
+
+    _pos_ref = other._link_pos;
+    _vel_ref = other._link_vel;
+    _effort_ref = other._effort;
+    _stiffness = other._stiffness;
+    _damping = other._damping;
+}
+
+
 const XBot::Joint& XBot::Joint::operator<< ( const XBot::Joint& from )
 {
     this->syncFrom(from);

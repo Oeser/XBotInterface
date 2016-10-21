@@ -91,7 +91,7 @@ KinematicChain::KinematicChain(const KinematicChain &other):
     _XBotModel(other._XBotModel),
     _chain_name(other._chain_name),
     _joint_num(other._joint_num),
-    _is_virtual(false)
+    _is_virtual(other._is_virtual)
 {
 
 
@@ -133,6 +133,19 @@ KinematicChain &KinematicChain::operator=(const KinematicChain &rhs)
     return *this;
 
 }
+
+void XBot::KinematicChain::shallowCopy(const KinematicChain& chain)
+{
+    *this = chain; // deep copy
+    
+    // Shallow copy of joint pointers
+    _joint_vector = chain._joint_vector;
+    _joint_name_map = chain._joint_name_map;
+    _joint_id_map = chain._joint_id_map;
+    
+    
+}
+
 
 bool XBot::KinematicChain::isVirtual() const
 {
@@ -943,7 +956,7 @@ bool KinematicChain::setTemperature(int i, double temp)
 
 
 
-bool KinematicChain::sync(const KinematicChain &other)
+bool KinematicChain::syncFrom(const KinematicChain &other)
 {
     // TBD: check that chains are indeed omologues??
     int pos = 0;

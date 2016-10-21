@@ -192,12 +192,20 @@ public:
     // TBD implement checkPositionLimit(), checkVelocityLimit(), checkEffortLimit()
 
     /**
-     * @brief synchronize the current Joint with another Joint object
+     * @brief Synchronize the current Joint with another Joint object
      * 
-     * @param other the Joint object from which we synchronize the current object
-     * @return bool true if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False otherwise
+     * @param other The Joint object from which we synchronize the current object
+     * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False otherwise
      */
     bool syncFrom(const Joint &other);
+    
+    /**
+     * @brief Set the joint references (TX) from other joint state (RX)
+     * 
+     * @param other The Joint object which references are read from
+     * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False otherwise.
+     */
+    bool setReferenceFrom(const Joint& other);
     
     /**
      * @brief operator << to synchronize the current Joint with another Joint object

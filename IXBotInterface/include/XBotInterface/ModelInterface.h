@@ -30,17 +30,29 @@
 #include <eigen_conversions/eigen_kdl.h>
 
 #include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/ModelChain.h>
 
 namespace XBot {
+
+class RobotInterface;
+
 class ModelInterface : public IXBotInterface {
 
 public:
+    
+    friend XBot::RobotInterface;
     
     /**
      * @brief shared pointer to a ModelInterface
      * 
      */
     typedef std::shared_ptr<ModelInterface> Ptr;
+    
+    ModelChain& operator()(const std::string& chain_name);
+    ModelChain& arm(int arm_id);
+    ModelChain& leg(int leg_id);
+    
+    virtual bool syncFrom(const IXBotInterface& other);
     
     static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
 
@@ -220,7 +232,7 @@ public:
    
     bool getSpatialVelocity( const std::string& link_name, 
                              Eigen::Matrix<double,6,1>& velocity) const;
-    bool getAcceleration( const std::string& link_name, 
+    bool getSpatialAcceleration( const std::string& link_name, 
                           Eigen::Matrix<double,6,1>& acceleration) const;
     
     /**
@@ -330,6 +342,29 @@ public:
                             const std::string& target_frame,
                             const Eigen::Vector3d& source_point,
                             Eigen::Vector3d& target_point) const; 
+                            
+    // Setters for RX
+        
+    virtual bool setJointPosition(const Eigen::VectorXd& q) final;
+    virtual bool setMotorPosition(const Eigen::VectorXd& q) final;
+    virtual bool setJointVelocity(const Eigen::VectorXd& qdot) final;
+    virtual bool setMotorVelocity(const Eigen::VectorXd& qdot) final;
+    virtual bool setJointEffort(const Eigen::VectorXd& tau) final;
+    virtual bool setTemperature(const Eigen::VectorXd& temp) final;
+    
+    virtual bool setJointPosition(const std::map<int, double>& q) final;
+    virtual bool setMotorPosition(const std::map<int, double>& q) final;
+    virtual bool setJointVelocity(const std::map<int, double>& qdot) final;
+    virtual bool setMotorVelocity(const std::map<int, double>& qdot) final;
+    virtual bool setJointEffort(const std::map<int, double>& tau) final;
+    virtual bool setTemperature(const std::map<int, double>& temp) final;
+    
+    virtual bool setJointPosition(const std::map<std::string, double>& q) final;
+    virtual bool setMotorPosition(const std::map<std::string, double>& q) final;
+    virtual bool setJointVelocity(const std::map<std::string, double>& qdot) final;
+    virtual bool setMotorVelocity(const std::map<std::string, double>& qdot) final;
+    virtual bool setJointEffort(const std::map<std::string, double>& tau) final;
+    virtual bool setTemperature(const std::map<std::string, double>& temp) final;
 
 protected:
     
@@ -339,17 +374,23 @@ protected:
 
 private:
     
-    std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
-        
-    XBot::KinematicChain::Ptr _virtual_chain;
+    using IXBotInterface::_chain_map;
+    std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
+    XBot::ModelChain _dummy_chain;
     
     static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
     
     std::vector<std::string> _model_ordered_chain_name; 
+    std::map<int, int> _joint_id_to_model_id;
     
     static bool parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars);
     
     bool fillModelOrderedChain();
+    
+    mutable KDL::Twist _tmp_kdl_twist;
+    mutable KDL::Frame _tmp_kdl_frame;
+    mutable KDL::Jacobian _tmp_kdl_jacobian;
+    mutable KDL::Vector _tmp_kdl_vector;
 
 };
 };
