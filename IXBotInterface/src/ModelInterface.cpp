@@ -262,3 +262,178 @@ XBot::ModelChain& XBot::ModelInterface::operator()(const std::string& chain_name
 }
 
 
+bool XBot::ModelInterface::getSpatialAcceleration(const std::string& link_name, 
+                                                  Eigen::Matrix< double, 6, 1 >& acceleration) const
+{
+    bool success = getSpatialAcceleration(link_name, _tmp_kdl_twist);
+    
+    tf::twistKDLToEigen(_tmp_kdl_twist, acceleration);
+    
+    return success;
+}
+
+
+bool XBot::ModelInterface::getCOM(const std::string& reference_frame, Eigen::Vector3d& com_position) const
+{
+    bool success = getCOM(reference_frame, _tmp_kdl_vector);
+    
+    tf::vectorKDLToEigen(_tmp_kdl_vector, com_position);
+    
+    return success;
+}
+
+void XBot::ModelInterface::getCOM(Eigen::Vector3d& com_position) const
+{
+    getCOM(_tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, com_position);
+}
+
+void XBot::ModelInterface::getCOMAcceleration(Eigen::Vector3d& acceleration) const
+{
+    getCOMAcceleration(_tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, acceleration);
+}
+
+void XBot::ModelInterface::getCOMJacobian(Eigen::MatrixXd& J) const
+{
+    getCOMJacobian(_tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+}
+
+void XBot::ModelInterface::getCOMVelocity(Eigen::Vector3d& velocity) const
+{
+    getCOMVelocity(_tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, velocity);
+}
+
+bool XBot::ModelInterface::getGravity(const std::string& reference_frame, Eigen::Vector3d& gravity) const
+{
+    bool success = getGravity(reference_frame, _tmp_kdl_vector);
+    
+    tf::vectorKDLToEigen(_tmp_kdl_vector, gravity);
+    
+    return success;
+}
+
+void XBot::ModelInterface::getGravity(Eigen::Vector3d& gravity) const
+{
+    getGravity(_tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, gravity);
+}
+
+
+bool XBot::ModelInterface::getJacobian(const std::string& link_name, Eigen::MatrixXd& J)
+{
+    bool success = getJacobian(link_name, _tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+    return success;
+}
+
+bool XBot::ModelInterface::getModelID(const std::string& chain_name, std::vector< int >& model_id_vector) const
+{
+    if(_chain_map.count(chain_name)){
+        
+        const KinematicChain& chain = *_chain_map.at(chain_name);
+        model_id_vector.resize(chain.getJointNum());
+        for(int i=0; i< chain.getJointNum(); i++){
+            model_id_vector[i] = _joint_id_to_model_id.at(chain.jointId(i));
+        }
+        
+    }
+    else{
+     std::cerr << "ERROR in " << __func__ << ": requested chain " << chain_name << " is not defined!" << std::endl;
+     return false;
+    }
+    
+}
+
+int XBot::ModelInterface::getModelID(const std::string& joint_name) const
+{
+    auto jptr = getJointByName(joint_name);
+    if(jptr) return _joint_id_to_model_id.at(jptr->getJointId());
+    else{
+        std::cerr << "ERROR in " << __func__ << ": requested joint " << joint_name << " is not defined!" << std::endl;
+        return -1;    
+    }
+}
+
+// bool XBot::ModelInterface::getOrientation(const std::string& source_frame, const std::string& target_frame, Eigen::Matrix3d& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getOrientation(const std::string& target_frame, KDL::Rotation& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getOrientation(const std::string& source_frame, const std::string& target_frame, KDL::Rotation& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getOrientation(const std::string& target_frame, Eigen::Matrix3d& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPointJacobian(const std::string& link_name, const Eigen::Vector3d& point, Eigen::MatrixXd& J)
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, const std::string& target_frame, const Eigen::Vector3d& source_point, Eigen::Vector3d& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, const std::string& target_frame, const KDL::Vector& source_point, KDL::Vector& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, const Eigen::Vector3d& source_point, Eigen::Vector3d& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, const KDL::Vector& source_point, KDL::Vector& target_point) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPose(const std::string& source_frame, Eigen::Affine3d& pose) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::string& target_frame, Eigen::Affine3d& pose) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::getSpatialVelocity(const std::string& link_name, Eigen::Matrix< double, int(6), int(1) >& velocity) const
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::setFloatingBasePose(const Eigen::Affine3d& floating_base_pose)
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const Eigen::Vector3d& gravity)
+// {
+// 
+// }
+// 
+// void XBot::ModelInterface::setGravity(const Eigen::Vector3d& gravity)
+// {
+// 
+// }
+// 
+// bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const KDL::Vector& gravity)
+// {
+// 
+// }
+

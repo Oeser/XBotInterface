@@ -232,7 +232,7 @@ public:
    
     bool getSpatialVelocity( const std::string& link_name, 
                              Eigen::Matrix<double,6,1>& velocity) const;
-    bool getAcceleration( const std::string& link_name, 
+    bool getSpatialAcceleration( const std::string& link_name, 
                           Eigen::Matrix<double,6,1>& acceleration) const;
     
     /**
@@ -342,6 +342,7 @@ public:
                             const std::string& target_frame,
                             const Eigen::Vector3d& source_point,
                             Eigen::Vector3d& target_point) const; 
+                            
 
 protected:
     
@@ -358,10 +359,16 @@ private:
     static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
     
     std::vector<std::string> _model_ordered_chain_name; 
+    std::map<int, int> _joint_id_to_model_id;
     
     static bool parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars);
     
     bool fillModelOrderedChain();
+    
+    mutable KDL::Twist _tmp_kdl_twist;
+    mutable KDL::Frame _tmp_kdl_frame;
+    mutable KDL::Jacobian _tmp_kdl_jacobian;
+    mutable KDL::Vector _tmp_kdl_vector;
 
 };
 };
