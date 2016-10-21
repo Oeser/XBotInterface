@@ -72,6 +72,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
+    return true;
 
 }
 
@@ -108,7 +109,7 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     std::map<std::string, std::string> vars;
     
     // parsing YAML
-    if (parseYAML(path_to_cfg, vars)) {
+    if (!parseYAML(path_to_cfg, vars)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
