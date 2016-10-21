@@ -60,45 +60,45 @@ public:
     
     // Getters for TX
 
-    virtual bool getPositionReference(Eigen::VectorXd& q) const;
-    virtual bool getVelocityReference(Eigen::VectorXd& qdot) const;
-    virtual bool getEffortReference(Eigen::VectorXd& tau) const;
-    virtual bool getStiffness(Eigen::VectorXd& K) const;
-    virtual bool getDamping(Eigen::VectorXd& D) const;
+    virtual bool getPositionReference(Eigen::VectorXd& q) const final;
+    virtual bool getVelocityReference(Eigen::VectorXd& qdot) const final;
+    virtual bool getEffortReference(Eigen::VectorXd& tau) const final;
+    virtual bool getStiffness(Eigen::VectorXd& K) const final;
+    virtual bool getDamping(Eigen::VectorXd& D) const final;
     
-    virtual bool getPositionReference(std::map<int, double>& q) const;
-    virtual bool getVelocityReference(std::map<int, double>& qdot) const;
-    virtual bool getEffortReference(std::map<int, double>& tau) const;
-    virtual bool getStiffness(std::map<int, double>& K) const;
-    virtual bool getDamping(std::map<int, double>& D) const;
+    virtual bool getPositionReference(std::map<int, double>& q) const final;
+    virtual bool getVelocityReference(std::map<int, double>& qdot) const final;
+    virtual bool getEffortReference(std::map<int, double>& tau) const final;
+    virtual bool getStiffness(std::map<int, double>& K) const final;
+    virtual bool getDamping(std::map<int, double>& D) const final;
     
-    virtual bool getPositionReference(std::map<std::string, double>& q) const;
-    virtual bool getVelocityReference(std::map<std::string, double>& qdot) const;
-    virtual bool getEffortReference(std::map<std::string, double>& tau) const;
-    virtual bool getStiffness(std::map<std::string, double>& K) const;
-    virtual bool getDamping(std::map<std::string, double>& D) const;
+    virtual bool getPositionReference(std::map<std::string, double>& q) const final;
+    virtual bool getVelocityReference(std::map<std::string, double>& qdot) const final;
+    virtual bool getEffortReference(std::map<std::string, double>& tau) const final;
+    virtual bool getStiffness(std::map<std::string, double>& K) const final;
+    virtual bool getDamping(std::map<std::string, double>& D) const final;
     
     
 
     // Setters for TX
     
-    virtual bool setPositionReference(const Eigen::VectorXd& q);
-    virtual bool setVelocityReference(const Eigen::VectorXd& qdot);
-    virtual bool setEffortReference(const Eigen::VectorXd& tau);
-    virtual bool setStiffness(const Eigen::VectorXd& K);
-    virtual bool setDamping(const Eigen::VectorXd& D);
+    virtual bool setPositionReference(const Eigen::VectorXd& q) final;
+    virtual bool setVelocityReference(const Eigen::VectorXd& qdot) final;
+    virtual bool setEffortReference(const Eigen::VectorXd& tau) final;
+    virtual bool setStiffness(const Eigen::VectorXd& K) final;
+    virtual bool setDamping(const Eigen::VectorXd& D) final;
     
-    virtual bool setPositionReference(const std::map<int, double>& q);
-    virtual bool setVelocityReference(const std::map<int, double>& qdot);
-    virtual bool setEffortReference(const std::map<int, double>& tau);
-    virtual bool setStiffness(const std::map<int, double>& K);
-    virtual bool setDamping(const std::map<int, double>& D);
+    virtual bool setPositionReference(const std::map<int, double>& q) final;
+    virtual bool setVelocityReference(const std::map<int, double>& qdot) final;
+    virtual bool setEffortReference(const std::map<int, double>& tau) final;
+    virtual bool setStiffness(const std::map<int, double>& K) final;
+    virtual bool setDamping(const std::map<int, double>& D) final;
     
-    virtual bool setPositionReference(const std::map<std::string, double>& q);
-    virtual bool setVelocityReference(const std::map<std::string, double>& qdot);
-    virtual bool setEffortReference(const std::map<std::string, double>& tau);
-    virtual bool setStiffness(const std::map<std::string, double>& K);
-    virtual bool setDamping(const std::map<std::string, double>& D);        
+    virtual bool setPositionReference(const std::map<std::string, double>& q) final;
+    virtual bool setVelocityReference(const std::map<std::string, double>& qdot) final;
+    virtual bool setEffortReference(const std::map<std::string, double>& tau) final;
+    virtual bool setStiffness(const std::map<std::string, double>& K) final;
+    virtual bool setDamping(const std::map<std::string, double>& D) final;        
 
 protected:
 
