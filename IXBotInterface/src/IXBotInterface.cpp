@@ -190,40 +190,12 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
 }
 
 
-XBot::KinematicChain &XBot::IXBotInterface::operator()(const std::string &chain_name)
-{
-    if (_chain_map.count(chain_name)) {
-        return *_chain_map.at(chain_name);
-    }
-    std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
-    return _dummy_chain;
-}
-
-
-XBot::KinematicChain &XBot::IXBotInterface::leg(int id)
-{
-    if (_XBotModel.get_legs_chain().size() > id) {
-        const std::string &requested_leg_name = _XBotModel.get_legs_chain().at(id);
-        return *_chain_map.at(requested_leg_name);
-    }
-    std::cerr << "ERROR " << __func__ << " : you are requesting a legs with id " << id << " that does not exists!!" << std::endl;
-    return _dummy_chain;
-}
-
 int XBot::IXBotInterface::legs() const
 {
     return _XBotModel.get_legs_chain().size();
 }
 
-XBot::KinematicChain &XBot::IXBotInterface::arm(int id)
-{
-    if (_XBotModel.get_arms_chain().size() > id) {
-        const std::string &requested_arm_name = _XBotModel.get_arms_chain().at(id);
-        return *_chain_map.at(requested_arm_name);
-    }
-    std::cerr << "ERROR " << __func__ << " : you are requesting a arms with id " << id << " that does not exists!!" << std::endl;
-    return _dummy_chain;
-}
+
 
 int XBot::IXBotInterface::arms() const
 {
@@ -237,7 +209,7 @@ bool XBot::IXBotInterface::syncFrom(const XBot::IXBotInterface &other)
         const std::string &chain_name = c.first;
         const KinematicChain &chain = *c.second;
         if (_chain_map.count(chain_name)) {
-            _chain_map.at(chain_name)->sync(chain);
+            _chain_map.at(chain_name)->syncFrom(chain);
         } else {
             if(!chain.isVirtual()){
                 std::cerr << "ERROR " << __func__ << " : you are trying to synchronize IXBotInterfaces with different chains!!" << std::endl;
@@ -1639,7 +1611,6 @@ XBot::IXBotInterface &XBot::IXBotInterface::operator=(const XBot::IXBotInterface
     std::swap(_ordered_joint_name, tmp._ordered_joint_name);
     std::swap(_ordered_joint_id, tmp._ordered_joint_id);
     std::swap(_chain_map, tmp._chain_map);
-    std::swap(_dummy_chain, tmp._dummy_chain);
 
 }
 
