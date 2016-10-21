@@ -343,6 +343,28 @@ public:
                             const Eigen::Vector3d& source_point,
                             Eigen::Vector3d& target_point) const; 
                             
+    // Setters for RX
+        
+    virtual bool setJointPosition(const Eigen::VectorXd& q) final;
+    virtual bool setMotorPosition(const Eigen::VectorXd& q) final;
+    virtual bool setJointVelocity(const Eigen::VectorXd& qdot) final;
+    virtual bool setMotorVelocity(const Eigen::VectorXd& qdot) final;
+    virtual bool setJointEffort(const Eigen::VectorXd& tau) final;
+    virtual bool setTemperature(const Eigen::VectorXd& temp) final;
+    
+    virtual bool setJointPosition(const std::map<int, double>& q) final;
+    virtual bool setMotorPosition(const std::map<int, double>& q) final;
+    virtual bool setJointVelocity(const std::map<int, double>& qdot) final;
+    virtual bool setMotorVelocity(const std::map<int, double>& qdot) final;
+    virtual bool setJointEffort(const std::map<int, double>& tau) final;
+    virtual bool setTemperature(const std::map<int, double>& temp) final;
+    
+    virtual bool setJointPosition(const std::map<std::string, double>& q) final;
+    virtual bool setMotorPosition(const std::map<std::string, double>& q) final;
+    virtual bool setJointVelocity(const std::map<std::string, double>& qdot) final;
+    virtual bool setMotorVelocity(const std::map<std::string, double>& qdot) final;
+    virtual bool setJointEffort(const std::map<std::string, double>& tau) final;
+    virtual bool setTemperature(const std::map<std::string, double>& temp) final;
 
 protected:
     

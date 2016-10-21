@@ -180,7 +180,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     // which are the first six provided by getModelID
     
     int joint_idx = 0;
-    
+    _joint_id_to_model_id.clear();
     if(isFloatingBase()) {
         
         std::string virtual_chain_name("virtual_chain");
@@ -193,6 +193,8 @@ bool XBot::ModelInterface::fillModelOrderedChain()
                                                             virtual_chain_name);
             
             _chain_map.at(virtual_chain_name)->pushBackJoint(jptr);
+            
+            _joint_id_to_model_id[jptr->getJointId()] = joint_idx;
             
             joint_idx++;
         }
@@ -216,6 +218,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
             
             if( chain.jointName(i) == model_ordered_joint_name[joint_idx] ){
                 
+                _joint_id_to_model_id[chain.jointId(i)] = joint_idx;
                 joint_idx++;
                 
             }
@@ -436,4 +439,152 @@ int XBot::ModelInterface::getModelID(const std::string& joint_name) const
 // {
 // 
 // }
+
+bool XBot::ModelInterface::setJointEffort(const std::map< std::string, double >& tau)
+{
+return XBot::IXBotInterface::setJointEffort(tau);
+}
+
+bool XBot::ModelInterface::setJointEffort(const std::map< int, double >& tau)
+{
+return XBot::IXBotInterface::setJointEffort(tau);
+}
+
+bool XBot::ModelInterface::setJointEffort(const Eigen::VectorXd& tau)
+{
+return XBot::IXBotInterface::setJointEffort(tau);
+}
+
+
+bool XBot::ModelInterface::setJointPosition(const std::map< std::string, double >& q)
+{
+return XBot::IXBotInterface::setJointPosition(q);
+}
+
+bool XBot::ModelInterface::setJointPosition(const std::map< int, double >& q)
+{
+return XBot::IXBotInterface::setJointPosition(q);
+}
+
+bool XBot::ModelInterface::setJointPosition(const Eigen::VectorXd& q)
+{
+return XBot::IXBotInterface::setJointPosition(q);
+}
+
+bool XBot::ModelInterface::setJointVelocity(const std::map< std::string, double >& qdot)
+{
+return XBot::IXBotInterface::setJointVelocity(qdot);
+}
+
+bool XBot::ModelInterface::setJointVelocity(const std::map< int, double >& qdot)
+{
+return XBot::IXBotInterface::setJointVelocity(qdot);
+}
+
+bool XBot::ModelInterface::setJointVelocity(const Eigen::VectorXd& qdot)
+{
+return XBot::IXBotInterface::setJointVelocity(qdot);
+}
+
+bool XBot::ModelInterface::setMotorPosition(const std::map< std::string, double >& q)
+{
+return XBot::IXBotInterface::setMotorPosition(q);
+}
+
+bool XBot::ModelInterface::setMotorPosition(const std::map< int, double >& q)
+{
+return XBot::IXBotInterface::setMotorPosition(q);
+}
+
+bool XBot::ModelInterface::setMotorPosition(const Eigen::VectorXd& q)
+{
+return XBot::IXBotInterface::setMotorPosition(q);
+}
+
+bool XBot::ModelInterface::setMotorVelocity(const std::map< std::string, double >& qdot)
+{
+return XBot::IXBotInterface::setMotorVelocity(qdot);
+}
+
+bool XBot::ModelInterface::setMotorVelocity(const std::map< int, double >& qdot)
+{
+return XBot::IXBotInterface::setMotorVelocity(qdot);
+}
+
+bool XBot::ModelInterface::setMotorVelocity(const Eigen::VectorXd& qdot)
+{
+return XBot::IXBotInterface::setMotorVelocity(qdot);
+}
+
+bool XBot::ModelInterface::setTemperature(const std::map< std::string, double >& temp)
+{
+return XBot::IXBotInterface::setTemperature(temp);
+}
+
+bool XBot::ModelInterface::setTemperature(const std::map< int, double >& temp)
+{
+return XBot::IXBotInterface::setTemperature(temp);
+}
+
+bool XBot::ModelInterface::setTemperature(const Eigen::VectorXd& temp)
+{
+return XBot::IXBotInterface::setTemperature(temp);
+}
+
+bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
+{
+return XBot::IXBotInterface::syncFrom(other);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
