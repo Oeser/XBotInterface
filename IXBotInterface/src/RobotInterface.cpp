@@ -146,7 +146,56 @@ bool XBot::RobotInterface::move(bool sync_model)
 {
     bool sync_ok = true;
     if (sync_model) {
-        sync_ok = _model->syncFrom(*this);
+        sync_ok = this->setReferenceFrom(*_model);
     }
     return sync_ok && move_internal();
+}
+
+bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
+{
+    // Fill _robot_chain_map with shallow copies of chains in _chain_map
+    
+    _robot_chain_map.clear();
+    
+    for( const auto& c : _chain_map){
+        
+        RobotChain::Ptr robot_chain(new RobotChain());
+        robot_chain->shallowCopy(*c.second);
+        
+        _robot_chain_map[c.first] = robot_chain;
+        
+    }
+    
+    // Call vitual init_robot
+    
+    return init_robot(path_to_cfg);
+}
+
+XBot::RobotChain& XBot::RobotInterface::arm(int arm_id)
+{
+    if (_XBotModel.get_arms_chain().size() > arm_id) {
+        const std::string &requested_arm_name = _XBotModel.get_arms_chain().at(arm_id);
+        return *_robot_chain_map.at(requested_arm_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a arms with id " << arm_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+XBot::RobotChain& XBot::RobotInterface::leg(int leg_id)
+{
+    if (_XBotModel.get_legs_chain().size() > leg_id) {
+        const std::string &requested_leg_name = _XBotModel.get_legs_chain().at(leg_id);
+        return *_robot_chain_map.at(requested_leg_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a legs with id " << leg_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+XBot::RobotChain& XBot::RobotInterface::operator()(const std::string& chain_name)
+{
+    if (_robot_chain_map.count(chain_name)) {
+        return *_robot_chain_map.at(chain_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
+    return _dummy_chain;
 }

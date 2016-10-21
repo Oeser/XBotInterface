@@ -149,6 +149,19 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
         return false;
         
     }
+    
+    // Fill _model_chain_map with shallow copies of chains in _chain_map
+    
+    _model_chain_map.clear();
+    
+    for( const auto& c : _chain_map){
+        
+        ModelChain::Ptr model_chain(new ModelChain());
+        model_chain->shallowCopy(*c.second);
+        
+        _model_chain_map[c.first] = model_chain;
+        
+    }
 
     return init_model(path_to_cfg);
 }
@@ -219,5 +232,33 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     return success;
 }
 
+XBot::ModelChain& XBot::ModelInterface::arm(int arm_id)
+{
+    if (_XBotModel.get_arms_chain().size() > arm_id) {
+        const std::string &requested_arm_name = _XBotModel.get_arms_chain().at(arm_id);
+        return *_model_chain_map.at(requested_arm_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a arms with id " << arm_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+XBot::ModelChain& XBot::ModelInterface::leg(int leg_id)
+{
+    if (_XBotModel.get_legs_chain().size() > leg_id) {
+        const std::string &requested_leg_name = _XBotModel.get_legs_chain().at(leg_id);
+        return *_model_chain_map.at(requested_leg_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a legs with id " << leg_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+XBot::ModelChain& XBot::ModelInterface::operator()(const std::string& chain_name)
+{
+    if (_model_chain_map.count(chain_name)) {
+        return *_model_chain_map.at(chain_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
 
 

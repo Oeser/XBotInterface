@@ -30,6 +30,7 @@
 #include <eigen_conversions/eigen_kdl.h>
 
 #include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/ModelChain.h>
 
 namespace XBot {
 class ModelInterface : public IXBotInterface {
@@ -41,6 +42,12 @@ public:
      * 
      */
     typedef std::shared_ptr<ModelInterface> Ptr;
+    
+    ModelChain& operator()(const std::string& chain_name);
+    ModelChain& arm(int arm_id);
+    ModelChain& leg(int leg_id);
+    
+    virtual bool syncFrom(const IXBotInterface& other);
     
     static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
 
@@ -340,8 +347,8 @@ protected:
 private:
     
     std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
-        
-    XBot::KinematicChain::Ptr _virtual_chain;
+    std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
+    XBot::ModelChain _dummy_chain;
     
     static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
     
