@@ -44,6 +44,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/IXBotInterface.cpp
                                  src/RobotInterface.cpp
                                  src/KinematicChain.cpp
+                                 src/RobotChain.cpp
                                  src/Joint.cpp
                                  src/ModelInterface.cpp)
                                  
