@@ -95,7 +95,7 @@ public:
     * @return True if source_frame is valid. False otherwise.
     */
     virtual bool getPose( const std::string& source_frame,
-                          KDL::Frame& pose ) = 0;
+                          KDL::Frame& pose ) const = 0;
                           
     /**
     * @brief Sets the floating base pose w.r.t. the world frame
@@ -118,7 +118,9 @@ public:
     /**
      * @brief Gets the COM Jacobian expressed in the world frame
      * 
-     * @param J the COM Jacobian expressed in the world frame
+     * @param J The COM Jacobian expressed in the world frame. Note that, since the COM is not fixed
+     * to any link, the Jacobian orientation part (i.e. the lower three rows) are undefined and filled with
+     * zeros.
      * @return void
      */
     virtual void getCOMJacobian( KDL::Jacobian& J) const = 0;   
@@ -131,16 +133,6 @@ public:
      * @return void
      */
     virtual void getCOMVelocity( KDL::Vector& velocity) const = 0;
-    
-    
-    /**
-     * @brief Gets the COM acceleration expressed in the world frame
-     * 
-     * @param acceleration the COM acceleration expressed in the world frame
-     * @return void
-     */
-    virtual void getCOMAcceleration( KDL::Vector& acceleration) const = 0;
-    
     
     /**
      * @brief Gets the gravity vector expressed in the world frame
@@ -311,8 +303,7 @@ public:
     
                                          
     void getCOMJacobian( Eigen::MatrixXd& J) const;                         
-    void getCOMVelocity( Eigen::Vector3d& velocity) const;
-    void getCOMAcceleration( Eigen::Vector3d& acceleration) const;                  
+    void getCOMVelocity( Eigen::Vector3d& velocity) const;               
                           
                           
                           
@@ -371,6 +362,7 @@ protected:
     virtual bool init_internal(const std::string &path_to_cfg);
     virtual bool init_model(const std::string &path_to_cfg) = 0;
     virtual const std::vector<std::string>& getModelOrderedChainName() final;
+    
 
 private:
     

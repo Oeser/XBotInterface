@@ -291,11 +291,6 @@ void XBot::ModelInterface::getCOM(Eigen::Vector3d& com_position) const
     tf::vectorKDLToEigen(_tmp_kdl_vector, com_position);
 }
 
-void XBot::ModelInterface::getCOMAcceleration(Eigen::Vector3d& acceleration) const
-{
-    getCOMAcceleration(_tmp_kdl_vector);
-    tf::vectorKDLToEigen(_tmp_kdl_vector, acceleration);
-}
 
 void XBot::ModelInterface::getCOMJacobian(Eigen::MatrixXd& J) const
 {
@@ -331,6 +326,30 @@ bool XBot::ModelInterface::getJacobian(const std::string& link_name, Eigen::Matr
     J = _tmp_kdl_jacobian.data;
     return success;
 }
+
+bool XBot::ModelInterface::getCOM(const std::string& reference_frame, KDL::Vector& com_position) const
+{
+    getCOM(com_position);
+    bool success = getPose(reference_frame, _tmp_kdl_frame);
+    com_position = _tmp_kdl_frame.Inverse()*com_position;
+    return success;
+}
+
+bool XBot::ModelInterface::getGravity(const std::string& reference_frame, KDL::Vector& gravity) const
+{
+    getGravity(gravity);
+    bool success = getPose(reference_frame, _tmp_kdl_frame);
+    gravity = _tmp_kdl_frame.Inverse()*gravity; 
+    return success;
+}
+
+bool XBot::ModelInterface::getJacobian(const std::string& link_name, KDL::Jacobian& J) const
+{
+    SetToZero(_tmp_kdl_vector);
+    return getPointJacobian(link_name, _tmp_kdl_vector, J);
+
+}
+
 
 bool XBot::ModelInterface::getModelID(const std::string& chain_name, std::vector< int >& model_id_vector) const
 {
