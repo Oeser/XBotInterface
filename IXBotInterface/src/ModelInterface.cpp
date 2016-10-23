@@ -406,8 +406,10 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame,
 
 void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const
 {
-    for(int i = 0; i < 9; i++){
-        kdl_rotation.data[i] = eigen_rotation(i); // TBD: check if works!
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            kdl_rotation.data[3*i+j] = eigen_rotation(i,j); // TBD: check if works!
+        }
     }
 }
 
