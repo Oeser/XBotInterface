@@ -52,7 +52,8 @@ public:
     ModelChain& arm(int arm_id);
     ModelChain& leg(int leg_id);
     
-    virtual bool syncFrom(const IXBotInterface& other);
+    bool syncFrom(const IXBotInterface& other);
+//     using XBot::IXBotInterface::syncFrom;
     
     static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
 
@@ -76,17 +77,7 @@ public:
                          bool update_velocity = false,
                          bool update_desired_acceleration = false ) = 0;
      
-    /**
-    * @brief Computes the pose of the target_frame w.r.t. the source_frame
-    * 
-    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
-    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
-    * @param pose A homogeneous transformation which transforms a point from source frame to target frame
-    * @return True if both source_frame and target_frame are valid. False otherwise.
-    */
-    virtual bool getPose( const std::string& source_frame,
-                          const std::string& target_frame,
-                          KDL::Frame& pose ) const = 0;
+    
     /**
     * @brief Computes the pose of the source_frame w.r.t. the world frame
     * 
@@ -300,7 +291,17 @@ public:
     bool getPose( const std::string& source_frame,
                   Eigen::Affine3d& pose ) const;
                   
-    
+    /**
+    * @brief Computes the pose of the target_frame w.r.t. the source_frame
+    * 
+    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
+    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
+    * @param pose A homogeneous transformation which transforms a point from source frame to target frame
+    * @return True if both source_frame and target_frame are valid. False otherwise.
+    */
+    bool getPose( const std::string& source_frame,
+                          const std::string& target_frame,
+                          KDL::Frame& pose ) const;
                                          
     void getCOMJacobian( Eigen::MatrixXd& J) const;                         
     void getCOMVelocity( Eigen::Vector3d& velocity) const;               
@@ -361,7 +362,9 @@ protected:
     
     virtual bool init_internal(const std::string &path_to_cfg);
     virtual bool init_model(const std::string &path_to_cfg) = 0;
-    virtual const std::vector<std::string>& getModelOrderedChainName() final;
+    virtual const std::vector<std::string>& getModelOrderedChainName() const final;
+    
+    void rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const;
     
 
 private:
@@ -380,7 +383,7 @@ private:
     bool fillModelOrderedChain();
     
     mutable KDL::Twist _tmp_kdl_twist;
-    mutable KDL::Frame _tmp_kdl_frame;
+    mutable KDL::Frame _tmp_kdl_frame, _tmp_kdl_frame_1;
     mutable KDL::Jacobian _tmp_kdl_jacobian;
     mutable KDL::Vector _tmp_kdl_vector;
 

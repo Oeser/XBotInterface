@@ -44,6 +44,11 @@ public:
     typedef std::shared_ptr<RobotInterface> Ptr;
 
     static RobotInterface::Ptr getRobot(const std::string &path_to_cfg, int argc, char **argv);
+    
+    ModelInterface& model();
+    
+    virtual double getTime() const = 0;
+    virtual bool isRunning() const = 0;
 
     bool sense(bool sync_model = true);
     bool move(bool sync_model = true);

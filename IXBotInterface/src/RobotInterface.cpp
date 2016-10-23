@@ -123,6 +123,10 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
 
 }
 
+XBot::ModelInterface& XBot::RobotInterface::model()
+{
+    return *_model;
+}
 
 
 const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName()

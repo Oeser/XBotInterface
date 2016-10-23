@@ -72,6 +72,8 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
+    
+    return true;
 
 }
 
@@ -108,39 +110,47 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     std::map<std::string, std::string> vars;
     
     // parsing YAML
-    if (parseYAML(path_to_cfg, vars)) {
+    if (!parseYAML(path_to_cfg, vars)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
     
     // loading the requested robot interface
     shlibpp::SharedLibraryClassFactory<ModelInterface> model_interface_factory( vars.at("path_to_shared_lib").c_str(),
-                                                                                vars.at("subclass_factory_name").c_str());
+                                vars.at("subclass_factory_name").c_str());
     if (!model_interface_factory.isValid()) {
         // NOTE print to celebrate the wizard
         printf("error (%s) : %s\n", shlibpp::Vocab::decode(model_interface_factory.getStatus()).c_str(),
                model_interface_factory.getLastNativeError().c_str());
     }
     // open and init robot interface
-    shlibpp::SharedLibraryClass<XBot::ModelInterface> model_instance;
+//     shlibpp::SharedLibraryClass<XBot::ModelInterface> new_model_instance;
+    
+    // save the instance
+    _model_interface_instance.push_back(shlibpp::SharedLibraryClass<XBot::ModelInterface>()); 
+    shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  _model_interface_instance[_model_interface_instance.size()-1];
+    
     model_instance.open(model_interface_factory); 
     model_instance->init(path_to_cfg);
     // static instance of the robot interface
     instance_ptr = std::shared_ptr<ModelInterface>(&model_instance.getContent(), [](ModelInterface* ptr){return;});
-    
-    // save the instance
-    _model_interface_instance.push_back(model_instance);    
-    
+ 
     return instance_ptr;
 }
 
-const std::vector< std::string >& XBot::ModelInterface::getModelOrderedChainName()
+const std::vector< std::string >& XBot::ModelInterface::getModelOrderedChainName() const
 {
     return _model_ordered_chain_name;
 }
  
 bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
 {
+    if(!init_model(path_to_cfg)){
+        
+        std::cerr << "ERROR in " << __func__ << ": model interface could not be initialized!" << std::endl;
+        
+        return false;
+    }
     
     if(!fillModelOrderedChain()){
      
@@ -163,7 +173,7 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
         
     }
 
-    return init_model(path_to_cfg);
+    return true;
 }
 
 
@@ -205,7 +215,9 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     while( joint_idx < model_ordered_joint_name.size() ){
      
         // compute the chain which the joint being processed belongs to
-        std::string chain_name = getJointByName(model_ordered_joint_name[joint_idx])->getChainName();
+        std::string joint_name = model_ordered_joint_name[joint_idx];
+        std::string chain_name = getJointByName(joint_name)->getChainName();
+        
         _model_ordered_chain_name.push_back(chain_name);
         
         // check that the joint that follow are equal to the chain ones,
@@ -231,6 +243,9 @@ bool XBot::ModelInterface::fillModelOrderedChain()
         
     }
     //_model_ordered_chain_name;
+    
+    std::cout << "Model ordered chains: " << std::endl;
+    for(const auto& s : _model_ordered_chain_name) std::cout << s << std::endl;
         
     return success;
 }
@@ -379,6 +394,24 @@ int XBot::ModelInterface::getModelID(const std::string& joint_name) const
     }
 }
 
+bool XBot::ModelInterface::getPose(const std::string& source_frame, 
+                                   const std::string& target_frame, 
+                                   KDL::Frame& pose) const
+{
+    bool success_source = getPose(source_frame, _tmp_kdl_frame);
+    bool success_target = getPose(target_frame, _tmp_kdl_frame_1);
+    pose = _tmp_kdl_frame_1.Inverse()*_tmp_kdl_frame;
+    
+}
+
+void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const
+{
+    for(int i = 0; i < 9; i++){
+        kdl_rotation.data[i] = eigen_rotation(i); // TBD: check if works!
+    }
+}
+
+
 // bool XBot::ModelInterface::getOrientation(const std::string& source_frame, const std::string& target_frame, Eigen::Matrix3d& target_point) const
 // {
 // 
@@ -423,17 +456,22 @@ int XBot::ModelInterface::getModelID(const std::string& joint_name) const
 // {
 // 
 // }
-// 
-// bool XBot::ModelInterface::getPose(const std::string& source_frame, Eigen::Affine3d& pose) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::string& target_frame, Eigen::Affine3d& pose) const
-// {
-// 
-// }
-// 
+
+bool XBot::ModelInterface::getPose(const std::string& source_frame, Eigen::Affine3d& pose) const
+{
+    bool success = getPose(source_frame, _tmp_kdl_frame);
+    tf::transformKDLToEigen(_tmp_kdl_frame, pose);
+    return success;
+    
+}
+
+bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::string& target_frame, Eigen::Affine3d& pose) const
+{
+    bool success = getPose(source_frame, target_frame, _tmp_kdl_frame);
+    tf::transformKDLToEigen(_tmp_kdl_frame, pose);
+    return success;
+}
+
 // bool XBot::ModelInterface::getSpatialVelocity(const std::string& link_name, Eigen::Matrix< double, int(6), int(1) >& velocity) const
 // {
 // 
@@ -552,7 +590,7 @@ return XBot::IXBotInterface::setTemperature(temp);
 
 bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
 {
-return XBot::IXBotInterface::syncFrom(other);
+return sync_internal(other);
 }
 
 

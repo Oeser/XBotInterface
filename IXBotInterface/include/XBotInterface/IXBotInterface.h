@@ -94,7 +94,7 @@ namespace XBot {
 
     protected:
         
-        virtual bool syncFrom(const IXBotInterface& other);
+        bool sync_internal(const IXBotInterface& other);
         
         virtual bool init_internal(const std::string& path_to_cfg){ return true; }
         
@@ -105,7 +105,7 @@ namespace XBot {
                                          std::string& absolute_path,
                                          std::string extension = "");
         
-        virtual const std::vector<std::string>& getModelOrderedChainName();
+        virtual const std::vector<std::string>& getModelOrderedChainName() const;
 
         // Setters for RX
         
