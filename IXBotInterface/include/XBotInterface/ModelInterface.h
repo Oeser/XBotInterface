@@ -27,6 +27,7 @@
 #include <Eigen/Geometry>
 #include <kdl/frames.hpp>
 #include <kdl/jacobian.hpp>
+#include <kdl/frames_io.hpp>
 #include <eigen_conversions/eigen_kdl.h>
 
 #include <XBotInterface/IXBotInterface.h>
@@ -373,6 +374,7 @@ private:
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
     XBot::ModelChain _dummy_chain;
     
+    static shlibpp::SharedLibraryClassFactory<ModelInterface> _model_interface_factory;
     static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
     
     std::vector<std::string> _model_ordered_chain_name; 

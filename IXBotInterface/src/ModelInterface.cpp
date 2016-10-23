@@ -20,6 +20,7 @@
 #include <XBotInterface/ModelInterface.h>
 
 // NOTE Static members need to be defined in the cpp 
+shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
 std::vector<shlibpp::SharedLibraryClass<XBot::ModelInterface> > XBot::ModelInterface::_model_interface_instance;
 
 bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars)
@@ -115,13 +116,16 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
         return instance_ptr;
     }
     
+    
+    
+    
     // loading the requested robot interface
-    shlibpp::SharedLibraryClassFactory<ModelInterface> model_interface_factory( vars.at("path_to_shared_lib").c_str(),
-                                vars.at("subclass_factory_name").c_str());
-    if (!model_interface_factory.isValid()) {
+    _model_interface_factory.open( vars.at("path_to_shared_lib").c_str(),
+                                   vars.at("subclass_factory_name").c_str());
+    if (!_model_interface_factory.isValid()) {
         // NOTE print to celebrate the wizard
-        printf("error (%s) : %s\n", shlibpp::Vocab::decode(model_interface_factory.getStatus()).c_str(),
-               model_interface_factory.getLastNativeError().c_str());
+        printf("error (%s) : %s\n", shlibpp::Vocab::decode(_model_interface_factory.getStatus()).c_str(),
+               _model_interface_factory.getLastNativeError().c_str());
     }
     // open and init robot interface
 //     shlibpp::SharedLibraryClass<XBot::ModelInterface> new_model_instance;
@@ -130,11 +134,11 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     _model_interface_instance.push_back(shlibpp::SharedLibraryClass<XBot::ModelInterface>()); 
     shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  _model_interface_instance[_model_interface_instance.size()-1];
     
-    model_instance.open(model_interface_factory); 
+    model_instance.open(_model_interface_factory); 
     model_instance->init(path_to_cfg);
     // static instance of the robot interface
     instance_ptr = std::shared_ptr<ModelInterface>(&model_instance.getContent(), [](ModelInterface* ptr){return;});
- 
+
     return instance_ptr;
 }
 
@@ -400,6 +404,9 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame,
 {
     bool success_source = getPose(source_frame, _tmp_kdl_frame);
     bool success_target = getPose(target_frame, _tmp_kdl_frame_1);
+    
+    std::cout << "W_T_S: \n" << _tmp_kdl_frame << "\n" << "W_T_T: \n" << _tmp_kdl_frame_1 << std::endl;
+    
     pose = _tmp_kdl_frame_1.Inverse()*_tmp_kdl_frame;
     
 }

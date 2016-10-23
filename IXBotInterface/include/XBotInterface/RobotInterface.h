@@ -123,6 +123,7 @@ private:
     
     static RobotInterface::Ptr _instance_ptr;
     static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
+    static shlibpp::SharedLibraryClassFactory<RobotInterface> _robot_interface_factory;
     static ModelInterface::Ptr _model;
     
     static std::string _framework;
