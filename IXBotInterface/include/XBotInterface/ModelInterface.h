@@ -185,6 +185,31 @@ public:
     * @return void
     */
     virtual void getModelID( std::vector<std::string>& joint_name ) const = 0;
+    
+    /**
+     * @brief Computes gravity compensation torques. Make sure that you correctly specified
+     * the gravity vector in order to obtain correct results.
+     * 
+     * @param g The gravity compensation torque vector (if model is floating base, includes virtual joints effort).
+     * @return void
+     */
+    virtual void computeGravityCompensation( Eigen::VectorXd& g ) const = 0;
+    
+    /**
+     * @brief Computes the non-linear torque term, i.e. the sum of centrifugal/coriolis/gravity contributions. Make sure that you correctly specified the gravity vector in order to obtain correct results.
+     * 
+     * @param n The non-linear torques vector (if model is floating base, includes virtual joints effort).
+     * @return void
+     */
+    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0;
+    
+    /**
+     * @brief Computes inverse dynamics.
+     * 
+     * @param tau The inverse dynamics torque vector (if model is floating base, includes virtual joints effort).
+     * @return void
+     */
+    virtual void computeInverseDynamics( Eigen::VectorXd& tau) const = 0;
 
  
     /**
