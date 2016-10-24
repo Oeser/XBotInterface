@@ -49,6 +49,19 @@ namespace XBot {
         
         bool init(const std::string& path_to_cfg);
         
+        void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
+        void getVelocityLimits(Eigen::VectorXd& qdot_max) const;
+        void getEffortLimits(Eigen::VectorXd& tau_max) const;
+        bool checkJointLimits(const Eigen::VectorXd& q, 
+                            std::vector<std::string>& violating_joints) const;
+        bool checkVelocityLimits(const Eigen::VectorXd& qdot, 
+                            std::vector<std::string>& violating_joints) const;
+        bool checkEffortLimits(const Eigen::VectorXd& tau, 
+                            std::vector<std::string>& violating_joints) const;
+        bool checkJointLimits(const Eigen::VectorXd& q) const;
+        bool checkVelocityLimits(const Eigen::VectorXd& qdot) const;
+        bool checkEffortLimits(const Eigen::VectorXd& tau) const;
+        
         // TODO: bool hasVelocity(), hasImpedance(), ....
         
         const urdf::ModelInterface& getUrdf() const;

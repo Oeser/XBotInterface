@@ -159,6 +159,7 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     _joint_id_map[joint->getJointId()] = joint;
     _joint_vector.push_back(joint);
     _ordered_joint_name.push_back(joint->getJointName());
+    _joint_num++;
     if(joint->getJointId() < 0) _is_virtual = true;
 }
 
@@ -1466,6 +1467,163 @@ bool XBot::KinematicChain::hasJoint(int id) const
 {
     return _joint_id_map.count(id) > 0;
 }
+
+void KinematicChain::getEffortLimits(Eigen::VectorXd& tau_max) const
+{
+    if(isVirtual()){
+        tau_max.setConstant(_joint_num, std::numeric_limits<double>::max());
+        return;
+    }
+    
+    tau_max.resize(getJointNum());
+    
+    for(int i = 0; i < _joint_num; i++){
+        tau_max(i) = _urdf_joints[i]->limits->effort;
+    }
+}
+
+
+void KinematicChain::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const
+{
+    if(isVirtual()){
+        q_min.setConstant(_joint_num, -std::numeric_limits<double>::max());
+        q_max.setConstant(_joint_num, std::numeric_limits<double>::max());
+        return;
+    }
+    
+    
+    q_min.resize(_joint_num);
+    q_max.resize(_joint_num);
+    
+    for(int i = 0; i < _joint_num; i++){
+        q_min(i) = _urdf_joints[i]->limits->lower;
+        q_max(i) = _urdf_joints[i]->limits->upper;
+    }
+}
+
+void KinematicChain::getVelocityLimits(Eigen::VectorXd& qdot_max) const
+{
+    if(isVirtual()){
+        qdot_max.setConstant(_joint_num, std::numeric_limits<double>::max());
+        return;
+    }
+    
+    qdot_max.resize(getJointNum());
+    
+    for(int i = 0; i < _joint_num; i++){
+        qdot_max(i) = _urdf_joints[i]->limits->velocity;
+    }
+}
+
+
+bool KinematicChain::checkEffortLimits(const Eigen::VectorXd& tau) const
+{
+    if(isVirtual()) return true;
+    
+    for(int i = 0; i < _joint_num; i++){
+        if( std::abs(tau(i)) > _urdf_joints[i]->limits->effort ){
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool KinematicChain::checkEffortLimits(const Eigen::VectorXd& tau, 
+                                       std::vector< std::string >& violating_joints) const
+{
+    if(isVirtual()) return true;
+    
+    bool success = true;
+//     violating_joints.clear();
+    
+    for(int i = 0; i < _joint_num; i++){
+        if( std::abs(tau(i)) > _urdf_joints[i]->limits->effort ){
+            success = false;
+            violating_joints.push_back(jointName(i));
+        }
+    }
+    
+    return success;
+}
+
+bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q) const
+{
+    if(isVirtual()) return true;
+    
+    for(int i = 0; i < _joint_num; i++){
+        if( q(i) > _urdf_joints[i]->limits->upper || q(i) < _urdf_joints[i]->limits->lower ){
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q, 
+                                      std::vector< std::string >& violating_joints) const
+{
+    if(isVirtual()) return true;
+    
+    bool success = true;
+//     violating_joints.clear();
+    for(int i = 0; i < _joint_num; i++){
+        if( q(i) > _urdf_joints[i]->limits->upper || q(i) < _urdf_joints[i]->limits->lower ){
+            success = false;
+            violating_joints.push_back(jointName(i));
+        }
+    }
+    
+    return true;
+}
+
+bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot) const
+{
+    if(isVirtual()) return true;
+    
+    for(int i = 0; i < _joint_num; i++){
+        if( std::abs(qdot(i)) > _urdf_joints[i]->limits->velocity ){
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot, 
+                                         std::vector< std::string >& violating_joints) const
+{
+    if(isVirtual()) return true;
+    
+    bool success = true;
+//     violating_joints.clear();
+    
+    for(int i = 0; i < _joint_num; i++){
+        if( std::abs(qdot(i)) > _urdf_joints[i]->limits->velocity ){
+            success = false;
+            violating_joints.push_back(jointName(i));
+        }
+    }
+    
+    return success;
+}
+
+void KinematicChain::getEffortLimits(int i, double& tau_max) const
+{
+    tau_max = _urdf_joints[i]->limits->effort;
+}
+
+void KinematicChain::getJointLimits(int i, double& q_min, double& q_max) const
+{
+    q_min = _urdf_joints[i]->limits->lower;
+    q_max = _urdf_joints[i]->limits->upper;
+}
+
+void KinematicChain::getVelocityLimits(int i, double& qdot_max) const
+{
+    qdot_max = _urdf_joints[i]->limits->velocity;
+}
+
 
 
 

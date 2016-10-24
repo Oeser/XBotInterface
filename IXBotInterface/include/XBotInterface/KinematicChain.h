@@ -91,6 +91,22 @@ public:
      */
     typedef std::shared_ptr<KinematicChain> Ptr;
     
+    void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
+    void getVelocityLimits(Eigen::VectorXd& qdot_max) const;
+    void getEffortLimits(Eigen::VectorXd& tau_max) const;
+    void getJointLimits(int i, double& q_min, double& q_max) const;
+    void getVelocityLimits(int i, double& qdot_max) const;
+    void getEffortLimits(int i, double& tau_max) const;
+    bool checkJointLimits(const Eigen::VectorXd& q, 
+                          std::vector<std::string>& violating_joints) const;
+    bool checkVelocityLimits(const Eigen::VectorXd& qdot, 
+                          std::vector<std::string>& violating_joints) const;
+    bool checkEffortLimits(const Eigen::VectorXd& tau, 
+                          std::vector<std::string>& violating_joints) const;
+    bool checkJointLimits(const Eigen::VectorXd& q) const;
+    bool checkVelocityLimits(const Eigen::VectorXd& qdot) const;
+    bool checkEffortLimits(const Eigen::VectorXd& tau) const;
+    
     /**
      * @brief add a joint in the kinematic chain pushing it in the end of the chain
      * 

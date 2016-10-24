@@ -1615,6 +1615,146 @@ XBot::IXBotInterface &XBot::IXBotInterface::operator=(const XBot::IXBotInterface
 
 }
 
+bool XBot::IXBotInterface::checkEffortLimits(const Eigen::VectorXd& tau) const
+{
+    int idx = 0;
+    for( const std::string& s : getModelOrderedChainName() ){
+        const KinematicChain& chain = *_chain_map.at(s);
+        if( !chain.checkEffortLimits(tau.segment(idx, chain.getJointNum())) ){
+            idx += chain.getJointNum();
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool XBot::IXBotInterface::checkEffortLimits(const Eigen::VectorXd& tau, 
+                                             std::vector< std::string >& violating_joints) const
+{
+    bool success = true;
+    
+    int idx = 0;
+    for( const std::string& s : getModelOrderedChainName() ){
+        const KinematicChain& chain = *_chain_map.at(s);
+        success = success && chain.checkEffortLimits(tau.segment(idx, chain.getJointNum()), violating_joints);
+        idx += chain.getJointNum();
+    }
+    
+    return success;
+}
+
+bool XBot::IXBotInterface::checkJointLimits(const Eigen::VectorXd& q) const
+{
+    int idx = 0;
+    for( const std::string& s : getModelOrderedChainName() ){
+        const KinematicChain& chain = *_chain_map.at(s);
+        if( !chain.checkJointLimits(q.segment(idx, chain.getJointNum())) ){
+            idx += chain.getJointNum();
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool XBot::IXBotInterface::checkJointLimits(const Eigen::VectorXd& q, 
+                                            std::vector< std::string >& violating_joints) const
+{
+    bool success = true;
+    
+    int idx = 0;
+    for( const std::string& s : getModelOrderedChainName() ){
+        const KinematicChain& chain = *_chain_map.at(s);
+        success = success && chain.checkJointLimits(q.segment(idx, chain.getJointNum()), violating_joints);
+        idx += chain.getJointNum();
+    }
+    
+    return success;
+}
+
+bool XBot::IXBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot) const
+{
+    int idx = 0;
+    for( const std::string& s : getModelOrderedChainName() ){
+        const KinematicChain& chain = *_chain_map.at(s);
+        if( !chain.checkVelocityLimits(qdot.segment(idx, chain.getJointNum())) ){
+            idx += chain.getJointNum();
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool XBot::IXBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot, 
+                                               std::vector< std::string >& violating_joints) const
+{
+    bool success = true;
+    
+    int idx = 0;
+    for( const std::string& s : getModelOrderedChainName() ){
+        const KinematicChain& chain = *_chain_map.at(s);
+        success = success && chain.checkVelocityLimits(qdot.segment(idx, chain.getJointNum()), violating_joints);
+        idx += chain.getJointNum();
+    }
+    
+    return success;
+}
+
+void XBot::IXBotInterface::getEffortLimits(Eigen::VectorXd& tau_max) const
+{
+    tau_max.resize(_joint_num);
+    
+    int idx = 0;
+    for( const std::string& c : getModelOrderedChainName() ){
+        
+        const KinematicChain& chain = *_chain_map.at(c);
+        
+        for(int i = 0; i < chain.getJointNum(); i++){
+            chain.getEffortLimits(i, tau_max(idx));
+            idx++;
+        }
+        
+    }
+}
+
+void XBot::IXBotInterface::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const
+{
+    q_min.resize(_joint_num);
+    q_max.resize(_joint_num);
+    
+    int idx = 0;
+    for( const std::string& c : getModelOrderedChainName() ){
+        
+        const KinematicChain& chain = *_chain_map.at(c);
+        
+        for(int i = 0; i < chain.getJointNum(); i++){
+            chain.getJointLimits(i, q_min(idx), q_max(idx));
+            idx++;
+        }
+        
+    }
+}
+
+void XBot::IXBotInterface::getVelocityLimits(Eigen::VectorXd& qdot_max) const
+{
+    qdot_max.resize(_joint_num);
+    
+    int idx = 0;
+    for( const std::string& c : getModelOrderedChainName() ){
+        
+        const KinematicChain& chain = *_chain_map.at(c);
+        
+        for(int i = 0; i < chain.getJointNum(); i++){
+            chain.getVelocityLimits(i, qdot_max(idx));
+            idx++;
+        }
+        
+    }
+}
+
+
 
 const std::vector< std::string > &XBot::IXBotInterface::getEnabledJointNames() const
 {
