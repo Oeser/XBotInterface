@@ -543,20 +543,24 @@ bool XBot::ModelInterface::setFloatingBasePose(const Eigen::Affine3d& floating_b
     
 }
 
-// bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const Eigen::Vector3d& gravity)
-// {
-// 
-// }
-// 
-// void XBot::ModelInterface::setGravity(const Eigen::Vector3d& gravity)
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const KDL::Vector& gravity)
-// {
-// 
-// }
+bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const Eigen::Vector3d& gravity)
+{
+    tf::vectorEigenToKDL(gravity, _tmp_kdl_vector);
+    return setGravity(reference_frame, _tmp_kdl_vector);
+}
+
+void XBot::ModelInterface::setGravity(const Eigen::Vector3d& gravity)
+{
+    tf::vectorEigenToKDL(gravity, _tmp_kdl_vector);
+    setGravity(_tmp_kdl_vector);
+}
+
+bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const KDL::Vector& gravity)
+{
+    bool success = getPose(reference_frame, _tmp_kdl_frame);
+    setGravity(_tmp_kdl_frame*gravity);
+    return success;
+}
 
 bool XBot::ModelInterface::setJointEffort(const std::map< std::string, double >& tau)
 {
@@ -659,8 +663,6 @@ bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
         return false;
     }
 }
-
-
 
 
 
