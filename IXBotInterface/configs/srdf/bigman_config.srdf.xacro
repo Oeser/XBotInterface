@@ -14,8 +14,8 @@
     <xacro:property name="BIGMAN_HEAD" value="true" />
     <xacro:property name="BIGMAN_LEFT_ARM" value="true" />
     <xacro:property name="BIGMAN_RIGHT_ARM" value="true" /> 
-    <xacro:property name="BIGMAN_LEFT_HAND" value="true" />
-    <xacro:property name="BIGMAN_RIGHT_HAND" value="true" /> 
+    <xacro:property name="BIGMAN_LEFT_HAND" value="false" />
+    <xacro:property name="BIGMAN_RIGHT_HAND" value="false" /> 
     <xacro:property name="BIGMAN_TORSO" value="true" />   
     <xacro:property name="BIGMAN_LEFT_LEG" value="true" />
     <xacro:property name="BIGMAN_RIGHT_LEG" value="true" /> 
