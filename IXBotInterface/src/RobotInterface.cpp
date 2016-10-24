@@ -148,13 +148,9 @@ bool XBot::RobotInterface::sense(bool sync_model)
 }
 
 
-bool XBot::RobotInterface::move(bool sync_model)
+bool XBot::RobotInterface::move()
 {
-    bool sync_ok = true;
-    if (sync_model) {
-        sync_ok = this->setReferenceFrom(*_model);
-    }
-    return sync_ok && move_internal();
+    return move_internal();
 }
 
 bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
@@ -210,8 +206,10 @@ bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model 
 {
     bool success = true;
     for (const auto & c : model._model_chain_map) {
+        
         const std::string &chain_name = c.first;
         const ModelChain &chain = *c.second;
+        
         if (_robot_chain_map.count(chain_name)) {
             _robot_chain_map.at(chain_name)->setReferenceFrom(chain);
         } else {

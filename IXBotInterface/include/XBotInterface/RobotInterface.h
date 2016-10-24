@@ -51,7 +51,7 @@ public:
     virtual bool isRunning() const = 0;
 
     bool sense(bool sync_model = true);
-    bool move(bool sync_model = true);
+    bool move();
     
     RobotChain& operator()(const std::string& chain_name);
     RobotChain& arm(int arm_id);
