@@ -28,6 +28,7 @@ std::string XBot::RobotInterface::_subclass_factory_name;
 XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
 XBot::ModelInterface::Ptr XBot::RobotInterface::_model;
 shlibpp::SharedLibraryClass<XBot::RobotInterface> XBot::RobotInterface::_robot_interface_instance;
+shlibpp::SharedLibraryClassFactory<XBot::RobotInterface> XBot::RobotInterface::_robot_interface_factory;
 
 XBot::RobotInterface::RobotInterface()
 {
@@ -103,15 +104,15 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     }
 
     // loading the requested robot interface
-    shlibpp::SharedLibraryClassFactory<RobotInterface> robot_interface_factory( _path_to_shared_lib.c_str(),
+    _robot_interface_factory.open( _path_to_shared_lib.c_str(),
                                                                                 _subclass_factory_name.c_str());
-    if (!robot_interface_factory.isValid()) {
+    if (!_robot_interface_factory.isValid()) {
         // NOTE print to celebrate the wizard
-        printf("error (%s) : %s\n", shlibpp::Vocab::decode(robot_interface_factory.getStatus()).c_str(),
-               robot_interface_factory.getLastNativeError().c_str());
+        printf("error (%s) : %s\n", shlibpp::Vocab::decode(_robot_interface_factory.getStatus()).c_str(),
+               _robot_interface_factory.getLastNativeError().c_str());
     }
     // open and init robot interface
-    _robot_interface_instance.open(robot_interface_factory); 
+    _robot_interface_instance.open(_robot_interface_factory); 
     _robot_interface_instance->init(path_to_cfg);
     // static instance of the robot interface
     _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;});
