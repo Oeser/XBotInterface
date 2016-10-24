@@ -56,7 +56,7 @@ namespace XBot {
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
         std::vector<std::string> getChainNames() const;
-        std::map<std::string, XBot::KinematicChain::Ptr>  getChainMap() const;
+        const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
         const std::vector<std::string>& getEnabledJointNames() const;
         bool hasJoint(const std::string& joint_name) const;
         
