@@ -216,6 +216,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     
     
     _model_ordered_chain_name.clear();
+    joint_idx = 0;
     while( joint_idx < model_ordered_joint_name.size() ){
      
         // compute the chain which the joint being processed belongs to
@@ -404,8 +405,6 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame,
 {
     bool success_source = getPose(source_frame, _tmp_kdl_frame);
     bool success_target = getPose(target_frame, _tmp_kdl_frame_1);
-    
-    std::cout << "W_T_S: \n" << _tmp_kdl_frame << "\n" << "W_T_T: \n" << _tmp_kdl_frame_1 << std::endl;
     
     pose = _tmp_kdl_frame_1.Inverse()*_tmp_kdl_frame;
     
@@ -650,7 +649,7 @@ return XBot::IXBotInterface::setTemperature(temp);
 
 bool XBot::ModelInterface::setTemperature(const Eigen::VectorXd& temp)
 {
-return XBot::IXBotInterface::setTemperature(temp);
+    return XBot::IXBotInterface::setTemperature(temp);
 }
 
 bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
