@@ -50,6 +50,12 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
 
 }
 
+int XBot::IXBotInterface::getJointNum() const
+{
+    return _joint_num;
+}
+
+
 const std::vector< std::string >& XBot::IXBotInterface::getModelOrderedChainName() const
 {
     return _XBotModel.get_ordered_chain_names();
@@ -185,7 +191,33 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
         _joint_num += c.second->getJointNum();
     }
     
+    // fill the joint id to eigen id
+    int eigen_id = 0;
+    for( const std::string& chain_name : getModelOrderedChainName() ) {
+        for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
+            _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id++;
+        }
+    }
+    
     return success;
+    
+}
+
+bool XBot::IXBotInterface::getEigenID ( const std::string& chain_name, std::vector< int >& ids ) const  //TBD don't replicate it in ModelInterface
+{
+    if(_chain_map.count(chain_name)){
+        
+        const KinematicChain& chain = *_chain_map.at(chain_name);
+        ids.resize(chain.getJointNum());
+        for(int i=0; i< chain.getJointNum(); i++){
+            ids[i] = _joint_id_to_eigen_id.at(chain.jointId(i));
+        }
+        
+    }
+    else{
+     std::cerr << "ERROR in " << __func__ << ": requested chain " << chain_name << " is not defined!" << std::endl;
+     return false;
+    }
     
 }
 

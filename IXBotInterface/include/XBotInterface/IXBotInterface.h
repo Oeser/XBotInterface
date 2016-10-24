@@ -65,6 +65,7 @@ namespace XBot {
         int legs() const;
         int arms() const;
         
+        int getJointNum() const;
 
         // Getters for RX
         
@@ -106,6 +107,8 @@ namespace XBot {
                                          std::string extension = "");
         
         virtual const std::vector<std::string>& getModelOrderedChainName() const;
+        
+        bool getEigenID(const std::string& chain_name, std::vector<int>& ids) const;
 
         // Setters for RX
         
@@ -175,6 +178,8 @@ namespace XBot {
         XBotCoreModel _XBotModel;
                 
         std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
+        
+        std::map<int, int> _joint_id_to_eigen_id;
 
     private:
 
