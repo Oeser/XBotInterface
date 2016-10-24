@@ -350,7 +350,7 @@ bool XBot::ModelInterface::getCOM(const std::string& reference_frame, KDL::Vecto
 {
     getCOM(com_position);
     bool success = getPose(reference_frame, _tmp_kdl_frame);
-    com_position = _tmp_kdl_frame.Inverse()*com_position;
+    com_position = _tmp_kdl_frame.Inverse(com_position);
     return success;
 }
 
@@ -358,7 +358,7 @@ bool XBot::ModelInterface::getGravity(const std::string& reference_frame, KDL::V
 {
     getGravity(gravity);
     bool success = getPose(reference_frame, _tmp_kdl_frame);
-    gravity = _tmp_kdl_frame.Inverse()*gravity; 
+    gravity = _tmp_kdl_frame.Inverse(gravity); 
     return success;
 }
 
@@ -420,51 +420,98 @@ void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotat
     }
 }
 
+void XBot::ModelInterface::rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const
+{
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            eigen_rotation(i,j) = kdl_rotation.data[3*i+j]; // TBD: check if works!
+        }
+    }
+}
 
-// bool XBot::ModelInterface::getOrientation(const std::string& source_frame, const std::string& target_frame, Eigen::Matrix3d& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getOrientation(const std::string& target_frame, KDL::Rotation& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getOrientation(const std::string& source_frame, const std::string& target_frame, KDL::Rotation& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getOrientation(const std::string& target_frame, Eigen::Matrix3d& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getPointJacobian(const std::string& link_name, const Eigen::Vector3d& point, Eigen::MatrixXd& J)
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, const std::string& target_frame, const Eigen::Vector3d& source_point, Eigen::Vector3d& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, const std::string& target_frame, const KDL::Vector& source_point, KDL::Vector& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, const Eigen::Vector3d& source_point, Eigen::Vector3d& target_point) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, const KDL::Vector& source_point, KDL::Vector& target_point) const
-// {
-// 
-// }
+
+bool XBot::ModelInterface::getOrientation(const std::string& source_frame, 
+                                          const std::string& target_frame, 
+                                          Eigen::Matrix3d& orientation) const
+{
+    bool success = getOrientation(source_frame, target_frame, _tmp_kdl_rotation);
+    rotationKDLToEigen(_tmp_kdl_rotation, orientation);
+    return success;
+}
+
+bool XBot::ModelInterface::getOrientation(const std::string& target_frame, KDL::Rotation& orientation) const
+{
+    bool success = getPose(target_frame, _tmp_kdl_frame);
+    orientation = _tmp_kdl_frame.M;
+    return success;;
+}
+
+bool XBot::ModelInterface::getOrientation(const std::string& source_frame, 
+                                          const std::string& target_frame, 
+                                          KDL::Rotation& orientation) const
+{
+    bool success = getOrientation(source_frame, _tmp_kdl_rotation);
+    success = success && getOrientation(target_frame, _tmp_kdl_rotation_1);
+    orientation = _tmp_kdl_rotation_1.Inverse()*_tmp_kdl_rotation;
+    return success;
+}
+
+bool XBot::ModelInterface::getOrientation(const std::string& target_frame, Eigen::Matrix3d& orientation) const
+{
+    bool success = getOrientation(target_frame, _tmp_kdl_rotation);
+    rotationKDLToEigen(_tmp_kdl_rotation, orientation);
+    return success;
+}
+
+bool XBot::ModelInterface::getPointJacobian(const std::string& link_name, 
+                                            const Eigen::Vector3d& point, 
+                                            Eigen::MatrixXd& J)
+{
+    tf::vectorEigenToKDL(point, _tmp_kdl_vector);
+    bool success = getPointJacobian(link_name, _tmp_kdl_vector, _tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+    return success;
+}
+
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
+                                            const std::string& target_frame, 
+                                            const Eigen::Vector3d& source_point, 
+                                            Eigen::Vector3d& target_point) const
+{
+    tf::vectorEigenToKDL(source_point, _tmp_kdl_vector);
+    bool success = getPointPosition(source_frame, target_frame, _tmp_kdl_vector, _tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, target_point);
+    return success;
+}
+
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
+                                            const std::string& target_frame, 
+                                            const KDL::Vector& source_point, 
+                                            KDL::Vector& target_point) const
+{
+    bool success = getPose(source_frame, target_frame, _tmp_kdl_frame);
+    target_point = _tmp_kdl_frame*source_point;
+    return success;
+}
+
+bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, 
+                                            const Eigen::Vector3d& source_point, 
+                                            Eigen::Vector3d& target_point) const
+{
+    tf::vectorEigenToKDL(source_point, _tmp_kdl_vector_1);
+    bool success = getPointPosition(target_frame, _tmp_kdl_vector_1, _tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, target_point);
+    return success;
+}
+
+bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, 
+                                            const KDL::Vector& source_point, 
+                                            KDL::Vector& target_point) const
+{
+    bool success = getPose(target_frame, _tmp_kdl_frame);
+    target_point = _tmp_kdl_frame.Inverse(source_point);
+    return success;
+}
 
 bool XBot::ModelInterface::getPose(const std::string& source_frame, Eigen::Affine3d& pose) const
 {
@@ -481,16 +528,21 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::s
     return success;
 }
 
-// bool XBot::ModelInterface::getSpatialVelocity(const std::string& link_name, Eigen::Matrix< double, int(6), int(1) >& velocity) const
-// {
-// 
-// }
-// 
-// bool XBot::ModelInterface::setFloatingBasePose(const Eigen::Affine3d& floating_base_pose)
-// {
-// 
-// }
-// 
+bool XBot::ModelInterface::getSpatialVelocity(const std::string& link_name, 
+                                              Eigen::Matrix< double, int(6), int(1) >& velocity) const
+{
+    bool success = getSpatialVelocity(link_name, _tmp_kdl_twist);
+    tf::twistKDLToEigen(_tmp_kdl_twist, velocity);
+    return success;
+}
+
+bool XBot::ModelInterface::setFloatingBasePose(const Eigen::Affine3d& floating_base_pose)
+{
+    tf::transformEigenToKDL(floating_base_pose, _tmp_kdl_frame);
+    return setFloatingBasePose(_tmp_kdl_frame);
+    
+}
+
 // bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const Eigen::Vector3d& gravity)
 // {
 // 
@@ -599,7 +651,13 @@ return XBot::IXBotInterface::setTemperature(temp);
 
 bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
 {
-return sync_internal(other);
+    if( sync_internal(other) ){
+        update(true, true, true);
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 

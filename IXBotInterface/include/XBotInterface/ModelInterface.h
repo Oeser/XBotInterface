@@ -310,16 +310,16 @@ public:
                           
                           
     bool getOrientation(    const std::string& target_frame,
-                            KDL::Rotation& target_point) const;                           
+                            KDL::Rotation& orientation) const;                           
     bool getOrientation(    const std::string& target_frame,
-                            Eigen::Matrix3d& target_point) const; 
+                            Eigen::Matrix3d& orientation) const; 
                             
     bool getOrientation(    const std::string& source_frame,
                             const std::string& target_frame,
-                            KDL::Rotation& target_point) const;                           
+                            KDL::Rotation& orientation) const;                           
     bool getOrientation(    const std::string& source_frame,
                             const std::string& target_frame,
-                            Eigen::Matrix3d& target_point) const;                       
+                            Eigen::Matrix3d& orientation) const;                       
                           
     bool getPointPosition(  const std::string& target_frame,
                             const KDL::Vector& source_point,
@@ -366,6 +366,7 @@ protected:
     virtual const std::vector<std::string>& getModelOrderedChainName() const final;
     
     void rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const;
+    void rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const;
     
 
 private:
@@ -387,7 +388,8 @@ private:
     mutable KDL::Twist _tmp_kdl_twist;
     mutable KDL::Frame _tmp_kdl_frame, _tmp_kdl_frame_1;
     mutable KDL::Jacobian _tmp_kdl_jacobian;
-    mutable KDL::Vector _tmp_kdl_vector;
+    mutable KDL::Vector _tmp_kdl_vector, _tmp_kdl_vector_1;
+    mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
 
 };
 };
