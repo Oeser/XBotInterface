@@ -30,12 +30,12 @@
       <chain base_link="pelvis" tip_link="torso_2"/>
    </group>
 
-<!--   <group name="legs">
+   <group name="legs">
       <group name="front_left_leg"/>
       <group name="front_right_leg"/>
       <group name="rear_right_leg"/>
       <group name="rear_left_leg"/>
-   </group>-->
+   </group>
    
     <group name="arms">
       <group name="left_arm"/>
