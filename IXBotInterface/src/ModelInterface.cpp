@@ -366,10 +366,9 @@ bool XBot::ModelInterface::getGravity(const std::string& reference_frame, KDL::V
 bool XBot::ModelInterface::getJacobian(const std::string& link_name, KDL::Jacobian& J) const
 {
     SetToZero(_tmp_kdl_vector);
-    return getPointJacobian(link_name, _tmp_kdl_vector, J);
+    return getJacobian(link_name, _tmp_kdl_vector, J);
 
 }
-
 
 bool XBot::ModelInterface::getModelID(const std::string& chain_name, std::vector< int >& model_id_vector) const
 {
@@ -462,12 +461,12 @@ bool XBot::ModelInterface::getOrientation(const std::string& target_frame, Eigen
     return success;
 }
 
-bool XBot::ModelInterface::getPointJacobian(const std::string& link_name, 
-                                            const Eigen::Vector3d& point, 
-                                            Eigen::MatrixXd& J)
+bool XBot::ModelInterface::getJacobian(const std::string& link_name, 
+                                       const Eigen::Vector3d& point, 
+                                       Eigen::MatrixXd& J)
 {
     tf::vectorEigenToKDL(point, _tmp_kdl_vector);
-    bool success = getPointJacobian(link_name, _tmp_kdl_vector, _tmp_kdl_jacobian);
+    bool success = getJacobian(link_name, _tmp_kdl_vector, _tmp_kdl_jacobian);
     J = _tmp_kdl_jacobian.data;
     return success;
 }
@@ -560,6 +559,35 @@ bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const 
     setGravity(_tmp_kdl_frame*gravity);
     return success;
 }
+
+bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name, 
+                                           const Eigen::Vector3d& point, 
+                                           Eigen::Vector3d& jdotqdot) const
+{
+    tf::vectorEigenToKDL(point, _tmp_kdl_vector);
+    bool success = computeJdotQdot(link_name, _tmp_kdl_vector, _tmp_kdl_vector_1);
+    tf::vectorKDLToEigen(_tmp_kdl_vector_1, jdotqdot);
+    return success;
+}
+
+
+bool XBot::ModelInterface::getPointAcceleration(const std::string& link_name, 
+                                                const Eigen::Vector3d& point, 
+                                                Eigen::Vector3d& acceleration) const
+{
+    tf::vectorEigenToKDL(point, _tmp_kdl_vector);
+    bool success = getPointAcceleration(link_name, _tmp_kdl_vector, _tmp_kdl_vector_1);
+    tf::vectorKDLToEigen(_tmp_kdl_vector_1, acceleration);
+    return success;
+}
+
+void XBot::ModelInterface::getCOMAcceleration(Eigen::Vector3d& acceleration) const
+{
+    getCOMAcceleration(_tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, acceleration);
+}
+
+
 
 bool XBot::ModelInterface::setJointEffort(const std::map< std::string, double >& tau)
 {

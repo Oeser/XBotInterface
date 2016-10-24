@@ -132,6 +132,31 @@ public:
      * @param gravity the gravity vector expressed in the world frame
      * @return void
      */
+    
+    virtual void getCOMAcceleration( KDL::Vector& acceleration) const = 0;
+    
+    virtual bool getPointAcceleration(const std::string& link_name, 
+                                      const KDL::Vector& point, 
+                                      KDL::Vector& acceleration) const = 0;
+    virtual void getInertiaMatrix(Eigen::MatrixXd& M) const = 0;
+                                      
+    virtual bool computeJdotQdot(const std::string& link_name, 
+                         const KDL::Vector& point, 
+                         KDL::Vector& jdotqdot) const = 0;
+                         
+    bool computeJdotQdot(const std::string& link_name, 
+                         const Eigen::Vector3d& point, 
+                         Eigen::Vector3d& jdotqdot) const;
+                         
+    
+    bool getPointAcceleration(const std::string& link_name, 
+                              const Eigen::Vector3d& point, 
+                              Eigen::Vector3d& acceleration) const;
+    
+    void getCOMAcceleration( Eigen::Vector3d& acceleration) const;
+    
+    
+    
     virtual void getGravity( KDL::Vector& gravity ) const = 0;
     
     
@@ -152,9 +177,9 @@ public:
      * @param J  the Jacobian expressed in the world frame
      * @return True if the link_name is a valid link name. False otherwise.
      */
-    virtual bool getPointJacobian( const std::string& link_name, 
-                                   const KDL::Vector& reference_point, 
-                                   KDL::Jacobian& J) const = 0;
+    virtual bool getJacobian( const std::string& link_name, 
+                              const KDL::Vector& reference_point, 
+                              KDL::Jacobian& J) const = 0;
                                    
     
     /**
@@ -256,9 +281,9 @@ public:
     bool getJacobian( const std::string& link_name, 
                       Eigen::MatrixXd& J);
     
-    bool getPointJacobian( const std::string& link_name, 
-                           const Eigen::Vector3d& point, 
-                           Eigen::MatrixXd& J);
+    bool getJacobian( const std::string& link_name, 
+                      const Eigen::Vector3d& point, 
+                      Eigen::MatrixXd& J);
     
     /**
      * @brief  Gets the gravity vector expressed in the reference_frame
