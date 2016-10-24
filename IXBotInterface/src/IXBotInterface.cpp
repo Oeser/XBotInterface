@@ -1570,7 +1570,7 @@ std::vector< std::string > XBot::IXBotInterface::getChainNames() const
     return _XBotModel.get_chain_names();
 }
 
-std::map< std::string, XBot::KinematicChain::Ptr > XBot::IXBotInterface::getChainMap() const
+const std::map< std::string, XBot::KinematicChain::Ptr >& XBot::IXBotInterface::getChainMap() const
 {
     return _chain_map;
 }
