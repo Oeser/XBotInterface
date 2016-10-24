@@ -158,6 +158,7 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     _joint_name_map[joint->getJointName()] = joint;
     _joint_id_map[joint->getJointId()] = joint;
     _joint_vector.push_back(joint);
+    _ordered_joint_name.push_back(joint->getJointName());
     if(joint->getJointId() < 0) _is_virtual = true;
 }
 
@@ -210,7 +211,7 @@ const std::string &KinematicChain::parentLinkName(int id) const
 
 const std::string &KinematicChain::jointName(int id) const
 {
-    return _urdf_joints[id]->name;
+    return _ordered_joint_name[id];
 }
 
 double KinematicChain::getJointPosition(int index) const
