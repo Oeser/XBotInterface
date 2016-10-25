@@ -1,6 +1,6 @@
 # CENTAURO config
 x_bot_interface:
-  framework: "ROS"
+  framework: "DUMMY"
   internal_model_type: "RBDL"
   is_internal_model_flaoting_base : "false"
   urdf_filename: "urdf/centauro.urdf"
@@ -15,6 +15,11 @@ RobotInterfaceROS:
   joint_state_name: "/centauro/joint_states"
   joint_service_name: "/centauro/position_controller/get_joint_names"
   command_topic_name: "/centauro/position_controller/command"
+  
+RobotInterfaceDUMMY:
+  subclass_name: "RobotInterfaceDUMMY"
+  path_to_shared_lib: "libRobotInterfaceDUMMY.so"
+  subclass_factory_name: "robot_interface_dummy"
 
 ModelInterfaceRBDL:
   subclass_name: "ModelInterfaceRBDL"
