@@ -33,7 +33,13 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
     _ordered_joint_id(other._ordered_joint_id),
     _XBotModel(other._XBotModel),
     _urdf_string(other._urdf_string),
-    _srdf_string(other._srdf_string)
+    _srdf_string(other._srdf_string),
+    _joint_id_to_eigen_id(other._joint_id_to_eigen_id),
+    _joint_name_to_eigen_id(other._joint_name_to_eigen_id),
+    _joint_map_config(other._joint_map_config),
+    _urdf_path(other._urdf_path),
+    _srdf_path(other._srdf_path),
+    _path_to_cfg(other._path_to_cfg)
 {
 
     for (const auto & chain_name_ptr_pair : other._chain_map) {
@@ -46,6 +52,14 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
 
         _chain_map[chain_name] = chainptr;
 
+    }
+    
+    for( const auto& j : other._ordered_joint_vector ){
+        
+        Joint::Ptr jptr = std::make_shared<Joint>();
+        *jptr = *j;
+        
+        _ordered_joint_vector.push_back(jptr);
     }
 
 }
@@ -178,7 +192,7 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     // create dynamically the Kinematic Chains
     for (const std::string & chain_name : _XBotModel.get_chain_names()) {
         XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name,
-                _XBotModel);
+                                                                    _XBotModel);
         _chain_map[chain_name] = actual_chain;
     }
     
@@ -200,7 +214,10 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     int eigen_id = 0;
     for( const std::string& chain_name : getModelOrderedChainName() ) {
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
-            _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id++;
+            _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id;
+            _joint_name_to_eigen_id[_chain_map.at(chain_name)->jointName(i)] = eigen_id;
+            _ordered_joint_vector.push_back(_chain_map.at(chain_name)->getJoint(i));
+            eigen_id++;
         }
     }
     
@@ -224,7 +241,23 @@ bool XBot::IXBotInterface::getEigenID ( const std::string& chain_name, std::vect
      return false;
     }
     
+    return true;
+    
 }
+
+int XBot::IXBotInterface::getEigenID(const std::string& joint_name) const
+{
+    auto it = _joint_name_to_eigen_id.find(joint_name);
+    if( it != _joint_name_to_eigen_id.end() ){
+        return it->second;
+    }
+    else{
+        std::cerr << "ERROR in " << __func__ << ": joint " << joint_name << " NOT defined!!!" << std::endl;
+        return -1;
+    }
+    
+}
+
 
 
 int XBot::IXBotInterface::legs() const
@@ -1649,6 +1682,11 @@ XBot::IXBotInterface &XBot::IXBotInterface::operator=(const XBot::IXBotInterface
     std::swap(_ordered_joint_name, tmp._ordered_joint_name);
     std::swap(_ordered_joint_id, tmp._ordered_joint_id);
     std::swap(_chain_map, tmp._chain_map);
+    std::swap(_joint_id_to_eigen_id, tmp._joint_id_to_eigen_id);
+    std::swap(_joint_name_to_eigen_id, tmp._joint_name_to_eigen_id);
+    std::swap(_path_to_cfg, tmp._path_to_cfg);
+    std::swap(_ordered_joint_vector, tmp._ordered_joint_vector);
+    std::swap(_joint_map_config, tmp._joint_map_config);
 
 }
 
