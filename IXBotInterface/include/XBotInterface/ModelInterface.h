@@ -144,16 +144,7 @@ public:
                          const KDL::Vector& point, 
                          KDL::Twist& jdotqdot) const = 0;
                          
-    bool computeJdotQdot(const std::string& link_name, 
-                         const Eigen::Vector3d& point, 
-                         Eigen::Matrix<double,6,1>& jdotqdot) const;
-                         
     
-    bool getPointAcceleration(const std::string& link_name, 
-                              const Eigen::Vector3d& point, 
-                              Eigen::Vector3d& acceleration) const;
-    
-    void getCOMAcceleration( Eigen::Vector3d& acceleration) const;
     
     
     
@@ -235,6 +226,22 @@ public:
      * @return void
      */
     virtual void computeInverseDynamics( Eigen::VectorXd& tau) const = 0;
+    
+    
+    bool computeJdotQdot(const std::string& link_name, 
+                         const Eigen::Vector3d& point, 
+                         Eigen::Matrix<double,6,1>& jdotqdot) const;
+                         
+    
+    bool getPointAcceleration(const std::string& link_name, 
+                              const Eigen::Vector3d& point, 
+                              Eigen::Vector3d& acceleration) const;
+    
+    void getCOMAcceleration( Eigen::Vector3d& acceleration) const;
+    
+    bool getChainSelectionMatrix( const std::string& chain_name, Eigen::MatrixXd& S ) const;
+    bool getJointSelectionMatrix( const std::string& joint_name, Eigen::RowVectorXd& S ) const;
+    bool getJointSelectionMatrix( int joint_id, Eigen::RowVectorXd& S ) const;
 
  
     /**

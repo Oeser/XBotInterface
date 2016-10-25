@@ -379,7 +379,7 @@ bool XBot::ModelInterface::getModelID(const std::string& chain_name, std::vector
         for(int i=0; i< chain.getJointNum(); i++){
             model_id_vector[i] = _joint_id_to_model_id.at(chain.jointId(i));
         }
-        
+        return true;
     }
     else{
      std::cerr << "ERROR in " << __func__ << ": requested chain " << chain_name << " is not defined!" << std::endl;
@@ -587,6 +587,34 @@ void XBot::ModelInterface::getCOMAcceleration(Eigen::Vector3d& acceleration) con
     tf::vectorKDLToEigen(_tmp_kdl_vector, acceleration);
 }
 
+bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name, 
+                                                   Eigen::MatrixXd& S) const
+{
+    std::vector<int> chain_ids; // TBD use a TMP to avoid allocation
+    if(!getModelID(chain_name, chain_ids)) return false;
+    
+    S.setZero(chain_ids.size(), getJointNum());
+    for( int i = 0; i < chain_ids.size(); i++ ){
+        S(i, chain_ids[i]) = 1;
+    }
+    
+    return true;
+}
+
+bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id, 
+                                                   Eigen::RowVectorXd& S) const
+{
+    return false; //TBD implement
+}
+
+bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name, 
+                                                   Eigen::RowVectorXd& S) const
+{
+    int joint_id = getModelID(joint_name);
+    if( joint_id < 0 ) return false; // TBD print error
+    S.setZero(getJointNum());
+    S(joint_id) = 1;
+}
 
 
 bool XBot::ModelInterface::setJointEffort(const std::map< std::string, double >& tau)
