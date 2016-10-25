@@ -61,6 +61,11 @@ const std::vector< std::string >& XBot::IXBotInterface::getModelOrderedChainName
     return _XBotModel.get_ordered_chain_names();
 }
 
+bool XBot::IXBotInterface::hasChain(const std::string& chain_name) const
+{
+    return _chain_map.count(chain_name) == 1;
+}
+
 
 bool XBot::IXBotInterface::computeAbsolutePath ( const std::string& input_path,
                                                  const std::string& middle_path,

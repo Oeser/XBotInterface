@@ -72,6 +72,7 @@ namespace XBot {
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
         const std::vector<std::string>& getEnabledJointNames() const;
         bool hasJoint(const std::string& joint_name) const;
+        bool hasChain(const std::string& chain_name) const;
         
         XBot::Joint::ConstPtr getJointByName(const std::string& joint_name) const;
         
