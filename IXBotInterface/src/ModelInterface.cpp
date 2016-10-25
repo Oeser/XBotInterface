@@ -561,12 +561,12 @@ bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const 
 }
 
 bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name, 
-                                           const Eigen::Vector3d& point, 
-                                           Eigen::Vector3d& jdotqdot) const
+                         const Eigen::Vector3d& point, 
+                         Eigen::Matrix<double,6,1>& jdotqdot) const
 {
     tf::vectorEigenToKDL(point, _tmp_kdl_vector);
-    bool success = computeJdotQdot(link_name, _tmp_kdl_vector, _tmp_kdl_vector_1);
-    tf::vectorKDLToEigen(_tmp_kdl_vector_1, jdotqdot);
+    bool success = computeJdotQdot(link_name, _tmp_kdl_vector, _tmp_kdl_twist);
+    tf::twistKDLToEigen(_tmp_kdl_twist, jdotqdot);
     return success;
 }
 

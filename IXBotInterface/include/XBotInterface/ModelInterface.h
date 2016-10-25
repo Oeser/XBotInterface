@@ -142,11 +142,11 @@ public:
                                       
     virtual bool computeJdotQdot(const std::string& link_name, 
                          const KDL::Vector& point, 
-                         KDL::Vector& jdotqdot) const = 0;
+                         KDL::Twist& jdotqdot) const = 0;
                          
     bool computeJdotQdot(const std::string& link_name, 
                          const Eigen::Vector3d& point, 
-                         Eigen::Vector3d& jdotqdot) const;
+                         Eigen::Matrix<double,6,1>& jdotqdot) const;
                          
     
     bool getPointAcceleration(const std::string& link_name, 
