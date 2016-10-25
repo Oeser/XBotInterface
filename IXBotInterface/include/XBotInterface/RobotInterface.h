@@ -46,6 +46,8 @@ public:
     static RobotInterface::Ptr getRobot(const std::string &path_to_cfg, int argc, char **argv);
     
     ModelInterface& model();
+    RobotInterface& operator=(const RobotInterface& other) = delete;
+    RobotInterface(const RobotInterface& other) = delete;
     
     virtual double getTime() const = 0;
     virtual bool isRunning() const = 0;
@@ -118,6 +120,7 @@ private:
     virtual bool init_internal(const std::string &path_to_cfg);
     
     using IXBotInterface::_chain_map;
+    using IXBotInterface::_ordered_joint_vector;
     std::map<std::string, XBot::RobotChain::Ptr> _robot_chain_map;
     XBot::RobotChain _dummy_chain;
     

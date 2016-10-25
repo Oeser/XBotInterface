@@ -188,10 +188,10 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     bool success = true;
     
     std::vector<std::string> model_ordered_joint_name;
-    this->getModelID(model_ordered_joint_name);
+    this->getModelOrderedJoints(model_ordered_joint_name);
     
     // if model is floating base add virtual chain with six virtual joints,
-    // which are the first six provided by getModelID
+    // which are the first six provided by getModelOrderedJoints
     
     int joint_idx = 0;
     _joint_id_to_model_id.clear();
@@ -370,33 +370,6 @@ bool XBot::ModelInterface::getJacobian(const std::string& link_name, KDL::Jacobi
 
 }
 
-bool XBot::ModelInterface::getModelID(const std::string& chain_name, std::vector< int >& model_id_vector) const
-{
-    if(_chain_map.count(chain_name)){
-        
-        const KinematicChain& chain = *_chain_map.at(chain_name);
-        model_id_vector.resize(chain.getJointNum());
-        for(int i=0; i< chain.getJointNum(); i++){
-            model_id_vector[i] = _joint_id_to_model_id.at(chain.jointId(i));
-        }
-        return true;
-    }
-    else{
-     std::cerr << "ERROR in " << __func__ << ": requested chain " << chain_name << " is not defined!" << std::endl;
-     return false;
-    }
-    
-}
-
-int XBot::ModelInterface::getModelID(const std::string& joint_name) const
-{
-    auto jptr = getJointByName(joint_name);
-    if(jptr) return _joint_id_to_model_id.at(jptr->getJointId());
-    else{
-        std::cerr << "ERROR in " << __func__ << ": requested joint " << joint_name << " is not defined!" << std::endl;
-        return -1;    
-    }
-}
 
 bool XBot::ModelInterface::getPose(const std::string& source_frame, 
                                    const std::string& target_frame, 
@@ -591,7 +564,7 @@ bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name
                                                    Eigen::MatrixXd& S) const
 {
     std::vector<int> chain_ids; // TBD use a TMP to avoid allocation
-    if(!getModelID(chain_name, chain_ids)) return false;
+    if(!getEigenID(chain_name, chain_ids)) return false;
     
     S.setZero(chain_ids.size(), getJointNum());
     for( int i = 0; i < chain_ids.size(); i++ ){
@@ -610,7 +583,7 @@ bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id,
 bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name, 
                                                    Eigen::RowVectorXd& S) const
 {
-    int joint_id = getModelID(joint_name);
+    int joint_id = getEigenID(joint_name);
     if( joint_id < 0 ) return false; // TBD print error
     S.setZero(getJointNum());
     S(joint_id) = 1;

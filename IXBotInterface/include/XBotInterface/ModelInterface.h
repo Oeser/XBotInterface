@@ -57,6 +57,10 @@ public:
 //     using XBot::IXBotInterface::syncFrom;
     
     static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
+    
+    ModelInterface& operator=(const ModelInterface& other) = delete;
+    ModelInterface(const ModelInterface& other) = delete;
+    ModelInterface(){}
 
     /**
      * @brief true if the robot is floating base, false if it has a fixed base.
@@ -181,7 +185,7 @@ public:
     * @return True if the link_name is a valid link name. False otherwise.
     */
     virtual bool getSpatialVelocity( const std::string& link_name, 
-                                     KDL::Twist& velocity) const = 0;
+                                     KDL::Twist& velocity) const = 0; // TBD name???
                                      
     /**
     * @brief Gets the spatial acceleration of the link with link_name name. The reference point of the acceleration twist is the origin of the link with link_name name.
@@ -191,7 +195,7 @@ public:
     * @return True if the link_name is a valid link name. False otherwise.
     */                                 
     virtual bool getSpatialAcceleration( const std::string& link_name, 
-                                         KDL::Twist& acceleration) const = 0;
+                                         KDL::Twist& acceleration) const = 0; // TBD name???
 
                              
     /**
@@ -200,7 +204,7 @@ public:
     * @param joint_name the joint names ordered according to the model
     * @return void
     */
-    virtual void getModelID( std::vector<std::string>& joint_name ) const = 0;
+    virtual void getModelOrderedJoints( std::vector<std::string>& joint_name ) const = 0;
     
     /**
      * @brief Computes gravity compensation torques. Make sure that you correctly specified
@@ -217,7 +221,7 @@ public:
      * @param n The non-linear torques vector (if model is floating base, includes virtual joints effort).
      * @return void
      */
-    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0;
+    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0; //TBD termss
     
     /**
      * @brief Computes inverse dynamics.
@@ -243,33 +247,6 @@ public:
     bool getJointSelectionMatrix( const std::string& joint_name, Eigen::RowVectorXd& S ) const;
     bool getJointSelectionMatrix( int joint_id, Eigen::RowVectorXd& S ) const;
 
- 
-    /**
-    * @brief Gets the model ID of the joint with joint_name name
-    * 
-    * @param joint_name the joint name
-    * @return int the model ID of the joint with joint_name name
-    */
-    int getModelID( const std::string& joint_name) const;
-                             
-                             
-    /**
-     * @brief Gets the vector of model IDs of the joints inside chain with name chain_name
-     * 
-     * @param chain_name the chain name
-     * @param model_id_vector the vector of model IDs of the joints inside chain with name chain_name
-     * @return True is a chain with chain_name name exists.
-     */
-    bool getModelID( const std::string& chain_name,
-                     std::vector<int>& model_id_vector) const;
-                             
-    /**
-     * @brief Gets the vector of joints model IDs of the whole robot
-     * 
-     * @param model_id_vector the vector of model IDs of the joints inside the whole robot
-     * @return void
-     */
-    void getModelID( std::vector<int>& model_id_vector) const;
    
     bool getSpatialVelocity( const std::string& link_name, 
                              Eigen::Matrix<double,6,1>& velocity) const;
@@ -429,6 +406,7 @@ protected:
 private:
     
     using IXBotInterface::_chain_map;
+    using IXBotInterface::_ordered_joint_vector;
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
     XBot::ModelChain _dummy_chain;
     
