@@ -30,6 +30,7 @@
 
 #include<XBotInterface/Joint.h>
 #include<XBotCoreModel.h>
+#include<XBotInterface/ForceTorqueSensor.h>
 
 
 namespace XBot
@@ -90,6 +91,9 @@ public:
      * 
      */
     typedef std::shared_ptr<KinematicChain> Ptr;
+    
+    std::vector<ForceTorqueSensor::ConstPtr> getForceTorque() const;
+    ForceTorqueSensor::ConstPtr getForceTorque(const std::string& link_name) const;
     
     void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
     void getVelocityLimits(Eigen::VectorXd& qdot_max) const;
@@ -267,6 +271,9 @@ protected:
     std::map<std::string, XBot::Joint::Ptr> _joint_name_map;
     std::map<int, XBot::Joint::Ptr> _joint_id_map;
     std::vector<XBot::Joint::Ptr> _joint_vector;
+    
+    std::vector<ForceTorqueSensor::Ptr> _ft_vector;
+    std::map<std::string, ForceTorqueSensor::Ptr> _ft_map;
     
     virtual bool syncFrom(const KinematicChain &other);
     

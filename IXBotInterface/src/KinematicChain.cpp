@@ -106,6 +106,15 @@ KinematicChain::KinematicChain(const KinematicChain &other):
 
     }
 
+    for (const ForceTorqueSensor::Ptr & other_ftptr : other._ft_vector) {
+
+        ForceTorqueSensor::Ptr ftptr = std::make_shared<ForceTorqueSensor>();
+        *ftptr = *other_ftptr;
+
+        _ft_vector.push_back(ftptr);
+        _ft_map[ftptr->sensorName()] = ftptr;
+
+    }
 
 }
 
@@ -128,6 +137,8 @@ KinematicChain &KinematicChain::operator=(const KinematicChain &rhs)
     std::swap(_joint_name_map, tmp._joint_name_map);
     std::swap(_joint_id_map, tmp._joint_id_map);
     std::swap(_is_virtual, tmp._is_virtual);
+    std::swap(_ft_vector, tmp._ft_vector);
+    std::swap(_ft_map, tmp._ft_map);
 
     // Return this
     return *this;
@@ -142,6 +153,8 @@ void XBot::KinematicChain::shallowCopy(const KinematicChain& chain)
     _joint_vector = chain._joint_vector;
     _joint_name_map = chain._joint_name_map;
     _joint_id_map = chain._joint_id_map;
+    _ft_vector = chain._ft_vector;
+    _ft_map = chain._ft_map;
     
     
 }
@@ -1633,6 +1646,31 @@ Joint::Ptr XBot::KinematicChain::getJoint(int i) const
     
     return _joint_vector[i];
 }
+
+ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::string& link_name) const
+{
+    bool success = false;
+    ForceTorqueSensor::ConstPtr ft = std::make_shared<ForceTorqueSensor>();
+    
+    for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
+        if( ftptr->parentLinkName() == link_name ){
+            success = true;
+            ft = ftptr;
+        }
+    }
+    
+    return ft;
+}
+
+std::vector< ForceTorqueSensor::ConstPtr > XBot::KinematicChain::getForceTorque() const
+{
+    std::vector< ForceTorqueSensor::ConstPtr > ft_constptr_vector;
+    for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
+        ft_constptr_vector.push_back(ftptr);
+    }
+    return ft_constptr_vector;
+}
+
 
 
 
