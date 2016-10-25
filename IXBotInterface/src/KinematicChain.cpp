@@ -1662,15 +1662,19 @@ ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::stri
     return ft;
 }
 
-std::vector< ForceTorqueSensor::ConstPtr > XBot::KinematicChain::getForceTorque() const
+std::map< std::string, ForceTorqueSensor::ConstPtr > XBot::KinematicChain::getForceTorque() const
 {
-    std::vector< ForceTorqueSensor::ConstPtr > ft_constptr_vector;
+    std::map< std::string, ForceTorqueSensor::ConstPtr > ft_constptr_map;
     for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
-        ft_constptr_vector.push_back(ftptr);
+        ft_constptr_map[ftptr->sensorName()] = ftptr;
     }
-    return ft_constptr_vector;
+    return ft_constptr_map;
 }
 
+std::map< std::string, ForceTorqueSensor::Ptr > KinematicChain::getForceTorqueInternal() const
+{
+    return _ft_map;
+}
 
 
 

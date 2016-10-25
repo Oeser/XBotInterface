@@ -92,8 +92,8 @@ public:
      */
     typedef std::shared_ptr<KinematicChain> Ptr;
     
-    std::vector<ForceTorqueSensor::ConstPtr> getForceTorque() const;
-    ForceTorqueSensor::ConstPtr getForceTorque(const std::string& link_name) const;
+    std::map<std::string, ForceTorqueSensor::ConstPtr> getForceTorque() const;
+    ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
     
     void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
     void getVelocityLimits(Eigen::VectorXd& qdot_max) const;
@@ -285,6 +285,8 @@ protected:
      * @return A shared pointer to the requested joint
      */
     Joint::Ptr getJoint(int i) const;
+    
+    std::map< std::string, ForceTorqueSensor::Ptr > getForceTorqueInternal() const;
     
     // Setters for RX
     

@@ -69,12 +69,14 @@ namespace XBot {
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
         std::vector<std::string> getChainNames() const;
-        const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
+        
         const std::vector<std::string>& getEnabledJointNames() const;
         bool hasJoint(const std::string& joint_name) const;
         bool hasChain(const std::string& chain_name) const;
         
         XBot::Joint::ConstPtr getJointByName(const std::string& joint_name) const;
+        std::map< std::string,  ForceTorqueSensor::ConstPtr > getForceTorque() const;
+        ForceTorqueSensor::ConstPtr getForceTorque(const std::string parent_link_name) const;
         
         int legs() const;
         int arms() const;
@@ -108,6 +110,8 @@ namespace XBot {
         friend std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
 
     protected:
+        
+        const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
         
         bool sync_internal(const IXBotInterface& other);
         
