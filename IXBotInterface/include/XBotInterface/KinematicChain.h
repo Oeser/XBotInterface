@@ -270,6 +270,15 @@ protected:
     
     virtual bool syncFrom(const KinematicChain &other);
     
+    
+    /**
+     * @brief Getter for the i-th Joint Ptr 
+     * 
+     * @param i index inside the chain (i=0 is the child joint of base link)
+     * @return A shared pointer to the requested joint
+     */
+    Joint::Ptr getJoint(int i) const;
+    
     // Setters for RX
     
     virtual bool setJointPosition(const Eigen::VectorXd &q);

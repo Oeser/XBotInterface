@@ -1624,6 +1624,15 @@ void KinematicChain::getVelocityLimits(int i, double& qdot_max) const
     qdot_max = _urdf_joints[i]->limits->velocity;
 }
 
+Joint::Ptr XBot::KinematicChain::getJoint(int i) const
+{
+    if(_joint_vector.size() <= i){
+        std::cerr << "ERROR in " << __func__ << "chain " << chainName() << "has less than " << i+1 << " joints!" << std::endl;
+        return Joint::Ptr();
+    }
+    
+    return _joint_vector[i];
+}
 
 
 
