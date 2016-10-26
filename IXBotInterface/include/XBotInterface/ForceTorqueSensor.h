@@ -59,6 +59,8 @@ public:
     const std::string& sensorName() const;
     const Eigen::Affine3d& sensorPose() const;
     
+    friend std::ostream& operator<< ( std::ostream& os, const XBot::ForceTorqueSensor& j );
+    
     // NOTE if you are a const ptr we cannot call them ///////
     void setWrench(const Eigen::Matrix<double, 6, 1>& wrench);
     void setForce(const Eigen::Vector3d& force);

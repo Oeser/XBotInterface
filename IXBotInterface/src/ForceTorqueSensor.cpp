@@ -129,6 +129,24 @@ void ForceTorqueSensor::setWrench(const Eigen::Matrix< double, int(6), int(1) >&
     _tz = wrench(5);
 }
 
+std::ostream& operator<< ( std::ostream& os, const XBot::ForceTorqueSensor& j ) 
+{
+    os << "FT name: " << j.sensorName() << std::endl;
+    os << "Parent link: " << j.parentLinkName() << std::endl;
+    os << "Sensor frame to parent link frame transform: " << std::endl;
+    os << "Orientation: \n" << j.sensorPose().linear() << std::endl;
+    os << "Position: \n" << j.sensorPose().translation() << std::endl;
+    os << "Sensed values ###########" << std::endl;
+    os << "\tFx: " << j._fx << std::endl;
+    os << "\tFy: " << j._fy << std::endl;
+    os << "\tFz: " << j._fz << std::endl;
+    os << "\tTx: " << j._tx << std::endl;
+    os << "\tTy: " << j._ty << std::endl;
+    os << "\tTz: " << j._tz << std::endl;
+    
+    return os;
+}
+
     
     
     
