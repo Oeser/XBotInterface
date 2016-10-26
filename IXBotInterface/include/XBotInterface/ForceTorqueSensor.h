@@ -26,7 +26,7 @@
 #include <kdl/kdl.hpp>
 #include <eigen_conversions/eigen_kdl.h>
 #include <Eigen/Geometry>
-#include <urdf/model.h>
+#include <srdfdom_advr/model.h>
 
 namespace XBot {
 
