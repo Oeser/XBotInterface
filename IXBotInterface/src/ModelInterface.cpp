@@ -176,6 +176,8 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
         _model_chain_map[c.first] = model_chain;
         
     }
+    
+    
 
     return true;
 }

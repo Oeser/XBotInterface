@@ -92,8 +92,24 @@ public:
      */
     typedef std::shared_ptr<KinematicChain> Ptr;
     
+    /**
+     * @brief Getter for the force-torque sensor map 
+     * 
+     * @return A map whose key is the sensor name (i.e. the name of the sensor link inside the URDF) and
+     * whose value is a shared pointer to the force torque sensor.
+     */
     std::map<std::string, ForceTorqueSensor::ConstPtr> getForceTorque() const;
-    ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
+    
+    /**
+     * @brief Returns a force-torque sensor given its parent-link name. 
+     * 
+     * @param parent_link_name Name of the link to which the sensor is attached
+     * @param ft A shared pointer to the force-torque sensor. A dummy FT is returned if either parent_link_name is not defined
+     * or it does not contain any FT sensor.
+     * @return True if a FT sensor with given parent_link_name was found. False otherwise.
+     */
+    bool getForceTorque(const std::string& parent_link_name, ForceTorqueSensor::ConstPtr& ft ) const;
+
     
     void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
     void getVelocityLimits(Eigen::VectorXd& qdot_max) const;

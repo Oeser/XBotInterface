@@ -213,6 +213,10 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     // fill the joint id to eigen id
     int eigen_id = 0;
     for( const std::string& chain_name : getModelOrderedChainName() ) {
+        
+        _ft_map.insert(_chain_map.at(chain_name)->getForceTorqueInternal().begin(),
+                       _chain_map.at(chain_name)->getForceTorqueInternal().end());
+        
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
             _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id;
             _joint_name_to_eigen_id[_chain_map.at(chain_name)->jointName(i)] = eigen_id;
@@ -1845,5 +1849,35 @@ std::ostream& XBot::operator<< ( std::ostream& os, const XBot::IXBotInterface& r
     return os;
 }
 
+bool XBot::IXBotInterface::getForceTorque(const std::string& parent_link_name, ForceTorqueSensor::ConstPtr& ft) const
+{
+    for( const auto& c : _chain_map ){
+        
+        const KinematicChain& chain = *c.second;
+        
+        if(chain.getForceTorque(parent_link_name, ft)){
+            return true;
+        }
+    }
+        
+   return false;
+}
+
+std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > XBot::IXBotInterface::getForceTorque()
+{
+   std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > ft_map;
+   
+   for( const auto& ft_ptr_pair : _ft_map ){
+       
+        ft_map[ft_ptr_pair.first] = ft_ptr_pair.second;
+   }
+   
+   return ft_map;
+}
+
+const std::map< std::string, XBot::ForceTorqueSensor::Ptr >& XBot::IXBotInterface::getForceTorqueInternal() const
+{
+    return _ft_map;
+}
 
 

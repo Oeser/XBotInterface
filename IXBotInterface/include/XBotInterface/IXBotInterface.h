@@ -75,8 +75,9 @@ namespace XBot {
         bool hasChain(const std::string& chain_name) const;
         
         XBot::Joint::ConstPtr getJointByName(const std::string& joint_name) const;
-        std::map< std::string,  ForceTorqueSensor::ConstPtr > getForceTorque() const;
-        ForceTorqueSensor::ConstPtr getForceTorque(const std::string parent_link_name) const;
+        
+        std::map< std::string, ForceTorqueSensor::ConstPtr > getForceTorque();
+        bool getForceTorque(const std::string& parent_link_name, ForceTorqueSensor::ConstPtr& ft) const;
         
         int legs() const;
         int arms() const;
@@ -112,6 +113,7 @@ namespace XBot {
     protected:
         
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
+        const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const;
         
         bool sync_internal(const IXBotInterface& other);
         
@@ -128,6 +130,7 @@ namespace XBot {
         
         bool getEigenID(const std::string& chain_name, std::vector<int>& ids) const;
         int getEigenID(const std::string& joint_name) const;
+        
         
 
         // Setters for RX
@@ -198,7 +201,8 @@ namespace XBot {
         XBotCoreModel _XBotModel;
                 
         std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
-        std::vector<Joint::Ptr> _ordered_joint_vector; //TBD copy, etc
+        std::vector<Joint::Ptr> _ordered_joint_vector;
+        std::map<std::string, ForceTorqueSensor::Ptr> _ft_map; // TBD implment
         
         std::map<int, int> _joint_id_to_eigen_id;
         std::map<std::string, int> _joint_name_to_eigen_id;

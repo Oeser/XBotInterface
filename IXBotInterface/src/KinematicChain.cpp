@@ -40,6 +40,7 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     _joint_num = _XBotModel.get_joint_num(chain_name);
     _XBotModel.get_enabled_joints_in_chain(chain_name, _ordered_joint_name);
     _XBotModel.get_enabled_joint_ids_in_chain(chain_name, _ordered_joint_id);
+
     // resize joint vector
     _joint_vector.resize(_joint_num);
     // initialize the joint maps and vector
@@ -71,6 +72,20 @@ KinematicChain::KinematicChain(const std::string &chain_name,
 
     // Add last link to _urdf_links
     _urdf_links.push_back(robot_urdf.getLink(childLinkName(getJointNum() - 1)));
+    
+    // Add FT
+    for( const auto& ft_name_id : _XBotModel.get_ft_sensors() ){
+        
+        const std::string& ft_joint_name = ft_name_id.first;
+        std::string ft_link_name = robot_urdf.getJoint(ft_joint_name)->child_link_name;
+        
+        ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name));
+        _ft_vector.push_back(ft_ptr);
+        _ft_map[ft_ptr->sensorName()] = ft_ptr;
+        
+        
+        
+    }
 
 }
 
@@ -1647,10 +1662,10 @@ Joint::Ptr XBot::KinematicChain::getJoint(int i) const
     return _joint_vector[i];
 }
 
-ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::string& link_name) const
+bool XBot::KinematicChain::getForceTorque(const std::string& link_name, ForceTorqueSensor::ConstPtr& ft) const
 {
     bool success = false;
-    ForceTorqueSensor::ConstPtr ft = std::make_shared<ForceTorqueSensor>();
+    ft = std::make_shared<ForceTorqueSensor>();
     
     for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
         if( ftptr->parentLinkName() == link_name ){
@@ -1659,7 +1674,11 @@ ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::stri
         }
     }
     
-    return ft;
+    if(!success){
+        std::cerr << "ERROR in " << __func__ << " " << link_name << " is either undefined or does not contain any FT" << std::endl;
+    }
+    
+    return success;
 }
 
 std::map< std::string, ForceTorqueSensor::ConstPtr > XBot::KinematicChain::getForceTorque() const
