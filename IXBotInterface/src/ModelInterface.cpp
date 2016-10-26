@@ -21,7 +21,7 @@
 
 // NOTE Static members need to be defined in the cpp 
 shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
-std::vector<shlibpp::SharedLibraryClass<XBot::ModelInterface> > XBot::ModelInterface::_model_interface_instance;
+std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > > XBot::ModelInterface::_model_interface_instance;
 
 bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars)
 {
@@ -127,13 +127,13 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
         printf("error (%s) : %s\n", shlibpp::Vocab::decode(_model_interface_factory.getStatus()).c_str(),
                _model_interface_factory.getLastNativeError().c_str());
     }
-    // open and init robot interface
-//     shlibpp::SharedLibraryClass<XBot::ModelInterface> new_model_instance;
     
     // save the instance
-    _model_interface_instance.push_back(shlibpp::SharedLibraryClass<XBot::ModelInterface>()); 
-    shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  _model_interface_instance[_model_interface_instance.size()-1];
+    std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > ali_ptr(new shlibpp::SharedLibraryClass<XBot::ModelInterface>(_model_interface_factory));
+    _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >()); 
+    shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  *_model_interface_instance[_model_interface_instance.size()-1];
     
+    // open and init robot interface
     model_instance.open(_model_interface_factory); 
     model_instance->init(path_to_cfg);
     // static instance of the robot interface

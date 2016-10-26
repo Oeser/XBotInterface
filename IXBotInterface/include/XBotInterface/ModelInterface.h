@@ -411,7 +411,7 @@ private:
     XBot::ModelChain _dummy_chain;
     
     static shlibpp::SharedLibraryClassFactory<ModelInterface> _model_interface_factory;
-    static std::vector<shlibpp::SharedLibraryClass<ModelInterface> > _model_interface_instance;
+    static std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<ModelInterface> > > _model_interface_instance;
     
     std::vector<std::string> _model_ordered_chain_name; 
     std::map<int, int> _joint_id_to_model_id;
