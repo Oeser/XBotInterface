@@ -213,9 +213,9 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     // fill the joint id to eigen id
     int eigen_id = 0;
     for( const std::string& chain_name : getModelOrderedChainName() ) {
-        
-        _ft_map.insert(_chain_map.at(chain_name)->getForceTorqueInternal().begin(),
-                       _chain_map.at(chain_name)->getForceTorqueInternal().end());
+        const std::map< std::string, ForceTorqueSensor::Ptr >& ft_map = _chain_map.at(chain_name)->getForceTorqueInternal();
+        _ft_map.insert(ft_map.begin(),
+                       ft_map.end());
         
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
             _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id;

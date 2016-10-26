@@ -78,13 +78,16 @@ KinematicChain::KinematicChain(const std::string &chain_name,
         
         const std::string& ft_joint_name = ft_name_id.first;
         std::string ft_link_name = robot_urdf.getJoint(ft_joint_name)->child_link_name;
+        const std::string& ft_parent_link_name = robot_urdf.getJoint(ft_joint_name)->parent_link_name;
         
-        ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name));
-        _ft_vector.push_back(ft_ptr);
-        _ft_map[ft_ptr->sensorName()] = ft_ptr;
-        
-        
-        
+        // check the FT on this chain
+        for( const auto& link_in_chain : _urdf_links) {
+            if(link_in_chain->name == ft_parent_link_name) {
+                ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name));
+                _ft_vector.push_back(ft_ptr);
+                _ft_map[ft_ptr->sensorName()] = ft_ptr;
+            }
+        }
     }
 
 }

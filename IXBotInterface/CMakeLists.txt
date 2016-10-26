@@ -21,8 +21,6 @@
 project(IXBotCoreInterface)
 
 find_package(XBotCoreModel REQUIRED)
-# find_package(RobotInterfaceROS REQUIRED)
-# find_package(RobotInterfaceYARP REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(sharedlib++ REQUIRED)
