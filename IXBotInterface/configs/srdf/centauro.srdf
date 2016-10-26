@@ -44,7 +44,7 @@
    
 
    
-    <group name="force_torque_sensor">
+    <group name="force_torque_sensors">
         <joint name="ft_foot_1_joint"/>
         <joint name="ft_foot_2_joint"/>
         <joint name="ft_foot_3_joint"/>

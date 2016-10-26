@@ -31,11 +31,16 @@ _fx(0), _fy(0), _fz(0), _tx(0), _ty(0), _tz(0)
     urdf::Rotation rot = ft_link->parent_joint->parent_to_joint_origin_transform.rotation;
     urdf::Vector3 pos = ft_link->parent_joint->parent_to_joint_origin_transform.position;
     
-    Eigen::Quaterniond quat(rot.x, rot.y, rot.z, rot.w);
+    Eigen::Quaterniond quat;
+    quat.x() = rot.x;
+    quat.y() = rot.y;
+    quat.z() = rot.z;
+    quat.w() = rot.w;
     
     _parent_link_T_sensor_link.translation() << pos.x, pos.y, pos.z;
-    _parent_link_T_sensor_link.linear() = Eigen::Matrix3d(quat);
+    _parent_link_T_sensor_link.linear() = quat.toRotationMatrix();
 
+//     std::cout << _ft_name << "\n" << quat.toRotationMatrix() << "\n" << _parent_link_T_sensor_link.linear() << std::endl;
 }
 
 ForceTorqueSensor::ForceTorqueSensor():
