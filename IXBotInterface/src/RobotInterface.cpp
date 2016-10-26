@@ -141,10 +141,11 @@ const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName
 bool XBot::RobotInterface::sense(bool sync_model)
 {
     bool sense_ok = sense_internal();
+    bool sensors_ok = read_sensors();
     if (sync_model) {
-        return sense_ok && (_model->syncFrom(*this));
+        return sense_ok && sensors_ok && (_model->syncFrom(*this));
     }
-    return sense_ok;
+    return sense_ok && sensors_ok;
 }
 
 

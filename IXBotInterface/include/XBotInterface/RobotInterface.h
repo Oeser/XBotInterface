@@ -111,6 +111,7 @@ protected:
 
     virtual bool sense_internal() = 0;
     virtual bool move_internal() = 0;
+    virtual bool read_sensors() = 0;
     virtual bool init_robot(const std::string& path_to_cfg) = 0;
     
     virtual const std::vector<std::string>& getModelOrderedChainName() final;
