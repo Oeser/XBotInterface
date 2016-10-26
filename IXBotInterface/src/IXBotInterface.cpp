@@ -189,11 +189,15 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     _XBotModel.get_enabled_joint_ids(_ordered_joint_id);
     _XBotModel.get_enabled_joint_names(_ordered_joint_name);
 
-    // create dynamically the Kinematic Chains
+    // create dynamically the Kinematic Chains and the FT
     for (const std::string & chain_name : _XBotModel.get_chain_names()) {
         XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name,
                                                                     _XBotModel);
         _chain_map[chain_name] = actual_chain;
+        
+        const std::map< std::string, ForceTorqueSensor::Ptr >& ft_map = _chain_map.at(chain_name)->getForceTorqueInternal();
+        _ft_map.insert(ft_map.begin(),
+                       ft_map.end());
     }
     
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
@@ -213,10 +217,6 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     // fill the joint id to eigen id
     int eigen_id = 0;
     for( const std::string& chain_name : getModelOrderedChainName() ) {
-        const std::map< std::string, ForceTorqueSensor::Ptr >& ft_map = _chain_map.at(chain_name)->getForceTorqueInternal();
-        _ft_map.insert(ft_map.begin(),
-                       ft_map.end());
-        
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
             _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id;
             _joint_name_to_eigen_id[_chain_map.at(chain_name)->jointName(i)] = eigen_id;
