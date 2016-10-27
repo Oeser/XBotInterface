@@ -133,7 +133,7 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName()
 {
 
-    return IXBotInterface::getModelOrderedChainName();
+    return _model_ordered_chain_name;
 }
 
 
@@ -169,9 +169,18 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
         
     }
     
-    // Call vitual init_robot
+    // Call virtual init_robot
+    bool success = init_robot(path_to_cfg);
     
-    return init_robot(path_to_cfg);
+    _model_ordered_chain_name.clear();
+    for( const std::string& s : model().getModelOrderedChainName() ){
+            if( s == "virtual_chain" ){}
+            else{
+                _model_ordered_chain_name.push_back(s);
+            }
+    }
+    
+    return success;
 }
 
 XBot::RobotChain& XBot::RobotInterface::arm(int arm_id)
@@ -203,6 +212,12 @@ XBot::RobotChain& XBot::RobotInterface::operator()(const std::string& chain_name
     return _dummy_chain;
 }
 
+XBot::RobotChain& XBot::RobotInterface::chain(const std::string& chain_name)
+{
+    return operator()(chain_name);
+}
+
+
 bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model )
 {
     bool success = true;
@@ -223,154 +238,6 @@ bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model 
     return success;
 }
 
-bool XBot::RobotInterface::getDamping ( std::map< std::string, double >& D ) const
-{
-     return XBot::IXBotInterface::getDamping ( D );
-}
 
-bool XBot::RobotInterface::getDamping ( std::map< int, double >& D ) const
-{
-     return XBot::IXBotInterface::getDamping ( D );
-}
-
-bool XBot::RobotInterface::getDamping ( Eigen::VectorXd& D ) const
-{
-     return XBot::IXBotInterface::getDamping ( D );
-}
-
-bool XBot::RobotInterface::getEffortReference ( std::map< std::string, double >& tau ) const
-{
-     return XBot::IXBotInterface::getEffortReference ( tau );
-}
-
-bool XBot::RobotInterface::getEffortReference ( std::map< int, double >& tau ) const
-{
-     return XBot::IXBotInterface::getEffortReference ( tau );
-}
-
-bool XBot::RobotInterface::getEffortReference ( Eigen::VectorXd& tau ) const
-{
-     return XBot::IXBotInterface::getEffortReference ( tau );
-}
-
-bool XBot::RobotInterface::getPositionReference ( std::map< std::string, double >& q ) const
-{
-     return XBot::IXBotInterface::getPositionReference ( q );
-}
-
-bool XBot::RobotInterface::getPositionReference ( std::map< int, double >& q ) const
-{
-     return XBot::IXBotInterface::getPositionReference ( q );
-}
-
-bool XBot::RobotInterface::getPositionReference ( Eigen::VectorXd& q ) const
-{
-     return XBot::IXBotInterface::getPositionReference ( q );
-}
-
-bool XBot::RobotInterface::getStiffness ( std::map< std::string, double >& K ) const
-{
-     return XBot::IXBotInterface::getStiffness ( K );
-}
-
-bool XBot::RobotInterface::getStiffness ( std::map< int, double >& K ) const
-{
-     return XBot::IXBotInterface::getStiffness ( K );
-}
-
-bool XBot::RobotInterface::getStiffness ( Eigen::VectorXd& K ) const
-{
-     return XBot::IXBotInterface::getStiffness ( K );
-}
-
-bool XBot::RobotInterface::getVelocityReference ( std::map< std::string, double >& qdot ) const
-{
-     return XBot::IXBotInterface::getVelocityReference ( qdot );
-}
-
-bool XBot::RobotInterface::getVelocityReference ( std::map< int, double >& qdot ) const
-{
-     return XBot::IXBotInterface::getVelocityReference ( qdot );
-}
-
-bool XBot::RobotInterface::getVelocityReference ( Eigen::VectorXd& qdot ) const
-{
-     return XBot::IXBotInterface::getVelocityReference ( qdot );
-}
-
-bool XBot::RobotInterface::setDamping ( const std::map< std::string, double >& D )
-{
-     return XBot::IXBotInterface::setDamping ( D );
-}
-
-bool XBot::RobotInterface::setDamping ( const std::map< int, double >& D )
-{
-     return XBot::IXBotInterface::setDamping ( D );
-}
-
-bool XBot::RobotInterface::setDamping ( const Eigen::VectorXd& D )
-{
-     return XBot::IXBotInterface::setDamping ( D );
-}
-
-bool XBot::RobotInterface::setEffortReference ( const std::map< std::string, double >& tau )
-{
-     return XBot::IXBotInterface::setEffortReference ( tau );
-}
-
-bool XBot::RobotInterface::setEffortReference ( const std::map< int, double >& tau )
-{
-     return XBot::IXBotInterface::setEffortReference ( tau );
-}
-
-bool XBot::RobotInterface::setEffortReference ( const Eigen::VectorXd& tau )
-{
-     return XBot::IXBotInterface::setEffortReference ( tau );
-}
-
-bool XBot::RobotInterface::setPositionReference ( const std::map< std::string, double >& q )
-{
-     return XBot::IXBotInterface::setPositionReference ( q );
-}
-
-bool XBot::RobotInterface::setPositionReference ( const std::map< int, double >& q )
-{
-     return XBot::IXBotInterface::setPositionReference ( q );
-}
-
-bool XBot::RobotInterface::setPositionReference ( const Eigen::VectorXd& q )
-{
-     return XBot::IXBotInterface::setPositionReference ( q );
-}
-
-bool XBot::RobotInterface::setStiffness ( const std::map< std::string, double >& K )
-{
-     return XBot::IXBotInterface::setStiffness ( K );
-}
-
-bool XBot::RobotInterface::setStiffness ( const std::map< int, double >& K )
-{
-     return XBot::IXBotInterface::setStiffness ( K );
-}
-
-bool XBot::RobotInterface::setStiffness ( const Eigen::VectorXd& K )
-{
-     return XBot::IXBotInterface::setStiffness ( K );
-}
-
-bool XBot::RobotInterface::setVelocityReference ( const std::map< std::string, double >& qdot )
-{
-     return XBot::IXBotInterface::setVelocityReference ( qdot );
-}
-
-bool XBot::RobotInterface::setVelocityReference ( const std::map< int, double >& qdot )
-{
-     return XBot::IXBotInterface::setVelocityReference ( qdot );
-}
-
-bool XBot::RobotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
-{
-     return XBot::IXBotInterface::setVelocityReference ( qdot );
-}
 
 

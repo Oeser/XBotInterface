@@ -50,6 +50,7 @@ public:
     typedef std::shared_ptr<ModelInterface> Ptr;
     
     ModelChain& operator()(const std::string& chain_name);
+    ModelChain& chain(const std::string& chain_name);
     ModelChain& arm(int arm_id);
     ModelChain& leg(int leg_id);
     
@@ -370,28 +371,23 @@ public:
                             const Eigen::Vector3d& source_point,
                             Eigen::Vector3d& target_point) const; 
                             
+    // Getters for RX
+
+    using IXBotInterface::getJointPosition;
+    using IXBotInterface::getMotorPosition;
+    using IXBotInterface::getJointVelocity;
+    using IXBotInterface::getMotorVelocity;
+    using IXBotInterface::getJointEffort;
+    using IXBotInterface::getTemperature;
+
     // Setters for RX
-        
-    virtual bool setJointPosition(const Eigen::VectorXd& q) final;
-    virtual bool setMotorPosition(const Eigen::VectorXd& q) final;
-    virtual bool setJointVelocity(const Eigen::VectorXd& qdot) final;
-    virtual bool setMotorVelocity(const Eigen::VectorXd& qdot) final;
-    virtual bool setJointEffort(const Eigen::VectorXd& tau) final;
-    virtual bool setTemperature(const Eigen::VectorXd& temp) final;
     
-    virtual bool setJointPosition(const std::map<int, double>& q) final;
-    virtual bool setMotorPosition(const std::map<int, double>& q) final;
-    virtual bool setJointVelocity(const std::map<int, double>& qdot) final;
-    virtual bool setMotorVelocity(const std::map<int, double>& qdot) final;
-    virtual bool setJointEffort(const std::map<int, double>& tau) final;
-    virtual bool setTemperature(const std::map<int, double>& temp) final;
-    
-    virtual bool setJointPosition(const std::map<std::string, double>& q) final;
-    virtual bool setMotorPosition(const std::map<std::string, double>& q) final;
-    virtual bool setJointVelocity(const std::map<std::string, double>& qdot) final;
-    virtual bool setMotorVelocity(const std::map<std::string, double>& qdot) final;
-    virtual bool setJointEffort(const std::map<std::string, double>& tau) final;
-    virtual bool setTemperature(const std::map<std::string, double>& temp) final;
+    using IXBotInterface::setJointPosition;
+    using IXBotInterface::setMotorPosition;
+    using IXBotInterface::setJointVelocity;
+    using IXBotInterface::setMotorVelocity;
+    using IXBotInterface::setJointEffort;
+    using IXBotInterface::setTemperature;
 
 protected:
     
@@ -425,6 +421,22 @@ private:
     mutable KDL::Jacobian _tmp_kdl_jacobian;
     mutable KDL::Vector _tmp_kdl_vector, _tmp_kdl_vector_1;
     mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
+    
+    // Getters for TX
+
+    using IXBotInterface::getPositionReference;
+    using IXBotInterface::getVelocityReference;
+    using IXBotInterface::getEffortReference;
+    using IXBotInterface::getStiffness;
+    using IXBotInterface::getDamping;
+
+    // Setters for TX
+    
+    using IXBotInterface::setPositionReference;
+    using IXBotInterface::setVelocityReference;
+    using IXBotInterface::setEffortReference;
+    using IXBotInterface::setStiffness;
+    using IXBotInterface::setDamping;
 
 };
 };

@@ -206,6 +206,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
         for(int i=0; i<6; i++){
             XBot::Joint::Ptr jptr = std::make_shared<Joint>(model_ordered_joint_name[i], 
                                                             -(i+1), 
+                                                            urdf::JointConstSharedPtr(),
                                                             virtual_chain_name);
             
             _chain_map.at(virtual_chain_name)->pushBackJoint(jptr);
@@ -284,6 +285,11 @@ XBot::ModelChain& XBot::ModelInterface::operator()(const std::string& chain_name
     }
     std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
     return _dummy_chain;
+}
+
+XBot::ModelChain& XBot::ModelInterface::chain(const std::string& chain_name)
+{
+    return operator()(chain_name);
 }
 
 
@@ -592,96 +598,7 @@ bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name
 }
 
 
-bool XBot::ModelInterface::setJointEffort(const std::map< std::string, double >& tau)
-{
-return XBot::IXBotInterface::setJointEffort(tau);
-}
 
-bool XBot::ModelInterface::setJointEffort(const std::map< int, double >& tau)
-{
-return XBot::IXBotInterface::setJointEffort(tau);
-}
-
-bool XBot::ModelInterface::setJointEffort(const Eigen::VectorXd& tau)
-{
-return XBot::IXBotInterface::setJointEffort(tau);
-}
-
-
-bool XBot::ModelInterface::setJointPosition(const std::map< std::string, double >& q)
-{
-return XBot::IXBotInterface::setJointPosition(q);
-}
-
-bool XBot::ModelInterface::setJointPosition(const std::map< int, double >& q)
-{
-return XBot::IXBotInterface::setJointPosition(q);
-}
-
-bool XBot::ModelInterface::setJointPosition(const Eigen::VectorXd& q)
-{
-return XBot::IXBotInterface::setJointPosition(q);
-}
-
-bool XBot::ModelInterface::setJointVelocity(const std::map< std::string, double >& qdot)
-{
-return XBot::IXBotInterface::setJointVelocity(qdot);
-}
-
-bool XBot::ModelInterface::setJointVelocity(const std::map< int, double >& qdot)
-{
-return XBot::IXBotInterface::setJointVelocity(qdot);
-}
-
-bool XBot::ModelInterface::setJointVelocity(const Eigen::VectorXd& qdot)
-{
-return XBot::IXBotInterface::setJointVelocity(qdot);
-}
-
-bool XBot::ModelInterface::setMotorPosition(const std::map< std::string, double >& q)
-{
-return XBot::IXBotInterface::setMotorPosition(q);
-}
-
-bool XBot::ModelInterface::setMotorPosition(const std::map< int, double >& q)
-{
-return XBot::IXBotInterface::setMotorPosition(q);
-}
-
-bool XBot::ModelInterface::setMotorPosition(const Eigen::VectorXd& q)
-{
-return XBot::IXBotInterface::setMotorPosition(q);
-}
-
-bool XBot::ModelInterface::setMotorVelocity(const std::map< std::string, double >& qdot)
-{
-return XBot::IXBotInterface::setMotorVelocity(qdot);
-}
-
-bool XBot::ModelInterface::setMotorVelocity(const std::map< int, double >& qdot)
-{
-return XBot::IXBotInterface::setMotorVelocity(qdot);
-}
-
-bool XBot::ModelInterface::setMotorVelocity(const Eigen::VectorXd& qdot)
-{
-return XBot::IXBotInterface::setMotorVelocity(qdot);
-}
-
-bool XBot::ModelInterface::setTemperature(const std::map< std::string, double >& temp)
-{
-return XBot::IXBotInterface::setTemperature(temp);
-}
-
-bool XBot::ModelInterface::setTemperature(const std::map< int, double >& temp)
-{
-return XBot::IXBotInterface::setTemperature(temp);
-}
-
-bool XBot::ModelInterface::setTemperature(const Eigen::VectorXd& temp)
-{
-    return XBot::IXBotInterface::setTemperature(temp);
-}
 
 bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
 {
