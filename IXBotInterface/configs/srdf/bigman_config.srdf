@@ -27,19 +27,11 @@
   <group name="torso">
     <chain base_link="Waist" tip_link="DWYTorso"/>
   </group>
-  <group name="left_leg">
-    <chain base_link="Waist" tip_link="l_sole"/>
-  </group>
-  <group name="right_leg">
-    <chain base_link="Waist" tip_link="r_sole"/>
-  </group>
   <!-- Robot kinematic chains END -->
   <!-- F-T sensors -->
   <group name="force_torque_sensors">
     <joint name="l_arm_ft_joint"/>
     <joint name="r_arm_ft_joint"/>
-    <joint name="l_leg_ft_joint"/>
-    <joint name="r_leg_ft_joint"/>
   </group>
   <!-- END F-T sensors -->
   <!-- TBD IMU -->
@@ -62,9 +54,7 @@
   <!-- CONSTRAINT: first left then right -->
   <group name="legs">
     <!-- LEFT LEG -->
-    <group name="left_leg"/>
     <!-- RIGHT LEG -->
-    <group name="right_leg"/>
   </group>
   
 .
@@ -89,9 +79,7 @@
     <!-- TORSO -->
     <group name="torso"/>
     <!-- LEFT LEG -->
-    <group name="left_leg"/>
     <!-- RIGHT LEG -->
-    <group name="right_leg"/>
   </group>
   <!-- END CHAINS -->
 </robot>
