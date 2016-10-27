@@ -127,3 +127,5 @@ include(AddUninstallTarget)
 
 # doc
 optional_build(doc doc ON)
+# examples
+optional_build(examples examples ON)
