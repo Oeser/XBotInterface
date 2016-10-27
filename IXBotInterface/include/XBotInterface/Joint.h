@@ -23,11 +23,14 @@
 #include <string>
 #include <memory>
 #include <iostream>
+#include <srdfdom_advr/model.h>
 
 namespace XBot
 {
     
     class KinematicChain;
+    class RobotChain;
+    class IXBotInterface;
 
 /**
 * @brief Container for the Joint information.
@@ -40,6 +43,8 @@ class Joint
 public:
     
     friend XBot::KinematicChain;
+    friend XBot::RobotChain;
+    friend XBot::IXBotInterface;
 
     /**
      * @brief Default constructor
@@ -48,14 +53,16 @@ public:
     Joint();
 
     /**
-     * @brief Construct using the joint name and id
+     * @brief Construct using the joint name, joint id
      *
      * @param joint_name the joint name
      * @param joint_id the joint id
+     * @param urdf_joint shared pointer to urdf::Joint struct
      * @param joint_name the parent chain name
      */
     Joint(const std::string &joint_name,
           int joint_id,
+          urdf::JointConstSharedPtr urdf_joint,
           const std::string &chain_name);
 
     /**
@@ -90,7 +97,72 @@ public:
      * @return const std::string& parent chain name
      */
     const std::string &getChainName() const;
+    
+    urdf::JointConstSharedPtr getUrdfJoint() const;
 
+    
+    // TBD implement checkPositionLimit(), checkVelocityLimit(), checkEffortLimit()
+
+    
+    
+    friend std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
+    
+
+protected:
+
+    void setJointName(const std::string &joint_name);
+    void setJointId(int joint_id);
+    
+    // TBD
+
+    /**
+     * @brief ...
+     * 
+     * @param link_pos ...
+     * @return void
+     */
+    void setJointPosition(double link_pos);
+    
+    /**
+     * @brief ...
+     * 
+     * @param motor_pos ...
+     * @return void
+     */
+    void setMotorPosition(double motor_pos);
+    
+    /**
+     * @brief ...
+     * 
+     * @param link_vel ...
+     * @return void
+     */
+    void setJointVelocity(double link_vel);
+    
+    /**
+     * @brief ...
+     * 
+     * @param motor_vel ...
+     * @return void
+     */
+    void setMotorVelocity(double motor_vel);
+    
+    /**
+     * @brief ...
+     * 
+     * @param effort ...
+     * @return void
+     */
+    void setJointEffort(double effort);
+    
+    /**
+     * @brief ...
+     * 
+     * @param temperature ...
+     * @return void
+     */
+    void setTemperature(double temperature);
+    
     /**
      * @brief getter for the link side encoder reading
      * 
@@ -171,26 +243,6 @@ public:
      */
     double getDamping() const;
     
-    
-    /**
-     * @brief return true if the joint is virtual
-     * 
-     * @return true if the joint is virtual. False otherwise
-     */
-    bool isVirtualJoint();
-    
-    
-
-    void setPositionReference(double pos_ref);
-    void setVelocityReference(double vel_ref);
-    void setEffortReference(double effort_ref);
-    void setStiffness(double stiffness);
-    void setDamping(double damping);
-    
-    
-    
-    // TBD implement checkPositionLimit(), checkVelocityLimit(), checkEffortLimit()
-
     /**
      * @brief Synchronize the current Joint with another Joint object
      * 
@@ -215,63 +267,24 @@ public:
      */
     const XBot::Joint& operator<< ( const XBot::Joint& from);
     
-    friend std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
+    
+    /**
+     * @brief return true if the joint is virtual
+     * 
+     * @return true if the joint is virtual. False otherwise
+     */
+    bool isVirtualJoint();
+    
     
 
-protected:
-
-    void setJointName(const std::string &joint_name);
-    void setJointId(int joint_id);
+    void setPositionReference(double pos_ref);
+    void setVelocityReference(double vel_ref);
+    void setEffortReference(double effort_ref);
+    void setStiffness(double stiffness);
+    void setDamping(double damping);
     
-    // TBD
-
-    /**
-     * @brief ...
-     * 
-     * @param link_pos ...
-     * @return void
-     */
-    void setJointPosition(double link_pos);
     
-    /**
-     * @brief ...
-     * 
-     * @param motor_pos ...
-     * @return void
-     */
-    void setMotorPosition(double motor_pos);
     
-    /**
-     * @brief ...
-     * 
-     * @param link_vel ...
-     * @return void
-     */
-    void setJointVelocity(double link_vel);
-    
-    /**
-     * @brief ...
-     * 
-     * @param motor_vel ...
-     * @return void
-     */
-    void setMotorVelocity(double motor_vel);
-    
-    /**
-     * @brief ...
-     * 
-     * @param effort ...
-     * @return void
-     */
-    void setJointEffort(double effort);
-    
-    /**
-     * @brief ...
-     * 
-     * @param temperature ...
-     * @return void
-     */
-    void setTemperature(double temperature);
 
 private:
     ////////////////
@@ -298,6 +311,10 @@ private:
     
     // TBD implement getter and setter
     std::string _joint_control_type; 
+    
+    
+    urdf::JointConstSharedPtr _urdf_joint;
+    
 
     ///////////////////
     // RX from board //

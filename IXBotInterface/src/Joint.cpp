@@ -29,9 +29,11 @@ XBot::Joint::Joint() :
 
 XBot::Joint::Joint ( const std::string& joint_name, 
                      int joint_id, 
+                     urdf::JointConstSharedPtr urdf_joint,
                      const std::string& chain_name ) :
     _joint_name(joint_name),
     _joint_id(joint_id),
+    _urdf_joint(urdf_joint),
     _chain_name(chain_name)
 {
     init();
