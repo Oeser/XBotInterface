@@ -262,6 +262,18 @@ int XBot::IXBotInterface::getEigenID(const std::string& joint_name) const
     
 }
 
+int XBot::IXBotInterface::getEigenID(int joint_id) const
+{
+    auto it = _joint_id_to_eigen_id.find(joint_id);
+    if( it != _joint_id_to_eigen_id.end() ){
+        return it->second;
+    }
+    else{
+        std::cerr << "ERROR in " << __func__ << ": joint " << joint_id << " NOT defined!!!" << std::endl;
+        return -1;
+    }
+}
+
 
 
 int XBot::IXBotInterface::legs() const
@@ -304,16 +316,38 @@ bool XBot::IXBotInterface::hasJoint(const std::string &joint_name) const
 
 XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& joint_name) const
 {
-    for(const auto& c : _chain_map){
-     
-        const XBot::KinematicChain& chain = *c.second;
-        if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
-        
+    auto it = _joint_name_to_eigen_id.find(joint_name);
+    
+    if( it != _joint_name_to_eigen_id.end() ){
+        return _ordered_joint_vector[it->second];
     }
     
     std::cerr << "ERROR in " << __func__ << ". Joint " << joint_name << " is NOT defined!" << std::endl;
     return XBot::Joint::ConstPtr();
 }
+
+XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByEigenIdx(int idx) const
+{
+    if( idx < getJointNum() ){
+        return _ordered_joint_vector[idx];
+    }
+    
+    std::cerr << "ERROR in " << __func__ << ". Less than " << idx+1 << " joints are defined!" << std::endl;
+    return XBot::Joint::ConstPtr();
+}
+
+XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByID(int joint_id) const
+{
+    auto it = _joint_id_to_eigen_id.find(joint_id);
+    
+    if( it != _joint_id_to_eigen_id.end() ){
+        return _ordered_joint_vector[it->second];
+    }
+    
+    std::cerr << "ERROR in " << __func__ << ". Joint " << joint_id << " is NOT defined!" << std::endl;
+    return XBot::Joint::ConstPtr();
+}
+
 
 
 
