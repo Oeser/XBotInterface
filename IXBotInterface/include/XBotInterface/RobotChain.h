@@ -69,6 +69,7 @@ protected:
 private:
     
     using KinematicChain::syncFrom;
+    using KinematicChain::pushBackJoint;
     
     // Setters for RX
     

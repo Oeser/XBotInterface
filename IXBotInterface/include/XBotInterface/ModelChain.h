@@ -76,6 +76,8 @@ private:
     using KinematicChain::setStiffness;
     using KinematicChain::setDamping;
     
+    using KinematicChain::pushBackJoint;
+    
     
 };
 } // end namespace XBot
