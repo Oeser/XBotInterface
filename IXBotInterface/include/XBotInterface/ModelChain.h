@@ -34,39 +34,24 @@ public:
     friend XBot::RobotChain;
     
     typedef std::shared_ptr<ModelChain> Ptr;
-    
-    
+
+    // Getters for RX
+
+    using KinematicChain::getJointPosition;
+    using KinematicChain::getMotorPosition;
+    using KinematicChain::getJointVelocity;
+    using KinematicChain::getMotorVelocity;
+    using KinematicChain::getJointEffort;
+    using KinematicChain::getTemperature;
+
     // Setters for RX
     
-    virtual bool setJointPosition(const Eigen::VectorXd &q);
-    virtual bool setMotorPosition(const Eigen::VectorXd &q);
-    virtual bool setJointVelocity(const Eigen::VectorXd &qdot);
-    virtual bool setMotorVelocity(const Eigen::VectorXd &qdot);
-    virtual bool setJointEffort(const Eigen::VectorXd &tau);
-    virtual bool setTemperature(const Eigen::VectorXd &temp);
-
-    virtual bool setJointPosition(const std::map<int, double> &q);
-    virtual bool setMotorPosition(const std::map<int, double> &q);
-    virtual bool setJointVelocity(const std::map<int, double> &qdot);
-    virtual bool setMotorVelocity(const std::map<int, double> &qdot);
-    virtual bool setJointEffort(const std::map<int, double> &tau);
-    virtual bool setTemperature(const std::map<int, double> &temp);
-
-    virtual bool setJointPosition(const std::map<std::string, double> &q);
-    virtual bool setMotorPosition(const std::map<std::string, double> &q);
-    virtual bool setJointVelocity(const std::map<std::string, double> &qdot);
-    virtual bool setMotorVelocity(const std::map<std::string, double> &qdot);
-    virtual bool setJointEffort(const std::map<std::string, double> &tau);
-    virtual bool setTemperature(const std::map<std::string, double> &temp);
-
-    virtual bool setJointPosition(int i, double q);
-    virtual bool setMotorPosition(int i, double q);
-    virtual bool setJointVelocity(int i, double qdot);
-    virtual bool setMotorVelocity(int i, double qdot);
-    virtual bool setJointEffort(int i, double tau);
-    virtual bool setTemperature(int i, double temp);
-    
-    virtual bool syncFrom(const KinematicChain& other);
+    using KinematicChain::setJointPosition;
+    using KinematicChain::setMotorPosition;
+    using KinematicChain::setJointVelocity;
+    using KinematicChain::setMotorVelocity;
+    using KinematicChain::setJointEffort;
+    using KinematicChain::setTemperature;
 
     
     
@@ -74,6 +59,22 @@ public:
 protected:
     
 private:
+    
+    // Getters for TX
+
+    using KinematicChain::getPositionReference;
+    using KinematicChain::getVelocityReference;
+    using KinematicChain::getEffortReference;
+    using KinematicChain::getStiffness;
+    using KinematicChain::getDamping;
+
+    // Setters for TX
+    
+    using KinematicChain::setPositionReference;
+    using KinematicChain::setVelocityReference;
+    using KinematicChain::setEffortReference;
+    using KinematicChain::setStiffness;
+    using KinematicChain::setDamping;
     
     
 };
