@@ -255,6 +255,38 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other)
     _damping = other._damping;
 }
 
+bool XBot::Joint::checkEffortLimit(double tau) const
+{
+    return std::abs(tau) <= _urdf_joint->limits->effort;
+}
+
+bool XBot::Joint::checkJointLimits(double q) const
+{
+    return (q <= _urdf_joint->limits->upper) && (q >= _urdf_joint->limits->lower);
+}
+
+bool XBot::Joint::checkVelocityLimit(double qdot) const
+{
+    return std::abs(qdot) <= _urdf_joint->limits->velocity;
+}
+
+
+void XBot::Joint::getEffortLimit(double& tau_max) const
+{
+    tau_max = _urdf_joint->limits->effort;
+}
+
+void XBot::Joint::getJointLimits(double& qmin, double& qmax) const
+{
+    qmin = _urdf_joint->limits->lower;
+    qmax = _urdf_joint->limits->upper;
+}
+
+void XBot::Joint::getVelocityLimit(double& qdot_max) const
+{
+    qdot_max = _urdf_joint->limits->velocity;
+}
+
 
 const XBot::Joint& XBot::Joint::operator<< ( const XBot::Joint& from )
 {

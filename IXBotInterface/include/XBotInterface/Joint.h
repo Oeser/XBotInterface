@@ -98,6 +98,18 @@ public:
      */
     const std::string &getChainName() const;
     
+    void getJointLimits(double& qmin, double& qmax) const;
+    
+    void getVelocityLimit(double& qdot_max) const;
+    
+    void getEffortLimit(double& tau_max) const;
+    
+    bool checkJointLimits(double q) const;
+    
+    bool checkVelocityLimit(double qdot) const;
+    
+    bool checkEffortLimit(double tau) const;
+    
     urdf::JointConstSharedPtr getUrdfJoint() const;
 
     
