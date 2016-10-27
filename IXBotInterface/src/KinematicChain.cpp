@@ -40,6 +40,9 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     _joint_num = _XBotModel.get_joint_num(chain_name);
     _XBotModel.get_enabled_joints_in_chain(chain_name, _ordered_joint_name);
     _XBotModel.get_enabled_joint_ids_in_chain(chain_name, _ordered_joint_id);
+    
+    // Get urdf model
+    const urdf::ModelInterface &robot_urdf = *XBotModel.get_urdf_model();
 
     // resize joint vector
     _joint_vector.resize(_joint_num);
@@ -49,14 +52,13 @@ KinematicChain::KinematicChain(const std::string &chain_name,
         int actual_joint_id = _ordered_joint_id[i];
         XBot::Joint::Ptr actual_joint = std::make_shared<Joint>(actual_joint_name,
                                                                 actual_joint_id,
+                                                                robot_urdf.getJoint(actual_joint_name),
                                                                 _chain_name);
         _joint_name_map[actual_joint_name] = actual_joint;
         _joint_id_map[actual_joint_id] = actual_joint;
         _joint_vector[i] = actual_joint;
     }
 
-    // Get urdf model
-    const urdf::ModelInterface &robot_urdf = *XBotModel.get_urdf_model();
 
     // Fill _urdf_joints and _urdf_links
     // NOTE: is it the correct way to handle links? What happens if some joint
@@ -194,12 +196,12 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     if(joint->getJointId() < 0) _is_virtual = true;
 }
 
-const std::vector< XBot::JointConstSharedPtr > &KinematicChain::getJoints() const
+const std::vector< urdf::JointConstSharedPtr > &KinematicChain::getUrdfJoints() const
 {
     return _urdf_joints;
 }
 
-const std::vector< XBot::LinkConstSharedPtr > &KinematicChain::getLinks() const
+const std::vector< urdf::LinkConstSharedPtr > &KinematicChain::getUrdfLinks() const
 {
     return _urdf_links;
 }
@@ -229,6 +231,14 @@ int KinematicChain::jointId(int i) const
     return _joint_vector[i]->getJointId();
 }
 
+Joint::ConstPtr XBot::KinematicChain::joint(int idx) const
+{
+    if( idx < getJointNum() ) return _joint_vector[idx];
+    else{
+        std::cerr << "ERROR in " << __func__ << ": chain " << _chain_name  << " has less than " << idx+1 << " joints!" << std::endl;
+        return Joint::ConstPtr();
+    }
+}
 
 
 const std::string &KinematicChain::childLinkName(int id) const
