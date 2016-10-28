@@ -32,7 +32,11 @@ namespace XBot {
 
     class KinematicChain;
     
-class ForceTorqueSensor {
+    /**
+     * @brief Force - Torque sensor abstraction: TBD documentation of the single functions
+     * 
+     */
+    class ForceTorqueSensor {
     
     
 public:
@@ -61,7 +65,7 @@ public:
     
     friend std::ostream& operator<< ( std::ostream& os, const XBot::ForceTorqueSensor& j );
     
-    // NOTE if you are a const ptr we cannot call them ///////
+    // NOTE if you are a const ptr you cannot call them ///////
     void setWrench(const Eigen::Matrix<double, 6, 1>& wrench);
     void setForce(const Eigen::Vector3d& force);
     void setTorque(const Eigen::Vector3d& torque);

@@ -32,6 +32,7 @@ shlibpp::SharedLibraryClassFactory<XBot::RobotInterface> XBot::RobotInterface::_
 
 XBot::RobotInterface::RobotInterface()
 {
+    _model_ordered_chain_name.clear();
 }
 
 bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
@@ -111,14 +112,16 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
         printf("error (%s) : %s\n", shlibpp::Vocab::decode(_robot_interface_factory.getStatus()).c_str(),
                _robot_interface_factory.getLastNativeError().c_str());
     }
+        
+    // loading the requested model interface internal to the robot
+    _model = XBot::ModelInterface::getModel(path_to_cfg);
+    
     // open and init robot interface
     _robot_interface_instance.open(_robot_interface_factory); 
     _robot_interface_instance->init(path_to_cfg);
     // static instance of the robot interface
     _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;});
-    
-    // loading the requested model interface internal to the robot
-    _model = XBot::ModelInterface::getModel(path_to_cfg);
+
     
     return _instance_ptr;
 
@@ -132,7 +135,6 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 
 const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName()
 {
-
     return _model_ordered_chain_name;
 }
 
@@ -169,16 +171,15 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
         
     }
     
+    // initialize model ordered chain name TBD check it
+    for( const std::string& s : model().getModelOrderedChainName() ){
+        if( s != "virtual_chain" ) {
+            _model_ordered_chain_name.push_back(s);
+        }
+    }
+    
     // Call virtual init_robot
     bool success = init_robot(path_to_cfg);
-    
-    _model_ordered_chain_name.clear();
-    for( const std::string& s : model().getModelOrderedChainName() ){
-            if( s == "virtual_chain" ){}
-            else{
-                _model_ordered_chain_name.push_back(s);
-            }
-    }
     
     return success;
 }

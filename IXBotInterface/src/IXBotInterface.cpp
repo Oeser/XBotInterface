@@ -316,10 +316,11 @@ bool XBot::IXBotInterface::hasJoint(const std::string &joint_name) const
 
 XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& joint_name) const
 {
-    auto it = _joint_name_to_eigen_id.find(joint_name);
-    
-    if( it != _joint_name_to_eigen_id.end() ){
-        return _ordered_joint_vector[it->second];
+    for(const auto& c : _chain_map){
+     
+        const XBot::KinematicChain& chain = *c.second;
+        if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
+        
     }
     
     std::cerr << "ERROR in " << __func__ << ". Joint " << joint_name << " is NOT defined!" << std::endl;
