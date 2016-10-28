@@ -1,5 +1,7 @@
 #include <XBotInterface/RobotInterface.h>
 
+void computeCartesianError(const Eigen::Affine3d& ref, const Eigen::Affine3d& actual, Eigen::VectorXd& error);
+
 int main(int argc, char **argv){
     
     using namespace XBot;
@@ -37,7 +39,8 @@ int main(int argc, char **argv){
      * by the set of its chains states, e.g. left_arm, right_arm, left_leg, 
      * right_leg, torso and neck, as opposed to a huge configuration vector.
      * In XBotInterface, a chain in accessed by the chain() method, which returns
-     * a KinematicChain by reference. For example, let's print the chain state via the << operator. 
+     * a KinematicChain by reference. For example, let's print the left arm state
+     * via the << operator. 
      */ 
     
     std::cout << robot.chain("left_arm") << std::endl;
@@ -46,7 +49,7 @@ int main(int argc, char **argv){
     
     std::cout << robot("right_arm") << std::endl;
     
-    /* We also support two kinds of "standard kinematic chains", i.e. legs
+    /* We also support two kinds of "standard kinematic groups", i.e. legs
      * and arms. This means that you can quickly access the i-th arm/leg by
      * writing:
      */
@@ -56,6 +59,9 @@ int main(int argc, char **argv){
     
     std::cout << robot.arm(arm_id) << std::endl;
     std::cout << robot.leg(leg_id) << std::endl;
+    
+    /* Arms and legs are ordered as defined in the robot SRDF which is specified
+     * inside the YAML configuration file. */
     
     /* Some functionalities provided by the KinematicChain API are the following:
      */
@@ -72,8 +78,8 @@ int main(int argc, char **argv){
     // Number of joints
     std::cout << "Torso is made of " << robot.chain("torso").getJointNum() << " joints" << std::endl;
 
-    /* Let's now turn back to our goal, which was to read the robot state. This can be done
-     * either chain-by-chain or for the whole robot at once. In either cases, the joint state
+    /* Let's now turn back to our goal, which is to read the robot state. This can be done
+     * either chain-by-chain, or for the whole robot at once. In either cases, the joint state
      * information can be obtained in three different forms:
      * 
      *  - as a joint name -> joint value std::map
@@ -112,7 +118,8 @@ int main(int argc, char **argv){
     /* A map of all robot FTs */
     auto ft_map = robot.getForceTorque(); // ft_map is a std::map<std::string, ForceTorqueSensor::ConstPtr>
     
-    /* The FT sensor attached to the tip link of the second leg */
+    /* For example, let's obtain the FT sensor attached to the 
+     * tip link of the second leg */
     ForceTorqueSensor::ConstPtr leg1_ft;
     if(!robot.getForceTorque(robot.leg(1).tipLinkName(), leg1_ft)){
         std::cerr << "ERROR! No ft was found on " << robot.leg(1).tipLinkName() << " link!" << std::endl;
@@ -176,7 +183,7 @@ int main(int argc, char **argv){
         
     }
     
-    /* Changes only reference of joints specified in the map */
+    /* Change only reference for joints specified in the map */
     robot.setPositionReference(bad_joints_new_ref); 
     
     /* To send the reference that we set to the controller, we just
@@ -199,7 +206,7 @@ int main(int argc, char **argv){
      * the internal model, you just write robot.model().
      */
     
-    // If a sense has just been called, this is exacly the same as
+    // If sense() has just been called, this is exacly the same as
     // robot.chain("left_arm").getJointPosition(left_arm_position);
     robot.model().chain("left_arm").getJointPosition(left_arm_position);
     
@@ -249,7 +256,98 @@ int main(int argc, char **argv){
     robot.setReferenceFrom(model);
     robot.move(); // robot should not move since model was aligned to robot state
     
-    // TBD IK example!!
+    /* Finally, let us turn to a somewhat realistic example of use of the
+     * XBotInterface library. We will write a simple inverse kinematics based
+     * control loop which allows a generic robot equipped with a torso and and
+     * two arms to move according to a defined cartesian trajectory. The employed
+     * algorithm is the most simple one, i.e. the jacobian-transposed base IK.
+     * First of all define the end-effector frame and the frame according 
+     * to which we want to set cartesian references: */
+    
+    std::string base_frame = robot("torso").baseLinkName();
+    std::string end_effector = robot("right_arm").tipLinkName();
+    
+    /* We want to move the end effector in a way such that its
+     * orientation remains constant, while the vertical position of
+     * the origin moves up and down cyclically. To do so, first we 
+     * need to put the initial end-effector pose inside some variable */
+    
+    Eigen::Affine3d initial_pose;
+    
+    // get the latest sensor data (internal model is also updated)
+    robot.sense(); 
+    
+    // save the initial end-effector pose inside initial_pose
+    robot.model().getPose(base_frame, end_effector, initial_pose);
+    
+    /* Since we will use the external model for IK computations,
+     * first we align it to the actual robot configuration. */
+    
+    model.syncFrom(robot);
+    
+    /* Also obtain the vector of the whole model configuration,
+     * which will be useful inside the control loop. */
+    
+    Eigen::VectorXd q;
+    
+    model.getJointPosition(q);
+    
+    // define period and length of the trajectory
+    double period = 3;
+    double length = 0.2;
+    
+    // initial time 
+    double t0 = robot.getTime();
+    double time = t0;
+    double previous_iteration_time = time;
+    
+    /* RobotInterface::isRunning returns true as long as some
+     * shutdown signal is not received */
+    
+    while( robot.isRunning() ){ 
+        
+        double time = robot.getTime() - t0;
+        double dt = time - previous_iteration_time;
+    
+        Eigen::Affine3d desired_pose, actual_pose;
+        
+        // Set the desired end-effector pose at current time
+        desired_pose.linear() = initial_pose.linear();
+        desired_pose.translation() = initial_pose.translation() + 0.5*length*std::sin(2*3.1415/period*time);
+        
+        // Compute the pose corresponding to the model state
+        model.getPose(base_frame, end_effector, actual_pose);
+        
+        // Compute the cartesian error
+        Eigen::VectorXd cartesian_error;
+        computeCartesianError(desired_pose, actual_pose, cartesian_error);
+        
+        // Set a cartesian velocity which is proportional to the error
+        double ik_gain = 100;
+        Eigen::VectorXd xdot = ik_gain * cartesian_error;
+        
+        // Compute the jacobian matrix
+        Eigen::MatrixXd J;
+        model.getJacobian(end_effector, J);
+        
+        // Compute the required joint velocities
+        Eigen::VectorXd qdot = J.transpose()*cartesian_error;
+        
+        // Integrate the computed velocities
+        q += qdot * dt;
+        
+        // Update the model
+        model.setJointPosition(q);
+        model.update();
+        
+        // Use the model state as a reference for controllers
+        robot.setReferenceFrom(model);
+        robot.move();
+        
+        
+    }
+    
+    
     
     
     

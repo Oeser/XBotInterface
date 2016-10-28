@@ -130,7 +130,9 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     
     // save the instance
     std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > ali_ptr(new shlibpp::SharedLibraryClass<XBot::ModelInterface>(_model_interface_factory));
-    _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >()); 
+    
+    _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >());
+    
     shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  *_model_interface_instance[_model_interface_instance.size()-1];
     
     // open and init robot interface
@@ -215,10 +217,12 @@ bool XBot::ModelInterface::fillModelOrderedChain()
             
             joint_idx++;
         }
+        
+//         _model_ordered_chain_name.push_back(virtual_chain_name);
     }
     
     
-    _model_ordered_chain_name.clear();
+
     joint_idx = 0;
     while( joint_idx < model_ordered_joint_name.size() ){
      

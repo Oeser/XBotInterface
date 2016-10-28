@@ -37,6 +37,11 @@ namespace XBot {
 
 class RobotInterface;
 
+/**
+ * @brief ModelInterface is an abstraction layer for a kinematic/dynamic 
+ * model of a robot. It inherits from the IXBotInterface class the 
+ * organization of a robot as a collection of kinematic chains. 
+ */
 class ModelInterface : public IXBotInterface {
 
 public:
@@ -44,24 +49,89 @@ public:
     friend XBot::RobotInterface;
     
     /**
-     * @brief shared pointer to a ModelInterface
-     * 
+     * @brief Shared pointer to a ModelInterface
      */
     typedef std::shared_ptr<ModelInterface> Ptr;
     
-    ModelChain& operator()(const std::string& chain_name);
-    ModelChain& chain(const std::string& chain_name);
-    ModelChain& arm(int arm_id);
-    ModelChain& leg(int leg_id);
+    /**
+     * @brief Shared pointer to const ModelInterface
+     */
+    typedef std::shared_ptr<ModelInterface> ConstPtr;
     
-    bool syncFrom(const IXBotInterface& other);
-//     using XBot::IXBotInterface::syncFrom;
-    
-    static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
-    
+    // ModelInt
+    ModelInterface() = default;
     ModelInterface& operator=(const ModelInterface& other) = delete;
     ModelInterface(const ModelInterface& other) = delete;
-    ModelInterface(){}
+    
+    
+        
+    /**
+     * @brief Factory method for generating instances of the ModelInterface class
+     * according to the provided configuration file, which specifies the URDF/SRDF 
+     * to be used, as well as the specific implementation of ModelInterface to be
+     * loaded.
+     * 
+     * @param path_to_cfg Path to the YAML configuration file.
+     * @return A shared pointer to a new instance of ModelInterface.
+     */
+    static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
+
+    /**
+     * @brief Returns a handle to the kinematic chain named chain_name.
+     * If such a chain is not defined, a dummy chain is returned and an
+     * error is displayed.
+     * 
+     * @param chain_name The name of the requested chain
+     * @return A reference to the requested kinematic chain
+     */
+    ModelChain& chain(const std::string& chain_name);
+    
+    /**
+     * @brief Returns a handle to the kinematic chain named chain_name.
+     * If such a chain is not defined, a dummy chain is returned and an
+     * error is displayed.
+     * 
+     * @param chain_name The name of the requested chain
+     * @return A reference to the requested kinematic chain
+     */
+    ModelChain& operator()(const std::string& chain_name);
+    
+    /**
+     * @brief Returns a handle to the kinematic chain corresponding to the
+     * arm n° arm_id. The order of arms is defined in the SRDF file which 
+     * was provided to ModelInterface::getModel(). If the requested chain
+     * is not defined, a dummy chain is returned and an error is displayed.
+     * 
+     * @param arm_id The requested arm id, from 0 to arms()-1
+     * @return A reference to the requested kinematic chain
+     */
+    ModelChain& arm(int arm_id);
+    
+    /**
+     * @brief Returns a handle to the kinematic chain corresponding to the
+     * leg n° leg_id. The order of legs is defined in the SRDF file which 
+     * was provided to ModelInterface::getModel(). If the requested chain
+     * is not defined, a dummy chain is returned and an error is displayed.
+     * 
+     * @param arm_id The requested leg id, from 0 to legs()-1
+     * @return A reference to the requested kinematic chain
+     */
+    ModelChain& leg(int leg_id);
+    
+    /**
+     * @brief Synchronizes the internal model state to the one of the IXBotInterface
+     * given as an argument. This can be either another ModelInterface or a RobotInterface.
+     * ModelInterface::update() is automatcally called, so that the kinematics and
+     * dynamics of the ModelInterface is updated as well.
+     * 
+     * @param other The RobotInterface or ModelInterface whose state is copied to this
+     * model.
+     * @return True if the synchronization is allowed, false otherwise.
+     */
+    bool syncFrom(const IXBotInterface& other);
+
+    
+
 
     /**
      * @brief true if the robot is floating base, false if it has a fixed base.
