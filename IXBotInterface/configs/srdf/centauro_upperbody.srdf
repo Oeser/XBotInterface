@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot name="centauro">
+
+   <group name="left_arm">
+      <chain base_link="torso_2" tip_link="arm1_7"/>
+   </group>
+   
+   <group name="right_arm">
+      <chain base_link="torso_2" tip_link="arm2_7"/>
+   </group>-->
+   
+   <group name="torso">
+      <chain base_link="pelvis" tip_link="torso_2"/>
+   </group>
+   
+    <group name="arms">
+      <group name="left_arm"/>
+      <group name="right_arm"/>
+   </group>
+
+   <group name="chains">
+       
+	<group name="left_arm"/>
+	<group name="right_arm"/>
+    
+	<group name="torso"/>
+    
+   </group>
+   
+
+
+</robot>
