@@ -3,7 +3,7 @@ x_bot_interface:
   framework: "YARP"
   internal_model_type: "RBDL"
   is_internal_model_flaoting_base : "false"
-  urdf_filename: "urdf/bigman_fixed_hands.urdf"
+  urdf_filename: "urdf/bigman_upper_body.urdf"
   srdf_filename: "srdf/bigman_config.srdf"
   joint_map_config: "joint_map/bigman_ecat_joint_map.yaml"
 
