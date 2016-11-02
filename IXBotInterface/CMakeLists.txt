@@ -27,6 +27,8 @@ find_package(sharedlib++ REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 
+option(XBOT_COMPILE_TESTS "Compile XBotInterface tests" FALSE)
+
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${RobotInterfaceROS_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIR}
@@ -129,3 +131,11 @@ include(AddUninstallTarget)
 optional_build(doc doc ON)
 # examples
 optional_build(examples examples ON)
+
+#######################
+# Add Testing target  #
+#######################
+if(XBOT_COMPILE_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
