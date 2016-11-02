@@ -1684,7 +1684,7 @@ const std::map< std::string, XBot::KinematicChain::Ptr >& XBot::IXBotInterface::
 }
 
 
-const srdf::Model& XBot::IXBotInterface::getSrdf() const
+const srdf_advr::Model& XBot::IXBotInterface::getSrdf() const
 {
     return _XBotModel;
 }

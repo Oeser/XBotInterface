@@ -52,7 +52,7 @@ namespace XBot {
         // URDF, SRDF getters
 
         const urdf::ModelInterface& getUrdf() const;
-        const srdf::Model& getSrdf() const;
+        const srdf_advr::Model& getSrdf() const;
         const std::string& getUrdfString() const;
         const std::string& getSrdfString() const;
 

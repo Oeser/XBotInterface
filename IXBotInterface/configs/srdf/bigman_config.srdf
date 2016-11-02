@@ -24,6 +24,12 @@
   <group name="right_arm">
     <chain base_link="DWYTorso" tip_link="r_wrist"/>
   </group>
+  <group name="left_hand">
+    <chain base_link="LWrMot3" tip_link="LSoftHand"/>
+  </group>
+  <group name="right_hand">
+    <chain base_link="RWrMot3" tip_link="RSoftHand"/>
+  </group>
   <group name="torso">
     <chain base_link="Waist" tip_link="DWYTorso"/>
   </group>
@@ -53,8 +59,6 @@
   </group>
   <!-- CONSTRAINT: first left then right -->
   <group name="legs">
-    <!-- LEFT LEG -->
-    <!-- RIGHT LEG -->
   </group>
   
 .
@@ -78,8 +82,6 @@
     <!-- RIGHT HAND -->
     <!-- TORSO -->
     <group name="torso"/>
-    <!-- LEFT LEG -->
-    <!-- RIGHT LEG -->
   </group>
   <!-- END CHAINS -->
 </robot>

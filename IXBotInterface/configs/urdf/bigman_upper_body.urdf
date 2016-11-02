@@ -632,7 +632,7 @@ and to define the end effectors of the robot-->
   </joint>
   <!-- ************ FOREARMS ************ -->
   <!-- This links are defined in order to be compliant with http://www.ros.org/reps/rep-0120.html#coordinate-frames
-        and to define the end effectors of the robot -->
+    and to define the end effectors of the robot -->
   <!-- position and orientation of the arm regardless of the tool (grasping device for instance) attached to it -->
   <link name="l_wrist"/>
   <link name="r_wrist"/>
@@ -821,130 +821,68 @@ and to define the end effectors of the robot-->
     <origin rpy="0 0 0" xyz="0 0 0"/>
   </joint>
   <!-- ************ HANDS ************ -->
-  <!-- For the hand we use the inertia of a parallelepiped -->
   <!-- LINKS -->
-  <link name="RSoftHand"/>
-  <link name="TCP_R"/>
-  <link name="RSoftHandLink">
+  <!-- ## WRONG NUMBERS FOR... ok lasciamo perde... FIX THEM!! ## -->
+  <link name="RSoftHand">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 -0.17"/>
       <mass value="1.2"/>
       <inertia ixx="0.00232" ixy="0" ixz="0" iyy="0.00296" iyz="0" izz="0.00136"/>
     </inertial>
     <visual>
-      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
-      <geometry name="RSoftHandLink_visual">
-        <mesh filename="package://bigman_urdf/meshes/SoftHandOpen.STL" scale="0.001 0.001 0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.07 0.07 0.07"/>
       </geometry>
-      <material name="grey"/>
+      <material name="Cyan">
+        <color rgba="0 1.0 1.0 1.0"/>
+      </material>
     </visual>
     <collision>
-      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
-      <geometry name="RSoftHandLink_collision">
-        <mesh filename="package://bigman_urdf/meshes/simple/SoftHandOpen.STL" scale="0.001 0.001 0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.07 0.07 0.07"/>
       </geometry>
     </collision>
   </link>
-  <link name="r_hand_upper_right_link"/>
-  <link name="r_hand_lower_right_link"/>
-  <link name="r_hand_upper_left_link"/>
-  <link name="r_hand_lower_left_link"/>
-  <link name="LSoftHand"/>
-  <link name="TCP_L"/>
-  <link name="LSoftHandLink">
+  <link name="LSoftHand">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 -0.17"/>
       <mass value="1.2"/>
       <inertia ixx="0.00232" ixy="0" ixz="0" iyy="0.00296" iyz="0" izz="0.00136"/>
     </inertial>
     <visual>
-      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
-      <geometry name="LSoftHandLink_visual">
-        <mesh filename="package://bigman_urdf/meshes/SoftHandOpen.STL" scale="0.001 -0.001 0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.07 0.07 0.07"/>
       </geometry>
-      <material name="grey"/>
+      <material name="Cyan">
+        <color rgba="0 1.0 1.0 1.0"/>
+      </material>
     </visual>
     <collision>
-      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
-      <geometry name="LSoftHandLink_collision">
-        <mesh filename="package://bigman_urdf/meshes/simple/SoftHandOpen.STL" scale="0.001 -0.001 0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.07 0.07 0.07"/>
       </geometry>
     </collision>
   </link>
-  <link name="l_hand_upper_right_link"/>
-  <link name="l_hand_lower_right_link"/>
-  <link name="l_hand_upper_left_link"/>
-  <link name="l_hand_lower_left_link"/>
   <!-- JOINTS -->
-  <joint name="r_handj" type="fixed">
+  <joint name="r_handj" type="revolute">
     <parent link="RWrMot3"/>
-    <child link="RSoftHandLink"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-  </joint>
-  <joint name="r_handj2" type="fixed">
-    <parent link="RSoftHandLink"/>
     <child link="RSoftHand"/>
-    <origin rpy="0 0 0" xyz="0 0.0305 -0.21"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.04"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="5" lower="0.0" upper="5.0" velocity="4.0"/>
+    <dynamics damping="3.0" friction="0"/>
   </joint>
-  <joint name="r_handj3" type="fixed">
-    <parent link="RSoftHand"/>
-    <child link="r_hand_upper_right_link"/>
-    <origin rpy="0 0 0" xyz="0.05 0.0 0.0"/>
-  </joint>
-  <joint name="r_handj4" type="fixed">
-    <parent link="RSoftHand"/>
-    <child link="r_hand_lower_right_link"/>
-    <origin rpy="0 0 0" xyz="-0.05 0.0 0.0"/>
-  </joint>
-  <joint name="r_handj5" type="fixed">
-    <parent link="RSoftHand"/>
-    <child link="r_hand_upper_left_link"/>
-    <origin rpy="0 0 0" xyz="0.05 0.0 0.1"/>
-  </joint>
-  <joint name="r_handj6" type="fixed">
-    <parent link="RSoftHand"/>
-    <child link="r_hand_lower_left_link"/>
-    <origin rpy="0 0 0" xyz="-0.05 0.0 0.1"/>
-  </joint>
-  <joint name="l_handj" type="fixed">
+  <joint name="l_handj" type="revolute">
     <parent link="LWrMot3"/>
-    <child link="LSoftHandLink"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-  </joint>
-  <joint name="l_handj2" type="fixed">
-    <parent link="LSoftHandLink"/>
     <child link="LSoftHand"/>
-    <origin rpy="0 0 0" xyz="0 -0.0305 -0.21"/>
-  </joint>
-  <joint name="l_handj3" type="fixed">
-    <parent link="LSoftHand"/>
-    <child link="l_hand_upper_right_link"/>
-    <origin rpy="0 0 0" xyz="0.05 0.0 0.0"/>
-  </joint>
-  <joint name="l_handj4" type="fixed">
-    <parent link="LSoftHand"/>
-    <child link="l_hand_lower_right_link"/>
-    <origin rpy="0 0 0" xyz="-0.05 0.0 0.0"/>
-  </joint>
-  <joint name="l_handj5" type="fixed">
-    <parent link="LSoftHand"/>
-    <child link="l_hand_upper_left_link"/>
-    <origin rpy="0 0 0" xyz="0.05 0.0 0.1"/>
-  </joint>
-  <joint name="l_handj6" type="fixed">
-    <parent link="LSoftHand"/>
-    <child link="l_hand_lower_left_link"/>
-    <origin rpy="0 0 0" xyz="-0.05 0.0 0.1"/>
-  </joint>
-  <joint name="TCP_Ljoint" type="fixed">
-    <parent link="LSoftHand"/>
-    <child link="TCP_L"/>
-    <origin rpy="1.57079632679 3.14159265359 0" xyz="0.0 0.0 0.0"/>
-  </joint>
-  <joint name="TCP_Rjoint" type="fixed">
-    <parent link="RSoftHand"/>
-    <child link="TCP_R"/>
-    <origin rpy="-1.57079632679 0 0" xyz="0.0 0.0 0.0"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.04"/>
+    <axis xyz="-1 0 0"/>
+    <limit effort="5" lower="0" upper="5.0" velocity="4.0"/>
+    <dynamics damping="3.0" friction="0"/>
   </joint>
   <!-- multisense_sl_v4 with fixed joints -->
   <joint name="neck_joint" type="fixed">
@@ -1093,3 +1031,4 @@ and to define the end effectors of the robot-->
     <origin rpy="0 0 0" xyz="0 0 0"/>
   </joint>
 </robot>
+
