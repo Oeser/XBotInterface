@@ -32,7 +32,11 @@
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
 namespace XBot {
-    // TBD XBotState
+
+    /**
+     * @brief Cross-Bot abstraction of a set of Joints(collected in KinematicChain) and Sensors( e.g. F-T Sensor) defined using the XBotCoreModel class.
+     * 
+     */
     class IXBotInterface {
     
     public:
@@ -199,7 +203,7 @@ namespace XBot {
         // Chain getter for developers
         
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
-        const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const;
+        const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const; // TBD change the Internal with something more meaningful
         bool getEigenID(const std::string& chain_name, std::vector<int>& ids) const;
         
         bool sync_internal(const IXBotInterface& other);
@@ -216,10 +220,9 @@ namespace XBot {
         virtual const std::vector<std::string>& getModelOrderedChainName() const;
 
                
-        
+        // internal XBotCoreModel object: it does the trick using URDF, SRDF and joint map configuration
         XBotCoreModel _XBotModel;
                 
-        // TBD avoid protected members in subclasses (using + getters)
         std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
         std::vector<Joint::Ptr> _ordered_joint_vector;
         std::map<std::string, ForceTorqueSensor::Ptr> _ft_map;
