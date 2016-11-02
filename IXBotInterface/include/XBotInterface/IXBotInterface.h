@@ -32,7 +32,7 @@
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
 namespace XBot {
-    // TBD XBotState
+
     class IXBotInterface {
     
     public:
@@ -40,40 +40,171 @@ namespace XBot {
         typedef std::shared_ptr<IXBotInterface> Ptr;
         
         // Constructor, copy constructor, copy assignment, virtual destructor, init function
-        
         IXBotInterface();
         IXBotInterface(const IXBotInterface& other);
         IXBotInterface& operator= (const IXBotInterface& rhs);
         virtual ~IXBotInterface();
+
         
+        /**
+         * @brief Since the class must be default-constructible in order to be supported
+         * by the dynamic-loading mechanism, a initialization function is provided which 
+         * performs the actual construction. It takes the path to a properly formatted YAML
+         * file as the only argument.
+         * 
+         * @param path_to_cfg The path to the YAML config file.
+         * @return True if initialization succeded.
+         */
         bool init(const std::string& path_to_cfg);
 
 
         // URDF, SRDF getters
 
+        /**
+         * @brief Getter for the robot URDF model corresponding to the URDF xml file
+         * specified in the YAML config file.
+         * 
+         * @return A reference to const urdf::ModelInterface
+         */
         const urdf::ModelInterface& getUrdf() const;
+        
+        /**
+         * @brief Getter fot the robot SRDF model corresponding to the SRDF xml file
+         * specified in the YAML config file.
+         * 
+         * @return A reference to const srdf_advd::Model
+         */
         const srdf_advr::Model& getSrdf() const;
+        
+        /**
+         * @brief Returns the robot URDF xml as a string. The URDF file is specified
+         * inside the YAML config file.
+         * 
+         * @return A const reference to the required string.
+         */
         const std::string& getUrdfString() const;
+        
+        /**
+         * @brief Returns the robot SRDF xml as a string. The SRDF file is specified
+         * inside the YAML config file.
+         * 
+         * @return A const reference to the required string.
+         */
         const std::string& getSrdfString() const;
 
 
         // Kinematic chains
 
+        /**
+         * @brief Return a vector of available chain names as strings.
+         * 
+         * @return A vector of available chain names.
+         */
         std::vector<std::string> getChainNames() const;
+        
+        /**
+         * @brief A method for determining if a chain with name "chain_name" is defined
+         * inside the interface.
+         * 
+         * @param chain_name The name of the chain whose existence has to be checked.
+         * @return True if the required chain exists.
+         */
         bool hasChain(const std::string& chain_name) const;
+        
+        /**
+         * @brief Returns the number of legs defined inside the interface. This equals
+         * the number of elements of the "legs" group inside the SRDF which was provided in the 
+         * YAML config file.
+         * 
+         * @return The number of defined legs.
+         */
         int legs() const;
+        
+        /**
+         * @brief Returns the number of arms defined inside the interface. This equals
+         * the number of elements of the "arms" group inside the SRDF which was provided in the 
+         * YAML config file.
+         * 
+         * @return The number of defined arms.
+         */        
         int arms() const;
 
         // Joints
 
+        /**
+         * @brief Returns a vector of enabled joint names.
+         * 
+         * @return A const reference to the vector of enabled joint names.
+         */
         const std::vector<std::string>& getEnabledJointNames() const;
+        
+        /**
+         * @brief Checks that a joint with name "joint_name" is defined as an enabled
+         * joint inside the interface.
+         * 
+         * @param joint_name The name of the joint we want to check existence for.
+         * @return True if the required joint is defined and enabled.
+         */
         bool hasJoint(const std::string& joint_name) const;
+        
+        /**
+         * @brief Getter for the number of enabled joints.
+         * 
+         * @return The number of enabled joints.
+         */
         int getJointNum() const;
 
+        /**
+         * @brief Gets the joint with name "joint_name" if it is defined as enabled.
+         * Otherwise, a null pointer is returned and an error is printed to screen.
+         * 
+         * @param joint_name The name of the required joint.
+         * @return A const shared pointer to the required joint. A null pointer is returned if
+         * joint_name is not defined as enabled.
+         */
         XBot::Joint::ConstPtr getJointByName(const std::string& joint_name) const;
+        
+        /**
+         * @brief Gets the joint with ID "joint_id" if it is defined as enabled.
+         * Otherwise, a null pointer is returned and an error is printed to screen.
+         * Joint IDs are defined inside a YAML file which is specified in the config
+         * file which is used to initialize the interface.
+         * 
+         * @param joint_id The ID of the required joint.
+         * @return A const shared pointer to the required joint. A null pointer is returned if
+         * a joint with the requested ID is not defined as enabled.
+         */
         XBot::Joint::ConstPtr getJointByID(int joint_id) const;
+        
+        /**
+         * @brief Gets the joint with the required Eigen index. This means that the idx-th
+         * entry of all Eigen vectors which are taken as arguments by XBotInterface methods refers
+         * to the returned joint.
+         * 
+         * @param idx The Eigen idx of the required joint. Valid indices span from 0 to getJointNum()-1.
+         * @return A const shared pointer to the required joint. A null pointer is returned if
+         * idx is not a valid index.
+         */
         XBot::Joint::ConstPtr getJointByEigenIdx(int idx) const;
+        
+        /**
+         * @brief Gets the Eigen ID of the joint with name "joint_name". This means that the i-th
+         * entry of all Eigen vectors which are taken as arguments by XBotInterface methods refers
+         * to the joint namd "joint_name".
+         * 
+         * @param joint_name The name of the required joint.
+         * @return The Eigen index of the required joint.
+         */
         int getEigenID(const std::string& joint_name) const;
+        
+        /**
+         * @brief Gets the Eigen ID of the joint with ID "joint_id". This means that the i-th
+         * entry of all Eigen vectors which are taken as arguments by XBotInterface methods refers
+         * to the joint with the given ID.
+         * 
+         * @param joint_id The ID of the required joint.
+         * @return The Eigen index of the required joint.
+         */
         int getEigenID(int joint_id) const;
 
 
