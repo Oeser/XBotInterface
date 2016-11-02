@@ -703,7 +703,6 @@ protected:
     
     virtual bool init_internal(const std::string &path_to_cfg);
     virtual bool init_model(const std::string &path_to_cfg) = 0;
-    virtual const std::vector<std::string>& getModelOrderedChainName() const final;
     
     inline void rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const;
     inline void rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const;
@@ -719,7 +718,7 @@ private:
     static shlibpp::SharedLibraryClassFactory<ModelInterface> _model_interface_factory;
     static std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<ModelInterface> > > _model_interface_instance;
     
-    std::vector<std::string> _model_ordered_chain_name; 
+    using IXBotInterface::_ordered_chain_names;
     std::map<int, int> _joint_id_to_model_id;
     
     static bool parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars);

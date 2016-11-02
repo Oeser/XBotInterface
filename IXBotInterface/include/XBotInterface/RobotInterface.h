@@ -101,8 +101,6 @@ protected:
     virtual bool read_sensors() = 0;
     virtual bool init_robot(const std::string& path_to_cfg) = 0;
     
-    virtual const std::vector<std::string>& getModelOrderedChainName() final;
-    
     
 
     // Setters for RX
@@ -123,6 +121,7 @@ private:
     
     using IXBotInterface::_chain_map;
     using IXBotInterface::_ordered_joint_vector;
+    using IXBotInterface::_ordered_chain_names;
     std::map<std::string, XBot::RobotChain::Ptr> _robot_chain_map;
     XBot::RobotChain _dummy_chain;
     

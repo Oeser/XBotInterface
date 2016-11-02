@@ -144,10 +144,6 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     return instance_ptr;
 }
 
-const std::vector< std::string >& XBot::ModelInterface::getModelOrderedChainName() const
-{
-    return _model_ordered_chain_name;
-}
  
 bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
 {
@@ -222,7 +218,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     }
     
     
-
+    _ordered_chain_names.clear();
     joint_idx = 0;
     while( joint_idx < model_ordered_joint_name.size() ){
      
@@ -230,7 +226,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
         std::string joint_name = model_ordered_joint_name[joint_idx];
         std::string chain_name = getJointByName(joint_name)->getChainName();
         
-        _model_ordered_chain_name.push_back(chain_name);
+        _ordered_chain_names.push_back(chain_name);
         
         // check that the joint that follow are equal to the chain ones,
         // ordered from base link to tip link
@@ -257,7 +253,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
     //_model_ordered_chain_name;
     
     std::cout << "Model ordered chains: " << std::endl;
-    for(const auto& s : _model_ordered_chain_name) std::cout << s << std::endl;
+    for(const auto& s : _ordered_chain_names) std::cout << s << std::endl;
         
     return success;
 }
@@ -580,6 +576,7 @@ bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id,
     else return false;
 }
 
+
 bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name, 
                                                    Eigen::RowVectorXd& S) const
 {
@@ -588,8 +585,6 @@ bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name
     S.setZero(getJointNum());
     S(joint_id) = 1;
 }
-
-
 
 
 bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
