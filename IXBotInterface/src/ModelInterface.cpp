@@ -130,7 +130,9 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     
     // save the instance
     std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > ali_ptr(new shlibpp::SharedLibraryClass<XBot::ModelInterface>(_model_interface_factory));
-    _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >()); 
+    
+    _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >());
+    
     shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  *_model_interface_instance[_model_interface_instance.size()-1];
     
     // open and init robot interface
@@ -215,10 +217,12 @@ bool XBot::ModelInterface::fillModelOrderedChain()
             
             joint_idx++;
         }
+        
+//         _model_ordered_chain_name.push_back(virtual_chain_name);
     }
     
     
-    _model_ordered_chain_name.clear();
+
     joint_idx = 0;
     while( joint_idx < model_ordered_joint_name.size() ){
      
@@ -293,10 +297,10 @@ XBot::ModelChain& XBot::ModelInterface::chain(const std::string& chain_name)
 }
 
 
-bool XBot::ModelInterface::getSpatialAcceleration(const std::string& link_name, 
+bool XBot::ModelInterface::getAccelerationTwist(const std::string& link_name, 
                                                   Eigen::Matrix< double, 6, 1 >& acceleration) const
 {
-    bool success = getSpatialAcceleration(link_name, _tmp_kdl_twist);
+    bool success = getAccelerationTwist(link_name, _tmp_kdl_twist);
     
     tf::twistKDLToEigen(_tmp_kdl_twist, acceleration);
     
@@ -307,7 +311,7 @@ bool XBot::ModelInterface::getSpatialAcceleration(const std::string& link_name,
 bool XBot::ModelInterface::getCOM(const std::string& reference_frame, Eigen::Vector3d& com_position) const
 {
     bool success = getCOM(reference_frame, _tmp_kdl_vector);
-    
+ 
     tf::vectorKDLToEigen(_tmp_kdl_vector, com_position);
     
     return success;
@@ -390,23 +394,6 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame,
     
 }
 
-void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const
-{
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            kdl_rotation.data[3*i+j] = eigen_rotation(i,j); // TBD: check if works!
-        }
-    }
-}
-
-void XBot::ModelInterface::rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const
-{
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            eigen_rotation(i,j) = kdl_rotation.data[3*i+j]; // TBD: check if works!
-        }
-    }
-}
 
 
 bool XBot::ModelInterface::getOrientation(const std::string& source_frame, 
@@ -507,10 +494,10 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::s
     return success;
 }
 
-bool XBot::ModelInterface::getSpatialVelocity(const std::string& link_name, 
+bool XBot::ModelInterface::getVelocityTwist(const std::string& link_name, 
                                               Eigen::Matrix< double, int(6), int(1) >& velocity) const
 {
-    bool success = getSpatialVelocity(link_name, _tmp_kdl_twist);
+    bool success = getVelocityTwist(link_name, _tmp_kdl_twist);
     tf::twistKDLToEigen(_tmp_kdl_twist, velocity);
     return success;
 }
@@ -571,12 +558,12 @@ void XBot::ModelInterface::getCOMAcceleration(Eigen::Vector3d& acceleration) con
 bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name, 
                                                    Eigen::MatrixXd& S) const
 {
-    std::vector<int> chain_ids; // TBD use a TMP to avoid allocation
-    if(!getEigenID(chain_name, chain_ids)) return false;
+
+    if(!getEigenID(chain_name, _tmp_int_vector)) return false;
     
-    S.setZero(chain_ids.size(), getJointNum());
-    for( int i = 0; i < chain_ids.size(); i++ ){
-        S(i, chain_ids[i]) = 1;
+    S.setZero(_tmp_int_vector.size(), getJointNum());
+    for( int i = 0; i < _tmp_int_vector.size(); i++ ){
+        S(i, _tmp_int_vector[i]) = 1;
     }
     
     return true;
@@ -585,14 +572,19 @@ bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name
 bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id, 
                                                    Eigen::RowVectorXd& S) const
 {
-    return false; //TBD implement
+    int idx = getEigenID(joint_id);
+    if(idx >= 0){
+        S.resize(getJointNum());
+        S(idx) = 1;
+    }
+    else return false;
 }
 
 bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name, 
                                                    Eigen::RowVectorXd& S) const
 {
     int joint_id = getEigenID(joint_name);
-    if( joint_id < 0 ) return false; // TBD print error
+    if( joint_id < 0 ) return false; 
     S.setZero(getJointNum());
     S(joint_id) = 1;
 }

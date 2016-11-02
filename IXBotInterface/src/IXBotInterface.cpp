@@ -198,6 +198,7 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
         const std::map< std::string, ForceTorqueSensor::Ptr >& ft_map = _chain_map.at(chain_name)->getForceTorqueInternal();
         _ft_map.insert(ft_map.begin(),
                        ft_map.end());
+        
     }
     
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
@@ -215,6 +216,8 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     }
     
     // fill the joint id to eigen id
+    _ordered_joint_vector.clear();
+    _joint_name_to_eigen_id.clear();
     int eigen_id = 0;
     for( const std::string& chain_name : getModelOrderedChainName() ) {
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
@@ -229,7 +232,7 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     
 }
 
-bool XBot::IXBotInterface::getEigenID ( const std::string& chain_name, std::vector< int >& ids ) const  //TBD don't replicate it in ModelInterface
+bool XBot::IXBotInterface::getEigenID ( const std::string& chain_name, std::vector< int >& ids ) const 
 {
     if(_chain_map.count(chain_name)){
         
@@ -320,6 +323,11 @@ XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& jo
     
     if( it != _joint_name_to_eigen_id.end() ){
         return _ordered_joint_vector[it->second];
+    }
+    
+    for( const auto& c : _chain_map){
+        const XBot::KinematicChain& chain = *c.second;
+        if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
     }
     
     std::cerr << "ERROR in " << __func__ << ". Joint " << joint_name << " is NOT defined!" << std::endl;

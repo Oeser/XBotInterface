@@ -103,6 +103,10 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
         ros::init(argc, argv, "from_config"); // TBD remove this ugly reference to implementation details
     }
 
+    // loading the requested model interface internal to the robot
+    _model = XBot::ModelInterface::getModel(path_to_cfg);
+    
+    
     // loading the requested robot interface
     _robot_interface_factory.open( _path_to_shared_lib.c_str(),
                                                                                 _subclass_factory_name.c_str());
@@ -117,8 +121,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     // static instance of the robot interface
     _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;});
     
-    // loading the requested model interface internal to the robot
-    _model = XBot::ModelInterface::getModel(path_to_cfg);
+    
     
     return _instance_ptr;
 
@@ -133,7 +136,7 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName()
 {
 
-    return _model_ordered_chain_name;
+    return _model_ordered_chain_name; //::getModelOrderedChainName();
 }
 
 
@@ -143,7 +146,7 @@ bool XBot::RobotInterface::sense(bool sync_model)
     bool sense_ok = sense_internal();
     bool sensors_ok = read_sensors();
     if (sync_model) {
-        return sense_ok && sensors_ok && (_model->syncFrom(*this));
+        return  (_model->syncFrom(*this)) && sense_ok && sensors_ok;
     }
     return sense_ok && sensors_ok;
 }

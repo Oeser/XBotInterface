@@ -364,8 +364,12 @@ public:
     bool setDamping(int i, double D);
 
     bool syncFrom(const KinematicChain &other);
+    
+    
 
     friend std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
+    
+    
 
 protected:
     
