@@ -335,7 +335,7 @@ namespace XBot {
                                          std::string& absolute_path,
                                          std::string extension = "");
         
-        virtual const std::vector<std::string>& getModelOrderedChainName() const;
+        const std::vector<std::string>& getModelOrderedChainName() const;
 
                
         // internal XBotCoreModel object: it does the trick using URDF, SRDF and joint map configuration
@@ -345,6 +345,7 @@ namespace XBot {
         std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
         std::vector<Joint::Ptr> _ordered_joint_vector;
         std::map<std::string, ForceTorqueSensor::Ptr> _ft_map;
+        std::vector<std::string> _ordered_chain_names;
         
         std::map<int, int> _joint_id_to_eigen_id;
         std::map<std::string, int> _joint_name_to_eigen_id;

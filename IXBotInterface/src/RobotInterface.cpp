@@ -133,12 +133,6 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 }
 
 
-const std::vector< std::string >& XBot::RobotInterface::getModelOrderedChainName()
-{
-
-    return _model_ordered_chain_name; //::getModelOrderedChainName();
-}
-
 
 
 bool XBot::RobotInterface::sense(bool sync_model)
@@ -175,11 +169,11 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
     // Call virtual init_robot
     bool success = init_robot(path_to_cfg);
     
-    _model_ordered_chain_name.clear();
+    _ordered_chain_names.clear();
     for( const std::string& s : model().getModelOrderedChainName() ){
             if( s == "virtual_chain" ){}
             else{
-                _model_ordered_chain_name.push_back(s);
+                _ordered_chain_names.push_back(s);
             }
     }
     

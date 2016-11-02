@@ -72,7 +72,7 @@ int XBot::IXBotInterface::getJointNum() const
 
 const std::vector< std::string >& XBot::IXBotInterface::getModelOrderedChainName() const
 {
-    return _XBotModel.get_ordered_chain_names();
+    return _ordered_chain_names;
 }
 
 bool XBot::IXBotInterface::hasChain(const std::string& chain_name) const
@@ -188,6 +188,7 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     _srdf_string = _XBotModel.get_srdf_string();
     _XBotModel.get_enabled_joint_ids(_ordered_joint_id);
     _XBotModel.get_enabled_joint_names(_ordered_joint_name);
+    _ordered_chain_names = _XBotModel.get_ordered_chain_names();
 
     // create dynamically the Kinematic Chains and the FT
     for (const std::string & chain_name : _XBotModel.get_chain_names()) {
