@@ -202,7 +202,7 @@ namespace XBot {
         // Force-torque sensors
 
         std::map< std::string, ForceTorqueSensor::ConstPtr > getForceTorque();
-        bool getForceTorque(const std::string& parent_link_name, ForceTorqueSensor::ConstPtr& ft) const;
+        ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
 
 
 

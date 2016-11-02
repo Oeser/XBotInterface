@@ -1675,15 +1675,14 @@ Joint::Ptr XBot::KinematicChain::getJoint(int i) const
     return _joint_vector[i];
 }
 
-bool XBot::KinematicChain::getForceTorque(const std::string& link_name, ForceTorqueSensor::ConstPtr& ft) const
+ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::string& link_name) const
 {
     bool success = false;
-    ft = std::make_shared<ForceTorqueSensor>();
     
     for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
         if( ftptr->parentLinkName() == link_name ){
             success = true;
-            ft = ftptr;
+            return ftptr;
         }
     }
     
@@ -1691,7 +1690,7 @@ bool XBot::KinematicChain::getForceTorque(const std::string& link_name, ForceTor
         std::cerr << "ERROR in " << __func__ << " " << link_name << " is either undefined or does not contain any FT" << std::endl;
     }
     
-    return success;
+    return ForceTorqueSensor::ConstPtr();
 }
 
 std::map< std::string, ForceTorqueSensor::ConstPtr > XBot::KinematicChain::getForceTorque() const

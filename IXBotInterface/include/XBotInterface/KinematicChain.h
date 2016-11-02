@@ -78,7 +78,6 @@ public:
      */
     KinematicChain(const KinematicChain &other);
 
-
     /**
      * @brief Custom copy assignment, which guarantees independence between
      * copies by performing a deep copy
@@ -104,11 +103,9 @@ public:
      * @brief Returns a force-torque sensor given its parent-link name. 
      * 
      * @param parent_link_name Name of the link to which the sensor is attached
-     * @param ft A shared pointer to the force-torque sensor. A dummy FT is returned if either parent_link_name is not defined
-     * or it does not contain any FT sensor.
-     * @return True if a FT sensor with given parent_link_name was found. False otherwise.
+     * @return A shared pointer to the required force-torque sensor.
      */
-    bool getForceTorque(const std::string& parent_link_name, ForceTorqueSensor::ConstPtr& ft ) const;
+    ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
 
     
     void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;

@@ -319,18 +319,16 @@ bool XBot::IXBotInterface::hasJoint(const std::string &joint_name) const
 
 XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& joint_name) const
 {
-    for(const auto& c : _chain_map){
-     
-        const XBot::KinematicChain& chain = *c.second;
-        if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
-        
+    auto it = _joint_name_to_eigen_id.find(joint_name);
+    
+    if( it != _joint_name_to_eigen_id.end() ){
+        return _ordered_joint_vector[it->second];
     }
     
     for( const auto& c : _chain_map){
         const XBot::KinematicChain& chain = *c.second;
         if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
     }
-    
     std::cerr << "ERROR in " << __func__ << ". Joint " << joint_name << " is NOT defined!" << std::endl;
     return XBot::Joint::ConstPtr();
 }
@@ -351,6 +349,11 @@ XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByID(int joint_id) const
     
     if( it != _joint_id_to_eigen_id.end() ){
         return _ordered_joint_vector[it->second];
+    }
+    
+    for( const auto& c : _chain_map){
+        const XBot::KinematicChain& chain = *c.second;
+        if(chain.hasJoint(joint_id)) return chain.getJointById(joint_id);
     }
     
     std::cerr << "ERROR in " << __func__ << ". Joint " << joint_id << " is NOT defined!" << std::endl;
@@ -1892,15 +1895,15 @@ std::ostream& XBot::operator<< ( std::ostream& os, const XBot::IXBotInterface& r
     return os;
 }
 
-bool XBot::IXBotInterface::getForceTorque(const std::string& parent_link_name, ForceTorqueSensor::ConstPtr& ft) const
+XBot::ForceTorqueSensor::ConstPtr XBot::IXBotInterface::getForceTorque(const std::string& parent_link_name) const
 {
-    for( const auto& c : _chain_map ){
+    
+    
+    
+    for( const auto& ft_pair : _ft_map ) {
         
-        const KinematicChain& chain = *c.second;
+        ForceTorqueSensor::ConstPtr ft = ft_pair.second;
         
-        if(chain.getForceTorque(parent_link_name, ft)){
-            return true;
-        }
     }
         
    return false;
