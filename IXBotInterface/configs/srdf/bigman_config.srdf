@@ -59,6 +59,8 @@
   </group>
   <!-- CONSTRAINT: first left then right -->
   <group name="legs">
+    <!-- LEFT LEG -->
+    <!-- RIGHT LEG -->
   </group>
   
 .
@@ -76,12 +78,16 @@
     <!-- RIGHT ARM -->
     <group name="right_arm"/>
     <!-- LEFT HAND -->
+    <group name="left_hand"/>
     --&gt;
 
         
     <!-- RIGHT HAND -->
+    <group name="right_hand"/>
     <!-- TORSO -->
     <group name="torso"/>
+    <!-- LEFT LEG -->
+    <!-- RIGHT LEG -->
   </group>
   <!-- END CHAINS -->
 </robot>
