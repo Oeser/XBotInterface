@@ -20,6 +20,7 @@
 #ifndef __MODEL_INTERFACE_H__
 #define __MODEL_INTERFACE_H__
 
+
 #include <vector>
 #include <map>
 
@@ -132,6 +133,7 @@ public:
     
     /**
      * @brief Updates the kinematic variables of the model according to the current state of the model.
+     * When called without arguments, it only updates joint positions (no velocities/accelerations).
      * 
      * @param update_position True if you want to update the positions. False otherwise.
      * @param update_velocity True if you want to update the velocities. False otherwise.
@@ -703,8 +705,8 @@ protected:
     virtual bool init_model(const std::string &path_to_cfg) = 0;
     virtual const std::vector<std::string>& getModelOrderedChainName() const final;
     
-    void rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const;
-    void rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const;
+    inline void rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const;
+    inline void rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const;
     
 
 private:
@@ -749,5 +751,25 @@ private:
 
 };
 };
+
+
+
+inline void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const
+{
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            kdl_rotation.data[3*i+j] = eigen_rotation(i,j); // TBD: check if works!
+        }
+    }
+}
+
+inline void XBot::ModelInterface::rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const
+{
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            eigen_rotation(i,j) = kdl_rotation.data[3*i+j]; // TBD: check if works!
+        }
+    }
+}
 
 #endif // __MODEL_INTERFACE_H__

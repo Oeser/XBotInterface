@@ -311,7 +311,7 @@ bool XBot::ModelInterface::getAccelerationTwist(const std::string& link_name,
 bool XBot::ModelInterface::getCOM(const std::string& reference_frame, Eigen::Vector3d& com_position) const
 {
     bool success = getCOM(reference_frame, _tmp_kdl_vector);
-    
+ 
     tf::vectorKDLToEigen(_tmp_kdl_vector, com_position);
     
     return success;
@@ -394,23 +394,6 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame,
     
 }
 
-void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const
-{
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            kdl_rotation.data[3*i+j] = eigen_rotation(i,j); // TBD: check if works!
-        }
-    }
-}
-
-void XBot::ModelInterface::rotationKDLToEigen(const KDL::Rotation& kdl_rotation, Eigen::Matrix3d& eigen_rotation) const
-{
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            eigen_rotation(i,j) = kdl_rotation.data[3*i+j]; // TBD: check if works!
-        }
-    }
-}
 
 
 bool XBot::ModelInterface::getOrientation(const std::string& source_frame, 
