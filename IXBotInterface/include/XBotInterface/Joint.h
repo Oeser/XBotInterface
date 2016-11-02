@@ -33,7 +33,7 @@ namespace XBot
     class IXBotInterface;
 
 /**
-* @brief Container for the Joint information.
+* @brief Container for the Joint state and information.
 *
 */
 class Joint
@@ -42,6 +42,7 @@ class Joint
 
 public:
     
+    // specify friendships
     friend XBot::KinematicChain;
     friend XBot::RobotChain;
     friend XBot::IXBotInterface;
@@ -53,7 +54,7 @@ public:
     Joint();
 
     /**
-     * @brief Construct using the joint name, joint id
+     * @brief Construct using the joint name, joint id, urdf joint and chain name
      *
      * @param joint_name the joint name
      * @param joint_id the joint id
@@ -98,82 +99,137 @@ public:
      */
     const std::string &getChainName() const;
     
+    /**
+     * @brief Getter for the joint position limits in the urdf
+     * 
+     * @param qmin lower position limit of the joint
+     * @param qmax upper position limit of the joint
+     * @return void
+     */
     void getJointLimits(double& qmin, double& qmax) const;
     
+    /**
+     * @brief Getter for the joint velocity limit in the urdf
+     * 
+     * @param qdot_max joint velocity limit
+     * @return void
+     */
     void getVelocityLimit(double& qdot_max) const;
     
+    /**
+     * @brief Getter for the joint effort limit in the urdf
+     * 
+     * @param tau_max joint effort limit
+     * @return void
+     */
     void getEffortLimit(double& tau_max) const;
     
+    /**
+     * @brief check that the param q is inside the position limits
+     * 
+     * @param q the position to check
+     * @return true if the param q is inside the joint position limits
+     */
     bool checkJointLimits(double q) const;
     
+    /**
+     * @brief check that the param qdot is below the joint velocity limit
+     * 
+     * @param qdot the velocity to check
+     * @return true if the param qdot is below the joint velocity limit
+     */
     bool checkVelocityLimit(double qdot) const;
     
+    /**
+     * @brief check that the param tau is below the joint effort limit
+     * 
+     * @param tau the effort to check
+     * @return true if the param tau is below the joint effort limit
+     */
     bool checkEffortLimit(double tau) const;
     
+    /**
+     * @brief Getter for the urdf Joint object
+     * 
+     * @return a (boost) shared pointer to a const urdf Joint object
+     */
     urdf::JointConstSharedPtr getUrdfJoint() const;
 
-    
-    // TBD implement checkPositionLimit(), checkVelocityLimit(), checkEffortLimit()
-
-    
-    
     friend std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
     
 
 protected:
-
+    
+    
+    ///////////////
+    // RX VALUES //
+    ///////////////
+    
+    
+    /**
+     * @brief Setter for the joint name
+     * 
+     * @param joint_name the joint name to set
+     * @return void
+     */
     void setJointName(const std::string &joint_name);
+    
+    /**
+     * @brief Setter for the joint id
+     * 
+     * @param joint_id the joint id to set
+     * @return void
+     */
     void setJointId(int joint_id);
     
-    // TBD
-
     /**
-     * @brief ...
+     * @brief Setter for the link side encoder reading
      * 
-     * @param link_pos ...
+     * @param link_pos the link side encoder reading to set
      * @return void
      */
     void setJointPosition(double link_pos);
     
     /**
-     * @brief ...
+     * @brief setter for the motor side encoder reading
      * 
-     * @param motor_pos ...
+     * @param motor_pos the motor side encoder reading to set
      * @return void
      */
     void setMotorPosition(double motor_pos);
     
     /**
-     * @brief ...
+     * @brief setter for the link side velocity
      * 
-     * @param link_vel ...
+     * @param link_vel the link side velocity to set
      * @return void
      */
     void setJointVelocity(double link_vel);
     
     /**
-     * @brief ...
+     * @brief setter for the motor side velocity
      * 
-     * @param motor_vel ...
+     * @param motor_vel the motor side velocity to set
      * @return void
      */
     void setMotorVelocity(double motor_vel);
     
     /**
-     * @brief ...
+     * @brief setter for the joint effort (generalized force)
      * 
-     * @param effort ...
+     * @param effort the joint effort (generalized force) to set
      * @return void
      */
     void setJointEffort(double effort);
     
     /**
-     * @brief ...
+     * @brief setter for the joint temperature
      * 
-     * @param temperature ...
+     * @param temperature the joint temperature
      * @return void
      */
     void setTemperature(double temperature);
+    
     
     /**
      * @brief getter for the link side encoder reading
@@ -211,13 +267,57 @@ protected:
     double getJointEffort() const;
     
     /**
-     * @brief getter for the commanded joint temperature
+     * @brief getter for the joint temperature
      * 
      * @return the joint temperature
      */
     double getTemperature() const;
-
     
+    
+    ///////////////
+    // TX VALUES //
+    ///////////////
+    
+    
+    /**
+     * @brief setter for the motor position reference 
+     * 
+     * @param pos_ref the motor position reference to set
+     * @return void
+     */
+    void setPositionReference(double pos_ref);
+    
+    /**
+     * @brief setter for the velocity reference
+     * 
+     * @param vel_ref the velocity reference to set
+     * @return void
+     */
+    void setVelocityReference(double vel_ref);
+    
+    /**
+     * @brief setter for the effort (generalized force) reference
+     * 
+     * @param effort_ref the effort (generalized force) reference to set
+     * @return void
+     */
+    void setEffortReference(double effort_ref);
+    
+    /**
+     * @brief set the joint stiffness
+     * 
+     * @param stiffness the joint stiffness to set
+     * @return void
+     */
+    void setStiffness(double stiffness);
+    
+    /**
+     * @brief set the joint damping
+     * 
+     * @param damping the joint damping to set
+     * @return void
+     */
+    void setDamping(double damping);
     
     
     /**
@@ -255,6 +355,7 @@ protected:
      */
     double getDamping() const;
     
+    
     /**
      * @brief Synchronize the current Joint with another Joint object
      * 
@@ -279,23 +380,12 @@ protected:
      */
     const XBot::Joint& operator<< ( const XBot::Joint& from);
     
-    
     /**
      * @brief return true if the joint is virtual
      * 
      * @return true if the joint is virtual. False otherwise
      */
     bool isVirtualJoint();
-    
-    
-
-    void setPositionReference(double pos_ref);
-    void setVelocityReference(double vel_ref);
-    void setEffortReference(double effort_ref);
-    void setStiffness(double stiffness);
-    void setDamping(double damping);
-    
-    
     
 
 private:

@@ -40,21 +40,12 @@ namespace XBot {
         typedef std::shared_ptr<IXBotInterface> Ptr;
         
         // Constructor, copy constructor, copy assignment, virtual destructor, init function
+        
         IXBotInterface();
         IXBotInterface(const IXBotInterface& other);
         IXBotInterface& operator= (const IXBotInterface& rhs);
         virtual ~IXBotInterface();
-
         
-        /**
-         * @brief Since the class must be default-constructible in order to be supported
-         * by the dynamic-loading mechanism, a initialization function is provided which 
-         * performs the actual construction. It takes the path to a properly formatted YAML
-         * file as the only argument.
-         * 
-         * @param path_to_cfg The path to the YAML config file.
-         * @return True if initialization succeded.
-         */
         bool init(const std::string& path_to_cfg);
 
 
@@ -330,7 +321,7 @@ namespace XBot {
         // Chain getter for developers
         
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
-        const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const;
+        const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const; // TBD change the Internal with something more meaningful
         bool getEigenID(const std::string& chain_name, std::vector<int>& ids) const;
         
         bool sync_internal(const IXBotInterface& other);
@@ -347,7 +338,7 @@ namespace XBot {
         virtual const std::vector<std::string>& getModelOrderedChainName() const;
 
                
-        
+        // internal XBotCoreModel object: it does the trick using URDF, SRDF and joint map configuration
         XBotCoreModel _XBotModel;
                 
         // TBD avoid protected members in subclasses (using + getters)
