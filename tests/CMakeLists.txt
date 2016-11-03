@@ -63,8 +63,12 @@ add_definitions(-DXBOT_TESTS_ROBOTS_DIR="${CMAKE_CURRENT_BINARY_DIR}/robots/")
 ADD_EXECUTABLE(testBasic     testBasic.cpp)
 TARGET_LINK_LIBRARIES(testBasic ${TestLibs})
 add_dependencies(testBasic GTest-ext XBotInterface)
-
 add_test(NAME XBot_testBasic COMMAND testBasic)
+
+ADD_EXECUTABLE(testJoint     testJoint.cpp)
+TARGET_LINK_LIBRARIES(testJoint ${TestLibs})
+add_dependencies(testJoint GTest-ext XBotInterface)
+add_test(NAME XBot_testJoint COMMAND testJoint)
 
 
 find_package(MATLAB QUIET)

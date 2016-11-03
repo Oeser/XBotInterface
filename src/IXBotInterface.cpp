@@ -19,7 +19,7 @@
 
 #include <XBotInterface/IXBotInterface.h>
 
-#define CONFIG_MIDDLE_PATH "/external/XBotInterface/IXBotInterface/configs/"
+#define CONFIG_MIDDLE_PATH "/external/XBotInterface/configs/"
 
 
 XBot::IXBotInterface::IXBotInterface()
