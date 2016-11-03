@@ -7,12 +7,9 @@ namespace {
 
 class testJoint: public ::testing::Test {
     
-    
-    
+
 protected:
 
-    
-    
      testJoint(){
          
          
@@ -119,6 +116,7 @@ TEST_F(testJoint, checkEffortLimits){
     }
     
 }
+
 
 } //namespace
 

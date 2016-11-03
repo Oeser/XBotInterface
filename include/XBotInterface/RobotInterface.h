@@ -111,6 +111,8 @@ protected:
     using IXBotInterface::setMotorVelocity;
     using IXBotInterface::setJointEffort;
     using IXBotInterface::setTemperature;
+    
+    using IXBotInterface::syncFrom;
 
         
 
