@@ -1615,7 +1615,7 @@ bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q,
         }
     }
     
-    return true;
+    return success;
 }
 
 bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot) const
