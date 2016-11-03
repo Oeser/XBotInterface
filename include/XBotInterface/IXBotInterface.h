@@ -130,6 +130,13 @@ namespace XBot {
         const std::vector<std::string>& getEnabledJointNames() const;
         
         /**
+         * @brief Returns a vector of enabled joint IDs.
+         * 
+         * @return A const reference to the vector of enabled joint IDs.
+         */
+        const std::vector<int>& getEnabledJointId() const;
+        
+        /**
          * @brief Checks that a joint with name "joint_name" is defined as an enabled
          * joint inside the interface.
          * 
@@ -311,6 +318,7 @@ namespace XBot {
         bool checkVelocityLimits(const Eigen::VectorXd& qdot) const;
         bool checkEffortLimits(const Eigen::VectorXd& tau) const;
         
+        virtual bool syncFrom(const IXBotInterface& other);
         
         friend std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
 
@@ -324,7 +332,7 @@ namespace XBot {
         const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const; // TBD change the Internal with something more meaningful
         bool getEigenID(const std::string& chain_name, std::vector<int>& ids) const;
         
-        bool sync_internal(const IXBotInterface& other);
+        
         
         virtual bool init_internal(const std::string& path_to_cfg){ return true; }
         
