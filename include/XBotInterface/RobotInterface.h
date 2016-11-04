@@ -27,14 +27,14 @@
 
 #include <cstdlib>
 
-#include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/XBotInterface.h>
 #include <XBotInterface/ModelInterface.h>
 #include <XBotInterface/RobotChain.h>
 
 namespace XBot
 {
 
-class RobotInterface : public IXBotInterface
+class RobotInterface : public XBotInterface
 {
 
 public:
@@ -68,29 +68,29 @@ public:
     
     // Getters for RX
 
-    using IXBotInterface::getJointPosition;
-    using IXBotInterface::getMotorPosition;
-    using IXBotInterface::getJointVelocity;
-    using IXBotInterface::getMotorVelocity;
-    using IXBotInterface::getJointEffort;
-    using IXBotInterface::getTemperature;
+    using XBotInterface::getJointPosition;
+    using XBotInterface::getMotorPosition;
+    using XBotInterface::getJointVelocity;
+    using XBotInterface::getMotorVelocity;
+    using XBotInterface::getJointEffort;
+    using XBotInterface::getTemperature;
 
     
     // Getters for TX
 
-    using IXBotInterface::getPositionReference;
-    using IXBotInterface::getVelocityReference;
-    using IXBotInterface::getEffortReference;
-    using IXBotInterface::getStiffness;
-    using IXBotInterface::getDamping;
+    using XBotInterface::getPositionReference;
+    using XBotInterface::getVelocityReference;
+    using XBotInterface::getEffortReference;
+    using XBotInterface::getStiffness;
+    using XBotInterface::getDamping;
 
     // Setters for TX
     
-    using IXBotInterface::setPositionReference;
-    using IXBotInterface::setVelocityReference;
-    using IXBotInterface::setEffortReference;
-    using IXBotInterface::setStiffness;
-    using IXBotInterface::setDamping;
+    using XBotInterface::setPositionReference;
+    using XBotInterface::setVelocityReference;
+    using XBotInterface::setEffortReference;
+    using XBotInterface::setStiffness;
+    using XBotInterface::setDamping;
     
 
 
@@ -105,14 +105,14 @@ protected:
 
     // Setters for RX
     
-    using IXBotInterface::setJointPosition;
-    using IXBotInterface::setMotorPosition;
-    using IXBotInterface::setJointVelocity;
-    using IXBotInterface::setMotorVelocity;
-    using IXBotInterface::setJointEffort;
-    using IXBotInterface::setTemperature;
+    using XBotInterface::setJointPosition;
+    using XBotInterface::setMotorPosition;
+    using XBotInterface::setJointVelocity;
+    using XBotInterface::setMotorVelocity;
+    using XBotInterface::setJointEffort;
+    using XBotInterface::setTemperature;
     
-    using IXBotInterface::syncFrom;
+    using XBotInterface::syncFrom;
 
         
 
@@ -121,9 +121,9 @@ private:
     
     virtual bool init_internal(const std::string &path_to_cfg);
     
-    using IXBotInterface::_chain_map;
-    using IXBotInterface::_ordered_joint_vector;
-    using IXBotInterface::_ordered_chain_names;
+    using XBotInterface::_chain_map;
+    using XBotInterface::_ordered_joint_vector;
+    using XBotInterface::_ordered_chain_names;
     std::map<std::string, XBot::RobotChain::Ptr> _robot_chain_map;
     XBot::RobotChain _dummy_chain;
     

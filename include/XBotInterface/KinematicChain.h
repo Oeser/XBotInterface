@@ -40,14 +40,14 @@ namespace XBot
 // typedef boost::shared_ptr<urdf::Link const> LinkConstSharedPtr;
 
 // NOTE forward declaration because of friendship
-class IXBotInterface;
+class XBotInterface;
 
 class KinematicChain
 {
 
 public:
     
-    friend XBot::IXBotInterface;
+    friend XBot::XBotInterface;
 
     /**
      * @brief Default constructor

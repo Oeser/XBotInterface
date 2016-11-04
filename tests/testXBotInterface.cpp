@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/XBotInterface.h>
 #include <cstdlib>
 #include <time.h>
 
@@ -24,7 +24,7 @@ protected:
      virtual void TearDown() {
      }
      
-     XBot::IXBotInterface xbint;
+     XBot::XBotInterface xbint;
      std::string path_to_cfg;
      
 };
@@ -61,7 +61,7 @@ TEST_F(testXbotInterface, checkCopyConstructor){
     
     
     // Copy constructor
-    XBot::IXBotInterface xbint_copy(xbint);
+    XBot::XBotInterface xbint_copy(xbint);
     
 
     xbint.getDamping(x);
@@ -135,7 +135,7 @@ TEST_F(testXbotInterface, checkCopyAssignment){
     
     
     // Copy constructor
-    XBot::IXBotInterface xbint_copy;
+    XBot::XBotInterface xbint_copy;
     xbint_copy = xbint;
     
 
@@ -198,7 +198,7 @@ TEST_F(testXbotInterface, checkJointGetters){
     
     for( int idx = 0; idx < xbint.getJointNum(); idx++ ){
         
-        int joint_id = xbint.getJointByEigenIdx(idx)->getJointId();
+        int joint_id = xbint.getJointByDofIndex(idx)->getJointId();
         
         ASSERT_TRUE( x_map.count(joint_id) == 1 );
         EXPECT_TRUE( x_map.at(joint_id) == x(idx) );
@@ -260,8 +260,8 @@ TEST_F(testXbotInterface, checkGettersSetters){
     
     x.setRandom( xbint.getJointNum() );
     for(int i = 0; i < x.size(); i++){
-        x_id_map[xbint.getJointByEigenIdx(i)->getJointId()] = x(i);
-        x_name_map[xbint.getJointByEigenIdx(i)->getJointName()] = x(i);
+        x_id_map[xbint.getJointByDofIndex(i)->getJointId()] = x(i);
+        x_name_map[xbint.getJointByDofIndex(i)->getJointName()] = x(i);
     }
     
     GETTER_SETTER_TEST(getDamping, setDamping)
@@ -281,7 +281,7 @@ TEST_F(testXbotInterface, checkGettersSetters){
 
 TEST_F(testXbotInterface, checkSyncFrom){
     
-    XBot::IXBotInterface other;
+    XBot::XBotInterface other;
     other.init(path_to_cfg);
     
     Eigen::VectorXd x;
@@ -369,7 +369,7 @@ TEST_F(testXbotInterface, checkJointLimits){
     
     for(const auto& j : xbint.getEnabledJointNames()){
         
-        int idx = xbint.getEigenID(j);
+        int idx = xbint.getDofIndex(j);
         
         EXPECT_EQ(xbint.getUrdf().getJoint(j)->limits->lower, qmin(idx));
         EXPECT_EQ(xbint.getUrdf().getJoint(j)->limits->upper, qmax(idx));
@@ -393,7 +393,7 @@ TEST_F(testXbotInterface, checkJointLimits){
             alpha(i) = rand()/double(RAND_MAX);
             beta(i) = 2.5*(alpha(i) - 0.5);
             if(beta(i) < 0 || beta(i) > 1){
-                expected_bad_joints.push_back(xbint.getJointByEigenIdx(i)->getJointName());
+                expected_bad_joints.push_back(xbint.getJointByDofIndex(i)->getJointName());
             }
         }
         
@@ -438,6 +438,11 @@ TEST_F(testXbotInterface, checkJointLimits){
 }
 
 
+int main ( int argc, char **argv )
+{
+     testing::InitGoogleTest ( &argc, argv );
+     return RUN_ALL_TESTS();
+}
 
 
 

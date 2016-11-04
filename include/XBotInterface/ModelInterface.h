@@ -31,7 +31,7 @@
 #include <kdl/frames_io.hpp>
 #include <eigen_conversions/eigen_kdl.h>
 
-#include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/XBotInterface.h>
 #include <XBotInterface/ModelChain.h>
 
 namespace XBot {
@@ -40,10 +40,10 @@ class RobotInterface;
 
 /**
  * @brief ModelInterface is an abstraction layer for a kinematic/dynamic 
- * model of a robot. It inherits from the IXBotInterface class the 
+ * model of a robot. It inherits from the XBotInterface class the 
  * organization of a robot as a collection of kinematic chains. 
  */
-class ModelInterface : public IXBotInterface {
+class ModelInterface : public XBotInterface {
 
 public:
     
@@ -120,7 +120,7 @@ public:
     ModelChain& leg(int leg_id);
     
     /**
-     * @brief Synchronizes the internal model state to the one of the IXBotInterface
+     * @brief Synchronizes the internal model state to the one of the XBotInterface
      * given as an argument. This can be either another ModelInterface or a RobotInterface.
      * ModelInterface::update() is automatcally called, so that the kinematics and
      * dynamics of the ModelInterface is updated as well.
@@ -129,7 +129,7 @@ public:
      * model.
      * @return True if the synchronization is allowed, false otherwise.
      */
-    bool syncFrom(const IXBotInterface& other);
+    bool syncFrom(const XBotInterface& other);
     
     /**
      * @brief Updates the kinematic variables of the model according to the current state of the model.
@@ -683,21 +683,21 @@ public:
     
     // Getters for RX
 
-    using IXBotInterface::getJointPosition;
-    using IXBotInterface::getMotorPosition;
-    using IXBotInterface::getJointVelocity;
-    using IXBotInterface::getMotorVelocity;
-    using IXBotInterface::getJointEffort;
-    using IXBotInterface::getTemperature;
+    using XBotInterface::getJointPosition;
+    using XBotInterface::getMotorPosition;
+    using XBotInterface::getJointVelocity;
+    using XBotInterface::getMotorVelocity;
+    using XBotInterface::getJointEffort;
+    using XBotInterface::getTemperature;
 
     // Setters for RX
     
-    using IXBotInterface::setJointPosition;
-    using IXBotInterface::setMotorPosition;
-    using IXBotInterface::setJointVelocity;
-    using IXBotInterface::setMotorVelocity;
-    using IXBotInterface::setJointEffort;
-    using IXBotInterface::setTemperature;
+    using XBotInterface::setJointPosition;
+    using XBotInterface::setMotorPosition;
+    using XBotInterface::setJointVelocity;
+    using XBotInterface::setMotorVelocity;
+    using XBotInterface::setJointEffort;
+    using XBotInterface::setTemperature;
 
 protected:
     
@@ -710,15 +710,15 @@ protected:
 
 private:
     
-    using IXBotInterface::_chain_map;
-    using IXBotInterface::_ordered_joint_vector;
+    using XBotInterface::_chain_map;
+    using XBotInterface::_ordered_joint_vector;
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
     XBot::ModelChain _dummy_chain;
     
     static shlibpp::SharedLibraryClassFactory<ModelInterface> _model_interface_factory;
     static std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<ModelInterface> > > _model_interface_instance;
     
-    using IXBotInterface::_ordered_chain_names;
+    using XBotInterface::_ordered_chain_names;
     std::map<int, int> _joint_id_to_model_id;
     
     static bool parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars);
@@ -734,19 +734,19 @@ private:
     
     // Getters for TX
 
-    using IXBotInterface::getPositionReference;
-    using IXBotInterface::getVelocityReference;
-    using IXBotInterface::getEffortReference;
-    using IXBotInterface::getStiffness;
-    using IXBotInterface::getDamping;
+    using XBotInterface::getPositionReference;
+    using XBotInterface::getVelocityReference;
+    using XBotInterface::getEffortReference;
+    using XBotInterface::getStiffness;
+    using XBotInterface::getDamping;
 
     // Setters for TX
     
-    using IXBotInterface::setPositionReference;
-    using IXBotInterface::setVelocityReference;
-    using IXBotInterface::setEffortReference;
-    using IXBotInterface::setStiffness;
-    using IXBotInterface::setDamping;
+    using XBotInterface::setPositionReference;
+    using XBotInterface::setVelocityReference;
+    using XBotInterface::setEffortReference;
+    using XBotInterface::setStiffness;
+    using XBotInterface::setDamping;
 
 };
 };

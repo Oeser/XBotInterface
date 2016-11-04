@@ -33,18 +33,18 @@
 
 namespace XBot {
 
-    class IXBotInterface {
+    class XBotInterface {
     
     public:
         
-        typedef std::shared_ptr<IXBotInterface> Ptr;
+        typedef std::shared_ptr<XBotInterface> Ptr;
         
         // Constructor, copy constructor, copy assignment, virtual destructor, init function
         
-        IXBotInterface();
-        IXBotInterface(const IXBotInterface& other);
-        IXBotInterface& operator= (const IXBotInterface& rhs);
-        virtual ~IXBotInterface();
+        XBotInterface();
+        XBotInterface(const XBotInterface& other);
+        XBotInterface& operator= (const XBotInterface& rhs);
+        virtual ~XBotInterface();
         
         bool init(const std::string& path_to_cfg);
 
@@ -183,7 +183,7 @@ namespace XBot {
          * @return A const shared pointer to the required joint. A null pointer is returned if
          * idx is not a valid index.
          */
-        XBot::Joint::ConstPtr getJointByEigenIdx(int idx) const;
+        XBot::Joint::ConstPtr getJointByDofIndex(int idx) const;
         
         /**
          * @brief Gets the Eigen ID of the joint with name "joint_name". This means that the i-th
@@ -193,7 +193,7 @@ namespace XBot {
          * @param joint_name The name of the required joint.
          * @return The Eigen index of the required joint.
          */
-        int getEigenID(const std::string& joint_name) const;
+        int getDofIndex(const std::string& joint_name) const;
         
         /**
          * @brief Gets the Eigen ID of the joint with ID "joint_id". This means that the i-th
@@ -203,7 +203,7 @@ namespace XBot {
          * @param joint_id The ID of the required joint.
          * @return The Eigen index of the required joint.
          */
-        int getEigenID(int joint_id) const;
+        int getDofIndex(int joint_id) const;
 
 
         // Force-torque sensors
@@ -318,9 +318,9 @@ namespace XBot {
         bool checkVelocityLimits(const Eigen::VectorXd& qdot) const;
         bool checkEffortLimits(const Eigen::VectorXd& tau) const;
         
-        virtual bool syncFrom(const IXBotInterface& other);
+        virtual bool syncFrom(const XBotInterface& other);
         
-        friend std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
+        friend std::ostream& operator<<(std::ostream& os, const XBot::XBotInterface& robot);
 
     protected:
         
@@ -330,7 +330,7 @@ namespace XBot {
         
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
         const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const; // TBD change the Internal with something more meaningful
-        bool getEigenID(const std::string& chain_name, std::vector<int>& ids) const;
+        bool getDofIndex(const std::string& chain_name, std::vector<int>& ids) const;
         
         
         
@@ -377,7 +377,7 @@ namespace XBot {
 
     };
     
-    std::ostream& operator<<(std::ostream& os, const XBot::IXBotInterface& robot);
+    std::ostream& operator<<(std::ostream& os, const XBot::XBotInterface& robot);
 
 }
 

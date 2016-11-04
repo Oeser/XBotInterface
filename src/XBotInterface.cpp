@@ -17,17 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/XBotInterface.h>
 
 #define CONFIG_MIDDLE_PATH "/external/XBotInterface/configs/"
 
 
-XBot::IXBotInterface::IXBotInterface()
+XBot::XBotInterface::XBotInterface()
 {
 
 }
 
-XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
+XBot::XBotInterface::XBotInterface(const XBot::XBotInterface &other):
     _joint_num(other._joint_num),
     _ordered_joint_name(other._ordered_joint_name),
     _ordered_joint_id(other._ordered_joint_id),
@@ -74,24 +74,24 @@ XBot::IXBotInterface::IXBotInterface(const XBot::IXBotInterface &other):
 
 }
 
-int XBot::IXBotInterface::getJointNum() const
+int XBot::XBotInterface::getJointNum() const
 {
     return _joint_num;
 }
 
 
-const std::vector< std::string >& XBot::IXBotInterface::getModelOrderedChainName() const
+const std::vector< std::string >& XBot::XBotInterface::getModelOrderedChainName() const
 {
     return _ordered_chain_names;
 }
 
-bool XBot::IXBotInterface::hasChain(const std::string& chain_name) const
+bool XBot::XBotInterface::hasChain(const std::string& chain_name) const
 {
     return _chain_map.count(chain_name) == 1;
 }
 
 
-bool XBot::IXBotInterface::computeAbsolutePath ( const std::string& input_path,
+bool XBot::XBotInterface::computeAbsolutePath ( const std::string& input_path,
                                                  const std::string& middle_path,
                                                  std::string& absolute_path, 
                                                  std::string extension)
@@ -120,7 +120,7 @@ bool XBot::IXBotInterface::computeAbsolutePath ( const std::string& input_path,
     return true;
 }
 
-bool XBot::IXBotInterface::parseYAML ( const std::string& path_to_cfg )
+bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
@@ -173,12 +173,12 @@ bool XBot::IXBotInterface::parseYAML ( const std::string& path_to_cfg )
 
 }
 
-const std::string& XBot::IXBotInterface::getPathToConfig() const
+const std::string& XBot::XBotInterface::getPathToConfig() const
 {
     return _path_to_cfg;
 }
 
-bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
+bool XBot::XBotInterface::init(const std::string &path_to_cfg)
 {
     // store path to config
     _path_to_cfg = path_to_cfg;
@@ -248,7 +248,7 @@ bool XBot::IXBotInterface::init(const std::string &path_to_cfg)
     
 }
 
-bool XBot::IXBotInterface::getEigenID ( const std::string& chain_name, std::vector< int >& ids ) const 
+bool XBot::XBotInterface::getDofIndex ( const std::string& chain_name, std::vector< int >& ids ) const 
 {
     if(_chain_map.count(chain_name)){
         
@@ -268,7 +268,7 @@ bool XBot::IXBotInterface::getEigenID ( const std::string& chain_name, std::vect
     
 }
 
-int XBot::IXBotInterface::getEigenID(const std::string& joint_name) const
+int XBot::XBotInterface::getDofIndex(const std::string& joint_name) const
 {
     auto it = _joint_name_to_eigen_id.find(joint_name);
     if( it != _joint_name_to_eigen_id.end() ){
@@ -281,7 +281,7 @@ int XBot::IXBotInterface::getEigenID(const std::string& joint_name) const
     
 }
 
-int XBot::IXBotInterface::getEigenID(int joint_id) const
+int XBot::XBotInterface::getDofIndex(int joint_id) const
 {
     auto it = _joint_id_to_eigen_id.find(joint_id);
     if( it != _joint_id_to_eigen_id.end() ){
@@ -295,19 +295,19 @@ int XBot::IXBotInterface::getEigenID(int joint_id) const
 
 
 
-int XBot::IXBotInterface::legs() const
+int XBot::XBotInterface::legs() const
 {
     return _XBotModel.get_legs_chain().size();
 }
 
 
 
-int XBot::IXBotInterface::arms() const
+int XBot::XBotInterface::arms() const
 {
     return _XBotModel.get_arms_chain().size();
 }
 
-bool XBot::IXBotInterface::syncFrom(const XBot::IXBotInterface &other)
+bool XBot::XBotInterface::syncFrom(const XBot::XBotInterface &other)
 {
     bool success = true;
     for (const auto & c : other._chain_map) {
@@ -318,7 +318,7 @@ bool XBot::IXBotInterface::syncFrom(const XBot::IXBotInterface &other)
             
         } else {
             if(!chain.isVirtual()){
-                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize IXBotInterfaces with different chains!!" << std::endl;
+                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
                 success = false;
             }
         }
@@ -327,13 +327,13 @@ bool XBot::IXBotInterface::syncFrom(const XBot::IXBotInterface &other)
 }
 
 
-bool XBot::IXBotInterface::hasJoint(const std::string &joint_name) const
+bool XBot::XBotInterface::hasJoint(const std::string &joint_name) const
 {
     return std::find(_ordered_joint_name.begin(), _ordered_joint_name.end(), joint_name) !=  _ordered_joint_name.end();
 }
 
 
-XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& joint_name) const
+XBot::Joint::ConstPtr XBot::XBotInterface::getJointByName(const std::string& joint_name) const
 {
     auto it = _joint_name_to_eigen_id.find(joint_name);
     
@@ -349,7 +349,7 @@ XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByName(const std::string& jo
     return XBot::Joint::ConstPtr();
 }
 
-XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByEigenIdx(int idx) const
+XBot::Joint::ConstPtr XBot::XBotInterface::getJointByDofIndex(int idx) const
 {
     if( idx < getJointNum() ){
         return _ordered_joint_vector[idx];
@@ -359,7 +359,7 @@ XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByEigenIdx(int idx) const
     return XBot::Joint::ConstPtr();
 }
 
-XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByID(int joint_id) const
+XBot::Joint::ConstPtr XBot::XBotInterface::getJointByID(int joint_id) const
 {
     auto it = _joint_id_to_eigen_id.find(joint_id);
     
@@ -379,7 +379,7 @@ XBot::Joint::ConstPtr XBot::IXBotInterface::getJointByID(int joint_id) const
 
 
 
-bool XBot::IXBotInterface::getJointPosition(Eigen::VectorXd &q) const
+bool XBot::XBotInterface::getJointPosition(Eigen::VectorXd &q) const
 {
     if (q.rows() != _joint_num) {
         q.resize(_joint_num);
@@ -397,7 +397,7 @@ bool XBot::IXBotInterface::getJointPosition(Eigen::VectorXd &q) const
     return true;
 }
 
-bool XBot::IXBotInterface::getJointPosition(std::map< std::string, double > &q) const
+bool XBot::XBotInterface::getJointPosition(std::map< std::string, double > &q) const
 {
 //     q.clear();
 
@@ -412,7 +412,7 @@ bool XBot::IXBotInterface::getJointPosition(std::map< std::string, double > &q) 
     }
 }
 
-bool XBot::IXBotInterface::getJointPosition(std::map< int, double > &q) const
+bool XBot::XBotInterface::getJointPosition(std::map< int, double > &q) const
 {
 //     q.clear();
 
@@ -427,7 +427,7 @@ bool XBot::IXBotInterface::getJointPosition(std::map< int, double > &q) const
     }
 }
 
-bool XBot::IXBotInterface::getPositionReference(std::map< std::string, double > &q) const
+bool XBot::XBotInterface::getPositionReference(std::map< std::string, double > &q) const
 {
 //     q.clear();
 
@@ -442,7 +442,7 @@ bool XBot::IXBotInterface::getPositionReference(std::map< std::string, double > 
     }
 }
 
-bool XBot::IXBotInterface::getPositionReference(std::map< int, double > &q) const
+bool XBot::XBotInterface::getPositionReference(std::map< int, double > &q) const
 {
 //     q.clear();
 
@@ -457,7 +457,7 @@ bool XBot::IXBotInterface::getPositionReference(std::map< int, double > &q) cons
     }
 }
 
-bool XBot::IXBotInterface::getPositionReference(Eigen::VectorXd &q) const
+bool XBot::XBotInterface::getPositionReference(Eigen::VectorXd &q) const
 {
     if (q.rows() != _joint_num) {
         q.resize(_joint_num);
@@ -475,7 +475,7 @@ bool XBot::IXBotInterface::getPositionReference(Eigen::VectorXd &q) const
     return true;
 }
 
-bool XBot::IXBotInterface::getDamping(std::map< std::string, double > &D) const
+bool XBot::XBotInterface::getDamping(std::map< std::string, double > &D) const
 {
 //     D.clear();
 
@@ -490,7 +490,7 @@ bool XBot::IXBotInterface::getDamping(std::map< std::string, double > &D) const
     }
 }
 
-bool XBot::IXBotInterface::getJointEffort(std::map< std::string, double > &tau) const
+bool XBot::XBotInterface::getJointEffort(std::map< std::string, double > &tau) const
 {
 //     tau.clear();
 
@@ -505,7 +505,7 @@ bool XBot::IXBotInterface::getJointEffort(std::map< std::string, double > &tau) 
     }
 }
 
-bool XBot::IXBotInterface::getEffortReference(std::map< std::string, double > &tau) const
+bool XBot::XBotInterface::getEffortReference(std::map< std::string, double > &tau) const
 {
 //     tau.clear();
 
@@ -520,7 +520,7 @@ bool XBot::IXBotInterface::getEffortReference(std::map< std::string, double > &t
     }
 }
 
-bool XBot::IXBotInterface::getJointVelocity(std::map< std::string, double > &qdot) const
+bool XBot::XBotInterface::getJointVelocity(std::map< std::string, double > &qdot) const
 {
 //     qdot.clear();
 
@@ -535,7 +535,7 @@ bool XBot::IXBotInterface::getJointVelocity(std::map< std::string, double > &qdo
     }
 }
 
-bool XBot::IXBotInterface::getMotorPosition(std::map< std::string, double > &q) const
+bool XBot::XBotInterface::getMotorPosition(std::map< std::string, double > &q) const
 {
 //     q.clear();
 
@@ -550,7 +550,7 @@ bool XBot::IXBotInterface::getMotorPosition(std::map< std::string, double > &q) 
     }
 }
 
-bool XBot::IXBotInterface::getStiffness(std::map< std::string, double > &K) const
+bool XBot::XBotInterface::getStiffness(std::map< std::string, double > &K) const
 {
 //     K.clear();
 
@@ -565,7 +565,7 @@ bool XBot::IXBotInterface::getStiffness(std::map< std::string, double > &K) cons
     }
 }
 
-bool XBot::IXBotInterface::getTemperature(std::map< std::string, double > &temp) const
+bool XBot::XBotInterface::getTemperature(std::map< std::string, double > &temp) const
 {
 //     temp.clear();
 
@@ -580,7 +580,7 @@ bool XBot::IXBotInterface::getTemperature(std::map< std::string, double > &temp)
     }
 }
 
-bool XBot::IXBotInterface::getVelocityReference(std::map< std::string, double > &qdot) const
+bool XBot::XBotInterface::getVelocityReference(std::map< std::string, double > &qdot) const
 {
 //     qdot.clear();
 
@@ -595,7 +595,7 @@ bool XBot::IXBotInterface::getVelocityReference(std::map< std::string, double > 
     }
 }
 
-bool XBot::IXBotInterface::getMotorVelocity(std::map< std::string, double > &qdot) const
+bool XBot::XBotInterface::getMotorVelocity(std::map< std::string, double > &qdot) const
 {
 //     qdot.clear();
 
@@ -612,7 +612,7 @@ bool XBot::IXBotInterface::getMotorVelocity(std::map< std::string, double > &qdo
 
 
 
-bool XBot::IXBotInterface::getDamping(std::map< int, double > &D) const
+bool XBot::XBotInterface::getDamping(std::map< int, double > &D) const
 {
 //     D.clear();
 
@@ -627,7 +627,7 @@ bool XBot::IXBotInterface::getDamping(std::map< int, double > &D) const
     }
 }
 
-bool XBot::IXBotInterface::getJointEffort(std::map< int, double > &tau) const
+bool XBot::XBotInterface::getJointEffort(std::map< int, double > &tau) const
 {
 //     tau.clear();
 
@@ -642,7 +642,7 @@ bool XBot::IXBotInterface::getJointEffort(std::map< int, double > &tau) const
     }
 }
 
-bool XBot::IXBotInterface::getEffortReference(std::map< int, double > &tau) const
+bool XBot::XBotInterface::getEffortReference(std::map< int, double > &tau) const
 {
 //     tau.clear();
 
@@ -658,7 +658,7 @@ bool XBot::IXBotInterface::getEffortReference(std::map< int, double > &tau) cons
 }
 
 
-bool XBot::IXBotInterface::getVelocityReference(std::map< int, double > &qdot) const
+bool XBot::XBotInterface::getVelocityReference(std::map< int, double > &qdot) const
 {
 //     qdot.clear();
 
@@ -674,7 +674,7 @@ bool XBot::IXBotInterface::getVelocityReference(std::map< int, double > &qdot) c
 }
 
 
-bool XBot::IXBotInterface::getJointVelocity(std::map< int, double > &qdot) const
+bool XBot::XBotInterface::getJointVelocity(std::map< int, double > &qdot) const
 {
 //     qdot.clear();
 
@@ -689,7 +689,7 @@ bool XBot::IXBotInterface::getJointVelocity(std::map< int, double > &qdot) const
     }
 }
 
-bool XBot::IXBotInterface::getMotorPosition(std::map< int, double > &q) const
+bool XBot::XBotInterface::getMotorPosition(std::map< int, double > &q) const
 {
 //     q.clear();
 
@@ -704,7 +704,7 @@ bool XBot::IXBotInterface::getMotorPosition(std::map< int, double > &q) const
     }
 }
 
-bool XBot::IXBotInterface::getMotorVelocity(std::map< int, double > &qdot) const
+bool XBot::XBotInterface::getMotorVelocity(std::map< int, double > &qdot) const
 {
 //     qdot.clear();
 
@@ -719,7 +719,7 @@ bool XBot::IXBotInterface::getMotorVelocity(std::map< int, double > &qdot) const
     }
 }
 
-bool XBot::IXBotInterface::getStiffness(std::map< int, double > &K) const
+bool XBot::XBotInterface::getStiffness(std::map< int, double > &K) const
 {
 //     K.clear();
 
@@ -734,7 +734,7 @@ bool XBot::IXBotInterface::getStiffness(std::map< int, double > &K) const
     }
 }
 
-bool XBot::IXBotInterface::getTemperature(std::map< int, double > &temp) const
+bool XBot::XBotInterface::getTemperature(std::map< int, double > &temp) const
 {
 //     temp.clear();
 
@@ -752,7 +752,7 @@ bool XBot::IXBotInterface::getTemperature(std::map< int, double > &temp) const
 
 
 
-bool XBot::IXBotInterface::getDamping(Eigen::VectorXd &D) const
+bool XBot::XBotInterface::getDamping(Eigen::VectorXd &D) const
 {
     if (D.rows() != _joint_num) {
         D.resize(_joint_num);
@@ -770,7 +770,7 @@ bool XBot::IXBotInterface::getDamping(Eigen::VectorXd &D) const
     return true;
 }
 
-bool XBot::IXBotInterface::getJointEffort(Eigen::VectorXd &tau) const
+bool XBot::XBotInterface::getJointEffort(Eigen::VectorXd &tau) const
 {
     if (tau.rows() != _joint_num) {
         tau.resize(_joint_num);
@@ -788,7 +788,7 @@ bool XBot::IXBotInterface::getJointEffort(Eigen::VectorXd &tau) const
     return true;
 }
 
-bool XBot::IXBotInterface::getEffortReference(Eigen::VectorXd &tau) const
+bool XBot::XBotInterface::getEffortReference(Eigen::VectorXd &tau) const
 {
     if (tau.rows() != _joint_num) {
         tau.resize(_joint_num);
@@ -806,7 +806,7 @@ bool XBot::IXBotInterface::getEffortReference(Eigen::VectorXd &tau) const
     return true;
 }
 
-bool XBot::IXBotInterface::getJointVelocity(Eigen::VectorXd &qdot) const
+bool XBot::XBotInterface::getJointVelocity(Eigen::VectorXd &qdot) const
 {
     if (qdot.rows() != _joint_num) {
         qdot.resize(_joint_num);
@@ -824,7 +824,7 @@ bool XBot::IXBotInterface::getJointVelocity(Eigen::VectorXd &qdot) const
     return true;
 }
 
-bool XBot::IXBotInterface::getMotorPosition(Eigen::VectorXd &q) const
+bool XBot::XBotInterface::getMotorPosition(Eigen::VectorXd &q) const
 {
     if (q.rows() != _joint_num) {
         q.resize(_joint_num);
@@ -842,7 +842,7 @@ bool XBot::IXBotInterface::getMotorPosition(Eigen::VectorXd &q) const
     return true;
 }
 
-bool XBot::IXBotInterface::getMotorVelocity(Eigen::VectorXd &qdot) const
+bool XBot::XBotInterface::getMotorVelocity(Eigen::VectorXd &qdot) const
 {
     if (qdot.rows() != _joint_num) {
         qdot.resize(_joint_num);
@@ -860,7 +860,7 @@ bool XBot::IXBotInterface::getMotorVelocity(Eigen::VectorXd &qdot) const
     return true;
 }
 
-bool XBot::IXBotInterface::getStiffness(Eigen::VectorXd &K) const
+bool XBot::XBotInterface::getStiffness(Eigen::VectorXd &K) const
 {
     if (K.rows() != _joint_num) {
         K.resize(_joint_num);
@@ -878,7 +878,7 @@ bool XBot::IXBotInterface::getStiffness(Eigen::VectorXd &K) const
     return true;
 }
 
-bool XBot::IXBotInterface::getTemperature(Eigen::VectorXd &temp) const
+bool XBot::XBotInterface::getTemperature(Eigen::VectorXd &temp) const
 {
     if (temp.rows() != _joint_num) {
         temp.resize(_joint_num);
@@ -896,7 +896,7 @@ bool XBot::IXBotInterface::getTemperature(Eigen::VectorXd &temp) const
     return true;
 }
 
-bool XBot::IXBotInterface::getVelocityReference(Eigen::VectorXd &qdot) const
+bool XBot::XBotInterface::getVelocityReference(Eigen::VectorXd &qdot) const
 {
     if (qdot.rows() != _joint_num) {
         qdot.resize(_joint_num);
@@ -915,7 +915,7 @@ bool XBot::IXBotInterface::getVelocityReference(Eigen::VectorXd &qdot) const
 }
 
 
-bool XBot::IXBotInterface::setJointPosition(const std::map< std::string, double > &q)
+bool XBot::XBotInterface::setJointPosition(const std::map< std::string, double > &q)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -939,7 +939,7 @@ bool XBot::IXBotInterface::setJointPosition(const std::map< std::string, double 
     return success;
 }
 
-bool XBot::IXBotInterface::setMotorPosition(const std::map< std::string, double > &q)
+bool XBot::XBotInterface::setMotorPosition(const std::map< std::string, double > &q)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -965,7 +965,7 @@ bool XBot::IXBotInterface::setMotorPosition(const std::map< std::string, double 
     return success;
 }
 
-bool XBot::IXBotInterface::setPositionReference(const std::map< std::string, double > &q)
+bool XBot::XBotInterface::setPositionReference(const std::map< std::string, double > &q)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -991,7 +991,7 @@ bool XBot::IXBotInterface::setPositionReference(const std::map< std::string, dou
     return success;
 }
 
-bool XBot::IXBotInterface::setJointEffort(const std::map< std::string, double > &tau)
+bool XBot::XBotInterface::setJointEffort(const std::map< std::string, double > &tau)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1017,7 +1017,7 @@ bool XBot::IXBotInterface::setJointEffort(const std::map< std::string, double > 
     return success;
 }
 
-bool XBot::IXBotInterface::setEffortReference(const std::map< std::string, double > &tau)
+bool XBot::XBotInterface::setEffortReference(const std::map< std::string, double > &tau)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1043,7 +1043,7 @@ bool XBot::IXBotInterface::setEffortReference(const std::map< std::string, doubl
     return success;
 }
 
-bool XBot::IXBotInterface::setJointVelocity(const std::map< std::string, double > &qdot)
+bool XBot::XBotInterface::setJointVelocity(const std::map< std::string, double > &qdot)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1069,7 +1069,7 @@ bool XBot::IXBotInterface::setJointVelocity(const std::map< std::string, double 
     return success;
 }
 
-bool XBot::IXBotInterface::setMotorVelocity(const std::map< std::string, double > &qdot)
+bool XBot::XBotInterface::setMotorVelocity(const std::map< std::string, double > &qdot)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1095,7 +1095,7 @@ bool XBot::IXBotInterface::setMotorVelocity(const std::map< std::string, double 
     return success;
 }
 
-bool XBot::IXBotInterface::setVelocityReference(const std::map< std::string, double > &qdot)
+bool XBot::XBotInterface::setVelocityReference(const std::map< std::string, double > &qdot)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1121,7 +1121,7 @@ bool XBot::IXBotInterface::setVelocityReference(const std::map< std::string, dou
     return success;
 }
 
-bool XBot::IXBotInterface::setTemperature(const std::map< std::string, double > &temp)
+bool XBot::XBotInterface::setTemperature(const std::map< std::string, double > &temp)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1147,7 +1147,7 @@ bool XBot::IXBotInterface::setTemperature(const std::map< std::string, double > 
     return success;
 }
 
-bool XBot::IXBotInterface::setStiffness(const std::map< std::string, double > &K)
+bool XBot::XBotInterface::setStiffness(const std::map< std::string, double > &K)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1173,7 +1173,7 @@ bool XBot::IXBotInterface::setStiffness(const std::map< std::string, double > &K
     return success;
 }
 
-bool XBot::IXBotInterface::setDamping ( const Eigen::VectorXd& D )
+bool XBot::XBotInterface::setDamping ( const Eigen::VectorXd& D )
 {
      if (D.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : D has wrong size " << D.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1192,7 +1192,7 @@ bool XBot::IXBotInterface::setDamping ( const Eigen::VectorXd& D )
     return true;
 }
 
-bool XBot::IXBotInterface::setJointEffort ( const Eigen::VectorXd& tau )
+bool XBot::XBotInterface::setJointEffort ( const Eigen::VectorXd& tau )
 {
      if (tau.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : tau has wrong size " << tau.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1211,7 +1211,7 @@ bool XBot::IXBotInterface::setJointEffort ( const Eigen::VectorXd& tau )
     return true;
 }
 
-bool XBot::IXBotInterface::setEffortReference ( const Eigen::VectorXd& tau )
+bool XBot::XBotInterface::setEffortReference ( const Eigen::VectorXd& tau )
 {
      if (tau.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : tau has wrong size " << tau.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1230,7 +1230,7 @@ bool XBot::IXBotInterface::setEffortReference ( const Eigen::VectorXd& tau )
     return true;
 }
 
-bool XBot::IXBotInterface::setJointPosition ( const Eigen::VectorXd& q )
+bool XBot::XBotInterface::setJointPosition ( const Eigen::VectorXd& q )
 {
      if (q.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1249,7 +1249,7 @@ bool XBot::IXBotInterface::setJointPosition ( const Eigen::VectorXd& q )
     return true;
 }
 
-bool XBot::IXBotInterface::setJointVelocity ( const Eigen::VectorXd& qdot )
+bool XBot::XBotInterface::setJointVelocity ( const Eigen::VectorXd& qdot )
 {
      if (qdot.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : qdot has wrong size " << qdot.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1268,7 +1268,7 @@ bool XBot::IXBotInterface::setJointVelocity ( const Eigen::VectorXd& qdot )
     return true;
 }
 
-bool XBot::IXBotInterface::setMotorPosition( const Eigen::VectorXd& q )
+bool XBot::XBotInterface::setMotorPosition( const Eigen::VectorXd& q )
 {
      if (q.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1287,7 +1287,7 @@ bool XBot::IXBotInterface::setMotorPosition( const Eigen::VectorXd& q )
     return true;
 }
 
-bool XBot::IXBotInterface::setMotorVelocity( const Eigen::VectorXd& qdot )
+bool XBot::XBotInterface::setMotorVelocity( const Eigen::VectorXd& qdot )
 {
      if (qdot.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : qdot has wrong size " << qdot.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1306,7 +1306,7 @@ bool XBot::IXBotInterface::setMotorVelocity( const Eigen::VectorXd& qdot )
     return true;
 }
 
-bool XBot::IXBotInterface::setPositionReference ( const Eigen::VectorXd& q )
+bool XBot::XBotInterface::setPositionReference ( const Eigen::VectorXd& q )
 {
      if (q.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1325,7 +1325,7 @@ bool XBot::IXBotInterface::setPositionReference ( const Eigen::VectorXd& q )
     return true;
 }
 
-bool XBot::IXBotInterface::setStiffness ( const Eigen::VectorXd& K )
+bool XBot::XBotInterface::setStiffness ( const Eigen::VectorXd& K )
 {
      if (K.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : K has wrong size " << K.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1344,7 +1344,7 @@ bool XBot::IXBotInterface::setStiffness ( const Eigen::VectorXd& K )
     return true;
 }
 
-bool XBot::IXBotInterface::setTemperature ( const Eigen::VectorXd& temp )
+bool XBot::XBotInterface::setTemperature ( const Eigen::VectorXd& temp )
 {
      if (temp.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : temp has wrong size " << temp.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1363,7 +1363,7 @@ bool XBot::IXBotInterface::setTemperature ( const Eigen::VectorXd& temp )
     return true;
 }
 
-bool XBot::IXBotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
+bool XBot::XBotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
 {
      if (qdot.rows() != _joint_num) {
         std::cerr << "ERROR in " << __func__ << " : qdot has wrong size " << qdot.rows() << " != robot joint number " << _joint_num << std::endl;
@@ -1386,7 +1386,7 @@ bool XBot::IXBotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
 
 
 
-bool XBot::IXBotInterface::setDamping(const std::map< std::string, double > &D)
+bool XBot::XBotInterface::setDamping(const std::map< std::string, double > &D)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1412,7 +1412,7 @@ bool XBot::IXBotInterface::setDamping(const std::map< std::string, double > &D)
     return success;
 }
 
-bool XBot::IXBotInterface::setDamping ( const std::map< int, double >& D )
+bool XBot::XBotInterface::setDamping ( const std::map< int, double >& D )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1439,7 +1439,7 @@ bool XBot::IXBotInterface::setDamping ( const std::map< int, double >& D )
 }
 
 
-bool XBot::IXBotInterface::setJointEffort ( const std::map< int, double >& tau )
+bool XBot::XBotInterface::setJointEffort ( const std::map< int, double >& tau )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1465,7 +1465,7 @@ bool XBot::IXBotInterface::setJointEffort ( const std::map< int, double >& tau )
     return success;
 }
 
-bool XBot::IXBotInterface::setEffortReference ( const std::map< int, double >& tau )
+bool XBot::XBotInterface::setEffortReference ( const std::map< int, double >& tau )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1491,7 +1491,7 @@ bool XBot::IXBotInterface::setEffortReference ( const std::map< int, double >& t
     return success;
 }
 
-bool XBot::IXBotInterface::setJointPosition ( const std::map< int, double >& q )
+bool XBot::XBotInterface::setJointPosition ( const std::map< int, double >& q )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1517,7 +1517,7 @@ bool XBot::IXBotInterface::setJointPosition ( const std::map< int, double >& q )
     return success;
 }
 
-bool XBot::IXBotInterface::setJointVelocity ( const std::map< int, double >& qdot )
+bool XBot::XBotInterface::setJointVelocity ( const std::map< int, double >& qdot )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1543,7 +1543,7 @@ bool XBot::IXBotInterface::setJointVelocity ( const std::map< int, double >& qdo
     return success;
 }
 
-bool XBot::IXBotInterface::setMotorPosition( const std::map< int, double >& q )
+bool XBot::XBotInterface::setMotorPosition( const std::map< int, double >& q )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1569,7 +1569,7 @@ bool XBot::IXBotInterface::setMotorPosition( const std::map< int, double >& q )
     return success;
 }
 
-bool XBot::IXBotInterface::setMotorVelocity( const std::map< int, double >& qdot )
+bool XBot::XBotInterface::setMotorVelocity( const std::map< int, double >& qdot )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1595,7 +1595,7 @@ bool XBot::IXBotInterface::setMotorVelocity( const std::map< int, double >& qdot
     return success;
 }
 
-bool XBot::IXBotInterface::setPositionReference ( const std::map< int, double >& q )
+bool XBot::XBotInterface::setPositionReference ( const std::map< int, double >& q )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1621,7 +1621,7 @@ bool XBot::IXBotInterface::setPositionReference ( const std::map< int, double >&
     return success;
 }
 
-bool XBot::IXBotInterface::setStiffness ( const std::map< int, double >& K )
+bool XBot::XBotInterface::setStiffness ( const std::map< int, double >& K )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1647,7 +1647,7 @@ bool XBot::IXBotInterface::setStiffness ( const std::map< int, double >& K )
     return success;
 }
 
-bool XBot::IXBotInterface::setTemperature ( const std::map< int, double >& temp )
+bool XBot::XBotInterface::setTemperature ( const std::map< int, double >& temp )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1673,7 +1673,7 @@ bool XBot::IXBotInterface::setTemperature ( const std::map< int, double >& temp 
     return success;
 }
 
-bool XBot::IXBotInterface::setVelocityReference ( const std::map< int, double >& qdot )
+bool XBot::XBotInterface::setVelocityReference ( const std::map< int, double >& qdot )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1701,46 +1701,46 @@ bool XBot::IXBotInterface::setVelocityReference ( const std::map< int, double >&
 
 
 
-std::vector< std::string > XBot::IXBotInterface::getChainNames() const
+std::vector< std::string > XBot::XBotInterface::getChainNames() const
 {
     return _XBotModel.get_chain_names();
 }
 
-const std::map< std::string, XBot::KinematicChain::Ptr >& XBot::IXBotInterface::getChainMap() const
+const std::map< std::string, XBot::KinematicChain::Ptr >& XBot::XBotInterface::getChainMap() const
 {
     return _chain_map;
 }
 
 
-const srdf_advr::Model& XBot::IXBotInterface::getSrdf() const
+const srdf_advr::Model& XBot::XBotInterface::getSrdf() const
 {
     return _XBotModel;
 }
 
-const std::string& XBot::IXBotInterface::getSrdfString() const
+const std::string& XBot::XBotInterface::getSrdfString() const
 {
     return _srdf_string;
 }
 
-const urdf::ModelInterface& XBot::IXBotInterface::getUrdf() const
+const urdf::ModelInterface& XBot::XBotInterface::getUrdf() const
 {
     return *(_XBotModel.get_urdf_model());
 }
 
-const std::string& XBot::IXBotInterface::getUrdfString() const
+const std::string& XBot::XBotInterface::getUrdfString() const
 {
     return _urdf_string;
 }
 
 
 
-XBot::IXBotInterface::~IXBotInterface()
+XBot::XBotInterface::~XBotInterface()
 {
 }
 
-XBot::IXBotInterface &XBot::IXBotInterface::operator=(const XBot::IXBotInterface &rhs)
+XBot::XBotInterface &XBot::XBotInterface::operator=(const XBot::XBotInterface &rhs)
 {
-    IXBotInterface tmp(rhs);
+    XBotInterface tmp(rhs);
     std::swap(_joint_num, tmp._joint_num);
     std::swap(_XBotModel, tmp._XBotModel);
     std::swap(_urdf_string, tmp._urdf_string);
@@ -1760,7 +1760,7 @@ XBot::IXBotInterface &XBot::IXBotInterface::operator=(const XBot::IXBotInterface
 
 }
 
-bool XBot::IXBotInterface::checkEffortLimits(const Eigen::VectorXd& tau) const
+bool XBot::XBotInterface::checkEffortLimits(const Eigen::VectorXd& tau) const
 {
     int idx = 0;
     for( const std::string& s : getModelOrderedChainName() ){
@@ -1774,7 +1774,7 @@ bool XBot::IXBotInterface::checkEffortLimits(const Eigen::VectorXd& tau) const
     return true;
 }
 
-bool XBot::IXBotInterface::checkEffortLimits(const Eigen::VectorXd& tau, 
+bool XBot::XBotInterface::checkEffortLimits(const Eigen::VectorXd& tau, 
                                              std::vector< std::string >& violating_joints) const
 {
     bool success = true;
@@ -1789,7 +1789,7 @@ bool XBot::IXBotInterface::checkEffortLimits(const Eigen::VectorXd& tau,
     return success;
 }
 
-bool XBot::IXBotInterface::checkJointLimits(const Eigen::VectorXd& q) const
+bool XBot::XBotInterface::checkJointLimits(const Eigen::VectorXd& q) const
 {
     int idx = 0;
     for( const std::string& s : getModelOrderedChainName() ){
@@ -1803,7 +1803,7 @@ bool XBot::IXBotInterface::checkJointLimits(const Eigen::VectorXd& q) const
     return true;
 }
 
-bool XBot::IXBotInterface::checkJointLimits(const Eigen::VectorXd& q, 
+bool XBot::XBotInterface::checkJointLimits(const Eigen::VectorXd& q, 
                                             std::vector< std::string >& violating_joints) const
 {
     bool success = true;
@@ -1818,7 +1818,7 @@ bool XBot::IXBotInterface::checkJointLimits(const Eigen::VectorXd& q,
     return success;
 }
 
-bool XBot::IXBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot) const
+bool XBot::XBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot) const
 {
     int idx = 0;
     for( const std::string& s : getModelOrderedChainName() ){
@@ -1832,7 +1832,7 @@ bool XBot::IXBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot) cons
     return true;
 }
 
-bool XBot::IXBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot, 
+bool XBot::XBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot, 
                                                std::vector< std::string >& violating_joints) const
 {
     bool success = true;
@@ -1847,7 +1847,7 @@ bool XBot::IXBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot,
     return success;
 }
 
-void XBot::IXBotInterface::getEffortLimits(Eigen::VectorXd& tau_max) const
+void XBot::XBotInterface::getEffortLimits(Eigen::VectorXd& tau_max) const
 {
     tau_max.resize(_joint_num);
     
@@ -1864,7 +1864,7 @@ void XBot::IXBotInterface::getEffortLimits(Eigen::VectorXd& tau_max) const
     }
 }
 
-void XBot::IXBotInterface::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const
+void XBot::XBotInterface::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const
 {
     q_min.resize(_joint_num);
     q_max.resize(_joint_num);
@@ -1882,7 +1882,7 @@ void XBot::IXBotInterface::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorX
     }
 }
 
-void XBot::IXBotInterface::getVelocityLimits(Eigen::VectorXd& qdot_max) const
+void XBot::XBotInterface::getVelocityLimits(Eigen::VectorXd& qdot_max) const
 {
     qdot_max.resize(_joint_num);
     
@@ -1901,12 +1901,12 @@ void XBot::IXBotInterface::getVelocityLimits(Eigen::VectorXd& qdot_max) const
 
 
 
-const std::vector< std::string > &XBot::IXBotInterface::getEnabledJointNames() const
+const std::vector< std::string > &XBot::XBotInterface::getEnabledJointNames() const
 {
     return _ordered_joint_name;
 }
 
-std::ostream& XBot::operator<< ( std::ostream& os, const XBot::IXBotInterface& robot )
+std::ostream& XBot::operator<< ( std::ostream& os, const XBot::XBotInterface& robot )
 {
     os << "Robot name: " << std::endl;
     for( const auto& c : robot.getChainMap() ) {
@@ -1915,7 +1915,7 @@ std::ostream& XBot::operator<< ( std::ostream& os, const XBot::IXBotInterface& r
     return os;
 }
 
-XBot::ForceTorqueSensor::ConstPtr XBot::IXBotInterface::getForceTorque(const std::string& parent_link_name) const
+XBot::ForceTorqueSensor::ConstPtr XBot::XBotInterface::getForceTorque(const std::string& parent_link_name) const
 {
     
     
@@ -1929,7 +1929,7 @@ XBot::ForceTorqueSensor::ConstPtr XBot::IXBotInterface::getForceTorque(const std
    return false;
 }
 
-std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > XBot::IXBotInterface::getForceTorque()
+std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > XBot::XBotInterface::getForceTorque()
 {
    std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > ft_map;
    
@@ -1941,13 +1941,13 @@ std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > XBot::IXBotInterface:
    return ft_map;
 }
 
-const std::map< std::string, XBot::ForceTorqueSensor::Ptr >& XBot::IXBotInterface::getForceTorqueInternal() const
+const std::map< std::string, XBot::ForceTorqueSensor::Ptr >& XBot::XBotInterface::getForceTorqueInternal() const
 {
     return _ft_map;
 }
 
 
-const std::vector<int>& XBot::IXBotInterface::getEnabledJointId() const
+const std::vector<int>& XBot::XBotInterface::getEnabledJointId() const
 {
     return _ordered_joint_id;
 }

@@ -555,7 +555,7 @@ bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name
                                                    Eigen::MatrixXd& S) const
 {
 
-    if(!getEigenID(chain_name, _tmp_int_vector)) return false;
+    if(!getDofIndex(chain_name, _tmp_int_vector)) return false;
     
     S.setZero(_tmp_int_vector.size(), getJointNum());
     for( int i = 0; i < _tmp_int_vector.size(); i++ ){
@@ -568,7 +568,7 @@ bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name
 bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id, 
                                                    Eigen::RowVectorXd& S) const
 {
-    int idx = getEigenID(joint_id);
+    int idx = getDofIndex(joint_id);
     if(idx >= 0){
         S.resize(getJointNum());
         S(idx) = 1;
@@ -580,16 +580,16 @@ bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id,
 bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name, 
                                                    Eigen::RowVectorXd& S) const
 {
-    int joint_id = getEigenID(joint_name);
+    int joint_id = getDofIndex(joint_name);
     if( joint_id < 0 ) return false; 
     S.setZero(getJointNum());
     S(joint_id) = 1;
 }
 
 
-bool XBot::ModelInterface::syncFrom(const XBot::IXBotInterface& other)
+bool XBot::ModelInterface::syncFrom(const XBot::XBotInterface& other)
 {
-    if( XBot::IXBotInterface::syncFrom(other) ){
+    if( XBot::XBotInterface::syncFrom(other) ){
         update(true, true, true);
         return true;
     }

@@ -227,7 +227,7 @@ bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model 
             _robot_chain_map.at(chain_name)->setReferenceFrom(chain);
         } else {
             if(!chain.isVirtual()){
-                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize IXBotInterfaces with different chains!!" << std::endl;
+                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
                 success = false;
             }
         }

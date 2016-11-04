@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <XBotInterface/IXBotInterface.h>
+#include <XBotInterface/XBotInterface.h>
 #include <cstdlib>
 #include <time.h>
 
@@ -28,7 +28,7 @@ protected:
      virtual void TearDown() {
      }
      
-     XBot::IXBotInterface xbint;
+     XBot::XBotInterface xbint;
 };
 
 // Test joint limits

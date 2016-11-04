@@ -65,7 +65,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
 add_library(XBotInterface SHARED ${XBotInterface_INCLUDES} 
-                                 src/IXBotInterface.cpp
+                                 src/XBotInterface.cpp
                                  src/RobotInterface.cpp
                                  src/KinematicChain.cpp
                                  src/RobotChain.cpp

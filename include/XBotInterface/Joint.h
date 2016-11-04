@@ -30,7 +30,7 @@ namespace XBot
     
     class KinematicChain;
     class RobotChain;
-    class IXBotInterface;
+    class XBotInterface;
 
 /**
 * @brief Container for the Joint state and information.
@@ -45,7 +45,7 @@ public:
     // specify friendships
     friend XBot::KinematicChain;
     friend XBot::RobotChain;
-    friend XBot::IXBotInterface;
+    friend XBot::XBotInterface;
 
     /**
      * @brief Default constructor
