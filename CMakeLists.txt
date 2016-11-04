@@ -57,7 +57,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIR}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
-                            ${sharedlib++_INCLUDE_DIRS}
+                            ${sharedlibpp_INCLUDE_DIRS}
                             )      
                             
                             
@@ -76,7 +76,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  
 target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
                                     yaml-cpp
-                                    ${sharedlib++_LIBRARIES}
+                                    ${sharedlibpp_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
                                     ${eigen_conversions_LIBRARIES}
                                     )
