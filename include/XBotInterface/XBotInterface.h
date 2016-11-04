@@ -82,6 +82,13 @@ namespace XBot {
          * @return A const reference to the required string.
          */
         const std::string& getSrdfString() const;
+        
+        
+        // Group states
+        
+        bool getRobotState(const std::string& state_name, Eigen::VectorXd& q) const;
+        bool getRobotState(const std::string& state_name, std::map<int, double>& q) const;
+        bool getRobotState(const std::string& state_name, std::map<std::string, double>& q) const;
 
 
         // Kinematic chains

@@ -1707,6 +1707,140 @@ std::map< std::string, ForceTorqueSensor::Ptr > KinematicChain::getForceTorqueIn
     return _ft_map;
 }
 
+bool XBot::KinematicChain::getChainState(const std::string& state_name, 
+                                         Eigen::VectorXd& q) const
+{
+    
+    q.resize(getJointNum());
+
+    bool success = false;
+    for( const auto& state : _XBotModel.getGroupStates() ){
+        
+        if( state.group_ == "chains" && state.name_ == state_name ){
+            
+            success = true;
+            
+            for( const auto& value_pair : state.joint_values_ ){
+                
+                const std::string& joint_name = value_pair.first;
+                const std::vector<double>& joint_value = value_pair.second;
+                
+                if( joint_value.size() != 1 ){
+                    std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
+                    return false;
+                }
+                
+                int dof_index = getDofIndex(joint_name);
+                q[dof_index] = joint_value[0];
+
+            }
+
+        }
+
+    }
+    
+    if(!success){
+        std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
+    }
+    
+    return success;
+}
+
+bool XBot::KinematicChain::getChainState(const std::string& state_name, 
+                                         std::map< std::string, double >& q) const
+{
+
+    bool success = false;
+    for( const auto& state : _XBotModel.getGroupStates() ){
+        
+        if( state.group_ == chainName() && state.name_ == state_name ){
+            
+            success = true;
+            
+            for( const auto& value_pair : state.joint_values_ ){
+                
+                const std::string& joint_name = value_pair.first;
+                const std::vector<double>& joint_value = value_pair.second;
+                
+                if( joint_value.size() != 1 ){
+                    std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
+                    return false;
+                }
+                
+                q[joint_name] = joint_value[0];
+
+            }
+
+        }
+        
+        
+    }
+    
+    if(!success){
+        std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
+    }
+    
+    return success;
+}
+
+bool XBot::KinematicChain::getChainState(const std::string& state_name, 
+                                         std::map< int, double >& q) const
+{
+
+    bool success = false;
+    for( const auto& state : _XBotModel.getGroupStates() ){
+        
+        if( state.group_ == "chains" && state.name_ == state_name ){
+            
+            success = true;
+            
+            for( const auto& value_pair : state.joint_values_ ){
+                
+                const std::string& joint_name = value_pair.first;
+                const std::vector<double>& joint_value = value_pair.second;
+                
+                if( joint_value.size() != 1 ){
+                    std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
+                    return false;
+                }
+                
+                int joint_id = getJointByName(joint_name)->getJointId();
+                q[joint_id] = joint_value[0];
+
+            }
+
+        }
+
+    }
+    
+    if(!success){
+        std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
+    }
+    
+    return success;
+}
+
+int XBot::KinematicChain::getDofIndex(const std::string& joint_name) const
+{
+    for(int i = 0; i < getJointNum(); i++){
+        if( _ordered_joint_name[i] == joint_name ) return i;
+    }
+    
+    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " NOT defined in chain " << chainName() << "!" << std::endl;
+    
+    return -1;
+}
+
+int XBot::KinematicChain::getDofIndex(int joint_id) const
+{
+    for(int i = 0; i < getJointNum(); i++){
+        if( _ordered_joint_id[i] == joint_id ) return i;
+    }
+    
+    std::cerr << "ERROR in " << __func__ << "! Joint ID" << joint_id << " NOT defined in chain " << chainName() << "!" << std::endl;
+    
+    return -1;
+}
 
 
 } // end namespace XBot

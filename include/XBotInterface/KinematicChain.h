@@ -91,6 +91,10 @@ public:
      */
     typedef std::shared_ptr<KinematicChain> Ptr;
     
+    bool getChainState(const std::string& state_name, std::map<int, double>& q) const;
+    bool getChainState(const std::string& state_name, std::map<std::string, double>& q) const;
+    bool getChainState(const std::string& state_name, Eigen::VectorXd& q) const;
+    
     /**
      * @brief Getter for the force-torque sensor map 
      * 
@@ -206,6 +210,10 @@ public:
      * @return The ID of the joint n° i
      */
     int jointId(int i) const;
+    
+    int getDofIndex(int joint_id) const;
+    
+    int getDofIndex(const std::string& joint_name) const;
     
     bool hasJoint(int id) const;
     
