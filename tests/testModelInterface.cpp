@@ -10,9 +10,11 @@ protected:
 virtual void SetUp(){
     
     std::string robotology_root = std::getenv("ROBOTOLOGY_ROOT");
-    std::string relative_path = "/external/XBotInterface/configs/config_centauro.yaml";
+    std::string relative_path = "/external/XBotInterface/configs/config_walkman.yaml";
     
     path_to_cfg = robotology_root + relative_path;
+    
+    std::cout << "PATH TO CFG: " << path_to_cfg << std::endl;
     
     model_ptr = XBot::ModelInterface::getModel(path_to_cfg);
 
@@ -25,7 +27,7 @@ std::string path_to_cfg;
     
 };
 
-void computeCartesianError(const Eigen::Affine3d& ref, const Eigen::Affine3d& actual, Eigen::VectorXd& error)
+inline void computeCartesianError(const Eigen::Affine3d& ref, const Eigen::Affine3d& actual, Eigen::VectorXd& error)
 {
     error.resize(6);
     
@@ -46,6 +48,9 @@ TEST_F(testModelInterface, checkBasicIK){
     Eigen::VectorXd q_home;
     model.getRobotState("home", q_home);
     model.setJointPosition(q_home);
+    model.update();
+    
+    std::cout << "HOMING: \n" << q_home << std::endl;
     
     
     
@@ -55,6 +60,7 @@ TEST_F(testModelInterface, checkBasicIK){
 
     
     model.getPose(end_effector_name, initial_pose);
+    model.getJointPosition(q);
     
     int max_iter = 100;
     int iter = 0;
@@ -63,10 +69,16 @@ TEST_F(testModelInterface, checkBasicIK){
     while( iter < max_iter){
         
         // Compute desired end-effector pose
-        desired_pose.translation() = initial_pose.translation() + Eigen::Vector3d(0,0,1)*0.2;
+        desired_pose.translation() = initial_pose.translation() + Eigen::Vector3d(0,0,1)*0.2*(iter/double(max_iter));
+        desired_pose.linear() = initial_pose.linear();
+        
+        std::cout << "DESIRED POSE\n" << "Position:\n" << desired_pose.translation() << "\nOrientation:\n" << desired_pose.linear() << std::endl;
         
         // Compute actual pose
         model.getPose(end_effector_name, actual_pose);
+        
+        std::cout << "ACTUAL POSE\n" << "Position:\n" << actual_pose.translation() << "\nOrientation:\n" << actual_pose.linear() << std::endl;
+        
 
         // Compute cartesian error and rotate it to world frame
         computeCartesianError(desired_pose, actual_pose, cartesian_error);
@@ -90,6 +102,8 @@ TEST_F(testModelInterface, checkBasicIK){
                 }
             }
         }
+        
+        std::cout << "JACOBIAN:\n" << J << std::endl;
         
         qdot = J.jacobiSvd(Eigen::ComputeThinU|Eigen::ComputeThinV).solve(xdot);
          
