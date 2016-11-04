@@ -10,7 +10,8 @@ protected:
 virtual void SetUp(){
     
     std::string robotology_root = std::getenv("ROBOTOLOGY_ROOT");
-    std::string relative_path = "/external/XBotInterface/configs/config_walkman.yaml";
+//     std::string relative_path = "/external/XBotInterface/configs/config_centauro.yaml";
+    std::string relative_path = "/external/XBotInterface/configs/config_walkman_upper_body.yaml";
     
     path_to_cfg = robotology_root + relative_path;
     
@@ -72,12 +73,12 @@ TEST_F(testModelInterface, checkBasicIK){
         desired_pose.translation() = initial_pose.translation() + Eigen::Vector3d(0,0,1)*0.2*(iter/double(max_iter));
         desired_pose.linear() = initial_pose.linear();
         
-        std::cout << "DESIRED POSE\n" << "Position:\n" << desired_pose.translation() << "\nOrientation:\n" << desired_pose.linear() << std::endl;
+//         std::cout << "DESIRED POSE\n" << "Position:\n" << desired_pose.translation() << "\nOrientation:\n" << desired_pose.linear() << std::endl;
         
         // Compute actual pose
         model.getPose(end_effector_name, actual_pose);
         
-        std::cout << "ACTUAL POSE\n" << "Position:\n" << actual_pose.translation() << "\nOrientation:\n" << actual_pose.linear() << std::endl;
+//         std::cout << "ACTUAL POSE\n" << "Position:\n" << actual_pose.translation() << "\nOrientation:\n" << actual_pose.linear() << std::endl;
         
 
         // Compute cartesian error and rotate it to world frame
@@ -103,7 +104,7 @@ TEST_F(testModelInterface, checkBasicIK){
             }
         }
         
-        std::cout << "JACOBIAN:\n" << J << std::endl;
+//         std::cout << "JACOBIAN:\n" << J << std::endl;
         
         qdot = J.jacobiSvd(Eigen::ComputeThinU|Eigen::ComputeThinV).solve(xdot);
          

@@ -3,7 +3,7 @@ x_bot_interface:
   framework: "DUMMY"
   internal_model_type: "RBDL"
   is_internal_model_flaoting_base : "false"
-  urdf_filename: "urdf/centauro.urdf"
+  urdf_filename: "urdf/centauro_upperbody.urdf"
   srdf_filename: "srdf/centauro_upperbody.srdf"
   joint_map_config: "joint_map/centauro_test_joint_map_upperbody.yaml"
 
