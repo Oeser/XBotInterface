@@ -211,6 +211,15 @@ namespace XBot {
          * @return The Eigen index of the required joint.
          */
         int getDofIndex(int joint_id) const;
+        
+        /**
+         * @brief Gets dof indices of all joints inside chain "chain_name".
+         * 
+         * @param chain_name The name of the requested chain.
+         * @param ids The output vector of dof indices.
+         * @return True if chain_name is a valid chain name.
+         */
+        bool getDofIndex(const std::string& chain_name, std::vector<int>& ids) const;
 
 
         // Force-torque sensors
@@ -337,7 +346,7 @@ namespace XBot {
         
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
         const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const; // TBD change the Internal with something more meaningful
-        bool getDofIndex(const std::string& chain_name, std::vector<int>& ids) const;
+        
         
         
         

@@ -72,6 +72,13 @@ target_link_libraries(testXBotInterface ${TestLibs})
 add_dependencies(testXBotInterface GTest-ext XBotInterface)
 add_test(NAME XBot_testXBotInterface COMMAND testXBotInterface)
 
+# Unit tests related to ModelInterface class
+add_executable(testModelInterface     testModelInterface.cpp)
+target_link_libraries(testModelInterface ${TestLibs})
+add_dependencies(testModelInterface GTest-ext XBotInterface)
+add_test(NAME XBot_testModelInterface COMMAND testModelInterface)
+
+
 find_package(MATLAB QUIET)
 find_package(PythonInterp)
 if(MATLAB_FOUND AND PYTHONINTERP_FOUND AND SHOW_TEST_RESULTS)
