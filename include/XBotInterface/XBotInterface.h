@@ -346,6 +346,8 @@ namespace XBot {
         
         virtual bool syncFrom(const XBotInterface& other);
         
+        const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
+        
         friend std::ostream& operator<<(std::ostream& os, const XBot::XBotInterface& robot);
 
     protected:
@@ -353,8 +355,7 @@ namespace XBot {
         
         
         // Chain getter for developers
-        
-        const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
+
         const std::map<std::string, ForceTorqueSensor::Ptr>& getForceTorqueInternal() const; // TBD change the Internal with something more meaningful
         
         
