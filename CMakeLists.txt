@@ -50,7 +50,7 @@ find_package(sharedlibpp REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 
-option(XBOT_COMPILE_TESTS "Compile XBotInterface tests" FALSE)
+option(BUILD_TESTS "Compile XBotInterface tests" FALSE)
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${RobotInterfaceROS_INCLUDE_DIRS}
@@ -158,7 +158,7 @@ optional_build(examples examples ON)
 #######################
 # Add Testing target  #
 #######################
-if(XBOT_COMPILE_TESTS)
+if(BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
 endif()

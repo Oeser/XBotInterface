@@ -5,10 +5,10 @@ set(PROJECTNAME XBot_tests)
 project(${PROJECTNAME})
 
 #TESTS THAT USES GAZEBO
-set(XBOT_COMPILE_SIMULATION_TESTS OFF CACHE BOOL "Flag to compile tests that uses Gazebo")
+set(BUILD_SIMULATION_TESTS OFF CACHE BOOL "Flag to compile tests that uses Gazebo")
 
-if (XBOT_COMPILE_SIMULATION_TESTS=)
-    add_definitions( -DXBOT_COMPILE_SIMULATION_TESTS=true )
+if (BUILD_SIMULATION_TESTS)
+    add_definitions( -DBUILD_SIMULATION_TESTS=true )
     #Gazebo
     find_package(Gazebo   REQUIRED)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
