@@ -282,6 +282,14 @@ public:
     const std::vector< urdf::LinkConstSharedPtr > &getUrdfLinks() const;
     
     void shallowCopy(const KinematicChain& chain);
+    
+    /**
+     * @brief Getter for the i-th Joint Ptr 
+     * 
+     * @param i index inside the chain (i=0 is the child joint of base link)
+     * @return A shared pointer to the requested joint
+     */
+    Joint::ConstPtr getJoint(int i) const;
 
     // Getters for RX
     
@@ -421,7 +429,7 @@ protected:
      * @param i index inside the chain (i=0 is the child joint of base link)
      * @return A shared pointer to the requested joint
      */
-    Joint::Ptr getJoint(int i) const;
+    Joint::Ptr getJointInternal(int i) const;
     
     std::map< std::string, ForceTorqueSensor::Ptr > getForceTorqueInternal() const;
     
