@@ -5,7 +5,7 @@ XBotInterface:
   joint_map_path: "joint_map/centauro_test_joint_map_upperbody.yaml"
 
 RobotInterface:
-  framework_name: "DUMMY"
+  framework_name: "ROS"
   
 ModelInterface:
   model_type: "RBDL"

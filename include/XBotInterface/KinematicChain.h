@@ -28,9 +28,10 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include<XBotInterface/Joint.h>
-#include<XBotCoreModel.h>
-#include<XBotInterface/ForceTorqueSensor.h>
+#include <XBotInterface/Joint.h>
+#include <XBotCoreModel.h>
+#include <XBotInterface/ForceTorqueSensor.h>
+#include <XBotInterface/ImuSensor.h>
 
 
 namespace XBot
@@ -131,12 +132,28 @@ public:
     std::map<std::string, ForceTorqueSensor::ConstPtr> getForceTorque() const;
     
     /**
+     * @brief Getter for the IMU sensor map 
+     * 
+     * @return A map whose key is the sensor name (i.e. the name of the sensor link inside the URDF) and
+     * whose value is a shared pointer to the IMU sensor.
+     */
+    std::map<std::string, ImuSensor::ConstPtr> getImu() const;
+    
+    /**
      * @brief Returns a force-torque sensor given its parent-link name. 
      * 
      * @param parent_link_name Name of the link to which the sensor is attached
      * @return A shared pointer to the required force-torque sensor.
      */
     ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
+    
+    /**
+     * @brief Returns an IMU sensor given its parent-link name. 
+     * 
+     * @param parent_link_name Name of the link to which the sensor is attached
+     * @return A shared pointer to the required IMU sensor.
+     */
+    ImuSensor::ConstPtr getImu(const std::string& parent_link_name) const;
 
     
     void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
@@ -404,7 +421,7 @@ public:
     bool setDamping(int i, double D);
     
     template <typename... SyncFlags>
-    bool syncFrom(const KinematicChain &other, SyncFlags... flags);
+    bool syncFrom(const KinematicChain& other, SyncFlags... flags);
     
     
 
@@ -421,6 +438,9 @@ protected:
     std::vector<ForceTorqueSensor::Ptr> _ft_vector;
     std::map<std::string, ForceTorqueSensor::Ptr> _ft_map;
     
+    std::vector<ImuSensor::Ptr> _imu_vector;
+    std::map<std::string, ImuSensor::Ptr> _imu_map;
+    
     
     
     
@@ -433,6 +453,7 @@ protected:
     Joint::Ptr getJointInternal(int i) const;
     
     std::map< std::string, ForceTorqueSensor::Ptr > getForceTorqueInternal() const;
+    std::map< std::string, ImuSensor::Ptr > getImuInternal() const;
     
     
 private:

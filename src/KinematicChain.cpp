@@ -135,6 +135,16 @@ KinematicChain::KinematicChain(const KinematicChain &other):
         _ft_map[ftptr->sensorName()] = ftptr;
 
     }
+    
+    for (const ImuSensor::Ptr & other_imuptr : other._imu_vector) {
+
+        ImuSensor::Ptr imuptr = std::make_shared<ImuSensor>();
+        *imuptr = *other_imuptr;
+
+        _imu_vector.push_back(imuptr);
+        _imu_map[imuptr->sensorName()] = imuptr;
+
+    }
 
 }
 
@@ -159,6 +169,8 @@ KinematicChain &KinematicChain::operator=(const KinematicChain &rhs)
     std::swap(_is_virtual, tmp._is_virtual);
     std::swap(_ft_vector, tmp._ft_vector);
     std::swap(_ft_map, tmp._ft_map);
+    std::swap(_imu_vector, tmp._imu_vector);
+    std::swap(_imu_map, tmp._imu_map);
 
     // Return this
     return *this;
@@ -175,8 +187,8 @@ void XBot::KinematicChain::shallowCopy(const KinematicChain& chain)
     _joint_id_map = chain._joint_id_map;
     _ft_vector = chain._ft_vector;
     _ft_map = chain._ft_map;
-    
-    
+    _imu_vector = chain._imu_vector;
+    _imu_map = chain._imu_map;
 }
 
 
@@ -1701,6 +1713,40 @@ std::map< std::string, ForceTorqueSensor::Ptr > KinematicChain::getForceTorqueIn
 {
     return _ft_map;
 }
+
+
+ImuSensor::ConstPtr XBot::KinematicChain::getImu(const std::string& link_name) const
+{
+    bool success = false;
+    
+    for( const ImuSensor::Ptr& imuptr : _imu_vector ){
+        if( imuptr->parentLinkName() == link_name ){
+            success = true;
+            return imuptr;
+        }
+    }
+    
+    if(!success){
+        std::cerr << "ERROR in " << __func__ << " " << link_name << " is either undefined or does not contain any IMU" << std::endl;
+    }
+    
+    return ImuSensor::ConstPtr();
+}
+
+std::map< std::string, ImuSensor::ConstPtr > XBot::KinematicChain::getImu() const
+{
+    std::map< std::string, ImuSensor::ConstPtr > imu_constptr_map;
+    for( const ImuSensor::Ptr& imuptr : _imu_vector ){
+        imu_constptr_map[imuptr->sensorName()] = imuptr;
+    }
+    return imu_constptr_map;
+}
+
+std::map< std::string, ImuSensor::Ptr > KinematicChain::getImuInternal() const
+{
+    return _imu_map;
+}
+
 
 bool XBot::KinematicChain::getChainState(const std::string& state_name, 
                                          Eigen::VectorXd& q) const
