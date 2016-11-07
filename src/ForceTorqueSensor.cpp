@@ -22,34 +22,17 @@
 namespace XBot {
     
 ForceTorqueSensor::ForceTorqueSensor(urdf::LinkConstSharedPtr ft_link):
+GenericSensor::GenericSensor(ft_link),
 _fx(0), _fy(0), _fz(0), _tx(0), _ty(0), _tz(0)
 {
-    
-    _ft_name = ft_link->name;
-    _parent_link_name = ft_link->parent_joint->parent_link_name;
-    
-    urdf::Rotation rot = ft_link->parent_joint->parent_to_joint_origin_transform.rotation;
-    urdf::Vector3 pos = ft_link->parent_joint->parent_to_joint_origin_transform.position;
-    
-    Eigen::Quaterniond quat;
-    quat.x() = rot.x;
-    quat.y() = rot.y;
-    quat.z() = rot.z;
-    quat.w() = rot.w;
-    
-    _parent_link_T_sensor_link.translation() << pos.x, pos.y, pos.z;
-    _parent_link_T_sensor_link.linear() = quat.toRotationMatrix();
 
-//     std::cout << _ft_name << "\n" << quat.toRotationMatrix() << "\n" << _parent_link_T_sensor_link.linear() << std::endl;
 }
 
 ForceTorqueSensor::ForceTorqueSensor():
-_ft_name(""),
-_parent_link_name(""),
-_parent_link_T_sensor_link(),
+GenericSensor::GenericSensor(),
 _fx(0), _fy(0), _fz(0), _tx(0), _ty(0), _tz(0)
 {
-_parent_link_T_sensor_link.setIdentity();
+
 }
 
 void ForceTorqueSensor::getForce(KDL::Vector& force) const
@@ -95,20 +78,6 @@ void ForceTorqueSensor::getWrench(Eigen::Matrix< double, int(6), int(1) >& wrenc
     wrench << _fx, _fy, _fz, _tx, _ty, _tz;
 }
 
-const std::string& ForceTorqueSensor::parentLinkName() const
-{
-    return _parent_link_name;
-}
-
-const std::string& ForceTorqueSensor::sensorName() const
-{
-    return _ft_name;
-}
-
-const Eigen::Affine3d& ForceTorqueSensor::sensorPose() const
-{
-    return _parent_link_T_sensor_link;
-}
 
 void ForceTorqueSensor::setForce(const Eigen::Vector3d& force)
 {

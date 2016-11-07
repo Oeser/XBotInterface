@@ -36,16 +36,7 @@ namespace XBot {
     class XBotInterface {
     
     public:
-        
-        
-        struct Options {
-            
-            std::string urdf_path;
-            std::string srdf_path;
-            std::string joint_map_path;
-            
-        };
-        
+
         
         typedef std::shared_ptr<XBotInterface> Ptr;
         
@@ -344,11 +335,13 @@ namespace XBot {
         bool checkVelocityLimits(const Eigen::VectorXd& qdot) const;
         bool checkEffortLimits(const Eigen::VectorXd& tau) const;
         
-        virtual bool syncFrom(const XBotInterface& other);
+        template <typename... SyncFlags>
+        bool sync(const XBotInterface& other, SyncFlags... flags);
         
         const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
         
         friend std::ostream& operator<<(std::ostream& os, const XBot::XBotInterface& robot);
+        
 
     protected:
         
@@ -405,6 +398,26 @@ namespace XBot {
     };
     
     std::ostream& operator<<(std::ostream& os, const XBot::XBotInterface& robot);
+    
+    template <typename... SyncFlags>
+    bool XBot::XBotInterface::sync(const XBot::XBotInterface &other, SyncFlags... flags)
+{
+    bool success = true;
+    for (const auto & c : other._chain_map) {
+        const std::string &chain_name = c.first;
+        const KinematicChain &chain = *c.second;
+        if (_chain_map.count(chain_name)) {
+            _chain_map.at(chain_name)->syncFrom(chain, flags...);
+            
+        } else {
+            if(!chain.isVirtual()){
+                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
+                success = false;
+            }
+        }
+    }
+    return success;
+}
 
 }
 

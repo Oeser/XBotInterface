@@ -24,6 +24,8 @@
 #include <memory>
 #include <iostream>
 #include <srdfdom_advr/model.h>
+#include <XBotInterface/sync_flags.h>
+
 
 namespace XBot
 {
@@ -360,17 +362,19 @@ protected:
      * @brief Synchronize the current Joint with another Joint object
      * 
      * @param other The Joint object from which we synchronize the current object
-     * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False otherwise
+     * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False * otherwise
      */
-    bool syncFrom(const Joint &other);
+    template <typename... SyncFlags>
+    bool syncFrom(const Joint &other, SyncFlags... flags);
     
     /**
      * @brief Set the joint references (TX) from other joint state (RX)
      * 
      * @param other The Joint object which references are read from
-     * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False otherwise.
+     * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False * otherwise.
      */
-    bool setReferenceFrom(const Joint& other);
+    template <typename... SyncFlags>
+    bool setReferenceFrom(const Joint& other, SyncFlags... flags);
     
     /**
      * @brief operator << to synchronize the current Joint with another Joint object
@@ -500,6 +504,7 @@ private:
     void init();
 
 
+
 };
 
 /**
@@ -510,6 +515,129 @@ private:
  * @return std::ostream& result ostream
  */
 std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
+
+
+
+
+template <typename... SyncFlags>
+bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
+{
+
+
+    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
+        std::cerr << "ERROR in " << __func__ << "! Attempt to synchronize joints with different names/ids!" << std::endl;
+        return false;
+    }
+
+    bool sync_position = false, 
+         sync_velocity = false, 
+         sync_acceleration = false, 
+         sync_effort = false,
+         sync_stiffness = false,
+         sync_damping;
+
+    parseFlags(sync_position, 
+               sync_velocity, 
+               sync_acceleration, 
+               sync_effort, 
+               sync_stiffness,
+               sync_damping,
+               flags...);
+
+
+
+
+    if(sync_position){
+        
+        // RX
+        _link_pos = other._link_pos;
+        _motor_pos = other._motor_pos;
+        
+        // TX
+        _pos_ref = other._pos_ref;
+    }
+    
+    if(sync_velocity){
+        
+        // RX
+        _link_vel = other._link_vel;
+        _motor_vel = other._motor_vel;
+        
+        // TX
+        _vel_ref = other._vel_ref;
+    }
+    
+    if(sync_effort){
+        
+        // RX
+        _effort = other._effort;
+        
+        // TX
+        _effort_ref = other._effort_ref;
+    }
+    
+    if(sync_stiffness){
+        _stiffness = other._stiffness;
+    }
+    
+    if(sync_damping){
+        _damping = other._damping;
+    }
+    
+    
+    ///////////////////
+    // RX from board //
+    ///////////////////
+    
+    _temperature = other._temperature;
+
+}
+
+template <typename... SyncFlags>
+bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
+{
+    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
+        std::cerr << "ERROR in " << __func__ << "! Attempt to set reference from joint with different name/id!" << std::endl;
+        return false;
+    }
+
+    bool sync_position = false, 
+         sync_velocity = false, 
+         sync_acceleration = false, 
+         sync_effort = false,
+         sync_stiffness = false,
+         sync_damping;
+
+    parseFlags(sync_position, 
+               sync_velocity, 
+               sync_acceleration, 
+               sync_effort, 
+               sync_stiffness,
+               sync_damping,
+               flags...);
+
+    /////////////////
+    // TX to board //
+    /////////////////
+    
+    if(sync_position){
+        _pos_ref = other._link_pos;
+    }
+    if(sync_velocity){
+        _vel_ref = other._link_vel;
+    }
+    if(sync_effort){
+        _effort_ref = other._effort;
+    }
+    if(sync_stiffness){
+        _stiffness = other._stiffness;
+    }
+    if(sync_damping){
+        _damping = other._damping;
+    }
+}
+
+
 
 }
 

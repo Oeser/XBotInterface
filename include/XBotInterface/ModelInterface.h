@@ -47,12 +47,6 @@ class ModelInterface : public XBotInterface {
 
 public:
     
-    struct Options : public XBotInterface::Options {
-        
-        std::string model_subclass_factory_name;
-        std::string model_type;
-        
-    };
     
     friend XBot::RobotInterface;
     
@@ -70,9 +64,8 @@ public:
     ModelInterface() = default;
     ModelInterface& operator=(const ModelInterface& other) = delete;
     ModelInterface(const ModelInterface& other) = delete;
-    
-    
-        
+
+
     /**
      * @brief Factory method for generating instances of the ModelInterface class
      * according to the provided configuration file, which specifies the URDF/SRDF 
@@ -83,7 +76,8 @@ public:
      * @return A shared pointer to a new instance of ModelInterface.
      */
     static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
-
+    
+    
     /**
      * @brief Returns a handle to the kinematic chain named chain_name.
      * If such a chain is not defined, a dummy chain is returned and an
@@ -129,14 +123,32 @@ public:
     /**
      * @brief Synchronizes the internal model state to the one of the XBotInterface
      * given as an argument. This can be either another ModelInterface or a RobotInterface.
+     * Flags can be specified to select a part of the state to be synchronized.
      * ModelInterface::update() is automatcally called, so that the kinematics and
-     * dynamics of the ModelInterface is updated as well.
+     * dynamics of the ModelInterface is updated as well. 
+     * 
+     * @usage model.syncFrom(other_model, XBot::Sync::Position, XBot::Sync::Effort)
+     * @usage model.syncFrom(other_model, XBot::Sync::Position)
      * 
      * @param other The RobotInterface or ModelInterface whose state is copied to this
      * model.
+     * @param flags Flags to specify what part of the state must be synchronized. By default (i.e. if
+     * this argument is omitted) the whole state is synchronized. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     *  - Sync::Position, 
+     *  - Sync::Velocity
+     *  - Sync::Acceleration
+     *  - Sync::Effort
+     *  - Sync::Stiffness 
+     *  - Sync::Damping 
+     *  - Sync::Impedance
+     *  - Sync::All
+
      * @return True if the synchronization is allowed, false otherwise.
      */
-    bool syncFrom(const XBotInterface& other);
+    template <typename... SyncFlags>
+    bool syncFrom(const XBotInterface& other, SyncFlags... flags);
     
     /**
      * @brief Updates the kinematic variables of the model according to the current state of the model.
@@ -695,7 +707,7 @@ public:
     using XBotInterface::getJointVelocity;
     using XBotInterface::getMotorVelocity;
     using XBotInterface::getJointEffort;
-    using XBotInterface::getTemperature;
+    
 
     // Setters for RX
     
@@ -704,7 +716,7 @@ public:
     using XBotInterface::setJointVelocity;
     using XBotInterface::setMotorVelocity;
     using XBotInterface::setJointEffort;
-    using XBotInterface::setTemperature;
+    
 
 protected:
     
@@ -717,6 +729,7 @@ protected:
 
 private:
     
+
     using XBotInterface::_chain_map;
     using XBotInterface::_ordered_joint_vector;
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
@@ -739,6 +752,9 @@ private:
     mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
     mutable std::vector<int> _tmp_int_vector;
     
+    using XBotInterface::getTemperature;
+    using XBotInterface::setTemperature;
+    
     // Getters for TX
 
     using XBotInterface::getPositionReference;
@@ -757,6 +773,8 @@ private:
     
     using XBotInterface::getChainMap;
 
+    using XBotInterface::sync;
+    
 };
 };
 
@@ -781,5 +799,18 @@ inline void XBot::ModelInterface::rotationKDLToEigen(const KDL::Rotation& kdl_ro
         }
     }
 }
+
+template <typename... SyncFlags>
+bool XBot::ModelInterface::syncFrom(const XBot::XBotInterface& other, SyncFlags... flags)
+{
+    if( XBot::XBotInterface::sync(other, flags...) ){
+        update(true, true, true);
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 
 #endif // __MODEL_INTERFACE_H__

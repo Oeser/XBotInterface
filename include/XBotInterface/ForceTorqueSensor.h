@@ -27,6 +27,7 @@
 #include <eigen_conversions/eigen_kdl.h>
 #include <Eigen/Geometry>
 #include <srdfdom_advr/model.h>
+#include <XBotInterface/GenericSensor.h>
 
 namespace XBot {
 
@@ -36,7 +37,7 @@ namespace XBot {
      * @brief Force - Torque sensor abstraction: TBD documentation of the single functions
      * 
      */
-    class ForceTorqueSensor {
+    class ForceTorqueSensor : public GenericSensor {
     
     
 public:
@@ -59,10 +60,6 @@ public:
     void getForce(KDL::Vector& force) const;
     void getTorque(KDL::Vector& torque) const;
     
-    const std::string& parentLinkName() const;
-    const std::string& sensorName() const;
-    const Eigen::Affine3d& sensorPose() const;
-    
     friend std::ostream& operator<< ( std::ostream& os, const XBot::ForceTorqueSensor& j );
     
     // NOTE if you are a const ptr you cannot call them ///////
@@ -73,9 +70,7 @@ public:
 
 private:
     
-    std::string _ft_name;
-    std::string _parent_link_name;
-    Eigen::Affine3d _parent_link_T_sensor_link;
+
     double _fx, _fy, _fz, _tx, _ty, _tz;
     
     

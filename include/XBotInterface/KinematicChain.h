@@ -402,8 +402,9 @@ public:
     bool setEffortReference(int i, double tau);
     bool setStiffness(int i, double K);
     bool setDamping(int i, double D);
-
-    bool syncFrom(const KinematicChain &other);
+    
+    template <typename... SyncFlags>
+    bool syncFrom(const KinematicChain &other, SyncFlags... flags);
     
     
 
@@ -457,6 +458,17 @@ private:
 };
 
     std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
+    
+    template <typename... SyncFlags>
+    bool KinematicChain::syncFrom(const KinematicChain &other, SyncFlags... flags)
+    {
+        
+        int pos = 0;
+        for (const XBot::Joint::Ptr & j : other._joint_vector) {
+            _joint_vector[pos++]->syncFrom(*j, flags...);
+        }
+    }
+    
 }
 
 #endif // __KINEMATIC_CHAIN_H__

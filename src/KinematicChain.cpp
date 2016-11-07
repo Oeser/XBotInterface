@@ -998,17 +998,6 @@ bool KinematicChain::setTemperature(int i, double temp)
 
 
 
-
-bool KinematicChain::syncFrom(const KinematicChain &other)
-{
-    // TBD: check that chains are indeed omologues??
-    int pos = 0;
-    for (const XBot::Joint::Ptr & j : other._joint_vector) {
-        _joint_vector[pos++]->syncFrom(*j);
-    }
-}
-
-
 bool KinematicChain::setDamping(const std::map< std::string, double > &D)
 {
     bool success = true;

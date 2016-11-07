@@ -39,14 +39,6 @@ class RobotInterface : public XBotInterface
 
 public:
     
-    struct Options : public XBotInterface::Options {
-        
-        std::string framework_name;
-        std::string robot_subclass_factory_name;
-        
-        ModelInterface::Options internal_model_options;
-        
-    };
 
     RobotInterface();
 
@@ -69,7 +61,32 @@ public:
     RobotChain& arm(int arm_id);
     RobotChain& leg(int leg_id);
     
-    bool setReferenceFrom(const ModelInterface& model);
+    /**
+     * @brief Sets the robot references according to a ModelInterface.
+     * Flags can be specified to select a part of the state to be synchronized.
+     * 
+     * @usage robot.setReferenceFrom(model, XBot::Sync::Position, XBot::Sync::Effort)
+     * @usage robot.setReferenceFrom(other_model, XBot::Sync::Position)
+     * 
+     * @param model The ModelInterface whose state is used as a reference for the robot.
+     * model.
+     * @param flags Flags to specify what part of the model state must be used a reference. By default (i.e. if
+     * this argument is omitted) the whole state is used. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     *  - Sync::Position, 
+     *  - Sync::Velocity
+     *  - Sync::Acceleration
+     *  - Sync::Effort
+     *  - Sync::Stiffness 
+     *  - Sync::Damping 
+     *  - Sync::Impedance
+     *  - Sync::All
+
+     * @return True if the synchronization is allowed, false otherwise.
+     */
+    template <typename... SyncFlags>
+    bool setReferenceFrom(const ModelInterface& model, SyncFlags... flags);
 
     virtual bool setControlMode(const std::map<std::string, std::string> &joint_control_mode_map) = 0;
     virtual bool setControlMode(const std::string &robot_control_mode) = 0;
@@ -121,7 +138,7 @@ protected:
     using XBotInterface::setJointEffort;
     using XBotInterface::setTemperature;
     
-    using XBotInterface::syncFrom;
+    using XBotInterface::sync;
 
     using XBotInterface::getChainMap;
 
@@ -153,6 +170,28 @@ private:
 
 
 };
+
+template <typename... SyncFlags>
+bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model, SyncFlags... flags )
+{
+    bool success = true;
+    for (const auto & c : model._model_chain_map) {
+        
+        const std::string &chain_name = c.first;
+        const ModelChain &chain = *c.second;
+        
+        if (_robot_chain_map.count(chain_name)) {
+            _robot_chain_map.at(chain_name)->setReferenceFrom(chain, flags...);
+        } else {
+            if(!chain.isVirtual()){
+                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
+                success = false;
+            }
+        }
+    }
+    return success;
+}
+
 }
 
 #endif // __ROBOT_INTERFACE_H__

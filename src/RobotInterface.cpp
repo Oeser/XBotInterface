@@ -38,7 +38,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
-        printf("Can not open %s\n", path_to_cfg.c_str());
+        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
         return false;
     }
 
@@ -46,19 +46,19 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
     YAML::Node x_bot_interface;
     // XBotInterface info
-    if(root_cfg["x_bot_interface"]) {
-        x_bot_interface = root_cfg["x_bot_interface"]; 
+    if(root_cfg["RobotInterface"]) {
+        x_bot_interface = root_cfg["RobotInterface"]; 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain x_bot_interface mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain RobotInterface mandatory node!!" << std::endl;
         return false;
     }
     // check framework
-    if(x_bot_interface["framework"]) {
-        _framework = x_bot_interface["framework"].as<std::string>();
+    if(x_bot_interface["framework_name"]) {
+        _framework = x_bot_interface["framework_name"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain framework mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << "  does not contain framework_name mandatory node!!" << std::endl;
         return false;
     }
     
@@ -71,7 +71,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
                             _path_to_shared_lib); 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain path_to_shared_lib mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << _subclass_name << " mandatory node!!" << std::endl;
         return false;
     }
     
@@ -79,7 +79,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
         _subclass_factory_name = root_cfg[_subclass_name]["subclass_factory_name"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : " << _subclass_name << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
     return true;
@@ -215,25 +215,6 @@ XBot::RobotChain& XBot::RobotInterface::chain(const std::string& chain_name)
 }
 
 
-bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model )
-{
-    bool success = true;
-    for (const auto & c : model._model_chain_map) {
-        
-        const std::string &chain_name = c.first;
-        const ModelChain &chain = *c.second;
-        
-        if (_robot_chain_map.count(chain_name)) {
-            _robot_chain_map.at(chain_name)->setReferenceFrom(chain);
-        } else {
-            if(!chain.isVirtual()){
-                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
-                success = false;
-            }
-        }
-    }
-    return success;
-}
 
 
 
