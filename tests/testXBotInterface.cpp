@@ -474,6 +474,21 @@ TEST_F(testXbotInterface, checkSyncFlags){
     xbint.getJointPosition(x);
     other.getJointPosition(y);
     EXPECT_TRUE( (x.array() == y.array()).all() );
+    xbint.getJointVelocity(x);
+    other.getJointVelocity(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+    xbint.getJointEffort(x);
+    other.getJointEffort(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+    xbint.getStiffness(x);
+    other.getStiffness(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+    xbint.getDamping(x);
+    other.getDamping(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+
+
+    
     
     setRandom(xbint);
     setRandom(other);
@@ -484,6 +499,17 @@ TEST_F(testXbotInterface, checkSyncFlags){
     xbint.getJointEffort(x);
     other.getJointEffort(y);
     EXPECT_TRUE( (x.array() == y.array()).all() );
+    xbint.getStiffness(x);
+    other.getStiffness(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+    xbint.getDamping(x);
+    other.getDamping(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+    xbint.getJointVelocity(x);
+    other.getJointVelocity(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
+    
+    
     
     setRandom(xbint);
     setRandom(other);
@@ -500,7 +526,9 @@ TEST_F(testXbotInterface, checkSyncFlags){
     xbint.getDamping(x);
     other.getDamping(y);
     EXPECT_TRUE( (x.array() == y.array()).all() );
-    
+    xbint.getJointVelocity(x);
+    other.getJointVelocity(y);
+    EXPECT_FALSE( (x.array() == y.array()).all() );
 
     
 }
