@@ -37,6 +37,16 @@ namespace XBot {
     
     public:
         
+        
+        struct Options {
+            
+            std::string urdf_path;
+            std::string srdf_path;
+            std::string joint_map_path;
+            
+        };
+        
+        
         typedef std::shared_ptr<XBotInterface> Ptr;
         
         // Constructor, copy constructor, copy assignment, virtual destructor, init function

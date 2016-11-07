@@ -47,6 +47,13 @@ class ModelInterface : public XBotInterface {
 
 public:
     
+    struct Options : public XBotInterface::Options {
+        
+        std::string model_subclass_factory_name;
+        std::string model_type;
+        
+    };
+    
     friend XBot::RobotInterface;
     
     /**
