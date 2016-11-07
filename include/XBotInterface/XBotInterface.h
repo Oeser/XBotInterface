@@ -36,16 +36,7 @@ namespace XBot {
     class XBotInterface {
     
     public:
-        
-        
-        struct Options {
-            
-            std::string urdf_path;
-            std::string srdf_path;
-            std::string joint_map_path;
-            
-        };
-        
+
         
         typedef std::shared_ptr<XBotInterface> Ptr;
         

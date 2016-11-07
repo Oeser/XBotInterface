@@ -47,12 +47,6 @@ class ModelInterface : public XBotInterface {
 
 public:
     
-    struct Options : public XBotInterface::Options {
-        
-        std::string model_subclass_factory_name;
-        std::string model_type;
-        
-    };
     
     friend XBot::RobotInterface;
     
@@ -70,9 +64,8 @@ public:
     ModelInterface() = default;
     ModelInterface& operator=(const ModelInterface& other) = delete;
     ModelInterface(const ModelInterface& other) = delete;
-    
-    
-        
+
+
     /**
      * @brief Factory method for generating instances of the ModelInterface class
      * according to the provided configuration file, which specifies the URDF/SRDF 
@@ -83,7 +76,8 @@ public:
      * @return A shared pointer to a new instance of ModelInterface.
      */
     static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
-
+    
+    
     /**
      * @brief Returns a handle to the kinematic chain named chain_name.
      * If such a chain is not defined, a dummy chain is returned and an
@@ -735,6 +729,7 @@ protected:
 
 private:
     
+
     using XBotInterface::_chain_map;
     using XBotInterface::_ordered_joint_vector;
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;

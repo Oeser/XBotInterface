@@ -39,14 +39,6 @@ class RobotInterface : public XBotInterface
 
 public:
     
-    struct Options : public XBotInterface::Options {
-        
-        std::string framework_name;
-        std::string robot_subclass_factory_name;
-        
-        ModelInterface::Options internal_model_options;
-        
-    };
 
     RobotInterface();
 

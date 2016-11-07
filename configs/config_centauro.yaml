@@ -1,12 +1,15 @@
 # CENTAURO config
-x_bot_interface:
-  framework: "DUMMY"
-  internal_model_type: "RBDL"
-  is_internal_model_flaoting_base : "false"
-  urdf_filename: "urdf/centauro_upperbody.urdf"
-  srdf_filename: "srdf/centauro_upperbody.srdf"
-  joint_map_config: "joint_map/centauro_test_joint_map_upperbody.yaml"
+XBotInterface:
+  urdf_path: "urdf/centauro_upperbody.urdf"
+  srdf_path: "srdf/centauro_upperbody.srdf"
+  joint_map_path: "joint_map/centauro_test_joint_map_upperbody.yaml"
 
+RobotInterface:
+  framework_name: "DUMMY"
+  
+ModelInterface:
+  model_type: "RBDL"
+  is_model_floating_base: "false"
 
 RobotInterfaceROS:
   subclass_name: "RobotInterfaceROS"

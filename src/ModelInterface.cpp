@@ -27,7 +27,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
-        printf("Can not open %s\n", path_to_cfg.c_str());
+        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
         return false;
     }
 
@@ -35,20 +35,20 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
     YAML::Node x_bot_interface;
     // XBotInterface info
-    if(root_cfg["x_bot_interface"]) {
-        x_bot_interface = root_cfg["x_bot_interface"]; 
+    if(root_cfg["ModelInterface"]) {
+        x_bot_interface = root_cfg["ModelInterface"]; 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain x_bot_interface mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!!" << std::endl;
         return false;
     }
     
     // check model type
-    if(x_bot_interface["internal_model_type"]) {
-        vars["model_type"] = x_bot_interface["internal_model_type"].as<std::string>();
+    if(x_bot_interface["model_type"]) {
+        vars["model_type"] = x_bot_interface["model_type"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain internal_model_type mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << "  does not contain model_type mandatory node!!" << std::endl;
         return false;
     }
     
@@ -62,7 +62,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
                             vars.at("path_to_shared_lib")); 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain path_to_shared_lib mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << vars.at("subclass_name") << " mandatory node!!" << std::endl;
         return false;
     }
     
@@ -70,7 +70,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         vars["subclass_factory_name"] = root_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : " << vars.at("subclass_name") << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
     
@@ -88,17 +88,17 @@ bool XBot::ModelInterface::isFloatingBase() const
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
     YAML::Node x_bot_interface;
     // XBotInterface info
-    if(root_cfg["x_bot_interface"]) {
-        x_bot_interface = root_cfg["x_bot_interface"]; 
+    if(root_cfg["ModelInterface"]) {
+        x_bot_interface = root_cfg["ModelInterface"]; 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain x_bot_interface mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!" << std::endl;
     }
-    if(x_bot_interface["is_internal_model_flaoting_base"]) {
-        is_model_floating_base = x_bot_interface["is_internal_model_flaoting_base"].as<bool>();
+    if(x_bot_interface["is_model_floating_base"]) {
+        is_model_floating_base = x_bot_interface["is_model_floating_base"].as<bool>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain is_internal_model_flaoting_base mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
     }
     return is_model_floating_base;
 }
@@ -147,6 +147,18 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
  
 bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
 {
+
+    // set is_floating_base
+    
+    std::ifstream fin(path_to_cfg);
+    if (fin.fail()) {
+        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
+        return false;
+    }
+
+    // loading YAML
+    YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    
     if(!init_model(path_to_cfg)){
         
         std::cerr << "ERROR in " << __func__ << ": model interface could not be initialized!" << std::endl;

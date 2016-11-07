@@ -124,50 +124,50 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
-        printf("Can not open %s\n", path_to_cfg.c_str());    //TBD change it
+        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
         return false;
     }
 
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
     YAML::Node x_bot_interface;
-    if(root_cfg["x_bot_interface"]) {
-        x_bot_interface = root_cfg["x_bot_interface"]; 
+    if(root_cfg["XBotInterface"]) {
+        x_bot_interface = root_cfg["XBotInterface"]; 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain x_bot_interface mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain XBotInterface mandatory node!!" << std::endl;
         return false;
     }
    
     // check the urdf_filename
-    if(x_bot_interface["urdf_filename"]) {
-        computeAbsolutePath(x_bot_interface["urdf_filename"].as<std::string>(), 
+    if(x_bot_interface["urdf_path"]) {
+        computeAbsolutePath(x_bot_interface["urdf_path"].as<std::string>(), 
                             CONFIG_MIDDLE_PATH,
                             _urdf_path); 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain urdf_filename mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain urdf_path mandatory node!!" << std::endl;
         return false;
     }
     
     // check the srdf_filename
-    if(x_bot_interface["srdf_filename"]) {
-        computeAbsolutePath(x_bot_interface["srdf_filename"].as<std::string>(), 
+    if(x_bot_interface["srdf_path"]) {
+        computeAbsolutePath(x_bot_interface["srdf_path"].as<std::string>(), 
                             CONFIG_MIDDLE_PATH,
                             _srdf_path); 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain srdf_filename mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain srdf_path mandatory node!!" << std::endl;
         return false;
     }
     
     // check joint_map_config
-    if(x_bot_interface["joint_map_config"]) {
-        computeAbsolutePath(x_bot_interface["joint_map_config"].as<std::string>(), 
+    if(x_bot_interface["joint_map_path"]) {
+        computeAbsolutePath(x_bot_interface["joint_map_path"].as<std::string>(), 
                             CONFIG_MIDDLE_PATH,
                             _joint_map_config); 
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : x_bot_interface node of  " << path_to_cfg << "  does not contain joint_map_config mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain joint_map_path mandatory node!!" << std::endl;
         return false;
     }
 
