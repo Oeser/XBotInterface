@@ -10,7 +10,7 @@ protected:
 virtual void SetUp(){
     
     std::string robotology_root = std::getenv("ROBOTOLOGY_ROOT");
-    std::string relative_path = "/external/XBotInterface/configs/config_centauro.yaml";
+    std::string relative_path = "/external/XBotInterface/configs/config_walkman.yaml";
     
     path_to_cfg = robotology_root + relative_path;
     

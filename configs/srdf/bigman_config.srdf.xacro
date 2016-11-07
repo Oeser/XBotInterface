@@ -194,7 +194,36 @@
    </group>
     <!-- END CHAINS -->    
  
-
+    <group_state name="home" group="chains">
+        
+        <joint name="NeckYawj" value="0.0"/>
+        <joint name="NeckPitchj" value="0.0"/>
+        
+        <joint name="WaistLat" value="0.0"/>
+        <joint name="WaistSag" value="0.0"/>
+        <joint name="WaistYaw" value="0.0"/>
+        
+        <joint name="RShSag" value="0.1"/>
+        <joint name="RShLat" value="-0.5"/>
+        <joint name="RShYaw" value="0.1"/>
+        <joint name="RElbj" value="-1.0"/>
+        <joint name="RForearmPlate" value="-0.6"/>
+        <joint name="RWrj1" value="-0.6"/>
+        <joint name="RWrj2" value="-0.1"/>
+        
+        <joint name="l_handj" value="0.0"/>
+        
+        <joint name="LShSag" value="-0.3"/>
+        <joint name="LShLat" value="0.5"/>
+        <joint name="LShYaw" value="-0.3"/>
+        <joint name="LElbj" value="-0.8"/>
+        <joint name="LForearmPlate" value="1.8"/>
+        <joint name="LWrj1" value="0.0"/>
+        <joint name="LWrj2" value="-1.0"/>
+        
+        <joint name="r_handj" value="0.0"/>
+        
+    </group_state>
 
     
     
