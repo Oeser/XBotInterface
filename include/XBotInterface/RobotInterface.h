@@ -123,7 +123,7 @@ protected:
     
     using XBotInterface::syncFrom;
 
-        
+    using XBotInterface::getChainMap;
 
 
 private:

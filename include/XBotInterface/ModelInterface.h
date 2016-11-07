@@ -754,17 +754,21 @@ private:
     using XBotInterface::setEffortReference;
     using XBotInterface::setStiffness;
     using XBotInterface::setDamping;
+    
+    using XBotInterface::getChainMap;
 
 };
 };
 
+
+// NOTE we should put all the utils function in an hpp file with a proper namespace.
 
 
 inline void XBot::ModelInterface::rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const
 {
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            kdl_rotation.data[3*i+j] = eigen_rotation(i,j); // TBD: check if works!
+            kdl_rotation.data[3*i+j] = eigen_rotation(i,j); 
         }
     }
 }
@@ -773,7 +777,7 @@ inline void XBot::ModelInterface::rotationKDLToEigen(const KDL::Rotation& kdl_ro
 {
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            eigen_rotation(i,j) = kdl_rotation.data[3*i+j]; // TBD: check if works!
+            eigen_rotation(i,j) = kdl_rotation.data[3*i+j]; 
         }
     }
 }
