@@ -224,7 +224,12 @@ bool XBot::ModelInterface::fillModelOrderedChain()
      
         // compute the chain which the joint being processed belongs to
         std::string joint_name = model_ordered_joint_name[joint_idx];
-        std::string chain_name = getJointByName(joint_name)->getChainName();
+        XBot::Joint::ConstPtr joint_ptr = getJointByName(joint_name);
+        if(!joint_ptr) {
+            return false;
+        }
+        
+        std::string chain_name = joint_ptr->getChainName();
         
         _ordered_chain_names.push_back(chain_name);
         
