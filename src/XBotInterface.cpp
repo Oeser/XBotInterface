@@ -237,7 +237,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg)
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
             _joint_id_to_eigen_id[_chain_map.at(chain_name)->jointId(i)] = eigen_id;
             _joint_name_to_eigen_id[_chain_map.at(chain_name)->jointName(i)] = eigen_id;
-            _ordered_joint_vector.push_back(_chain_map.at(chain_name)->getJoint(i));
+            _ordered_joint_vector.push_back(_chain_map.at(chain_name)->getJointInternal(i));
             _ordered_joint_id.push_back(_chain_map.at(chain_name)->jointId(i));
             _ordered_joint_name.push_back(_chain_map.at(chain_name)->jointName(i));
             eigen_id++;

@@ -1665,7 +1665,7 @@ void KinematicChain::getVelocityLimits(int i, double& qdot_max) const
     qdot_max = _urdf_joints[i]->limits->velocity;
 }
 
-Joint::Ptr XBot::KinematicChain::getJoint(int i) const
+Joint::Ptr XBot::KinematicChain::getJointInternal(int i) const
 {
     if(_joint_vector.size() <= i){
         std::cerr << "ERROR in " << __func__ << "chain " << chainName() << "has less than " << i+1 << " joints!" << std::endl;
@@ -1674,6 +1674,12 @@ Joint::Ptr XBot::KinematicChain::getJoint(int i) const
     
     return _joint_vector[i];
 }
+
+Joint::ConstPtr KinematicChain::getJoint ( int i ) const
+{
+    return getJointInternal(i);
+}
+
 
 ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::string& link_name) const
 {
