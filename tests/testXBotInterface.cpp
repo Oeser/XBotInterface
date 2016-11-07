@@ -392,6 +392,10 @@ TEST_F(testXbotInterface, checkJointLimits){
         for( int i = 0; i < xbint.getJointNum(); i++ ){
             alpha(i) = rand()/double(RAND_MAX);
             beta(i) = 2.5*(alpha(i) - 0.5);
+            // force at least one beta outside [0,1]
+            if(i == 0) {
+                beta(i) = 1.1;
+            }
             if(beta(i) < 0 || beta(i) > 1){
                 expected_bad_joints.push_back(xbint.getJointByDofIndex(i)->getJointName());
             }
