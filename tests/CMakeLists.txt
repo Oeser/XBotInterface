@@ -47,12 +47,16 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} )
 enable_testing()
 
 # if(TRUE OR YCM_EP_DEVEL_MODE_OpenSoT)
+# NOTE why we do not see XBotInterface here???
 add_custom_command( TARGET XBotInterface POST_BUILD
                     COMMAND ${CMAKE_CTEST_COMMAND}
                     MAIN_DEPENDENCY XBotInterface
                     DEPENDS
-                    testBasic
-                    )
+                    testJoint
+                    testKinematicChain
+                    testXBotInterface
+                    testModelInterface
+                    )                 
 # endif()
 
 # gTests TODO add libs
@@ -65,6 +69,12 @@ add_executable(testJoint     testJoint.cpp)
 target_link_libraries(testJoint ${TestLibs})
 add_dependencies(testJoint GTest-ext XBotInterface)
 add_test(NAME XBot_testJoint COMMAND testJoint)
+
+# Unit tests related to KinematicChain class
+add_executable(testKinematicChain     testKinematicChain.cpp)
+target_link_libraries(testKinematicChain ${TestLibs})
+add_dependencies(testKinematicChain GTest-ext XBotInterface)
+add_test(NAME XBot_testKinematicChain COMMAND testKinematicChain)
 
 # Unit tests related to XbotInterface class
 add_executable(testXBotInterface     testXBotInterface.cpp)
