@@ -215,25 +215,6 @@ XBot::RobotChain& XBot::RobotInterface::chain(const std::string& chain_name)
 }
 
 
-bool XBot::RobotInterface::setReferenceFrom ( const XBot::ModelInterface& model )
-{
-    bool success = true;
-    for (const auto & c : model._model_chain_map) {
-        
-        const std::string &chain_name = c.first;
-        const ModelChain &chain = *c.second;
-        
-        if (_robot_chain_map.count(chain_name)) {
-            _robot_chain_map.at(chain_name)->setReferenceFrom(chain);
-        } else {
-            if(!chain.isVirtual()){
-                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
-                success = false;
-            }
-        }
-    }
-    return success;
-}
 
 
 

@@ -24,6 +24,45 @@ protected:
      virtual void TearDown() {
      }
      
+     void setRandom(XBot::XBotInterface& xbint){
+         
+        Eigen::VectorXd x;
+         
+        x.setRandom(xbint.getJointNum());
+        xbint.setDamping(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setEffortReference(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setJointPosition(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setJointVelocity(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setJointEffort(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setPositionReference(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setStiffness(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.getMotorVelocity(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.getVelocityReference(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setMotorPosition(x);
+        
+        x.setRandom(xbint.getJointNum());
+        xbint.setTemperature(x);
+         
+     }
+     
      XBot::XBotInterface xbint;
      std::string path_to_cfg;
      
@@ -57,7 +96,19 @@ TEST_F(testXbotInterface, checkCopyConstructor){
     xbint.setPositionReference(x);
     
     x.setRandom(xbint.getJointNum());
+    xbint.setStiffness(x);
+    
+    x.setRandom(xbint.getJointNum());
+    xbint.getMotorVelocity(x);
+    
+    x.setRandom(xbint.getJointNum());
+    xbint.getVelocityReference(x);
+    
+    x.setRandom(xbint.getJointNum());
     xbint.setMotorPosition(x);
+    
+    x.setRandom(xbint.getJointNum());
+    xbint.setTemperature(x);
     
     
     // Copy constructor
@@ -90,6 +141,22 @@ TEST_F(testXbotInterface, checkCopyConstructor){
     
     xbint.getMotorPosition(x);
     xbint_copy.getMotorPosition(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getMotorVelocity(x);
+    xbint_copy.getMotorVelocity(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getStiffness(x);
+    xbint_copy.getStiffness(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getVelocityReference(x);
+    xbint_copy.getVelocityReference(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getTemperature(x);
+    xbint_copy.getTemperature(x_copy);
     EXPECT_TRUE( (x.array() == x_copy.array()).all() );
     
     
@@ -131,7 +198,19 @@ TEST_F(testXbotInterface, checkCopyAssignment){
     xbint.setPositionReference(x);
     
     x.setRandom(xbint.getJointNum());
+    xbint.setStiffness(x);
+    
+    x.setRandom(xbint.getJointNum());
+    xbint.getMotorVelocity(x);
+    
+    x.setRandom(xbint.getJointNum());
+    xbint.getVelocityReference(x);
+    
+    x.setRandom(xbint.getJointNum());
     xbint.setMotorPosition(x);
+    
+    x.setRandom(xbint.getJointNum());
+    xbint.setTemperature(x);
     
     
     // Copy constructor
@@ -165,6 +244,22 @@ TEST_F(testXbotInterface, checkCopyAssignment){
     
     xbint.getMotorPosition(x);
     xbint_copy.getMotorPosition(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getMotorVelocity(x);
+    xbint_copy.getMotorVelocity(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getStiffness(x);
+    xbint_copy.getStiffness(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getVelocityReference(x);
+    xbint_copy.getVelocityReference(x_copy);
+    EXPECT_TRUE( (x.array() == x_copy.array()).all() );
+    
+    xbint.getTemperature(x);
+    xbint_copy.getTemperature(x_copy);
     EXPECT_TRUE( (x.array() == x_copy.array()).all() );
     
     
@@ -306,8 +401,10 @@ TEST_F(testXbotInterface, checkSyncFrom){
     other.setVelocityReference(x);
     x.setRandom(xbint.getJointNum());
     other.setEffortReference(x);
+    x.setRandom(xbint.getJointNum());
+    other.setTemperature(x);
     
-    xbint.syncFrom(other);
+    xbint.sync(other);
     
     Eigen::VectorXd y;
     
@@ -355,6 +452,56 @@ TEST_F(testXbotInterface, checkSyncFrom){
     other.getEffortReference(y);
     EXPECT_TRUE( (x.array() == y.array()).all() );
     
+    xbint.getTemperature(x);
+    other.getTemperature(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+    
+}
+
+
+
+TEST_F(testXbotInterface, checkSyncFlags){
+    
+    XBot::XBotInterface other;
+    other.init(path_to_cfg);
+    
+    Eigen::VectorXd x, y;
+    
+    setRandom(xbint);
+    setRandom(other);
+    xbint.sync(other, XBot::Sync::Position);
+    xbint.getJointPosition(x);
+    other.getJointPosition(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+    setRandom(xbint);
+    setRandom(other);
+    xbint.sync(other, XBot::Sync::Position, XBot::Sync::Effort);
+    xbint.getJointPosition(x);
+    other.getJointPosition(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    xbint.getJointEffort(x);
+    other.getJointEffort(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+    setRandom(xbint);
+    setRandom(other);
+    xbint.sync(other, XBot::Sync::Position, XBot::Sync::Effort, XBot::Sync::Impedance);
+    xbint.getJointPosition(x);
+    other.getJointPosition(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    xbint.getJointEffort(x);
+    other.getJointEffort(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    xbint.getStiffness(x);
+    other.getStiffness(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    xbint.getDamping(x);
+    other.getDamping(y);
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+
     
 }
 

@@ -307,24 +307,7 @@ int XBot::XBotInterface::arms() const
     return _XBotModel.get_arms_chain().size();
 }
 
-bool XBot::XBotInterface::syncFrom(const XBot::XBotInterface &other)
-{
-    bool success = true;
-    for (const auto & c : other._chain_map) {
-        const std::string &chain_name = c.first;
-        const KinematicChain &chain = *c.second;
-        if (_chain_map.count(chain_name)) {
-            _chain_map.at(chain_name)->syncFrom(chain);
-            
-        } else {
-            if(!chain.isVirtual()){
-                std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
-                success = false;
-            }
-        }
-    }
-    return success;
-}
+
 
 
 bool XBot::XBotInterface::hasJoint(const std::string &joint_name) const

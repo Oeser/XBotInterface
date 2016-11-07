@@ -587,16 +587,6 @@ bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name
 }
 
 
-bool XBot::ModelInterface::syncFrom(const XBot::XBotInterface& other)
-{
-    if( XBot::XBotInterface::syncFrom(other) ){
-        update(true, true, true);
-        return true;
-    }
-    else{
-        return false;
-    }
-}
 
 
 

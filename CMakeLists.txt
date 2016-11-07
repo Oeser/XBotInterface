@@ -81,8 +81,8 @@ target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
                                     ${eigen_conversions_LIBRARIES}
                                     )
 
-add_executable(test src/main_test.cpp)
-target_link_libraries(test XBotInterface)
+add_executable(test_exec src/main_test.cpp)
+target_link_libraries(test_exec XBotInterface)
 
 # Enable srdf generation from xacro
 set(ENABLE_SRDF_FROM_XACRO_GENERATION CACHE BOOL "ON")

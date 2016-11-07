@@ -206,54 +206,6 @@ void XBot::Joint::setDamping(double damping)
     _damping = damping;
 }
 
-bool XBot::Joint::syncFrom(const XBot::Joint &other)
-{
-
-    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
-        std::cerr << "ERROR in " << __func__ << "! Attempt to synchronize joints with different names/ids!" << std::endl;
-        return false;
-    }
-
-    ///////////////////
-    // RX from board //
-    ///////////////////
-
-    _link_pos = other._link_pos;
-    _motor_pos = other._motor_pos;
-    _link_vel = other._link_vel;
-    _motor_vel = other._motor_vel;
-    _effort = other._effort;
-    _temperature = other._temperature;
-
-    /////////////////
-    // TX to board //
-    /////////////////
-
-    _pos_ref = other._pos_ref;
-    _vel_ref = other._vel_ref;
-    _effort_ref = other._effort_ref;
-    _stiffness = other._stiffness;
-    _damping = other._damping;
-}
-
-bool XBot::Joint::setReferenceFrom(const XBot::Joint& other)
-{
-    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
-        std::cerr << "ERROR in " << __func__ << "! Attempt to set reference from joint with different name/id!" << std::endl;
-        return false;
-    }
-
-
-    /////////////////
-    // TX to board //
-    /////////////////
-
-    _pos_ref = other._link_pos;
-    _vel_ref = other._link_vel;
-    _effort_ref = other._effort;
-    _stiffness = other._stiffness;
-    _damping = other._damping;
-}
 
 bool XBot::Joint::checkEffortLimit(double tau) const
 {

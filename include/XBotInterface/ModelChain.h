@@ -42,7 +42,6 @@ public:
     using KinematicChain::getJointVelocity;
     using KinematicChain::getMotorVelocity;
     using KinematicChain::getJointEffort;
-    using KinematicChain::getTemperature;
 
     // Setters for RX
     
@@ -51,7 +50,7 @@ public:
     using KinematicChain::setJointVelocity;
     using KinematicChain::setMotorVelocity;
     using KinematicChain::setJointEffort;
-    using KinematicChain::setTemperature;
+    
 
     
     
@@ -59,6 +58,9 @@ public:
 protected:
     
 private:
+    
+    using KinematicChain::getTemperature;
+    using KinematicChain::setTemperature;
     
     // Getters for TX
 
