@@ -91,8 +91,35 @@ public:
      */
     typedef std::shared_ptr<KinematicChain> Ptr;
     
+    /**
+     * @brief Get the chain joints group state configuration as specified in XBotCoreModel that retrieve the information from the SRDF
+     * 
+     * @param state_name group state name requested
+     * @param q chain joint configuration as map with key specified as joint ID (i.e. numerical name of the joint) and values as joint configuration,
+     *          This is an output parameter; it will not be cleared before being filled.
+     * @return true if the state_name exists in the SRDF, false otherwise.
+     */
     bool getChainState(const std::string& state_name, std::map<int, double>& q) const;
+    
+    /**
+     * @brief Get the chain joints group state configuration as specified in XBotCoreModel that retrieve the information from the SRDF
+     * 
+     * @param state_name group state name requested
+     * @param q chain joint configuration as map with key specified as joint name (i.e. human readable name of the joint) and values as joint configuration,
+     *          This is an output parameter; it will not be cleared before being filled.
+     * @return true if the state_name exists in the SRDF, false otherwise.
+     */
     bool getChainState(const std::string& state_name, std::map<std::string, double>& q) const;
+    
+    
+    /**
+     * @brief Get the chain joints group state configuration as specified in XBotCoreModel that retrieve the information from the SRDF
+     * 
+     * @param state_name group state name requested
+     * @param q chain joint configuration as Eigen vector of joint configuration,
+     *          This is an output parameter; any contents present in the vector will be overwritten in this function.
+     * @return true if the state_name exists in the SRDF, false otherwise.
+     */
     bool getChainState(const std::string& state_name, Eigen::VectorXd& q) const;
     
     /**
