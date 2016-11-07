@@ -160,5 +160,6 @@ optional_build(examples examples ON)
 #######################
 if(BUILD_TESTS)
   enable_testing()
-  add_subdirectory(tests)
+  add_custom_target(test_verbose ${CMAKE_CTEST_COMMAND} -V)
+  add_subdirectory(tests)  
 endif()
