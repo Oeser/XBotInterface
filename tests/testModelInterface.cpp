@@ -10,7 +10,7 @@ protected:
 virtual void SetUp(){
     
     std::string robotology_root = std::getenv("ROBOTOLOGY_ROOT");
-    std::string relative_path = "/external/XBotInterface/configs/config_walkman.yaml";
+    std::string relative_path = "/external/XBotInterface/configs/config_centauro.yaml";
     
     path_to_cfg = robotology_root + relative_path;
     
@@ -123,7 +123,115 @@ TEST_F(testModelInterface, checkBasicIK){
     
 }
 
+TEST_F(testModelInterface, checkNumericalJacobian){
+    
+    XBot::ModelInterface& model = *model_ptr;
+    
+    Eigen::VectorXd q, q1, q2;
+    q.setRandom(model.getJointNum());
+    double step_size = 0.0001;
+    
 
+    Eigen::MatrixXd J, Jhat;
+    Eigen::Affine3d T, T1, T2, dT;
+    Eigen::Vector3d p, p1, p2, dPhi;
+    Eigen::Matrix3d R, R1, R2, S;
+    
+    for( const std::string& j : model.getEnabledJointNames() ){
+        
+        std::string link_name = model.getUrdf().getJoint(j)->child_link_name;
+        
+        model.setJointPosition(q);
+        model.update();
+        
+        model.getPose(link_name, T);
+        p = T.translation();
+        R = T.linear();
+        
+        model.getJacobian(link_name, J);
+        Jhat = J;
+        
+        for( int i = 1; i < model.getJointNum(); i++ ){
+            
+            q2 = q;
+            q2(i) += step_size/2;
+            
+            q1 = q;
+            q1(i) -= step_size/2;
+            
+            model.setJointPosition(q1);
+            model.update();
+            model.getPose(link_name, T1);
+            p1 = T1.translation();
+            R1 = T1.linear();
+            
+            model.setJointPosition(q2);
+            model.update();
+            model.getPose(link_name, T2);
+            p2 = T2.translation();
+            R2 = T2.linear();
+            
+            Jhat.col(i).head(3) = (p2-p1)/step_size;
+            S = (R2-R1)*R.transpose();
+            Jhat(3,i) = S(2,1)/step_size;
+            Jhat(4,i) = S(0,2)/step_size;
+            Jhat(5,i) = S(1,0)/step_size;
+            
+        
+        }
+        
+        std::cout << "Link: " << link_name << ",  (J-Jhat).norm()/J.size() = " << (J-Jhat).norm()/J.size() << std::endl;
+    
+        EXPECT_NEAR( (J-Jhat).norm()/J.size() , 0, 0.001 );    
+        
+    }
+    
+}
+
+TEST_F(testModelInterface, checkPoseConsistency){
+ 
+    XBot::ModelInterface& model = *model_ptr;
+    Eigen::VectorXd q;
+    q.setRandom(model.getJointNum());
+    model.setJointPosition(q);
+    model.update();
+    
+    std::vector<std::string> link_names;
+    
+    for( const auto& j : model.getEnabledJointNames() ){
+        link_names.push_back(model.getUrdf().getJoint(j)->child_link_name);
+    }
+    
+    Eigen::Affine3d b_T_a, c_T_a, c_T_b;
+    
+    for( const std::string& link_a : link_names ){
+        for( const std::string& link_b : link_names ){
+            for( const std::string& link_c : link_names ){
+
+                
+                model.getPose(link_a, link_b, b_T_a);
+                model.getPose(link_b, link_c, c_T_b);
+                model.getPose(link_a, link_c, c_T_a);
+
+                EXPECT_NEAR( ((c_T_b*b_T_a).translation() - c_T_a.translation()).norm()/3, 0.0, 0.0001 );
+                EXPECT_NEAR( ((c_T_b*b_T_a).linear() - c_T_a.linear()).norm()/9, 0.0, 0.0001 );
+                
+                
+            }
+            
+            model.getPose(link_a, link_b, b_T_a);
+            model.getPose(link_b, c_T_b);
+            model.getPose(link_a, c_T_a);
+            
+            EXPECT_NEAR( ((c_T_b*b_T_a).translation() - c_T_a.translation()).norm()/3, 0.0, 0.0001 );
+            EXPECT_NEAR( ((c_T_b*b_T_a).linear() - c_T_a.linear()).norm()/9, 0.0, 0.0001 );
+            
+        }
+    }
+    
+    
+    
+}
 
 
 int main ( int argc, char **argv )
