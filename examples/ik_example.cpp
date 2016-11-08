@@ -118,16 +118,16 @@ int main(int argc, char **argv){
      * representations described above.
      */
     
-    std::map<int, double> left_arm_position;
+    JointIdMap left_arm_position;
     robot.arm(0).getJointPosition(left_arm_position);
     
-    std::map<std::string, double> right_arm_velocity;
+    JointNameMap right_arm_velocity;
     robot.chain("right_arm").getJointVelocity(right_arm_velocity);
     
     Eigen::VectorXd torso_torque;
     robot("torso").getJointEffort(torso_torque);
     
-    std::map<std::string, double> robot_torque;
+    JointNameMap robot_torque;
     robot.getJointPosition(robot_torque);
     
     Eigen::VectorXd robot_position;
@@ -200,7 +200,7 @@ int main(int argc, char **argv){
      * middle of the range, i.e. (qmin+qmax)/2
      */
     
-    std::map<std::string, double> bad_joints_new_ref;
+    JointNameMap bad_joints_new_ref;
     
     for( const std::string& joint_name : bad_joints ){
         

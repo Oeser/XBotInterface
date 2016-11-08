@@ -204,7 +204,7 @@ TEST_F(testKinematicChain, checkJointGetters){
         Eigen::VectorXd x;
         x.setRandom( c.second->getJointNum() );
         c.second->setJointPosition(x);
-        std::map<int, double> x_map;
+        XBot::JointIdMap x_map;
         c.second->getJointPosition(x_map);
         
         for( int i = 0; i < c.second->getJointNum(); i++ ){
@@ -270,8 +270,8 @@ TEST_F(testKinematicChain, checkGettersSetters){
  
     
     Eigen::VectorXd x, y;
-    std::map<int, double> x_id_map, y_id_map;
-    std::map<std::string, double> x_name_map, y_name_map;
+    XBot::JointIdMap x_id_map, y_id_map;
+    XBot::JointNameMap x_name_map, y_name_map;
     
     for(const auto& c : xbint.getChainMap()) {
         x_id_map.clear();

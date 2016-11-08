@@ -305,7 +305,7 @@ TEST_F(testXbotInterface, checkJointGetters){
     Eigen::VectorXd x;
     x.setRandom( xbint.getJointNum() );
     xbint.setJointPosition(x);
-    std::map<int, double> x_map;
+    XBot::JointIdMap x_map;
     xbint.getJointPosition(x_map);
     
     for( int idx = 0; idx < xbint.getJointNum(); idx++ ){
@@ -369,8 +369,8 @@ TEST_F(testXbotInterface, checkGettersSetters){
     for(int iter = 0; iter < 300; iter++){
     
     Eigen::VectorXd x, y;
-    std::map<int, double> x_id_map, y_id_map;
-    std::map<std::string, double> x_name_map, y_name_map;
+    XBot::JointIdMap x_id_map, y_id_map;
+    XBot::JointNameMap x_name_map, y_name_map;
     
     x.setRandom( xbint.getJointNum() );
     for(int i = 0; i < x.size(); i++){

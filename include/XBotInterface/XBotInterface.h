@@ -28,6 +28,7 @@
 #include <yaml-cpp/yaml.h>
 #include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
+#include <XBotInterface/TypedefAndEnums.h>
 
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
@@ -105,7 +106,7 @@ namespace XBot {
         * @param q The robot joint configuration as a map with key representing the joint ID (i.e. numerical name of the joint) and value representing joint positions. This is an output parameter; it will not be cleared before being filled.
         * @return True if the state_name exists in the SRDF, false otherwise.
         */
-        bool getRobotState(const std::string& state_name, std::map<int, double>& q) const;
+        bool getRobotState(const std::string& state_name, JointIdMap& q) const;
         
         /**
         * @brief Gets the robot joints group state configuration as specified in the robot SRDF.
@@ -114,7 +115,7 @@ namespace XBot {
         * @param q The robot joint configuration as a map with key representing the joint name and value representing joint positions. This is an output parameter; it will not be cleared before being filled.
         * @return True if the state_name exists in the SRDF, false otherwise.
         */
-        bool getRobotState(const std::string& state_name, std::map<std::string, double>& q) const;
+        bool getRobotState(const std::string& state_name, JointNameMap& q) const;
 
 
         // Kinematic chains
@@ -250,68 +251,479 @@ namespace XBot {
 
         // Force-torque sensors
 
+        /**
+        * @brief Getter for the force-torque sensor map pertaining to the whole robot. 
+        * 
+        * @return A map whose key is the sensor name (i.e. the name of the sensor link inside the URDF) and
+        * whose value is a shared pointer to the force torque sensor.
+        */
         std::map< std::string, ForceTorqueSensor::ConstPtr > getForceTorque();
+        
+        /**
+        * @brief Returns a force-torque sensor given its parent-link name. 
+        * 
+        * @param parent_link_name Name of the link to which the sensor is attached
+        * @return A shared pointer to the required force-torque sensor. The returned pointer is null if
+        * the robot either does not contain a link named "parent_link_name" or such a link does not contain
+        * any FT.
+        */
         ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
         
         // IMU sensors
 
+        /**
+        * @brief Getter for the IMU sensor map pertaining to the chain. 
+        * 
+        * @return A map whose key is the sensor name (i.e. the name of the sensor link inside the URDF) and
+        * whose value is a shared pointer to the IMU sensor.
+        */
         std::map< std::string, ImuSensor::ConstPtr > getImu();
+        
+        /**
+        * @brief Returns an IMU sensor given its parent-link name. 
+        * 
+        * @param parent_link_name Name of the link to which the sensor is attached
+        * @return A shared pointer to the required IMU sensor. The returned pointer is null if
+        * the chain either does not contain a link named "parent_link_name" or such a link does not contain
+        * any IMU.
+        */
         ImuSensor::ConstPtr getImu(const std::string& parent_link_name) const;
 
 
 
         // Getters for RX
 
-
+        /**
+         * @brief Gets the robot joint positions as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param q A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getJointPosition(Eigen::VectorXd& q) const;
+        
+        /**
+         * @brief Gets the robot motor positions as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param q A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getMotorPosition(Eigen::VectorXd& q) const;
+        
+        /**
+         * @brief Gets the robot joint velocities as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param qdot A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getJointVelocity(Eigen::VectorXd& qdot) const;
+        
+        /**
+         * @brief Gets the robot motor velocities as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param qdot A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getMotorVelocity(Eigen::VectorXd& qdot) const;
+        
+        /**
+         * @brief Gets the robot joint accelerations as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param qddot A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getJointAcceleration(Eigen::VectorXd& qddot) const;
+        
+        /**
+         * @brief Gets the robot joint efforts as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param tau A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getJointEffort(Eigen::VectorXd& tau) const;
+        
+        /**
+         * @brief Gets the robot joint temperatures as an Eigen vector. The joint order inside
+         * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param temp A reference to an Eigen vector to be filled with the requested joint state.
+         * If the provided vector has wrong size it is resized automatically.
+         * @return bool
+         */
         bool getTemperature(Eigen::VectorXd& temp) const;
 
-        bool getJointPosition(std::map<int, double>& q) const;
-        bool getMotorPosition(std::map<int, double>& q) const;
-        bool getJointVelocity(std::map<int, double>& qdot) const;
-        bool getMotorVelocity(std::map<int, double>& qdot) const;
-        bool getJointAcceleration(std::map<int, double>& qddot) const;
-        bool getJointEffort(std::map<int, double>& tau) const;
-        bool getTemperature(std::map<int, double>& temp) const;
+        
+        /**
+         * @brief Gets the robot joint positions as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param q A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointPosition(JointIdMap& q) const;
+        
+        /**
+         * @brief Gets the robot motor positions as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param q A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getMotorPosition(JointIdMap& q) const;
+        
+        /**
+         * @brief Gets the robot joint velocities as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param qdot A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointVelocity(JointIdMap& qdot) const;
+        
+        /**
+         * @brief Gets the robot motor velocities as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param qdot A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getMotorVelocity(JointIdMap& qdot) const;
+        
+        /**
+         * @brief Gets the robot joint accelerations as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param qddot A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointAcceleration(JointIdMap& qddot) const;
+        
+        /**
+         * @brief Gets the robot joint efforts as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param tau A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointEffort(JointIdMap& tau) const;
+        
+        /**
+         * @brief Gets the robot joint temperatures as a JointIdMap, i.e. a map whose key
+         * represents the joint ID and whose value represents the required joint state.
+         * 
+         * @param temp A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getTemperature(JointIdMap& temp) const;
 
-        bool getJointPosition(std::map<std::string, double>& q) const;
-        bool getMotorPosition(std::map<std::string, double>& q) const;
-        bool getJointVelocity(std::map<std::string, double>& qdot) const;
-        bool getMotorVelocity(std::map<std::string, double>& qdot) const;
-        bool getJointAcceleration(std::map<std::string, double>& qddot) const;
-        bool getJointEffort(std::map<std::string, double>& tau) const;
-        bool getTemperature(std::map<std::string, double>& temp) const;
+        
+        /**
+         * @brief Gets the robot joint postions as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param q A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointPosition(JointNameMap& q) const;
+        
+        /**
+         * @brief Gets the robot motor postions as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param q A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getMotorPosition(JointNameMap& q) const;
+        
+        /**
+         * @brief Gets the robot joint velocities as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param qdot A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointVelocity(JointNameMap& qdot) const;
+        
+        /**
+         * @brief Gets the robot motor velocities as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param qdot A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getMotorVelocity(JointNameMap& qdot) const;
+        
+        /**
+         * @brief Gets the robot joint accelerations as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param qddot A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointAcceleration(JointNameMap& qddot) const;
+        
+        /**
+         * @brief Gets the robot joint efforts as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param tau A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getJointEffort(JointNameMap& tau) const;
+        
+        /**
+         * @brief Gets the robot joint temperatures as a JointNameMap, i.e. a map whose key
+         * represents the joint human-readable name and whose value represents the required joint state.
+         * 
+         * @param temp A reference to a JointIdMap to be filled with the requested joint state.
+         * It is the user responsibility to clear the map before it is filled (if required).
+         * @return bool
+         */
+        bool getTemperature(JointNameMap& temp) const;
 
         // Setters for RX
         
+        /**
+         * @brief Sets the XBotInterface internal joint positions according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param q The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setJointPosition(const Eigen::VectorXd& q);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor positions according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param q The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setMotorPosition(const Eigen::VectorXd& q);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint velocities according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param qdot The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setJointVelocity(const Eigen::VectorXd& qdot);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor velocities according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param qdot The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setMotorVelocity(const Eigen::VectorXd& qdot);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint accelerations according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param qddot The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setJointAcceleration(const Eigen::VectorXd& qddot);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint efforts according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param tau The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setJointEffort(const Eigen::VectorXd& tau);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint temperatures according to the 
+         * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
+         * methods.
+         * 
+         * @param temp The vector of input joint states.
+         * @return True if the size of the provided vector matches getJointNum().
+         */
         bool setTemperature(const Eigen::VectorXd& temp);
         
-        bool setJointPosition(const std::map<int, double>& q);
-        bool setMotorPosition(const std::map<int, double>& q);
-        bool setJointVelocity(const std::map<int, double>& qdot);
-        bool setMotorVelocity(const std::map<int, double>& qdot);
-        bool setJointAcceleration(const std::map<int, double>& qddot);
-        bool setJointEffort(const std::map<int, double>& tau);
-        bool setTemperature(const std::map<int, double>& temp);
         
-        bool setJointPosition(const std::map<std::string, double>& q);
-        bool setMotorPosition(const std::map<std::string, double>& q);
-        bool setJointVelocity(const std::map<std::string, double>& qdot);
-        bool setMotorVelocity(const std::map<std::string, double>& qdot);
-        bool setJointAcceleration(const std::map<std::string, double>& qddot);
-        bool setJointEffort(const std::map<std::string, double>& tau);
-        bool setTemperature(const std::map<std::string, double>& temp);
+        /**
+         * @brief Sets the XBotInterface internal joint positions according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param q The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointPosition(const JointIdMap& q);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor positions according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param q The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setMotorPosition(const JointIdMap& q);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint velocities according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param qdot The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointVelocity(const JointIdMap& qdot);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor velocities according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param qdot The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setMotorVelocity(const JointIdMap& qdot);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint accelerations according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param qddot The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointAcceleration(const JointIdMap& qddot);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint efforts according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param tau The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointEffort(const JointIdMap& tau);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor temperatures according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
+         * can include joint states for an arbitrary subset of the whole robot.
+         * 
+         * @param temp The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setTemperature(const JointIdMap& temp);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint positions according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param q The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointPosition(const JointNameMap& q);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor positions according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param q The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setMotorPosition(const JointNameMap& q);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint velocities according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param qdot The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointVelocity(const JointNameMap& qdot);
+        
+        /**
+         * @brief Sets the XBotInterface internal motor velocities according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param qdot The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setMotorVelocity(const JointNameMap& qdot);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint accelerations according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param qddot The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointAcceleration(const JointNameMap& qddot);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint efforts according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param tau The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setJointEffort(const JointNameMap& tau);
+        
+        /**
+         * @brief Sets the XBotInterface internal joint temperatures according to the input
+         * JointNameMap (i.e. a map whose key represents the joint name and whose value 
+         * represents the joint state), which can include joint states for an arbitrary
+         * subset of the whole robot.
+         * 
+         * @param temp The input JointIdMap
+         * @return True if all joint IDs inside the provided map are valid.
+         */
+        bool setTemperature(const JointNameMap& temp);
         
         // Getters for TX
 
@@ -321,17 +733,17 @@ namespace XBot {
         bool getStiffness(Eigen::VectorXd& K) const;
         bool getDamping(Eigen::VectorXd& D) const;
         
-        bool getPositionReference(std::map<int, double>& q) const;
-        bool getVelocityReference(std::map<int, double>& qdot) const;
-        bool getEffortReference(std::map<int, double>& tau) const;
-        bool getStiffness(std::map<int, double>& K) const;
-        bool getDamping(std::map<int, double>& D) const;
+        bool getPositionReference(JointIdMap& q) const;
+        bool getVelocityReference(JointIdMap& qdot) const;
+        bool getEffortReference(JointIdMap& tau) const;
+        bool getStiffness(JointIdMap& K) const;
+        bool getDamping(JointIdMap& D) const;
         
-        bool getPositionReference(std::map<std::string, double>& q) const;
-        bool getVelocityReference(std::map<std::string, double>& qdot) const;
-        bool getEffortReference(std::map<std::string, double>& tau) const;
-        bool getStiffness(std::map<std::string, double>& K) const;
-        bool getDamping(std::map<std::string, double>& D) const;
+        bool getPositionReference(JointNameMap& q) const;
+        bool getVelocityReference(JointNameMap& qdot) const;
+        bool getEffortReference(JointNameMap& tau) const;
+        bool getStiffness(JointNameMap& K) const;
+        bool getDamping(JointNameMap& D) const;
         
         // Setters for TX
         
@@ -341,17 +753,17 @@ namespace XBot {
         bool setStiffness(const Eigen::VectorXd& K);
         bool setDamping(const Eigen::VectorXd& D);
         
-        bool setPositionReference(const std::map<int, double>& q);
-        bool setVelocityReference(const std::map<int, double>& qdot);
-        bool setEffortReference(const std::map<int, double>& tau);
-        bool setStiffness(const std::map<int, double>& K);
-        bool setDamping(const std::map<int, double>& D);
+        bool setPositionReference(const JointIdMap& q);
+        bool setVelocityReference(const JointIdMap& qdot);
+        bool setEffortReference(const JointIdMap& tau);
+        bool setStiffness(const JointIdMap& K);
+        bool setDamping(const JointIdMap& D);
         
-        bool setPositionReference(const std::map<std::string, double>& q);
-        bool setVelocityReference(const std::map<std::string, double>& qdot);
-        bool setEffortReference(const std::map<std::string, double>& tau);
-        bool setStiffness(const std::map<std::string, double>& K);
-        bool setDamping(const std::map<std::string, double>& D);
+        bool setPositionReference(const JointNameMap& q);
+        bool setVelocityReference(const JointNameMap& qdot);
+        bool setEffortReference(const JointNameMap& tau);
+        bool setStiffness(const JointNameMap& K);
+        bool setDamping(const JointNameMap& D);
 
 
 

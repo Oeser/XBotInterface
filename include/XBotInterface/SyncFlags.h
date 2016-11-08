@@ -17,25 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef __XBOT_ENUM__
-#define __XBOT_ENUM__
+#ifndef __XBOT_SYNCFLAGS__
+#define __XBOT_SYNCFLAGS__
 
-namespace XBot{
+#include <XBotInterface/TypedefAndEnums.h>
+
+namespace XBot {
  
-    enum class Sync {
-        
-        Position ,
-        Velocity,
-        Effort,
-        Acceleration,
-        Impedance,
-        Stiffness,
-        Damping,
-        All 
-        
-    };
-    
-    
     inline void parseFlags(bool& pos, 
                            bool& vel, 
                            bool& acc, 
@@ -72,9 +60,6 @@ namespace XBot{
         d = d || (s == Sync::Damping);
         
     }
-    
 
-    
 }
-
 #endif

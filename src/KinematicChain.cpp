@@ -300,7 +300,7 @@ bool KinematicChain::getJointPosition(Eigen::VectorXd &q) const
     return true;
 }
 
-bool KinematicChain::getJointPosition(std::map< std::string, double > &q) const
+bool KinematicChain::getJointPosition(JointNameMap &q) const
 {
 //     q.clear();
 
@@ -315,7 +315,7 @@ bool KinematicChain::getJointPosition(std::map< std::string, double > &q) const
 
 }
 
-bool KinematicChain::getDamping(std::map< std::string, double > &D) const
+bool KinematicChain::getDamping(JointNameMap &D) const
 {
 //     D.clear();
 
@@ -329,7 +329,7 @@ bool KinematicChain::getDamping(std::map< std::string, double > &D) const
     }
 }
 
-bool KinematicChain::getJointEffort(std::map< std::string, double > &tau) const
+bool KinematicChain::getJointEffort(JointNameMap &tau) const
 {
 //     tau.clear();
 
@@ -343,7 +343,7 @@ bool KinematicChain::getJointEffort(std::map< std::string, double > &tau) const
     }
 }
 
-bool KinematicChain::getEffortReference(std::map< std::string, double > &tau) const
+bool KinematicChain::getEffortReference(JointNameMap &tau) const
 {
 //     tau.clear();
 
@@ -357,7 +357,7 @@ bool KinematicChain::getEffortReference(std::map< std::string, double > &tau) co
     }
 }
 
-bool KinematicChain::getJointVelocity(std::map< std::string, double > &qdot) const
+bool KinematicChain::getJointVelocity(JointNameMap &qdot) const
 {
 //     qdot.clear();
 
@@ -371,7 +371,7 @@ bool KinematicChain::getJointVelocity(std::map< std::string, double > &qdot) con
     }
 }
 
-bool XBot::KinematicChain::getJointAcceleration(std::map< std::string, double >& qddot) const
+bool XBot::KinematicChain::getJointAcceleration(JointNameMap& qddot) const
 {
     for (const auto & name_joint_pair : _joint_name_map) {
 
@@ -384,7 +384,7 @@ bool XBot::KinematicChain::getJointAcceleration(std::map< std::string, double >&
 }
 
 
-bool KinematicChain::getMotorPosition(std::map< std::string, double > &q) const
+bool KinematicChain::getMotorPosition(JointNameMap &q) const
 {
 //     q.clear();
 
@@ -398,7 +398,7 @@ bool KinematicChain::getMotorPosition(std::map< std::string, double > &q) const
     }
 }
 
-bool KinematicChain::getMotorVelocity(std::map< std::string, double > &qdot) const
+bool KinematicChain::getMotorVelocity(JointNameMap &qdot) const
 {
 //     qdot.clear();
 
@@ -412,7 +412,7 @@ bool KinematicChain::getMotorVelocity(std::map< std::string, double > &qdot) con
     }
 }
 
-bool KinematicChain::getStiffness(std::map< std::string, double > &K) const
+bool KinematicChain::getStiffness(JointNameMap &K) const
 {
 //     K.clear();
 
@@ -426,7 +426,7 @@ bool KinematicChain::getStiffness(std::map< std::string, double > &K) const
     }
 }
 
-bool KinematicChain::getTemperature(std::map< std::string, double > &temp) const
+bool KinematicChain::getTemperature(JointNameMap &temp) const
 {
 //     temp.clear();
 
@@ -440,7 +440,7 @@ bool KinematicChain::getTemperature(std::map< std::string, double > &temp) const
     }
 }
 
-bool KinematicChain::getVelocityReference(std::map< std::string, double > &qdot) const
+bool KinematicChain::getVelocityReference(JointNameMap &qdot) const
 {
 //     qdot.clear();
 
@@ -457,7 +457,7 @@ bool KinematicChain::getVelocityReference(std::map< std::string, double > &qdot)
 
 
 
-bool KinematicChain::getJointPosition(std::map< int, double > &q) const
+bool KinematicChain::getJointPosition(JointIdMap &q) const
 {
 //     q.clear();
 
@@ -484,7 +484,7 @@ bool KinematicChain::getPositionReference(Eigen::VectorXd &q) const
     return true;
 }
 
-bool KinematicChain::getPositionReference(std::map< std::string, double > &q) const
+bool KinematicChain::getPositionReference(JointNameMap &q) const
 {
 //     q.clear();
 
@@ -498,7 +498,7 @@ bool KinematicChain::getPositionReference(std::map< std::string, double > &q) co
     }
 }
 
-bool KinematicChain::getPositionReference(std::map< int, double > &q) const
+bool KinematicChain::getPositionReference(JointIdMap &q) const
 {
 //     q.clear();
 
@@ -512,7 +512,7 @@ bool KinematicChain::getPositionReference(std::map< int, double > &q) const
     }
 }
 
-bool KinematicChain::getDamping(std::map< int, double > &D) const
+bool KinematicChain::getDamping(JointIdMap &D) const
 {
 //     D.clear();
 
@@ -526,7 +526,7 @@ bool KinematicChain::getDamping(std::map< int, double > &D) const
     }
 }
 
-bool KinematicChain::getJointEffort(std::map< int, double > &tau) const
+bool KinematicChain::getJointEffort(JointIdMap &tau) const
 {
 //     tau.clear();
 
@@ -540,7 +540,7 @@ bool KinematicChain::getJointEffort(std::map< int, double > &tau) const
     }
 }
 
-bool KinematicChain::getEffortReference(std::map< int, double > &tau) const
+bool KinematicChain::getEffortReference(JointIdMap &tau) const
 {
 //     tau.clear();
 
@@ -554,7 +554,7 @@ bool KinematicChain::getEffortReference(std::map< int, double > &tau) const
     }
 }
 
-bool KinematicChain::getJointVelocity(std::map< int, double > &qdot) const
+bool KinematicChain::getJointVelocity(JointIdMap &qdot) const
 {
 //     qdot.clear();
 
@@ -568,7 +568,7 @@ bool KinematicChain::getJointVelocity(std::map< int, double > &qdot) const
     }
 }
 
-bool XBot::KinematicChain::getJointAcceleration(std::map< int, double >& qddot) const
+bool XBot::KinematicChain::getJointAcceleration(JointIdMap& qddot) const
 {
     for (const auto & id_joint_pair : _joint_id_map) {
 
@@ -581,7 +581,7 @@ bool XBot::KinematicChain::getJointAcceleration(std::map< int, double >& qddot) 
 }
 
 
-bool KinematicChain::getMotorPosition(std::map< int, double > &q) const
+bool KinematicChain::getMotorPosition(JointIdMap &q) const
 {
 //     q.clear();
 
@@ -595,7 +595,7 @@ bool KinematicChain::getMotorPosition(std::map< int, double > &q) const
     }
 }
 
-bool KinematicChain::getMotorVelocity(std::map< int, double > &qdot) const
+bool KinematicChain::getMotorVelocity(JointIdMap &qdot) const
 {
 //     qdot.clear();
 
@@ -609,7 +609,7 @@ bool KinematicChain::getMotorVelocity(std::map< int, double > &qdot) const
     }
 }
 
-bool KinematicChain::getStiffness(std::map< int, double > &K) const
+bool KinematicChain::getStiffness(JointIdMap &K) const
 {
 //     K.clear();
 
@@ -623,7 +623,7 @@ bool KinematicChain::getStiffness(std::map< int, double > &K) const
     }
 }
 
-bool KinematicChain::getTemperature(std::map< int, double > &temp) const
+bool KinematicChain::getTemperature(JointIdMap &temp) const
 {
 //     temp.clear();
 
@@ -637,7 +637,7 @@ bool KinematicChain::getTemperature(std::map< int, double > &temp) const
     }
 }
 
-bool KinematicChain::getVelocityReference(std::map< int, double > &qdot) const
+bool KinematicChain::getVelocityReference(JointIdMap &qdot) const
 {
 //     qdot.clear();
 
@@ -1096,7 +1096,7 @@ bool KinematicChain::setTemperature(int i, double temp)
 
 
 
-bool KinematicChain::setDamping(const std::map< std::string, double > &D)
+bool KinematicChain::setDamping(const JointNameMap &D)
 {
     bool success = true;
 
@@ -1114,7 +1114,7 @@ bool KinematicChain::setDamping(const std::map< std::string, double > &D)
     return success;
 }
 
-bool KinematicChain::setJointEffort(const std::map< std::string, double > &tau)
+bool KinematicChain::setJointEffort(const JointNameMap &tau)
 {
     bool success = true;
 
@@ -1132,7 +1132,7 @@ bool KinematicChain::setJointEffort(const std::map< std::string, double > &tau)
     return success;
 }
 
-bool KinematicChain::setEffortReference(const std::map< std::string, double > &tau)
+bool KinematicChain::setEffortReference(const JointNameMap &tau)
 {
     bool success = true;
 
@@ -1150,7 +1150,7 @@ bool KinematicChain::setEffortReference(const std::map< std::string, double > &t
     return success;
 }
 
-bool KinematicChain::setJointPosition(const std::map< std::string, double > &q)
+bool KinematicChain::setJointPosition(const JointNameMap &q)
 {
     bool success = true;
 
@@ -1168,7 +1168,7 @@ bool KinematicChain::setJointPosition(const std::map< std::string, double > &q)
     return success;
 }
 
-bool KinematicChain::setJointVelocity(const std::map< std::string, double > &qdot)
+bool KinematicChain::setJointVelocity(const JointNameMap &qdot)
 {
     bool success = true;
 
@@ -1186,7 +1186,7 @@ bool KinematicChain::setJointVelocity(const std::map< std::string, double > &qdo
     return success;
 }
 
-bool XBot::KinematicChain::setJointAcceleration(const std::map< std::string, double >& qddot)
+bool XBot::KinematicChain::setJointAcceleration(const JointNameMap& qddot)
 {
     bool success = true;
 
@@ -1206,7 +1206,7 @@ bool XBot::KinematicChain::setJointAcceleration(const std::map< std::string, dou
 }
 
 
-bool KinematicChain::setMotorPosition(const std::map< std::string, double > &q)
+bool KinematicChain::setMotorPosition(const JointNameMap &q)
 {
     bool success = true;
 
@@ -1224,7 +1224,7 @@ bool KinematicChain::setMotorPosition(const std::map< std::string, double > &q)
     return success;
 }
 
-bool KinematicChain::setMotorVelocity(const std::map< std::string, double > &qdot)
+bool KinematicChain::setMotorVelocity(const JointNameMap &qdot)
 {
     bool success = true;
 
@@ -1242,7 +1242,7 @@ bool KinematicChain::setMotorVelocity(const std::map< std::string, double > &qdo
     return success;
 }
 
-bool KinematicChain::setPositionReference(const std::map< std::string, double > &q)
+bool KinematicChain::setPositionReference(const JointNameMap &q)
 {
     bool success = true;
 
@@ -1260,7 +1260,7 @@ bool KinematicChain::setPositionReference(const std::map< std::string, double > 
     return success;
 }
 
-bool KinematicChain::setStiffness(const std::map< std::string, double > &K)
+bool KinematicChain::setStiffness(const JointNameMap &K)
 {
     bool success = true;
 
@@ -1278,7 +1278,7 @@ bool KinematicChain::setStiffness(const std::map< std::string, double > &K)
     return success;
 }
 
-bool KinematicChain::setTemperature(const std::map< std::string, double > &temp)
+bool KinematicChain::setTemperature(const JointNameMap &temp)
 {
     bool success = true;
 
@@ -1296,7 +1296,7 @@ bool KinematicChain::setTemperature(const std::map< std::string, double > &temp)
     return success;
 }
 
-bool KinematicChain::setVelocityReference(const std::map< std::string, double > &qdot)
+bool KinematicChain::setVelocityReference(const JointNameMap &qdot)
 {
     bool success = true;
 
@@ -1314,7 +1314,7 @@ bool KinematicChain::setVelocityReference(const std::map< std::string, double > 
     return success;
 }
 
-bool KinematicChain::setDamping(const std::map< int, double > &D)
+bool KinematicChain::setDamping(const JointIdMap &D)
 {
     bool success = true;
 
@@ -1332,7 +1332,7 @@ bool KinematicChain::setDamping(const std::map< int, double > &D)
     return success;
 }
 
-bool KinematicChain::setJointEffort(const std::map< int, double > &tau)
+bool KinematicChain::setJointEffort(const JointIdMap &tau)
 {
     bool success = true;
 
@@ -1350,7 +1350,7 @@ bool KinematicChain::setJointEffort(const std::map< int, double > &tau)
     return success;
 }
 
-bool KinematicChain::setEffortReference(const std::map< int, double > &tau)
+bool KinematicChain::setEffortReference(const JointIdMap &tau)
 {
     bool success = true;
 
@@ -1369,7 +1369,7 @@ bool KinematicChain::setEffortReference(const std::map< int, double > &tau)
 }
 
 
-bool KinematicChain::setJointPosition(const std::map< int, double > &q)
+bool KinematicChain::setJointPosition(const JointIdMap &q)
 {
     bool success = true;
 
@@ -1388,7 +1388,7 @@ bool KinematicChain::setJointPosition(const std::map< int, double > &q)
 }
 
 
-bool KinematicChain::setJointVelocity(const std::map< int, double > &qdot)
+bool KinematicChain::setJointVelocity(const JointIdMap &qdot)
 {
     bool success = true;
 
@@ -1406,7 +1406,7 @@ bool KinematicChain::setJointVelocity(const std::map< int, double > &qdot)
     return success;
 }
 
-bool XBot::KinematicChain::setJointAcceleration(const std::map< int, double >& qddot)
+bool XBot::KinematicChain::setJointAcceleration(const JointIdMap& qddot)
 {
     bool success = true;
 
@@ -1426,7 +1426,7 @@ bool XBot::KinematicChain::setJointAcceleration(const std::map< int, double >& q
 }
 
 
-bool KinematicChain::setMotorPosition(const std::map< int, double > &q)
+bool KinematicChain::setMotorPosition(const JointIdMap &q)
 {
     bool success = true;
 
@@ -1446,7 +1446,7 @@ bool KinematicChain::setMotorPosition(const std::map< int, double > &q)
 
 
 
-bool KinematicChain::setMotorVelocity(const std::map< int, double > &qdot)
+bool KinematicChain::setMotorVelocity(const JointIdMap &qdot)
 {
     bool success = true;
 
@@ -1464,7 +1464,7 @@ bool KinematicChain::setMotorVelocity(const std::map< int, double > &qdot)
     return success;
 }
 
-bool KinematicChain::setPositionReference(const std::map< int, double > &q)
+bool KinematicChain::setPositionReference(const JointIdMap &q)
 {
     bool success = true;
 
@@ -1483,7 +1483,7 @@ bool KinematicChain::setPositionReference(const std::map< int, double > &q)
 }
 
 
-bool KinematicChain::setStiffness(const std::map< int, double > &K)
+bool KinematicChain::setStiffness(const JointIdMap &K)
 {
     bool success = true;
 
@@ -1501,7 +1501,7 @@ bool KinematicChain::setStiffness(const std::map< int, double > &K)
     return success;
 }
 
-bool KinematicChain::setTemperature(const std::map< int, double > &temp)
+bool KinematicChain::setTemperature(const JointIdMap &temp)
 {
     bool success = true;
 
@@ -1519,7 +1519,7 @@ bool KinematicChain::setTemperature(const std::map< int, double > &temp)
     return success;
 }
 
-bool KinematicChain::setVelocityReference(const std::map< int, double > &qdot)
+bool KinematicChain::setVelocityReference(const JointIdMap &qdot)
 {
     bool success = true;
 
@@ -1914,7 +1914,7 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
 }
 
 bool XBot::KinematicChain::getChainState(const std::string& state_name, 
-                                         std::map< std::string, double >& q) const
+                                         JointNameMap& q) const
 {
 
     bool success = false;
@@ -1951,7 +1951,7 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
 }
 
 bool XBot::KinematicChain::getChainState(const std::string& state_name, 
-                                         std::map< int, double >& q) const
+                                         JointIdMap& q) const
 {
 
     bool success = false;

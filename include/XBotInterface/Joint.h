@@ -24,7 +24,7 @@
 #include <memory>
 #include <iostream>
 #include <srdfdom_advr/model.h>
-#include <XBotInterface/sync_flags.h>
+#include <XBotInterface/SyncFlags.h>
 
 
 namespace XBot

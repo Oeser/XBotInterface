@@ -99,7 +99,7 @@ public:
      * @param q The chain joint configuration as a map with key representing the joint ID (i.e. numerical name of the joint) and values representing joint positions. This is an output parameter; it will not be cleared before being filled.
      * @return True if the state_name exists in the SRDF, false otherwise.
      */
-    bool getChainState(const std::string& state_name, std::map<int, double>& q) const;
+    bool getChainState(const std::string& state_name, JointIdMap& q) const;
     
     /**
      * @brief Gets the chain joints group state configuration as specified in the robot SRDF.
@@ -108,7 +108,7 @@ public:
      * @param q The chain joint configuration as a map with key representing joint names and values representing joint positions. This is an output parameter; it will not be cleared before being filled.
      * @return True if the state_name exists in the SRDF, false otherwise.
      */
-    bool getChainState(const std::string& state_name, std::map<std::string, double>& q) const;
+    bool getChainState(const std::string& state_name, JointNameMap& q) const;
     
     
     /**
@@ -123,7 +123,7 @@ public:
     bool getChainState(const std::string& state_name, Eigen::VectorXd& q) const;
     
     /**
-     * @brief Getter for the force-torque sensor map 
+     * @brief Getter for the force-torque sensor map pertaining to the chain. 
      * 
      * @return A map whose key is the sensor name (i.e. the name of the sensor link inside the URDF) and
      * whose value is a shared pointer to the force torque sensor.
@@ -131,7 +131,7 @@ public:
     std::map<std::string, ForceTorqueSensor::ConstPtr> getForceTorque() const;
     
     /**
-     * @brief Getter for the IMU sensor map 
+     * @brief Getter for the IMU sensor map pertaining to the chain. 
      * 
      * @return A map whose key is the sensor name (i.e. the name of the sensor link inside the URDF) and
      * whose value is a shared pointer to the IMU sensor.
@@ -142,7 +142,9 @@ public:
      * @brief Returns a force-torque sensor given its parent-link name. 
      * 
      * @param parent_link_name Name of the link to which the sensor is attached
-     * @return A shared pointer to the required force-torque sensor.
+     * @return A shared pointer to the required force-torque sensor. The returned pointer is null if
+     * the chain either does not contain a link named "parent_link_name" or such a link does not contain
+     * any FT.
      */
     ForceTorqueSensor::ConstPtr getForceTorque(const std::string& parent_link_name) const;
     
@@ -150,7 +152,9 @@ public:
      * @brief Returns an IMU sensor given its parent-link name. 
      * 
      * @param parent_link_name Name of the link to which the sensor is attached
-     * @return A shared pointer to the required IMU sensor.
+     * @return A shared pointer to the required IMU sensor. The returned pointer is null if
+     * the chain either does not contain a link named "parent_link_name" or such a link does not contain
+     * any IMU.
      */
     ImuSensor::ConstPtr getImu(const std::string& parent_link_name) const;
 
@@ -415,21 +419,21 @@ public:
     bool getJointEffort(Eigen::VectorXd &tau) const;
     bool getTemperature(Eigen::VectorXd &temp) const;
 
-    bool getJointPosition(std::map<int, double> &q) const;
-    bool getMotorPosition(std::map<int, double> &q) const;
-    bool getJointVelocity(std::map<int, double> &qdot) const;
-    bool getMotorVelocity(std::map<int, double> &qdot) const;
-    bool getJointAcceleration(std::map<int, double> &qddot) const;
-    bool getJointEffort(std::map<int, double> &tau) const;
-    bool getTemperature(std::map<int, double> &temp) const;
+    bool getJointPosition(JointIdMap &q) const;
+    bool getMotorPosition(JointIdMap &q) const;
+    bool getJointVelocity(JointIdMap &qdot) const;
+    bool getMotorVelocity(JointIdMap &qdot) const;
+    bool getJointAcceleration(JointIdMap &qddot) const;
+    bool getJointEffort(JointIdMap &tau) const;
+    bool getTemperature(JointIdMap &temp) const;
 
-    bool getJointPosition(std::map<std::string, double> &q) const;
-    bool getMotorPosition(std::map<std::string, double> &q) const;
-    bool getJointVelocity(std::map<std::string, double> &qdot) const;
-    bool getMotorVelocity(std::map<std::string, double> &qdot) const;
-    bool getJointAcceleration(std::map<std::string, double> &qddot) const;
-    bool getJointEffort(std::map<std::string, double> &tau) const;
-    bool getTemperature(std::map<std::string, double> &temp) const;
+    bool getJointPosition(JointNameMap &q) const;
+    bool getMotorPosition(JointNameMap &q) const;
+    bool getJointVelocity(JointNameMap &qdot) const;
+    bool getMotorVelocity(JointNameMap &qdot) const;
+    bool getJointAcceleration(JointNameMap &qddot) const;
+    bool getJointEffort(JointNameMap &tau) const;
+    bool getTemperature(JointNameMap &temp) const;
 
     double getJointPosition(int index) const;
     double getMotorPosition(int index) const;
@@ -449,21 +453,21 @@ public:
     bool setJointEffort(const Eigen::VectorXd &tau);
     bool setTemperature(const Eigen::VectorXd &temp);
 
-    bool setJointPosition(const std::map<int, double> &q);
-    bool setMotorPosition(const std::map<int, double> &q);
-    bool setJointVelocity(const std::map<int, double> &qdot);
-    bool setMotorVelocity(const std::map<int, double> &qdot);
-    bool setJointAcceleration(const std::map<int, double> &qddot);
-    bool setJointEffort(const std::map<int, double> &tau);
-    bool setTemperature(const std::map<int, double> &temp);
+    bool setJointPosition(const JointIdMap &q);
+    bool setMotorPosition(const JointIdMap &q);
+    bool setJointVelocity(const JointIdMap &qdot);
+    bool setMotorVelocity(const JointIdMap &qdot);
+    bool setJointAcceleration(const JointIdMap &qddot);
+    bool setJointEffort(const JointIdMap &tau);
+    bool setTemperature(const JointIdMap &temp);
 
-    bool setJointPosition(const std::map<std::string, double> &q);
-    bool setMotorPosition(const std::map<std::string, double> &q);
-    bool setJointVelocity(const std::map<std::string, double> &qdot);
-    bool setMotorVelocity(const std::map<std::string, double> &qdot);
-    bool setJointAcceleration(const std::map<std::string, double> &qddot);
-    bool setJointEffort(const std::map<std::string, double> &tau);
-    bool setTemperature(const std::map<std::string, double> &temp);
+    bool setJointPosition(const JointNameMap &q);
+    bool setMotorPosition(const JointNameMap &q);
+    bool setJointVelocity(const JointNameMap &qdot);
+    bool setMotorVelocity(const JointNameMap &qdot);
+    bool setJointAcceleration(const JointNameMap &qddot);
+    bool setJointEffort(const JointNameMap &tau);
+    bool setTemperature(const JointNameMap &temp);
 
     bool setJointPosition(int i, double q);
     bool setMotorPosition(int i, double q);
@@ -481,17 +485,17 @@ public:
     bool getStiffness(Eigen::VectorXd &K) const;
     bool getDamping(Eigen::VectorXd &D) const;
 
-    bool getPositionReference(std::map<int, double> &q) const;
-    bool getVelocityReference(std::map<int, double> &qdot) const;
-    bool getEffortReference(std::map<int, double> &tau) const;
-    bool getStiffness(std::map<int, double> &K) const;
-    bool getDamping(std::map<int, double> &D) const;
+    bool getPositionReference(JointIdMap &q) const;
+    bool getVelocityReference(JointIdMap &qdot) const;
+    bool getEffortReference(JointIdMap &tau) const;
+    bool getStiffness(JointIdMap &K) const;
+    bool getDamping(JointIdMap &D) const;
 
-    bool getPositionReference(std::map<std::string, double> &q) const;
-    bool getVelocityReference(std::map<std::string, double> &qdot) const;
-    bool getEffortReference(std::map<std::string, double> &tau) const;
-    bool getStiffness(std::map<std::string, double> &K) const;
-    bool getDamping(std::map<std::string, double> &D) const;
+    bool getPositionReference(JointNameMap &q) const;
+    bool getVelocityReference(JointNameMap &qdot) const;
+    bool getEffortReference(JointNameMap &tau) const;
+    bool getStiffness(JointNameMap &K) const;
+    bool getDamping(JointNameMap &D) const;
 
     double getPositionReference(int index) const;
     double getVelocityReference(int index) const;
@@ -507,17 +511,17 @@ public:
     bool setStiffness(const Eigen::VectorXd &K);
     bool setDamping(const Eigen::VectorXd &D);
 
-    bool setPositionReference(const std::map<int, double> &q);
-    bool setVelocityReference(const std::map<int, double> &qdot);
-    bool setEffortReference(const std::map<int, double> &tau);
-    bool setStiffness(const std::map<int, double> &K);
-    bool setDamping(const std::map<int, double> &D);
+    bool setPositionReference(const JointIdMap &q);
+    bool setVelocityReference(const JointIdMap &qdot);
+    bool setEffortReference(const JointIdMap &tau);
+    bool setStiffness(const JointIdMap &K);
+    bool setDamping(const JointIdMap &D);
 
-    bool setPositionReference(const std::map<std::string, double> &q);
-    bool setVelocityReference(const std::map<std::string, double> &qdot);
-    bool setEffortReference(const std::map<std::string, double> &tau);
-    bool setStiffness(const std::map<std::string, double> &K);
-    bool setDamping(const std::map<std::string, double> &D);
+    bool setPositionReference(const JointNameMap &q);
+    bool setVelocityReference(const JointNameMap &qdot);
+    bool setEffortReference(const JointNameMap &tau);
+    bool setStiffness(const JointNameMap &K);
+    bool setDamping(const JointNameMap &D);
 
     bool setPositionReference(int i, double q);
     bool setVelocityReference(int i, double qdot);

@@ -393,7 +393,7 @@ bool XBot::XBotInterface::getJointPosition(Eigen::VectorXd &q) const
     return true;
 }
 
-bool XBot::XBotInterface::getJointPosition(std::map< std::string, double > &q) const
+bool XBot::XBotInterface::getJointPosition(JointNameMap &q) const
 {
 //     q.clear();
 
@@ -408,7 +408,7 @@ bool XBot::XBotInterface::getJointPosition(std::map< std::string, double > &q) c
     }
 }
 
-bool XBot::XBotInterface::getJointPosition(std::map< int, double > &q) const
+bool XBot::XBotInterface::getJointPosition(JointIdMap &q) const
 {
 //     q.clear();
 
@@ -423,7 +423,7 @@ bool XBot::XBotInterface::getJointPosition(std::map< int, double > &q) const
     }
 }
 
-bool XBot::XBotInterface::getPositionReference(std::map< std::string, double > &q) const
+bool XBot::XBotInterface::getPositionReference(JointNameMap &q) const
 {
 //     q.clear();
 
@@ -438,7 +438,7 @@ bool XBot::XBotInterface::getPositionReference(std::map< std::string, double > &
     }
 }
 
-bool XBot::XBotInterface::getPositionReference(std::map< int, double > &q) const
+bool XBot::XBotInterface::getPositionReference(JointIdMap &q) const
 {
 //     q.clear();
 
@@ -471,7 +471,7 @@ bool XBot::XBotInterface::getPositionReference(Eigen::VectorXd &q) const
     return true;
 }
 
-bool XBot::XBotInterface::getDamping(std::map< std::string, double > &D) const
+bool XBot::XBotInterface::getDamping(JointNameMap &D) const
 {
 //     D.clear();
 
@@ -486,7 +486,7 @@ bool XBot::XBotInterface::getDamping(std::map< std::string, double > &D) const
     }
 }
 
-bool XBot::XBotInterface::getJointEffort(std::map< std::string, double > &tau) const
+bool XBot::XBotInterface::getJointEffort(JointNameMap &tau) const
 {
 //     tau.clear();
 
@@ -501,7 +501,7 @@ bool XBot::XBotInterface::getJointEffort(std::map< std::string, double > &tau) c
     }
 }
 
-bool XBot::XBotInterface::getEffortReference(std::map< std::string, double > &tau) const
+bool XBot::XBotInterface::getEffortReference(JointNameMap &tau) const
 {
 //     tau.clear();
 
@@ -516,7 +516,7 @@ bool XBot::XBotInterface::getEffortReference(std::map< std::string, double > &ta
     }
 }
 
-bool XBot::XBotInterface::getJointVelocity(std::map< std::string, double > &qdot) const
+bool XBot::XBotInterface::getJointVelocity(JointNameMap &qdot) const
 {
 //     qdot.clear();
 
@@ -531,7 +531,7 @@ bool XBot::XBotInterface::getJointVelocity(std::map< std::string, double > &qdot
     }
 }
 
-bool XBot::XBotInterface::getJointAcceleration(std::map< std::string, double >& qddot) const
+bool XBot::XBotInterface::getJointAcceleration(JointNameMap& qddot) const
 {
     for(int i = 0; i < _joint_num; i++){
         const Joint::Ptr& joint = _ordered_joint_vector[i];
@@ -550,7 +550,7 @@ bool XBot::XBotInterface::getJointAcceleration(std::map< std::string, double >& 
 }
 
 
-bool XBot::XBotInterface::getMotorPosition(std::map< std::string, double > &q) const
+bool XBot::XBotInterface::getMotorPosition(JointNameMap &q) const
 {
 //     q.clear();
 
@@ -565,7 +565,7 @@ bool XBot::XBotInterface::getMotorPosition(std::map< std::string, double > &q) c
     }
 }
 
-bool XBot::XBotInterface::getStiffness(std::map< std::string, double > &K) const
+bool XBot::XBotInterface::getStiffness(JointNameMap &K) const
 {
 //     K.clear();
 
@@ -580,7 +580,7 @@ bool XBot::XBotInterface::getStiffness(std::map< std::string, double > &K) const
     }
 }
 
-bool XBot::XBotInterface::getTemperature(std::map< std::string, double > &temp) const
+bool XBot::XBotInterface::getTemperature(JointNameMap &temp) const
 {
 //     temp.clear();
 
@@ -595,7 +595,7 @@ bool XBot::XBotInterface::getTemperature(std::map< std::string, double > &temp) 
     }
 }
 
-bool XBot::XBotInterface::getVelocityReference(std::map< std::string, double > &qdot) const
+bool XBot::XBotInterface::getVelocityReference(JointNameMap &qdot) const
 {
 //     qdot.clear();
 
@@ -610,7 +610,7 @@ bool XBot::XBotInterface::getVelocityReference(std::map< std::string, double > &
     }
 }
 
-bool XBot::XBotInterface::getMotorVelocity(std::map< std::string, double > &qdot) const
+bool XBot::XBotInterface::getMotorVelocity(JointNameMap &qdot) const
 {
 //     qdot.clear();
 
@@ -627,7 +627,7 @@ bool XBot::XBotInterface::getMotorVelocity(std::map< std::string, double > &qdot
 
 
 
-bool XBot::XBotInterface::getDamping(std::map< int, double > &D) const
+bool XBot::XBotInterface::getDamping(JointIdMap &D) const
 {
 //     D.clear();
 
@@ -642,7 +642,7 @@ bool XBot::XBotInterface::getDamping(std::map< int, double > &D) const
     }
 }
 
-bool XBot::XBotInterface::getJointEffort(std::map< int, double > &tau) const
+bool XBot::XBotInterface::getJointEffort(JointIdMap &tau) const
 {
 //     tau.clear();
 
@@ -657,7 +657,7 @@ bool XBot::XBotInterface::getJointEffort(std::map< int, double > &tau) const
     }
 }
 
-bool XBot::XBotInterface::getEffortReference(std::map< int, double > &tau) const
+bool XBot::XBotInterface::getEffortReference(JointIdMap &tau) const
 {
 //     tau.clear();
 
@@ -673,7 +673,7 @@ bool XBot::XBotInterface::getEffortReference(std::map< int, double > &tau) const
 }
 
 
-bool XBot::XBotInterface::getVelocityReference(std::map< int, double > &qdot) const
+bool XBot::XBotInterface::getVelocityReference(JointIdMap &qdot) const
 {
 //     qdot.clear();
 
@@ -689,7 +689,7 @@ bool XBot::XBotInterface::getVelocityReference(std::map< int, double > &qdot) co
 }
 
 
-bool XBot::XBotInterface::getJointVelocity(std::map< int, double > &qdot) const
+bool XBot::XBotInterface::getJointVelocity(JointIdMap &qdot) const
 {
 //     qdot.clear();
 
@@ -704,7 +704,7 @@ bool XBot::XBotInterface::getJointVelocity(std::map< int, double > &qdot) const
     }
 }
 
-bool XBot::XBotInterface::getJointAcceleration(std::map< int, double >& qddot) const
+bool XBot::XBotInterface::getJointAcceleration(JointIdMap& qddot) const
 {
     
     for(int i = 0; i < _joint_num; i++){
@@ -725,7 +725,7 @@ bool XBot::XBotInterface::getJointAcceleration(std::map< int, double >& qddot) c
 }
 
 
-bool XBot::XBotInterface::getMotorPosition(std::map< int, double > &q) const
+bool XBot::XBotInterface::getMotorPosition(JointIdMap &q) const
 {
 //     q.clear();
 
@@ -740,7 +740,7 @@ bool XBot::XBotInterface::getMotorPosition(std::map< int, double > &q) const
     }
 }
 
-bool XBot::XBotInterface::getMotorVelocity(std::map< int, double > &qdot) const
+bool XBot::XBotInterface::getMotorVelocity(JointIdMap &qdot) const
 {
 //     qdot.clear();
 
@@ -755,7 +755,7 @@ bool XBot::XBotInterface::getMotorVelocity(std::map< int, double > &qdot) const
     }
 }
 
-bool XBot::XBotInterface::getStiffness(std::map< int, double > &K) const
+bool XBot::XBotInterface::getStiffness(JointIdMap &K) const
 {
 //     K.clear();
 
@@ -770,7 +770,7 @@ bool XBot::XBotInterface::getStiffness(std::map< int, double > &K) const
     }
 }
 
-bool XBot::XBotInterface::getTemperature(std::map< int, double > &temp) const
+bool XBot::XBotInterface::getTemperature(JointIdMap &temp) const
 {
 //     temp.clear();
 
@@ -977,7 +977,7 @@ bool XBot::XBotInterface::getVelocityReference(Eigen::VectorXd &qdot) const
 }
 
 
-bool XBot::XBotInterface::setJointPosition(const std::map< std::string, double > &q)
+bool XBot::XBotInterface::setJointPosition(const JointNameMap &q)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1001,7 +1001,7 @@ bool XBot::XBotInterface::setJointPosition(const std::map< std::string, double >
     return success;
 }
 
-bool XBot::XBotInterface::setMotorPosition(const std::map< std::string, double > &q)
+bool XBot::XBotInterface::setMotorPosition(const JointNameMap &q)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1027,7 +1027,7 @@ bool XBot::XBotInterface::setMotorPosition(const std::map< std::string, double >
     return success;
 }
 
-bool XBot::XBotInterface::setPositionReference(const std::map< std::string, double > &q)
+bool XBot::XBotInterface::setPositionReference(const JointNameMap &q)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1053,7 +1053,7 @@ bool XBot::XBotInterface::setPositionReference(const std::map< std::string, doub
     return success;
 }
 
-bool XBot::XBotInterface::setJointEffort(const std::map< std::string, double > &tau)
+bool XBot::XBotInterface::setJointEffort(const JointNameMap &tau)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1079,7 +1079,7 @@ bool XBot::XBotInterface::setJointEffort(const std::map< std::string, double > &
     return success;
 }
 
-bool XBot::XBotInterface::setEffortReference(const std::map< std::string, double > &tau)
+bool XBot::XBotInterface::setEffortReference(const JointNameMap &tau)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1105,7 +1105,7 @@ bool XBot::XBotInterface::setEffortReference(const std::map< std::string, double
     return success;
 }
 
-bool XBot::XBotInterface::setJointVelocity(const std::map< std::string, double > &qdot)
+bool XBot::XBotInterface::setJointVelocity(const JointNameMap &qdot)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1131,7 +1131,7 @@ bool XBot::XBotInterface::setJointVelocity(const std::map< std::string, double >
     return success;
 }
 
-bool XBot::XBotInterface::setJointAcceleration(const std::map< std::string, double >& qddot)
+bool XBot::XBotInterface::setJointAcceleration(const JointNameMap& qddot)
 {
     for(const auto& qddot_pair : qddot){
         const std::string joint_name = qddot_pair.first;
@@ -1167,7 +1167,7 @@ bool XBot::XBotInterface::setJointAcceleration(const std::map< std::string, doub
 }
 
 
-bool XBot::XBotInterface::setMotorVelocity(const std::map< std::string, double > &qdot)
+bool XBot::XBotInterface::setMotorVelocity(const JointNameMap &qdot)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1193,7 +1193,7 @@ bool XBot::XBotInterface::setMotorVelocity(const std::map< std::string, double >
     return success;
 }
 
-bool XBot::XBotInterface::setVelocityReference(const std::map< std::string, double > &qdot)
+bool XBot::XBotInterface::setVelocityReference(const JointNameMap &qdot)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1219,7 +1219,7 @@ bool XBot::XBotInterface::setVelocityReference(const std::map< std::string, doub
     return success;
 }
 
-bool XBot::XBotInterface::setTemperature(const std::map< std::string, double > &temp)
+bool XBot::XBotInterface::setTemperature(const JointNameMap &temp)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1245,7 +1245,7 @@ bool XBot::XBotInterface::setTemperature(const std::map< std::string, double > &
     return success;
 }
 
-bool XBot::XBotInterface::setStiffness(const std::map< std::string, double > &K)
+bool XBot::XBotInterface::setStiffness(const JointNameMap &K)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1509,7 +1509,7 @@ bool XBot::XBotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
 
 
 
-bool XBot::XBotInterface::setDamping(const std::map< std::string, double > &D)
+bool XBot::XBotInterface::setDamping(const JointNameMap &D)
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1535,7 +1535,7 @@ bool XBot::XBotInterface::setDamping(const std::map< std::string, double > &D)
     return success;
 }
 
-bool XBot::XBotInterface::setDamping ( const std::map< int, double >& D )
+bool XBot::XBotInterface::setDamping ( const JointIdMap& D )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1562,7 +1562,7 @@ bool XBot::XBotInterface::setDamping ( const std::map< int, double >& D )
 }
 
 
-bool XBot::XBotInterface::setJointEffort ( const std::map< int, double >& tau )
+bool XBot::XBotInterface::setJointEffort ( const JointIdMap& tau )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1588,7 +1588,7 @@ bool XBot::XBotInterface::setJointEffort ( const std::map< int, double >& tau )
     return success;
 }
 
-bool XBot::XBotInterface::setEffortReference ( const std::map< int, double >& tau )
+bool XBot::XBotInterface::setEffortReference ( const JointIdMap& tau )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1614,7 +1614,7 @@ bool XBot::XBotInterface::setEffortReference ( const std::map< int, double >& ta
     return success;
 }
 
-bool XBot::XBotInterface::setJointPosition ( const std::map< int, double >& q ) // TBD profile vs unordered maps
+bool XBot::XBotInterface::setJointPosition ( const JointIdMap& q ) // TBD profile vs unordered maps
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1640,7 +1640,7 @@ bool XBot::XBotInterface::setJointPosition ( const std::map< int, double >& q ) 
     return success;
 }
 
-bool XBot::XBotInterface::setJointVelocity ( const std::map< int, double >& qdot )
+bool XBot::XBotInterface::setJointVelocity ( const JointIdMap& qdot )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1666,7 +1666,7 @@ bool XBot::XBotInterface::setJointVelocity ( const std::map< int, double >& qdot
     return success;
 }
 
-bool XBot::XBotInterface::setJointAcceleration(const std::map< int, double >& qddot)
+bool XBot::XBotInterface::setJointAcceleration(const JointIdMap& qddot)
 {
     
     for(const auto& qddot_pair : qddot){
@@ -1701,7 +1701,7 @@ bool XBot::XBotInterface::setJointAcceleration(const std::map< int, double >& qd
 }
 
 
-bool XBot::XBotInterface::setMotorPosition( const std::map< int, double >& q )
+bool XBot::XBotInterface::setMotorPosition( const JointIdMap& q )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1727,7 +1727,7 @@ bool XBot::XBotInterface::setMotorPosition( const std::map< int, double >& q )
     return success;
 }
 
-bool XBot::XBotInterface::setMotorVelocity( const std::map< int, double >& qdot )
+bool XBot::XBotInterface::setMotorVelocity( const JointIdMap& qdot )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1753,7 +1753,7 @@ bool XBot::XBotInterface::setMotorVelocity( const std::map< int, double >& qdot 
     return success;
 }
 
-bool XBot::XBotInterface::setPositionReference ( const std::map< int, double >& q )
+bool XBot::XBotInterface::setPositionReference ( const JointIdMap& q )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1779,7 +1779,7 @@ bool XBot::XBotInterface::setPositionReference ( const std::map< int, double >& 
     return success;
 }
 
-bool XBot::XBotInterface::setStiffness ( const std::map< int, double >& K )
+bool XBot::XBotInterface::setStiffness ( const JointIdMap& K )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1805,7 +1805,7 @@ bool XBot::XBotInterface::setStiffness ( const std::map< int, double >& K )
     return success;
 }
 
-bool XBot::XBotInterface::setTemperature ( const std::map< int, double >& temp )
+bool XBot::XBotInterface::setTemperature ( const JointIdMap& temp )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -1831,7 +1831,7 @@ bool XBot::XBotInterface::setTemperature ( const std::map< int, double >& temp )
     return success;
 }
 
-bool XBot::XBotInterface::setVelocityReference ( const std::map< int, double >& qdot )
+bool XBot::XBotInterface::setVelocityReference ( const JointIdMap& qdot )
 {
     bool success = true;
     for (const auto & chainname_ptr_pair : _chain_map) {
@@ -2146,7 +2146,7 @@ const std::vector<int>& XBot::XBotInterface::getEnabledJointId() const
 }
 
 bool XBot::XBotInterface::getRobotState(const std::string& state_name, 
-                                        std::map< std::string, double >& q) const
+                                        JointNameMap& q) const
 {
 
     bool success = false;
@@ -2183,7 +2183,7 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
 }
 
 bool XBot::XBotInterface::getRobotState(const std::string& state_name, 
-                                        std::map< int, double >& q) const
+                                        JointIdMap& q) const
 {
 
     bool success = false;
