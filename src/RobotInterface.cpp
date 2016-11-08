@@ -139,6 +139,7 @@ bool XBot::RobotInterface::sense(bool sync_model)
 {
     bool sense_ok = sense_internal();
     bool sensors_ok = read_sensors();
+    _ts_rx = getTime();
     if (sync_model) {
         return  (_model->syncFrom(*this)) && sense_ok && sensors_ok;
     }
@@ -148,6 +149,7 @@ bool XBot::RobotInterface::sense(bool sync_model)
 
 bool XBot::RobotInterface::move()
 {
+    _ts_tx = getTime();
     return move_internal();
 }
 
@@ -212,6 +214,16 @@ XBot::RobotChain& XBot::RobotInterface::operator()(const std::string& chain_name
 XBot::RobotChain& XBot::RobotInterface::chain(const std::string& chain_name)
 {
     return operator()(chain_name);
+}
+
+double XBot::RobotInterface::getTimestampRx() const
+{
+    return _ts_rx;
+}
+
+double XBot::RobotInterface::getTimestampTx() const
+{
+    return _ts_tx;
 }
 
 

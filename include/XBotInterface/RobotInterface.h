@@ -100,6 +100,13 @@ public:
     using XBotInterface::getMotorVelocity;
     using XBotInterface::getJointEffort;
     using XBotInterface::getTemperature;
+    
+    /**
+     * @brief Get the RX timestamp: it corresponds to the last call to sense()
+     * 
+     * @return the RX timestamp in seconds
+     */
+    double getTimestampRx() const;
 
     
     // Getters for TX
@@ -109,6 +116,13 @@ public:
     using XBotInterface::getEffortReference;
     using XBotInterface::getStiffness;
     using XBotInterface::getDamping;
+    
+    /**
+     * @brief Get the TX timestamp: it corresponds to the last call to move()
+     * 
+     * @return the TX timestamp in seconds
+     */
+    double getTimestampTx() const;
 
     // Setters for TX
     
@@ -168,7 +182,8 @@ private:
     
     static bool parseYAML(const std::string &path_to_cfg);
     
-
+    double _ts_rx;
+    double _ts_tx;
 
 };
 
