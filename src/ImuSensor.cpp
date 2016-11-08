@@ -22,6 +22,7 @@
 namespace XBot {
     
 ImuSensor::ImuSensor():
+GenericSensor::GenericSensor(),
 _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identity())
 {
 
@@ -75,20 +76,26 @@ void ImuSensor::getOrientation(Eigen::Quaterniond& orientation) const
 
 void ImuSensor::setImuData(Eigen::Matrix3d& orientation, 
                            Eigen::Vector3d& acceleration,
-                           Eigen::Vector3d& angular_velocity)
+                           Eigen::Vector3d& angular_velocity, 
+                           double timestamp
+                          )
 {
     _orientation = orientation;
     _lin_acc = acceleration;
     _angular_velocity = angular_velocity;
+    setTimestamp(timestamp);
 }
 
 void ImuSensor::setImuData(Eigen::Quaterniond& orientation, 
                            Eigen::Vector3d& acceleration,
-                           Eigen::Vector3d& angular_velocity)
+                           Eigen::Vector3d& angular_velocity,
+                           double timestamp
+                          )
 {
     _orientation = orientation.toRotationMatrix();
     _lin_acc = acceleration;
     _angular_velocity = angular_velocity;
+    setTimestamp(timestamp);
 }
 
     

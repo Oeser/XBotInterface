@@ -60,31 +60,31 @@ public:
     RobotChain& chain(const std::string& chain_name);
     RobotChain& arm(int arm_id);
     RobotChain& leg(int leg_id);
-    
-    /**
-     * @brief Sets the robot references according to a ModelInterface.
-     * Flags can be specified to select a part of the state to be synchronized.
-     * 
-     * @usage robot.setReferenceFrom(model, XBot::Sync::Position, XBot::Sync::Effort)
-     * @usage robot.setReferenceFrom(other_model, XBot::Sync::Position)
-     * 
-     * @param model The ModelInterface whose state is used as a reference for the robot.
-     * model.
-     * @param flags Flags to specify what part of the model state must be used a reference. By default (i.e. if
-     * this argument is omitted) the whole state is used. Otherwise, an arbitrary number of flags
-     * can be specified in order to select a subset of the state. The flags must be of the enum type
-     * XBot::Sync, which can take the following values:
-     *  - Sync::Position, 
-     *  - Sync::Velocity
-     *  - Sync::Acceleration
-     *  - Sync::Effort
-     *  - Sync::Stiffness 
-     *  - Sync::Damping 
-     *  - Sync::Impedance
-     *  - Sync::All
 
-     * @return True if the synchronization is allowed, false otherwise.
-     */
+/**
+    * @brief Sets the robot references according to a ModelInterface.
+    * Flags can be specified to select a part of the state to be synchronized.
+    * 
+    * @usage robot.setReferenceFrom(model, XBot::Sync::Position, XBot::Sync::Effort)
+    * @usage robot.setReferenceFrom(other_model, XBot::Sync::Position)
+    * 
+    * @param model The ModelInterface whose state is used as a reference for the robot.
+    * model.
+    * @param flags Flags to specify what part of the model state must be used a reference. By default (i.e. if
+    * this argument is omitted) the whole state is used. Otherwise, an arbitrary number of flags
+    * can be specified in order to select a subset of the state. The flags must be of the enum type
+    * XBot::Sync, which can take the following values:
+    *  - Sync::Position, 
+    *  - Sync::Velocity
+    *  - Sync::Acceleration
+    *  - Sync::Effort
+    *  - Sync::Stiffness 
+    *  - Sync::Damping 
+    *  - Sync::Impedance
+    *  - Sync::All
+    *
+    * @return True if the synchronization is allowed, false otherwise.
+    */
     template <typename... SyncFlags>
     bool setReferenceFrom(const ModelInterface& model, SyncFlags... flags);
 

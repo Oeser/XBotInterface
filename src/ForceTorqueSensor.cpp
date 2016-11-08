@@ -79,21 +79,23 @@ void ForceTorqueSensor::getWrench(Eigen::Matrix< double, int(6), int(1) >& wrenc
 }
 
 
-void ForceTorqueSensor::setForce(const Eigen::Vector3d& force)
+void ForceTorqueSensor::setForce(const Eigen::Vector3d& force, double timestamp)
 {
     _fx = force.x();
     _fy = force.y();
     _fz = force.z();
+    setTimestamp(timestamp);
 }
 
-void ForceTorqueSensor::setTorque(const Eigen::Vector3d& torque)
+void ForceTorqueSensor::setTorque(const Eigen::Vector3d& torque, double timestamp)
 {
     _tx = torque.x();
     _ty = torque.y();
     _tz = torque.z();
+    setTimestamp(timestamp);
 }
 
-void ForceTorqueSensor::setWrench(const Eigen::Matrix< double, int(6), int(1) >& wrench)
+void ForceTorqueSensor::setWrench(const Eigen::Matrix< double, int(6), int(1) >& wrench, double timestamp)
 {
     _fx = wrench(0);
     _fy = wrench(1);
@@ -101,15 +103,16 @@ void ForceTorqueSensor::setWrench(const Eigen::Matrix< double, int(6), int(1) >&
     _tx = wrench(3);
     _ty = wrench(4);
     _tz = wrench(5);
+    setTimestamp(timestamp);
 }
 
 std::ostream& operator<< ( std::ostream& os, const XBot::ForceTorqueSensor& j ) 
 {
-    os << "FT name: " << j.sensorName() << std::endl;
-    os << "Parent link: " << j.parentLinkName() << std::endl;
+    os << "FT name: " << j.getSensorName() << std::endl;
+    os << "Parent link: " << j.getParentLinkName() << std::endl;
     os << "Sensor frame to parent link frame transform: " << std::endl;
-    os << "Orientation: \n" << j.sensorPose().linear() << std::endl;
-    os << "Position: \n" << j.sensorPose().translation() << std::endl;
+    os << "Orientation: \n" << j.getSensorPose().linear() << std::endl;
+    os << "Position: \n" << j.getSensorPose().translation() << std::endl;
     os << "Sensed values ###########" << std::endl;
     os << "\tFx: " << j._fx << std::endl;
     os << "\tFy: " << j._fy << std::endl;

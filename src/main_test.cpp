@@ -14,6 +14,9 @@ int main(int argc, char *argv[])
     
     bool p = true, v = true, a = true, e = true;
     
+    XBotInterface xb;
+    
+    
 //     parseFlags(p,v,a,e, Sync::Position, Sync::Effort, Sync::Acceleration);
 //     
 //     if(p) std::cout << "SYNC POS!!" << std::endl;

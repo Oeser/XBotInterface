@@ -73,7 +73,7 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     }
 
     // Add last link to _urdf_links
-    _urdf_links.push_back(robot_urdf.getLink(childLinkName(getJointNum() - 1)));
+    _urdf_links.push_back(robot_urdf.getLink(getChildLinkName(getJointNum() - 1)));
     
     // Add FT
     for( const auto& ft_name_id : _XBotModel.get_ft_sensors() ){
@@ -87,9 +87,27 @@ KinematicChain::KinematicChain(const std::string &chain_name,
             if(link_in_chain->name == ft_parent_link_name) {
                 ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name));
                 _ft_vector.push_back(ft_ptr);
-                _ft_map[ft_ptr->sensorName()] = ft_ptr;
+                _ft_map[ft_ptr->getSensorName()] = ft_ptr;
             }
         }
+    }
+    
+    // Add IMU
+    for( const auto& imu_name_id : _XBotModel.get_imu_sensors() ){
+        
+        const std::string& imu_joint_name = imu_name_id.first;
+        std::string imu_link_name = robot_urdf.getJoint(imu_joint_name)->child_link_name;
+        std::string imu_parent_link_name = robot_urdf.getJoint(imu_joint_name)->parent_link_name;
+     
+        // check the if IMU is on this chain
+        for( const auto& link_in_chain : _urdf_links) {
+            if(link_in_chain->name == imu_parent_link_name) {
+                ImuSensor::Ptr imu_ptr = std::make_shared<ImuSensor>(robot_urdf.getLink(imu_link_name));
+                _imu_vector.push_back(imu_ptr);
+                _imu_map[imu_ptr->getSensorName()] = imu_ptr;
+            }
+        }
+        
     }
 
 }
@@ -132,7 +150,7 @@ KinematicChain::KinematicChain(const KinematicChain &other):
         *ftptr = *other_ftptr;
 
         _ft_vector.push_back(ftptr);
-        _ft_map[ftptr->sensorName()] = ftptr;
+        _ft_map[ftptr->getSensorName()] = ftptr;
 
     }
     
@@ -142,7 +160,7 @@ KinematicChain::KinematicChain(const KinematicChain &other):
         *imuptr = *other_imuptr;
 
         _imu_vector.push_back(imuptr);
-        _imu_map[imuptr->sensorName()] = imuptr;
+        _imu_map[imuptr->getSensorName()] = imuptr;
 
     }
 
@@ -223,47 +241,38 @@ int KinematicChain::getJointNum() const
     return _joint_vector.size();
 }
 
-const std::string &KinematicChain::baseLinkName() const
+const std::string &KinematicChain::getBaseLinkName() const
 {
     return _urdf_links[0]->name;
 }
 
-const std::string &KinematicChain::tipLinkName() const
+const std::string &KinematicChain::getTipLinkName() const
 {
     return _urdf_links[_urdf_links.size() - 1]->name;
 }
 
-const std::string &KinematicChain::chainName() const
+const std::string &KinematicChain::getChainName() const
 {
     return _chain_name;
 }
 
-int KinematicChain::jointId(int i) const
+int KinematicChain::getJointId(int i) const
 {
     return _joint_vector[i]->getJointId();
 }
 
-Joint::ConstPtr XBot::KinematicChain::joint(int idx) const
-{
-    if( idx < getJointNum() ) return _joint_vector[idx];
-    else{
-        std::cerr << "ERROR in " << __func__ << ": chain " << _chain_name  << " has less than " << idx+1 << " joints!" << std::endl;
-        return Joint::ConstPtr();
-    }
-}
 
-
-const std::string &KinematicChain::childLinkName(int id) const
+const std::string &KinematicChain::getChildLinkName(int id) const
 {
     return _urdf_joints[id]->child_link_name;
 }
 
-const std::string &KinematicChain::parentLinkName(int id) const
+const std::string &KinematicChain::getParentLinkName(int id) const
 {
     return _urdf_joints[id]->parent_link_name;
 }
 
-const std::string &KinematicChain::jointName(int id) const
+const std::string &KinematicChain::getJointName(int id) const
 {
     return _ordered_joint_name[id];
 }
@@ -725,7 +734,7 @@ bool KinematicChain::getVelocityReference(Eigen::VectorXd &qdot) const
 double KinematicChain::getPositionReference(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getPositionReference();
 }
@@ -733,7 +742,7 @@ double KinematicChain::getPositionReference(int index) const
 double KinematicChain::getJointEffort(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getJointEffort();
 }
@@ -741,7 +750,7 @@ double KinematicChain::getJointEffort(int index) const
 double KinematicChain::getEffortReference(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getEffortReference();
 }
@@ -749,7 +758,7 @@ double KinematicChain::getEffortReference(int index) const
 double KinematicChain::getJointVelocity(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getJointVelocity();
 }
@@ -757,7 +766,7 @@ double KinematicChain::getJointVelocity(int index) const
 double KinematicChain::getMotorPosition(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getMotorPosition();
 }
@@ -765,7 +774,7 @@ double KinematicChain::getMotorPosition(int index) const
 double KinematicChain::getMotorVelocity(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getMotorVelocity();
 }
@@ -773,7 +782,7 @@ double KinematicChain::getMotorVelocity(int index) const
 double KinematicChain::getStiffness(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getStiffness();
 }
@@ -781,7 +790,7 @@ double KinematicChain::getStiffness(int index) const
 double KinematicChain::getTemperature(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getTemperature();
 }
@@ -789,7 +798,7 @@ double KinematicChain::getTemperature(int index) const
 double KinematicChain::getVelocityReference(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getVelocityReference();
 }
@@ -797,7 +806,7 @@ double KinematicChain::getVelocityReference(int index) const
 double KinematicChain::getDamping(int index) const
 {
     if (index >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << index + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
     }
     return _joint_vector[index]->getDamping();
 }
@@ -957,7 +966,7 @@ bool KinematicChain::setVelocityReference(const Eigen::VectorXd &qdot)
 bool KinematicChain::setJointPosition(int i, double q)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setJointPosition(q);
@@ -966,7 +975,7 @@ bool KinematicChain::setJointPosition(int i, double q)
 bool KinematicChain::setJointEffort(int i, double tau)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setJointEffort(tau);
@@ -975,7 +984,7 @@ bool KinematicChain::setJointEffort(int i, double tau)
 bool KinematicChain::setJointVelocity(int i, double qdot)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setJointVelocity(qdot);
@@ -984,7 +993,7 @@ bool KinematicChain::setJointVelocity(int i, double qdot)
 bool KinematicChain::setMotorPosition(int i, double q)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setMotorPosition(q);
@@ -993,7 +1002,7 @@ bool KinematicChain::setMotorPosition(int i, double q)
 bool KinematicChain::setMotorVelocity(int i, double qdot)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setMotorVelocity(qdot);
@@ -1002,7 +1011,7 @@ bool KinematicChain::setMotorVelocity(int i, double qdot)
 bool KinematicChain::setTemperature(int i, double temp)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setTemperature(temp);
@@ -1414,7 +1423,7 @@ bool KinematicChain::setVelocityReference(const std::map< int, double > &qdot)
 bool KinematicChain::setPositionReference(int i, double q)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setPositionReference(q);
@@ -1424,7 +1433,7 @@ bool KinematicChain::setPositionReference(int i, double q)
 bool KinematicChain::setVelocityReference(int i, double qdot)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setVelocityReference(qdot);
@@ -1434,7 +1443,7 @@ bool KinematicChain::setVelocityReference(int i, double qdot)
 bool KinematicChain::setEffortReference(int i, double tau)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setEffortReference(tau);
@@ -1443,7 +1452,7 @@ bool KinematicChain::setEffortReference(int i, double tau)
 bool KinematicChain::setStiffness(int i, double K)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setStiffness(K);
@@ -1452,7 +1461,7 @@ bool KinematicChain::setStiffness(int i, double K)
 bool KinematicChain::setDamping(int i, double D)
 {
     if (i >= this->getJointNum()) {
-        std::cerr << "ERROR in " << __func__ << " : chain " << chainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
         return false;
     }
     _joint_vector[i]->setDamping(D);
@@ -1468,12 +1477,12 @@ std::ostream& operator<< ( std::ostream& os, const KinematicChain& c )
     return os;
 }
 
-const std::vector< int >& XBot::KinematicChain::jointIds() const
+const std::vector< int >& XBot::KinematicChain::getJointIds() const
 {
     return _ordered_joint_id;
 }
 
-const std::vector< std::string >& XBot::KinematicChain::jointNames() const
+const std::vector< std::string >& XBot::KinematicChain::getJointNames() const
 {
     return _ordered_joint_name;
 }
@@ -1582,7 +1591,7 @@ bool KinematicChain::checkEffortLimits(const Eigen::VectorXd& tau,
     for(int i = 0; i < _joint_num; i++){
         if( std::abs(tau(i)) > _urdf_joints[i]->limits->effort ){
             success = false;
-            violating_joints.push_back(jointName(i));
+            violating_joints.push_back(getJointName(i));
         }
     }
     
@@ -1612,7 +1621,7 @@ bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q,
     for(int i = 0; i < _joint_num; i++){
         if( q(i) > _urdf_joints[i]->limits->upper || q(i) < _urdf_joints[i]->limits->lower ){
             success = false;
-            violating_joints.push_back(jointName(i));
+            violating_joints.push_back(getJointName(i));
         }
     }
     
@@ -1643,7 +1652,7 @@ bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot,
     for(int i = 0; i < _joint_num; i++){
         if( std::abs(qdot(i)) > _urdf_joints[i]->limits->velocity ){
             success = false;
-            violating_joints.push_back(jointName(i));
+            violating_joints.push_back(getJointName(i));
         }
     }
     
@@ -1669,7 +1678,7 @@ void KinematicChain::getVelocityLimits(int i, double& qdot_max) const
 Joint::Ptr XBot::KinematicChain::getJointInternal(int i) const
 {
     if(_joint_vector.size() <= i){
-        std::cerr << "ERROR in " << __func__ << "chain " << chainName() << "has less than " << i+1 << " joints!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << "chain " << getChainName() << "has less than " << i+1 << " joints!" << std::endl;
         return Joint::Ptr();
     }
     
@@ -1687,7 +1696,7 @@ ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::stri
     bool success = false;
     
     for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
-        if( ftptr->parentLinkName() == link_name ){
+        if( ftptr->getParentLinkName() == link_name ){
             success = true;
             return ftptr;
         }
@@ -1704,7 +1713,7 @@ std::map< std::string, ForceTorqueSensor::ConstPtr > XBot::KinematicChain::getFo
 {
     std::map< std::string, ForceTorqueSensor::ConstPtr > ft_constptr_map;
     for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
-        ft_constptr_map[ftptr->sensorName()] = ftptr;
+        ft_constptr_map[ftptr->getSensorName()] = ftptr;
     }
     return ft_constptr_map;
 }
@@ -1720,7 +1729,7 @@ ImuSensor::ConstPtr XBot::KinematicChain::getImu(const std::string& link_name) c
     bool success = false;
     
     for( const ImuSensor::Ptr& imuptr : _imu_vector ){
-        if( imuptr->parentLinkName() == link_name ){
+        if( imuptr->getParentLinkName() == link_name ){
             success = true;
             return imuptr;
         }
@@ -1737,7 +1746,7 @@ std::map< std::string, ImuSensor::ConstPtr > XBot::KinematicChain::getImu() cons
 {
     std::map< std::string, ImuSensor::ConstPtr > imu_constptr_map;
     for( const ImuSensor::Ptr& imuptr : _imu_vector ){
-        imu_constptr_map[imuptr->sensorName()] = imuptr;
+        imu_constptr_map[imuptr->getSensorName()] = imuptr;
     }
     return imu_constptr_map;
 }
@@ -1771,7 +1780,7 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
                     return false;
                 }
                 
-                int dof_index = getDofIndex(joint_name);
+                int dof_index = getChainDofIndex(joint_name);
                 q[dof_index] = joint_value[0];
 
             }
@@ -1794,7 +1803,7 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
         
-        if( state.group_ == chainName() && state.name_ == state_name ){
+        if( state.group_ == getChainName() && state.name_ == state_name ){
             
             success = true;
             
@@ -1861,24 +1870,24 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
     return success;
 }
 
-int XBot::KinematicChain::getDofIndex(const std::string& joint_name) const
+int XBot::KinematicChain::getChainDofIndex(const std::string& joint_name) const
 {
     for(int i = 0; i < getJointNum(); i++){
         if( _ordered_joint_name[i] == joint_name ) return i;
     }
     
-    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " NOT defined in chain " << chainName() << "!" << std::endl;
+    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " NOT defined in chain " << getChainName() << "!" << std::endl;
     
     return -1;
 }
 
-int XBot::KinematicChain::getDofIndex(int joint_id) const
+int XBot::KinematicChain::getChainDofIndex(int joint_id) const
 {
     for(int i = 0; i < getJointNum(); i++){
         if( _ordered_joint_id[i] == joint_id ) return i;
     }
     
-    std::cerr << "ERROR in " << __func__ << "! Joint ID" << joint_id << " NOT defined in chain " << chainName() << "!" << std::endl;
+    std::cerr << "ERROR in " << __func__ << "! Joint ID" << joint_id << " NOT defined in chain " << getChainName() << "!" << std::endl;
     
     return -1;
 }

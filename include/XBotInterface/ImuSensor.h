@@ -55,11 +55,15 @@ public:
                     
     void setImuData(Eigen::Quaterniond& orientation, 
                     Eigen::Vector3d& acceleration,
-                    Eigen::Vector3d& angular_velocity);
+                    Eigen::Vector3d& angular_velocity,
+                    double timestamp
+                   );
     
     void setImuData(Eigen::Matrix3d& orientation, 
                     Eigen::Vector3d& acceleration,
-                    Eigen::Vector3d& angular_velocity);
+                    Eigen::Vector3d& angular_velocity,
+                    double timestamp
+                   );
 
 protected:
     

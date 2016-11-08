@@ -253,9 +253,9 @@ bool XBot::ModelInterface::fillModelOrderedChain()
         
         for( int i = 0; i < chain_joint_num; i++ ){
             
-            if( chain.jointName(i) == model_ordered_joint_name[joint_idx] ){
+            if( chain.getJointName(i) == model_ordered_joint_name[joint_idx] ){
                 
-                _joint_id_to_model_id[chain.jointId(i)] = joint_idx;
+                _joint_id_to_model_id[chain.getJointId(i)] = joint_idx;
                 joint_idx++;
                 
             }

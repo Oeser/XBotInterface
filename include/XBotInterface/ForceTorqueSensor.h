@@ -63,9 +63,9 @@ public:
     friend std::ostream& operator<< ( std::ostream& os, const XBot::ForceTorqueSensor& j );
     
     // NOTE if you are a const ptr you cannot call them ///////
-    void setWrench(const Eigen::Matrix<double, 6, 1>& wrench);
-    void setForce(const Eigen::Vector3d& force);
-    void setTorque(const Eigen::Vector3d& torque);
+    void setWrench(const Eigen::Matrix<double, 6, 1>& wrench, double timestamp);
+    void setForce(const Eigen::Vector3d& force, double timestamp);
+    void setTorque(const Eigen::Vector3d& torque, double timestamp);
     //////////////////////////////////////////////////////////
 
 private:

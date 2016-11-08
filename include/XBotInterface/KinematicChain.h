@@ -93,33 +93,32 @@ public:
     typedef std::shared_ptr<KinematicChain> Ptr;
     
     /**
-     * @brief Get the chain joints group state configuration as specified in XBotCoreModel that retrieve the information from the SRDF
+     * @brief Gets the chain joints group state configuration as specified in the robot SRDF.
      * 
-     * @param state_name group state name requested
-     * @param q chain joint configuration as map with key specified as joint ID (i.e. numerical name of the joint) and values as joint configuration,
-     *          This is an output parameter; it will not be cleared before being filled.
-     * @return true if the state_name exists in the SRDF, false otherwise.
+     * @param state_name The name of the requested group state.
+     * @param q The chain joint configuration as a map with key representing the joint ID (i.e. numerical name of the joint) and values representing joint positions. This is an output parameter; it will not be cleared before being filled.
+     * @return True if the state_name exists in the SRDF, false otherwise.
      */
     bool getChainState(const std::string& state_name, std::map<int, double>& q) const;
     
     /**
-     * @brief Get the chain joints group state configuration as specified in XBotCoreModel that retrieve the information from the SRDF
+     * @brief Gets the chain joints group state configuration as specified in the robot SRDF.
      * 
-     * @param state_name group state name requested
-     * @param q chain joint configuration as map with key specified as joint name (i.e. human readable name of the joint) and values as joint configuration,
-     *          This is an output parameter; it will not be cleared before being filled.
-     * @return true if the state_name exists in the SRDF, false otherwise.
+     * @param state_name The name of the requested group state.
+     * @param q The chain joint configuration as a map with key representing joint names and values representing joint positions. This is an output parameter; it will not be cleared before being filled.
+     * @return True if the state_name exists in the SRDF, false otherwise.
      */
     bool getChainState(const std::string& state_name, std::map<std::string, double>& q) const;
     
     
     /**
-     * @brief Get the chain joints group state configuration as specified in XBotCoreModel that retrieve the information from the SRDF
+     * @brief Gets the chain joints group state configuration as specified in the robot SRDF.
      * 
-     * @param state_name group state name requested
-     * @param q chain joint configuration as Eigen vector of joint configuration,
+     * 
+     * @param state_name The name of the requested group state.
+     * @param q The chain joint configuration as Eigen vector of joint positions,
      *          This is an output parameter; any contents present in the vector will be overwritten in this function.
-     * @return true if the state_name exists in the SRDF, false otherwise.
+     * @return True if the state_name exists in the SRDF, false otherwise.
      */
     bool getChainState(const std::string& state_name, Eigen::VectorXd& q) const;
     
@@ -156,20 +155,120 @@ public:
     ImuSensor::ConstPtr getImu(const std::string& parent_link_name) const;
 
     
+    /**
+     * @brief Gets a vector of the chain joint limits, as specified in the URDF file. The vector is ordered from
+     * the chain base link to its tip link.
+     * 
+     * @param q_min The output vector of the chain joints lower limits.
+     * @param q_max The output vector of the chain joints upper limits.
+     * @return void
+     */
     void getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_max) const;
+    
+    /**
+     * @brief Gets a vector of the chain joint velocity limits, as specified in the URDF file. The vector is ordered from
+     * the chain base link to its tip link.
+     * 
+     * @param qdot_max The output vector of the chain joints velocity limits
+     * @return void
+     */
     void getVelocityLimits(Eigen::VectorXd& qdot_max) const;
+    /**
+     * 
+     * @brief Gets a vector of the chain joint effort limits, as specified in the URDF file. The vector is ordered from
+     * the chain base link to its tip link.
+     * 
+     * @param qdot_max The output vector of the chain joints effort limits
+     * @return void
+     */    
     void getEffortLimits(Eigen::VectorXd& tau_max) const;
+    
+    /**
+     * @brief Gets the lower and upper joint limits of the i-th joint in the chain (from base link to
+     * tip link)
+     * 
+     * @param i The index of the joint along the chain for which the joint limits are requested.
+     * @param q_min The required joint lower limit.
+     * @param q_max The required joint upper limit.
+     * @return void
+     */
     void getJointLimits(int i, double& q_min, double& q_max) const;
+    
+    /**
+     * @brief Gets the velocity limit of the i-th joint in the chain (from base link to
+     * tip link)
+     * 
+     * @param i  The index of the joint along the chain for which the joint limit is requested.
+     * @param qdot_max The requested joint velocity limit.
+     * @return void
+     */
     void getVelocityLimits(int i, double& qdot_max) const;
+    
+    /**
+     * @brief Gets the effort limit of the i-th joint in the chain (from base link to
+     * tip link)
+     * 
+     * @param i  The index of the joint along the chain for which the joint limit is requested.
+     * @param tau_max The requested joint effort limit.
+     * @return void
+     */
     void getEffortLimits(int i, double& tau_max) const;
+    
+    /**
+     * @brief Check the input joint position vector against joint limits. The names of joints violating the
+     * limits are pushed into the violating_joints vector (which is not cleared before being filled)
+     * 
+     * @param q A joint position vector to be checked against joint limits, ordered from base link to tip link.
+     * @param violating_joints The vector of the names of joints violating the limits. Note that this is not cleared before use.
+     * @return True if all joints are within their limits.
+     */
     bool checkJointLimits(const Eigen::VectorXd& q, 
                           std::vector<std::string>& violating_joints) const;
+
+    /**
+     * @brief Check the input joint velocity vector against joint limits. The names of joints violating the
+     * limits are pushed into the violating_joints vector (which is not cleared before being filled)
+     * 
+     * @param qdot A joint velocity vector to be checked against joint limits, ordered from base link to tip link.
+     * @param violating_joints The vector of the names of joints violating the limits. Note that this is not cleared before use.
+     * @return True if all joints are within their limits.
+     */                      
     bool checkVelocityLimits(const Eigen::VectorXd& qdot, 
                           std::vector<std::string>& violating_joints) const;
+
+    /**
+     * @brief Check the input joint effort vector against joint limits. The names of joints violating the
+     * limits are pushed into the violating_joints vector (which is not cleared before being filled)
+     * 
+     * @param tau A joint effort vector to be checked against joint limits, ordered from base link to tip link.
+     * @param violating_joints The vector of the names of joints violating the limits. Note that this is not cleared before use.
+     * @return True if all joints are within their limits.
+     */
     bool checkEffortLimits(const Eigen::VectorXd& tau, 
                           std::vector<std::string>& violating_joints) const;
+                          
+    /**
+     * @brief Check the input joint position vector against joint limits. 
+     * 
+     * @param q A joint position vector to be checked against joint limits, ordered from base link to tip link.
+     * @return True if all joints are within their limits.
+     */
     bool checkJointLimits(const Eigen::VectorXd& q) const;
+    
+    /**
+     * @brief Check the input joint velocity vector against joint limits. 
+     * 
+     * @param qdot A joint velocity vector to be checked against joint limits, ordered from base link to tip link.
+     * @return True if all joints are within their limits.
+     */
     bool checkVelocityLimits(const Eigen::VectorXd& qdot) const;
+    
+    /**
+     * @brief Check the input joint effort vector against joint limits. 
+     * 
+     * @param tau A joint effort vector to be checked against joint limits, ordered from base link to tip link.
+     * @return True if all joints are within their limits.
+     */
     bool checkEffortLimits(const Eigen::VectorXd& tau) const;
     
     /**
@@ -192,21 +291,21 @@ public:
      *
      * @return Chain name as const std::string&
      */
-    const std::string &chainName() const;
+    const std::string &getChainName() const;
 
     /**
      * @brief Method returning the name of the chain base link
      *
      * @return Base link name as const std::string&
      */
-    const std::string &baseLinkName() const;
+    const std::string &getBaseLinkName() const;
 
     /**
      * @brief Method returning the name of the chain tip link
      *
      * @return Tip link name as const std::string&
      */
-    const std::string &tipLinkName() const;
+    const std::string &getTipLinkName() const;
 
     /**
      * @brief Method returning the name of the child link corresponding
@@ -216,7 +315,7 @@ public:
      *
      * @return The name of the child link of joint n° i
      */
-    const std::string &childLinkName(int i) const;
+    const std::string &getChildLinkName(int i) const;
 
     /**
      * @brief Method returning the name of the parent link corresponding
@@ -226,7 +325,7 @@ public:
      *
      * @return The name of the parent link of joint n° i
      */
-    const std::string &parentLinkName(int i) const;
+    const std::string &getParentLinkName(int i) const;
 
     /**
      * @brief Method returning the name of the i-th joint of the chain
@@ -235,7 +334,7 @@ public:
      *
      * @return The name of the joint n° i
      */
-    const std::string &jointName(int i) const;
+    const std::string& getJointName(int i) const;
     
     
     /**
@@ -244,7 +343,7 @@ public:
      * 
      * @return a const reference to the vector of joint names
      */
-    const std::vector<std::string>& jointNames() const;
+    const std::vector<std::string>& getJointNames() const;
 
     /**
      * @brief Method returning the ID of the i-th joint of the chain
@@ -253,17 +352,15 @@ public:
      *
      * @return The ID of the joint n° i
      */
-    int jointId(int i) const;
+    int getJointId(int i) const;
     
-    int getDofIndex(int joint_id) const;
+    int getChainDofIndex(int joint_id) const;
     
-    int getDofIndex(const std::string& joint_name) const;
+    int getChainDofIndex(const std::string& joint_name) const;
     
     bool hasJoint(int id) const;
     
     bool hasJoint(const std::string& joint_name) const;
-    
-    Joint::ConstPtr joint(int idx) const;
     
     /**
      * @brief Returns a vector containing the IDs of all joints in the chain, from
@@ -271,7 +368,7 @@ public:
      * 
      * @return a const reference to the vector of joint IDs
      */
-    const std::vector<int>& jointIds() const;
+    const std::vector<int>& getJointIds() const;
 
     /**
      * @brief Method returning the number of enabled joints

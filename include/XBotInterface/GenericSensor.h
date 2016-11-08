@@ -40,11 +40,15 @@ namespace XBot {
         
         GenericSensor(urdf::LinkConstSharedPtr sensor_link);
         
-        const std::string& parentLinkName() const;
+        const std::string& getParentLinkName() const;
         
-        const std::string& sensorName() const;
+        const std::string& getSensorName() const;
         
-        const Eigen::Affine3d& sensorPose() const;
+        const Eigen::Affine3d& getSensorPose() const;
+        
+        double getTimestamp() const;
+        
+        void setTimestamp(double timestamp);
         
         
         
@@ -55,6 +59,7 @@ namespace XBot {
         std::string _sensor_name;
         std::string _parent_link_name;
         Eigen::Affine3d _parent_link_T_sensor_link;
+        double _timestamp;
         
     };
 }

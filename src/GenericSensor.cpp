@@ -21,7 +21,8 @@
 
 namespace XBot {
     
-GenericSensor::GenericSensor(urdf::LinkConstSharedPtr sensor_link)
+GenericSensor::GenericSensor(urdf::LinkConstSharedPtr sensor_link):
+_timestamp(-1)
 {
     
     _sensor_name = sensor_link->name;
@@ -40,17 +41,18 @@ GenericSensor::GenericSensor(urdf::LinkConstSharedPtr sensor_link)
     _parent_link_T_sensor_link.linear() = quat.toRotationMatrix();
 }
 
-GenericSensor::GenericSensor()
+GenericSensor::GenericSensor():
+_timestamp(-1)
 {
     _parent_link_T_sensor_link.setIdentity();
 }
 
-const std::string& GenericSensor::parentLinkName() const
+const std::string& GenericSensor::getParentLinkName() const
 {
     return _parent_link_name;
 }
 
-const std::string& GenericSensor::sensorName() const
+const std::string& GenericSensor::getSensorName() const
 {
     return _sensor_name;
 }
@@ -62,12 +64,20 @@ KDL::Frame GenericSensor::sensorPose() const
     return tmp_frame;
 }*/
 
-const Eigen::Affine3d& GenericSensor::sensorPose() const
+const Eigen::Affine3d& GenericSensor::getSensorPose() const
 {
     return _parent_link_T_sensor_link;
 }
 
-    
-    
-    
+double XBot::GenericSensor::getTimestamp() const
+{
+    return _timestamp;
+}
+
+void XBot::GenericSensor::setTimestamp(double timestamp)
+{
+    _timestamp = timestamp;
+}
+
+
 }
