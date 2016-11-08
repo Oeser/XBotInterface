@@ -115,6 +115,11 @@ double XBot::Joint::getMotorVelocity() const
     return _motor_vel;
 }
 
+double XBot::Joint::getJointAcceleration() const
+{
+    return _link_acc;
+}
+
 double XBot::Joint::getJointEffort() const
 {
     return _effort;
@@ -145,6 +150,12 @@ void XBot::Joint::setMotorVelocity(double motor_vel)
 {
     _motor_vel = motor_vel;
 }
+
+void XBot::Joint::setJointAcceleration(double link_acc)
+{
+    _link_acc = link_acc;
+}
+
 
 void XBot::Joint::setJointEffort(double effort)
 {

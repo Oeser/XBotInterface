@@ -366,6 +366,19 @@ bool KinematicChain::getJointVelocity(std::map< std::string, double > &qdot) con
     }
 }
 
+bool XBot::KinematicChain::getJointAcceleration(std::map< std::string, double >& qddot) const
+{
+    for (const auto & name_joint_pair : _joint_name_map) {
+
+        const std::string &joint_name = name_joint_pair.first;
+        const Joint &joint = *name_joint_pair.second;
+
+        qddot[joint_name] = joint.getJointAcceleration();
+
+    }
+}
+
+
 bool KinematicChain::getMotorPosition(std::map< std::string, double > &q) const
 {
 //     q.clear();
@@ -550,6 +563,19 @@ bool KinematicChain::getJointVelocity(std::map< int, double > &qdot) const
     }
 }
 
+bool XBot::KinematicChain::getJointAcceleration(std::map< int, double >& qddot) const
+{
+    for (const auto & id_joint_pair : _joint_id_map) {
+
+        int joint_id = id_joint_pair.first;
+        const Joint &joint = *id_joint_pair.second;
+
+        qddot[joint_id] = joint.getJointAcceleration();
+
+    }
+}
+
+
 bool KinematicChain::getMotorPosition(std::map< int, double > &q) const
 {
 //     q.clear();
@@ -668,6 +694,19 @@ bool KinematicChain::getJointVelocity(Eigen::VectorXd &qdot) const
     return true;
 }
 
+bool XBot::KinematicChain::getJointAcceleration(Eigen::VectorXd& qddot) const
+{
+    if (qddot.rows() != _joint_num) {
+        qddot.resize(_joint_num);
+    }
+    int pos = 0;
+    for (const XBot::Joint::Ptr & j : _joint_vector) {
+        qddot[pos++] = j->getJointAcceleration();
+    }
+    return true;
+}
+
+
 bool KinematicChain::getMotorPosition(Eigen::VectorXd &q) const
 {
     if (q.rows() != _joint_num) {
@@ -762,6 +801,15 @@ double KinematicChain::getJointVelocity(int index) const
     }
     return _joint_vector[index]->getJointVelocity();
 }
+
+double XBot::KinematicChain::getJointAcceleration(int index) const
+{
+    if (index >= this->getJointNum()) {
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << index + 1 << " joints!" << std::endl;
+    }
+    return _joint_vector[index]->getJointAcceleration();
+}
+
 
 double KinematicChain::getMotorPosition(int index) const
 {
@@ -880,6 +928,20 @@ bool KinematicChain::setJointVelocity(const Eigen::VectorXd &qdot)
     return true;
 }
 
+bool XBot::KinematicChain::setJointAcceleration(const Eigen::VectorXd& qddot)
+{
+    if (qddot.rows() != _joint_num) {
+        std::cerr << "ERROR in " << __func__ << " : qddot has wrong size " << qddot.rows() << " != chain joint number " << _joint_num << std::endl;
+        return false;
+    }
+    int pos = 0;
+    for (const XBot::Joint::Ptr & j : _joint_vector) {
+        j->setJointAcceleration(qddot[pos++]);
+    }
+    return true;
+}
+
+
 bool KinematicChain::setMotorPosition(const Eigen::VectorXd &q)
 {
     if (q.rows() != _joint_num) {
@@ -989,6 +1051,16 @@ bool KinematicChain::setJointVelocity(int i, double qdot)
     }
     _joint_vector[i]->setJointVelocity(qdot);
 }
+
+bool XBot::KinematicChain::setJointAcceleration(int i, double qddot)
+{
+    if (i >= this->getJointNum()) {
+        std::cerr << "ERROR in " << __func__ << " : chain " << getChainName() << " has less than " << i + 1 << " joints!" << std::endl;
+        return false;
+    }
+    _joint_vector[i]->setJointAcceleration(qddot);
+}
+
 
 bool KinematicChain::setMotorPosition(int i, double q)
 {
@@ -1108,6 +1180,26 @@ bool KinematicChain::setJointVelocity(const std::map< std::string, double > &qdo
 
     return success;
 }
+
+bool XBot::KinematicChain::setJointAcceleration(const std::map< std::string, double >& qddot)
+{
+    bool success = true;
+
+    for (const auto & jointname_value_pair : qddot) {
+        const std::string &joint_name = jointname_value_pair.first;
+        auto it = _joint_name_map.find(joint_name);
+        if ( it != _joint_name_map.end() ) {
+            it->second->setJointAcceleration(jointname_value_pair.second);
+        } else {
+            success = false;
+            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+        }
+
+    }
+
+    return success;
+}
+
 
 bool KinematicChain::setMotorPosition(const std::map< std::string, double > &q)
 {
@@ -1308,6 +1400,26 @@ bool KinematicChain::setJointVelocity(const std::map< int, double > &qdot)
 
     return success;
 }
+
+bool XBot::KinematicChain::setJointAcceleration(const std::map< int, double >& qddot)
+{
+    bool success = true;
+
+    for (const auto & jointid_value_pair : qddot) {
+        int joint_id = jointid_value_pair.first;
+        auto it = _joint_id_map.find(joint_id);
+        if ( it != _joint_id_map.end() ) {
+            it->second->setJointAcceleration(jointid_value_pair.second);
+        } else {
+            success = false;
+            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+        }
+
+    }
+
+    return success;
+}
+
 
 bool KinematicChain::setMotorPosition(const std::map< int, double > &q)
 {

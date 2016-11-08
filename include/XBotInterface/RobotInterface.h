@@ -137,7 +137,8 @@ protected:
     using XBotInterface::setMotorVelocity;
     using XBotInterface::setJointEffort;
     using XBotInterface::setTemperature;
-    
+    using XBotInterface::setJointAcceleration;
+    using XBotInterface::getJointAcceleration;
     using XBotInterface::sync;
 
     using XBotInterface::getChainMap;

@@ -41,6 +41,7 @@ public:
     using KinematicChain::getMotorPosition;
     using KinematicChain::getJointVelocity;
     using KinematicChain::getMotorVelocity;
+    using KinematicChain::getJointAcceleration;
     using KinematicChain::getJointEffort;
 
     // Setters for RX
@@ -49,12 +50,9 @@ public:
     using KinematicChain::setMotorPosition;
     using KinematicChain::setJointVelocity;
     using KinematicChain::setMotorVelocity;
+    using KinematicChain::setJointAcceleration;
     using KinematicChain::setJointEffort;
-    
 
-    
-    
-    
 protected:
     
 private:

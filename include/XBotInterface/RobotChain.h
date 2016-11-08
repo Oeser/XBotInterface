@@ -79,6 +79,9 @@ private:
     using KinematicChain::setMotorVelocity;
     using KinematicChain::setJointEffort;
     using KinematicChain::setTemperature;
+    
+    using KinematicChain::setJointAcceleration;
+    using KinematicChain::getJointAcceleration;
 
     
     

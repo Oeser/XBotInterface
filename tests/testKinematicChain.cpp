@@ -147,7 +147,7 @@ TEST_F(testKinematicChain, checkCopyAssignment) {
         
         // iterate over the other chains
         for(const auto& c2 : xbint.getChainMap()) {
-            if(c2.first != current_chain.chainName()) {
+            if(c2.first != current_chain.getChainName()) {
                 XBot::KinematicChain copy_chain = *c2.second;
                 // operator = 
                 copy_chain = current_chain;
@@ -282,8 +282,8 @@ TEST_F(testKinematicChain, checkGettersSetters){
         XBot::KinematicChain& chain = *c.second;
         x.setRandom( chain.getJointNum() );
         for(int i = 0; i < x.size(); i++){
-            x_id_map[chain.jointId(i)] = x(i);
-            x_name_map[chain.jointName(i)] = x(i);
+            x_id_map[chain.getJointId(i)] = x(i);
+            x_name_map[chain.getJointName(i)] = x(i);
         }
         GETTER_SETTER_TEST(chain, getDamping, setDamping)
         GETTER_SETTER_TEST(chain, getStiffness, setStiffness)
@@ -322,7 +322,7 @@ TEST_F(testKinematicChain, checkSyncFrom){
         XBot::KinematicChain current_chain = *c1.second;
         
          for(const auto& c2 : xbint2.getChainMap()) {
-            if(c2.first == current_chain.chainName()) {
+            if(c2.first == current_chain.getChainName()) {
                 XBot::KinematicChain chain = *c2.second;
             
                 x.setRandom(chain.getJointNum());

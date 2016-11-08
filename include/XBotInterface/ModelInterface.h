@@ -706,6 +706,7 @@ public:
     using XBotInterface::getMotorPosition;
     using XBotInterface::getJointVelocity;
     using XBotInterface::getMotorVelocity;
+    using XBotInterface::getJointAcceleration;
     using XBotInterface::getJointEffort;
     
 
@@ -715,6 +716,7 @@ public:
     using XBotInterface::setMotorPosition;
     using XBotInterface::setJointVelocity;
     using XBotInterface::setMotorVelocity;
+    using XBotInterface::setJointAcceleration;
     using XBotInterface::setJointEffort;
     
 

@@ -43,7 +43,7 @@ TEST_F(testModelInterface, checkBasicIK){
  
     XBot::ModelInterface& model = *model_ptr;
     
-    std::string end_effector_name = model.arm(0).tipLinkName();
+    std::string end_effector_name = model.arm(0).getTipLinkName();
     
     Eigen::VectorXd q_home;
     model.getRobotState("home", q_home);
@@ -92,7 +92,7 @@ TEST_F(testModelInterface, checkBasicIK){
 
         // Set columns to zero except for arm(0)
         for( const std::string& chain_name : model.getChainNames() ){
-            if( chain_name != model.arm(0).chainName() ){
+            if( chain_name != model.arm(0).getChainName() ){
                 
                 std::vector<int> indices_to_be_disabled;
                 model.getDofIndex(chain_name, indices_to_be_disabled);

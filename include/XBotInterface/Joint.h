@@ -217,6 +217,14 @@ protected:
     void setMotorVelocity(double motor_vel);
     
     /**
+     * @brief setter for the link side acceleration
+     * 
+     * @param link_acc the link side velocity to set
+     * @return void
+     */
+    void setJointAcceleration(double link_acc);
+    
+    /**
      * @brief setter for the joint effort (generalized force)
      * 
      * @param effort the joint effort (generalized force) to set
@@ -260,6 +268,13 @@ protected:
      * @return the motor side velocity
      */
     double getMotorVelocity() const;
+    
+    /**
+     * @brief getter for the link side acceleration
+     * 
+     * @return the link side acceleration
+     */
+    double getJointAcceleration() const;
     
     /**
      * @brief getter for the joint effort (generalized force)
@@ -451,6 +466,12 @@ private:
     double _motor_vel;
     
     /**
+     * @brief link side acceleration
+     * 
+     */
+    double _link_acc;
+    
+    /**
      * @brief joint effort (generalized force)
      * 
      */
@@ -565,6 +586,11 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
         
         // TX
         _vel_ref = other._vel_ref;
+    }
+    
+    if(sync_acceleration){
+        
+        _link_acc = other._link_acc;
     }
     
     if(sync_effort){

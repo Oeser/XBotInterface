@@ -262,16 +262,12 @@ namespace XBot {
 
         // Getters for RX
 
-        /**
-         * @brief ...
-         * 
-         * @param q ...
-         * @return bool
-         */
+
         bool getJointPosition(Eigen::VectorXd& q) const;
         bool getMotorPosition(Eigen::VectorXd& q) const;
         bool getJointVelocity(Eigen::VectorXd& qdot) const;
         bool getMotorVelocity(Eigen::VectorXd& qdot) const;
+        bool getJointAcceleration(Eigen::VectorXd& qddot) const;
         bool getJointEffort(Eigen::VectorXd& tau) const;
         bool getTemperature(Eigen::VectorXd& temp) const;
 
@@ -279,6 +275,7 @@ namespace XBot {
         bool getMotorPosition(std::map<int, double>& q) const;
         bool getJointVelocity(std::map<int, double>& qdot) const;
         bool getMotorVelocity(std::map<int, double>& qdot) const;
+        bool getJointAcceleration(std::map<int, double>& qddot) const;
         bool getJointEffort(std::map<int, double>& tau) const;
         bool getTemperature(std::map<int, double>& temp) const;
 
@@ -286,6 +283,7 @@ namespace XBot {
         bool getMotorPosition(std::map<std::string, double>& q) const;
         bool getJointVelocity(std::map<std::string, double>& qdot) const;
         bool getMotorVelocity(std::map<std::string, double>& qdot) const;
+        bool getJointAcceleration(std::map<std::string, double>& qddot) const;
         bool getJointEffort(std::map<std::string, double>& tau) const;
         bool getTemperature(std::map<std::string, double>& temp) const;
 
@@ -295,6 +293,7 @@ namespace XBot {
         bool setMotorPosition(const Eigen::VectorXd& q);
         bool setJointVelocity(const Eigen::VectorXd& qdot);
         bool setMotorVelocity(const Eigen::VectorXd& qdot);
+        bool setJointAcceleration(const Eigen::VectorXd& qddot);
         bool setJointEffort(const Eigen::VectorXd& tau);
         bool setTemperature(const Eigen::VectorXd& temp);
         
@@ -302,6 +301,7 @@ namespace XBot {
         bool setMotorPosition(const std::map<int, double>& q);
         bool setJointVelocity(const std::map<int, double>& qdot);
         bool setMotorVelocity(const std::map<int, double>& qdot);
+        bool setJointAcceleration(const std::map<int, double>& qddot);
         bool setJointEffort(const std::map<int, double>& tau);
         bool setTemperature(const std::map<int, double>& temp);
         
@@ -309,6 +309,7 @@ namespace XBot {
         bool setMotorPosition(const std::map<std::string, double>& q);
         bool setJointVelocity(const std::map<std::string, double>& qdot);
         bool setMotorVelocity(const std::map<std::string, double>& qdot);
+        bool setJointAcceleration(const std::map<std::string, double>& qddot);
         bool setJointEffort(const std::map<std::string, double>& tau);
         bool setTemperature(const std::map<std::string, double>& temp);
         
