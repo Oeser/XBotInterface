@@ -209,7 +209,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg)
     _XBotModel.get_enabled_joint_names(_ordered_joint_name);
     _ordered_chain_names = _XBotModel.get_ordered_chain_names();
 
-    // create dynamically the Kinematic Chains and the FT
+    // create dynamically the Kinematic Chains, FT and IMU
     for (const std::string & chain_name : _XBotModel.get_chain_names()) {
         XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name,
                                                                     _XBotModel);
@@ -218,6 +218,10 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg)
         const std::map< std::string, ForceTorqueSensor::Ptr >& ft_map = _chain_map.at(chain_name)->getForceTorqueInternal();
         _ft_map.insert(ft_map.begin(),
                        ft_map.end());
+        
+        const std::map< std::string, ImuSensor::Ptr >& imu_map = _chain_map.at(chain_name)->getImuInternal();
+        _imu_map.insert(imu_map.begin(),
+                       imu_map.end());
         
     }
     

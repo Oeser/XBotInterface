@@ -19,7 +19,7 @@ RobotInterfaceROS:
   joint_service_name: "/centauro/position_controller/get_joint_names"
   command_topic_name: "/centauro/position_controller/command"
   ft_topic_names: ["/ft_foot_1", "/ft_foot_2", "/ft_foot_3", "/ft_foot_4"]
-  imu_topic_names: ["/pelvis_imu"]
+  imu_topic_names: ["/imu_1_data", "/imu_2_data"]
   
 RobotInterfaceDUMMY:
   subclass_name: "RobotInterfaceDUMMY"

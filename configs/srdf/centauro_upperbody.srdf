@@ -17,6 +17,11 @@
         <group name="left_arm"/>
         <group name="right_arm"/>
     </group>
+    
+    <group name="imu_sensors">
+        <joint name="test_imu_1_joint"/>
+        <joint name="test_imu_2_joint"/>
+    </group>
 
     <group name="chains">
         
@@ -26,6 +31,7 @@
         <group name="torso"/>
         
     </group>
+
     
     <group_state name="home" group="chains">
         

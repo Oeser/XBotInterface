@@ -23,6 +23,26 @@
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
+  <gazebo>
+    <plugin filename="libgazebo_ros_imu.so" name="imu_plugin">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>test_imu_1</bodyName>
+      <topicName>imu_1_data</topicName>
+      <serviceName>imu_1_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <updateRate>100.0</updateRate>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="libgazebo_ros_imu.so" name="imu_plugin">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>test_imu_2</bodyName>
+      <topicName>imu_2_data</topicName>
+      <serviceName>imu_2_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <updateRate>100.0</updateRate>
+    </plugin>
+  </gazebo>
   <gazebo reference="knee_1">
     <sensor name="foot_contact_sensor_1" type="contact">
       <always_on>true</always_on>
@@ -689,6 +709,13 @@
       </geometry>
     </collision>
   </link>
+  <link name="test_imu_1">
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="0.0001"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
   <!--	<link name="mass${arm_num}_body">
 	<inertial>
 		<origin xyz="0 0 0"/> -->
@@ -785,6 +812,12 @@
 		<origin xyz="0 0 -0.15"/> 
 	</joint> -->
   <!-- /wrist pitch-->
+  <joint name="test_imu_1_joint" type="fixed">
+    <parent link="arm1_7"/>
+    <child link="test_imu_1"/>
+    <origin xyz="0.0 0.0 0.0"/>
+    <axis xyz="0.1 -0.2 0.3"/>
+  </joint>
   <transmission name="t_j_arm1_1">
     <type> transmission_interface/SimpleTransmission</type>
     <joint name="j_arm1_1">
@@ -1129,6 +1162,13 @@
       </geometry>
     </collision>
   </link>
+  <link name="test_imu_2">
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="0.0001"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
   <!--	<link name="mass${arm_num}_body">
 	<inertial>
 		<origin xyz="0 0 0"/> -->
@@ -1224,6 +1264,12 @@
 		<origin xyz="0 0 -0.15"/> 
 	</joint> -->
   <!-- /wrist pitch-->
+  <joint name="test_imu_2_joint" type="fixed">
+    <parent link="arm2_7"/>
+    <child link="test_imu_2"/>
+    <origin xyz="0.0 0.0 0.0"/>
+    <axis xyz="0.1 -0.2 0.3"/>
+  </joint>
   <transmission name="t_j_arm2_1">
     <type> transmission_interface/SimpleTransmission</type>
     <joint name="j_arm2_1">
