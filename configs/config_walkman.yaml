@@ -1,8 +1,8 @@
 # WALKMAN config
 
 XBotInterface:
-  urdf_path: "urdf/bigman_upper_body.urdf"
-  srdf_path: "srdf/bigman_config.srdf"
+  urdf_path: "urdf/bigman.urdf"
+  srdf_path: "srdf/bigman.srdf"
   joint_map_path: "joint_map/bigman_ecat_joint_map.yaml"
 
 RobotInterface:
