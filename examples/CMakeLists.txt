@@ -45,11 +45,13 @@ endif()
 ## Build ##
 ###########
 add_executable(ik_example ik_example.cpp)
+add_executable(id_example id_example.cpp)
 
 ##########
 ## Link ##
 ##########
 target_link_libraries(ik_example XBotInterface)
+target_link_libraries(id_example XBotInterface)
 
 #############
 ## Install ##

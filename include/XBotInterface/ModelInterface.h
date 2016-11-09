@@ -160,8 +160,8 @@ public:
      * @return True if the update is successful. False otherwise.
      */
     virtual bool update( bool update_position = true, 
-                         bool update_velocity = false,
-                         bool update_desired_acceleration = false ) = 0;
+                         bool update_velocity = true,
+                         bool update_desired_acceleration = true ) = 0;
 
     /**
     * @brief Gets a vector with the joint names ordered according to the model. If the model is floating-base,
