@@ -89,13 +89,13 @@ int main(int argc, char **argv){
      */
     
     // Getter for the chain name
-    std::cout << "First arm name is :" << robot.arm(0).chainName() << std::endl; 
+    std::cout << "First arm name is :" << robot.arm(0).getChainName() << std::endl; 
     
     // Base link name
-    std::cout << "Right arm base link name is :" << robot("right_arm").baseLinkName() << std::endl; 
+    std::cout << "Right arm base link name is :" << robot("right_arm").getBaseLinkName() << std::endl; 
     
     // Tip link name
-    std::cout << "Right arm tip link name is :" << robot("right_arm").tipLinkName() << std::endl; 
+    std::cout << "Right arm tip link name is :" << robot("right_arm").getTipLinkName() << std::endl; 
 
     // Number of joints
     std::cout << "Torso is made of " << robot.chain("torso").getJointNum() << " joints" << std::endl;
@@ -146,9 +146,9 @@ int main(int argc, char **argv){
     
     /* For example, let's obtain the FT sensor attached to the 
      * tip link of the second arm */
-    ForceTorqueSensor::ConstPtr arm1_ft = robot.getForceTorque(robot.arm(1).tipLinkName());
+    ForceTorqueSensor::ConstPtr arm1_ft = robot.getForceTorque(robot.arm(1).getTipLinkName());
     if(!arm1_ft){
-        std::cerr << "ERROR! No ft was found on " << robot.arm(1).tipLinkName() << " link!" << std::endl;
+        std::cerr << "ERROR! No ft was found on " << robot.arm(1).getTipLinkName() << " link!" << std::endl;
     }
     else {
 
@@ -164,7 +164,7 @@ int main(int argc, char **argv){
         KDL::Wrench arm1_wrench;
         arm1_ft->getWrench(arm1_wrench);
         
-        std::cout << "The force-torque sensor attached to " << robot.arm(1).tipLinkName() << " has name " << arm1_ft->sensorName() << " and its output is \n" << arm1_wrench << std::endl;
+        std::cout << "The force-torque sensor attached to " << robot.arm(1).getTipLinkName() << " has name " << arm1_ft->getSensorName() << " and its output is \n" << arm1_wrench << std::endl;
     } 
     
     /* Let us now move from sensors to actuators.
@@ -251,8 +251,8 @@ int main(int argc, char **argv){
      */
     
     KDL::Frame b_T_ee;
-    robot.model().getPose(robot("left_arm").tipLinkName(), 
-                          robot("torso").baseLinkName(),
+    robot.model().getPose(robot("left_arm").getTipLinkName(), 
+                          robot("torso").getBaseLinkName(),
                           b_T_ee);
     
     /* We can print out the transform between the frames... */
@@ -260,7 +260,7 @@ int main(int argc, char **argv){
     
     /* To obtain a pose w.r.t. to the world frame, just omit the second argument */
     Eigen::Affine3d world_T_ee;
-    robot.model().getPose(robot("left_arm").tipLinkName(),
+    robot.model().getPose(robot("left_arm").getTipLinkName(),
                           world_T_ee);
     
     /* While RobotInterface is a singleton, meaning that you can only
@@ -294,8 +294,8 @@ int main(int argc, char **argv){
      * to which we want to set cartesian references: 
      */
     
-    std::string base_frame = robot("torso").baseLinkName();
-    std::string end_effector = robot("right_arm").tipLinkName();
+    std::string base_frame = robot("torso").getBaseLinkName();
+    std::string end_effector = robot("right_arm").getTipLinkName();
     
     /* We want to move the end effector in a way such that its
      * orientation remains constant, while the vertical position of
