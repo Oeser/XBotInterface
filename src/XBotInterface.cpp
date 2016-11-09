@@ -1790,7 +1790,7 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                                         Eigen::VectorXd& q) const
 {
     
-    q.resize(getJointNum());
+    q.setZero(getJointNum());
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
