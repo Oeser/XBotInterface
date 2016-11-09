@@ -905,6 +905,19 @@ namespace XBot {
         
         friend std::ostream& operator<<(std::ostream& os, const XBot::XBotInterface& robot);
         
+        /**
+         * @brief Print a pretty table about the robot state.
+         * 
+         * @return void
+         */
+        void print() const;
+        
+        /**
+         * @brief Print a pretty table about the robot tracking.
+         * 
+         * @return void
+         */
+        void printTracking() const;
 
     protected:
         

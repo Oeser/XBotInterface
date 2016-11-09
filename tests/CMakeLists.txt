@@ -56,7 +56,7 @@ add_custom_command( TARGET XBotInterface POST_BUILD
                     testKinematicChain
                     testXBotInterface
                     testModelInterface
-                    )                 
+                    )
 # endif()
 
 # gTests TODO add libs

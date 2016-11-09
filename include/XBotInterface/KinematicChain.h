@@ -532,7 +532,19 @@ public:
     template <typename... SyncFlags>
     bool syncFrom(const KinematicChain& other, SyncFlags... flags);
     
+    /**
+     * @brief Prints a pretty table about chain state.
+     * 
+     * @return void
+     */
+    void print() const;
     
+    /**
+     * @brief Prints a pretty table about chain tracking.
+     * 
+     * @return void
+     */
+    void printTracking() const;
 
     friend std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
     

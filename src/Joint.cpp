@@ -48,6 +48,7 @@ void XBot::Joint::init()
     _link_pos = 0;
     _motor_pos = 0;
     _link_vel = 0;
+    _link_acc = 0;
     _motor_vel = 0;
     _effort = 0;
     _temperature = 0;
@@ -258,8 +259,62 @@ const XBot::Joint& XBot::Joint::operator<< ( const XBot::Joint& from )
 }
 
 
+void XBot::Joint::print() const
+{
+    bprinter::TablePrinter tp(&std::cout);
+    tp.AddColumn("Name", 7);
+    tp.AddColumn("ID", 4);
+    tp.AddColumn("Link pos", 8);
+    tp.AddColumn("Mot pos", 7);
+    tp.AddColumn("Link vel", 8);
+    tp.AddColumn("Mot vel", 7);
+    tp.AddColumn("Effort", 6);
+    tp.AddColumn("Temp", 4);
+    tp.AddColumn("Pos ref", 7);
+    tp.AddColumn("Vel ref", 7);
+    tp.AddColumn("Eff ref", 7);
+    tp.AddColumn("K", 5);
+    tp.AddColumn("D", 5);
+
+    tp.PrintHeader();
+    tp << getJointName() << getJointId() << getJointPosition() << getMotorPosition() << getJointVelocity() << getMotorVelocity() << getJointEffort() << getTemperature() << getPositionReference() << getVelocityReference() << getEffortReference() << getStiffness() << getDamping();
+    tp.PrintFooter();
+}
+
+void XBot::Joint::printTracking() const
+{
+    bprinter::TablePrinter tp(&std::cout);
+    tp.AddColumn("Name", 7);
+    tp.AddColumn("ID", 4);
+    tp.AddColumn("Link pos", 8);
+    tp.AddColumn("Pos ref", 7);
+    tp.AddColumn("Pos err", 7);
+    tp.AddColumn("Pos err%", 8);
+    tp.AddColumn("Effort", 8);
+    tp.AddColumn("Tau ref", 7);
+    tp.AddColumn("Tau err", 7);
+    tp.AddColumn("Tau err%", 8);
+    tp.AddColumn("Link vel", 8);
+    tp.AddColumn("Vel ref", 7);
+    tp.AddColumn("Vel err", 7);
+    tp.AddColumn("Vel err%", 8);
+    
+    double pos_err = getPositionReference() - getJointPosition();
+    double pos_err_rel = pos_err / getPositionReference();
+    double tau_err = getEffortReference() - getJointEffort();
+    double tau_err_rel = pos_err / getEffortReference();
+    double vel_err = getVelocityReference() - getJointVelocity();
+    double vel_err_rel = pos_err / getVelocityReference();
+
+    tp.PrintHeader();
+    tp << getJointName() << getJointId() << getJointPosition() << getPositionReference() << pos_err << pos_err_rel*100 << getJointEffort() << getEffortReference() << tau_err << tau_err_rel*100 << getJointVelocity() << getVelocityReference() << vel_err << vel_err_rel*100;
+    tp.PrintFooter();
+}
+
+
 std::ostream& XBot::operator<< ( std::ostream& os, const XBot::Joint& j ) 
 {
+        
     os << "Joint id: " << j.getJointId() << std::endl;
     os << "Joint name: " << j.getJointName() << std::endl;
     os << "RX values ###########" << std::endl;

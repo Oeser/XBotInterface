@@ -1949,5 +1949,63 @@ int XBot::KinematicChain::getChainDofIndex(int joint_id) const
     return -1;
 }
 
+void XBot::KinematicChain::print() const
+{
+    bprinter::TablePrinter tp(&std::cout);
+    tp.AddColumn("Name", 10);
+    tp.AddColumn("ID", 4);
+    tp.AddColumn("Link pos", 8);
+    tp.AddColumn("Mot pos", 7);
+    tp.AddColumn("Link vel", 8);
+    tp.AddColumn("Mot vel", 7);
+    tp.AddColumn("Effort", 6);
+    tp.AddColumn("Temp", 4);
+    tp.AddColumn("Pos ref", 7);
+    tp.AddColumn("Vel ref", 7);
+    tp.AddColumn("Eff ref", 7);
+    tp.AddColumn("K", 5);
+    tp.AddColumn("D", 5);
+
+    tp.PrintHeader();
+    for(int i = 0; i < _joint_num; i++){
+        tp << getJointName(i) << getJointId(i) << getJointPosition(i) << getMotorPosition(i) << getJointVelocity(i) << getMotorVelocity(i) << getJointEffort(i) << getTemperature(i) << getPositionReference(i) << getVelocityReference(i) << getEffortReference(i) << getStiffness(i) << getDamping(i);
+    }
+    tp.PrintFooter();
+}
+
+void XBot::KinematicChain::printTracking() const
+{
+    bprinter::TablePrinter tp(&std::cout);
+    tp.AddColumn("Name", 10);
+    tp.AddColumn("ID", 4);
+    tp.AddColumn("Link pos", 8);
+    tp.AddColumn("Pos ref", 7);
+    tp.AddColumn("Pos err", 7);
+    tp.AddColumn("Pos err%", 8);
+    tp.AddColumn("Effort", 8);
+    tp.AddColumn("Tau ref", 7);
+    tp.AddColumn("Tau err", 7);
+    tp.AddColumn("Tau err%", 8);
+    tp.AddColumn("Link vel", 8);
+    tp.AddColumn("Vel ref", 7);
+    tp.AddColumn("Vel err", 7);
+    tp.AddColumn("Vel err%", 8);
+    
+    tp.PrintHeader();
+    for( int i = 0; i < _joint_num; i++ ){
+        
+        double pos_err = getPositionReference(i) - getJointPosition(i);
+        double pos_err_rel = pos_err / getPositionReference(i);
+        double tau_err = getEffortReference(i) - getJointEffort(i);
+        double tau_err_rel = pos_err / getEffortReference(i);
+        double vel_err = getVelocityReference(i) - getJointVelocity(i);
+        double vel_err_rel = pos_err / getVelocityReference(i);
+
+        
+        tp << getJointName(i) << getJointId(i) << getJointPosition(i) << getPositionReference(i) << pos_err << pos_err_rel*100 << getJointEffort(i) << getEffortReference(i) << tau_err << tau_err_rel*100 << getJointVelocity(i) << getVelocityReference(i) << vel_err << vel_err_rel*100;
+    
+    }
+    tp.PrintFooter();
+}
 
 } // end namespace XBot

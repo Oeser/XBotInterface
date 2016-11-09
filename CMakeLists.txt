@@ -58,6 +58,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
                             ${sharedlibpp_INCLUDE_DIRS}
+                            ${bprinter_INCLUDE_DIRS}
                             )      
                             
                             
@@ -74,13 +75,15 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/ModelInterface.cpp
                                  src/GenericSensor.cpp
                                  src/ForceTorqueSensor.cpp
-                                 src/ImuSensor.cpp)
+                                 src/ImuSensor.cpp
+                                 src/bprinter/table_printer.cpp)
                                  
 target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
                                     yaml-cpp
                                     ${sharedlibpp_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
                                     ${eigen_conversions_LIBRARIES}
+                                    ${bprinter_LIBRARIES}
                                     )
 
 add_executable(test_exec src/main_test.cpp)

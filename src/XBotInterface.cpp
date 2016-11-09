@@ -1884,3 +1884,18 @@ bool XBot::XBotInterface::mapToEigen(const XBot::JointNameMap& map, Eigen::Vecto
     
     return success;
 }
+
+void XBot::XBotInterface::print() const
+{
+    for( const auto& c : _chain_map ){
+        c.second->print();
+    }
+}
+
+
+void XBot::XBotInterface::printTracking() const
+{
+    for( const auto& c : _chain_map ){
+        c.second->printTracking();
+    }
+}

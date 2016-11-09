@@ -25,6 +25,7 @@
 #include <iostream>
 #include <srdfdom_advr/model.h>
 #include <XBotInterface/SyncFlags.h>
+#include <bprinter/table_printer.h>
 
 
 namespace XBot
@@ -159,6 +160,19 @@ public:
 
     friend std::ostream& operator<< ( std::ostream& os, const XBot::Joint& j );
     
+    /**
+     * @brief Prints a pretty table about joint state.
+     * 
+     * @return void
+     */
+    void print() const;
+    
+    /**
+     * @brief Prints a pretty table about joint tracking error.
+     * 
+     * @return void
+     */
+    void printTracking() const;
 
 protected:
     
