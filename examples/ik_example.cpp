@@ -2,6 +2,8 @@
 
 void computeCartesianError(const Eigen::Affine3d& ref, const Eigen::Affine3d& actual, Eigen::VectorXd& error);
 
+double computeAlphaHoming(double rel_t);
+
 int main(int argc, char **argv){
     
     using namespace XBot;
@@ -152,13 +154,13 @@ int main(int argc, char **argv){
     }
     else {
 
-        /* Let's assume we found the FT sensor.
-        *FT sensors can be printed with operator<< 
+        /* If we found the FT sensor.
+        *  FT sensors can be printed with operator<< 
         */
         std::cout << *arm1_ft << std::endl;
         
         /* FT measurement can be accessed via the getForce/getTorque/getWrench methods.
-        * Both Eigen and KDL are supported.
+        *  Both Eigen and KDL are supported.
         */
         
         KDL::Wrench arm1_wrench;
@@ -219,10 +221,10 @@ int main(int argc, char **argv){
      * do robot.move()
      */
     
-    robot.move();
+//     robot.move();
     
     /* Sleep for a while to allow the robot execute the commanded reference */
-    sleep(3);
+    sleep(1);
     
     /* Now that we know how to use the XBotInterface library to get
      * joint-space information about the robot, let us move to
@@ -237,6 +239,7 @@ int main(int argc, char **argv){
     
     // If sense() has just been called, this is exactly the same as
     // robot.chain("left_arm").getJointPosition(left_arm_position);
+    robot.sense();
     robot.model().chain("left_arm").getJointPosition(left_arm_position);
     
     /* ModelInterface provides methods to compute common kinematic/dynamic
@@ -294,6 +297,37 @@ int main(int argc, char **argv){
      * to which we want to set cartesian references: 
      */
     
+    /* First of all let's do a proper homing.
+     * We exploit the SRDF group state feature provided by model.
+     */
+    
+    // homing on robot
+    Eigen::VectorXd q_homing;
+    robot.getRobotState("home", q_homing);
+    
+    // update robot state: encoders and sensors are read from the robot
+    robot.sense();
+    
+    // get the current robot joint position
+    Eigen::VectorXd qsensed;
+    robot.getJointPosition(qsensed);
+    
+    // joint space interpolation
+    double t0 = robot.getTime();
+    double T = 5;
+    double alpha = 0;
+    while(alpha < 1) {
+        double t = robot.getTime() - t0;
+        std::cout << "current time : " << t << std::endl;
+        alpha = computeAlphaHoming(t / T);
+        std::cout << "alpha : " << alpha << std::endl;
+        robot.setPositionReference(qsensed + alpha * (q_homing - qsensed));
+        // commmand the references on the motor
+        robot.move();
+        // sleep a bit
+        usleep(10000);
+    }
+    
     std::string base_frame = robot("torso").getBaseLinkName();
     std::string end_effector = robot("right_arm").getTipLinkName();
     
@@ -309,20 +343,19 @@ int main(int argc, char **argv){
     robot.sense(); 
     
     // save the initial end-effector pose inside initial_pose
-    robot.model().getPose(base_frame, end_effector, initial_pose);
+    robot.model().getPose(end_effector, base_frame, initial_pose);
     
     /* Since we will use the external model for IK computations,
      * first we align it to the actual robot configuration. 
      */
     
-    model.syncFrom(robot);
+    model.syncFrom(robot, XBot::Sync::Position);
     
     /* Also obtain the vector of the whole model configuration,
      * which will be useful inside the control loop.
      */
     
     Eigen::VectorXd q;
-    
     model.getJointPosition(q);
     
     // define period and length of the trajectory
@@ -330,30 +363,29 @@ int main(int argc, char **argv){
     double length = 0.2;
     
     // initial time 
-    double t0 = robot.getTime();
-    double time = t0;
-    double previous_iteration_time = time;
+    double time = 0.0;
+    double dt = 0.001;
+    
+    Eigen::Affine3d desired_pose, actual_pose;
+    Eigen::VectorXd cartesian_error;
+    Eigen::VectorXd qdot;
     
     /* RobotInterface::isRunning returns true as long as some
      * shutdown signal is not received 
      */
-    
     while( robot.isRunning() ) { 
         
-        double time = robot.getTime() - t0;
-        double dt = time - previous_iteration_time;
-    
-        Eigen::Affine3d desired_pose, actual_pose;
+        // updated the current time
+        time += dt;
         
         // Set the desired end-effector pose at current time
         desired_pose.linear() = initial_pose.linear();
         desired_pose.translation() = initial_pose.translation() + Eigen::Vector3d(0,0,1)*0.5*length*std::sin(2*3.1415/period*time);
         
         // Compute the pose corresponding to the model state
-        model.getPose(base_frame, end_effector, actual_pose);
+        model.getPose(end_effector, base_frame, actual_pose);
         
         // Compute the cartesian error
-        Eigen::VectorXd cartesian_error;
         computeCartesianError(desired_pose, actual_pose, cartesian_error);
         
         // Set a cartesian velocity which is proportional to the error
@@ -363,9 +395,10 @@ int main(int argc, char **argv){
         // Compute the jacobian matrix
         Eigen::MatrixXd J;
         model.getJacobian(end_effector, J);
+        model.maskJacobian("torso", J);
         
         // Compute the required joint velocities
-        Eigen::VectorXd qdot = J.transpose()*cartesian_error;
+        qdot = J.jacobiSvd(Eigen::ComputeThinU|Eigen::ComputeThinV).solve(xdot);
         
         // Integrate the computed velocities
         q += qdot * dt;
@@ -378,7 +411,8 @@ int main(int argc, char **argv){
         robot.setReferenceFrom(model);
         robot.move();
         
-        
+        // sleep a bit
+        usleep(5000);
     }
 
     return 0;
@@ -394,4 +428,11 @@ void computeCartesianError(const Eigen::Affine3d& ref, const Eigen::Affine3d& ac
     Eigen::Vector3d position_error = ref.translation() - actual.translation();
     
     error << position_error, orientation_error;
+}
+
+double computeAlphaHoming ( double rel_t )
+{
+    if(rel_t < 0) return 0;
+    if(rel_t > 1) return 1;
+    return rel_t * rel_t * (3 - 2* rel_t);
 }
