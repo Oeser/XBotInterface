@@ -26,6 +26,10 @@
 
 namespace XBot {
 
+/**
+* @brief Kinematic chain useful for a robot abstraction
+* 
+*/
 class RobotChain : public KinematicChain {
     
 public:
@@ -61,6 +65,12 @@ public:
     using KinematicChain::setDamping;
     
     
+    /**
+     * @brief Setter for the robot chain references using a model chain
+     * 
+     * @param model_chain the model chain reference to set on the current robot chain
+     * @return true on success, false otherwise
+     */
     bool setReferenceFrom(const ModelChain& model_chain);
     
     

@@ -29,6 +29,10 @@
 
 namespace XBot {
  
+    /**
+     * @brief Generic sensor abstraction
+     * 
+     */
     class GenericSensor {
     
     public:
@@ -36,20 +40,54 @@ namespace XBot {
         typedef std::shared_ptr<GenericSensor> Ptr;
         typedef std::shared_ptr<const GenericSensor> ConstPtr;
         
+        /**
+         * @brief Default constructor
+         * 
+         */
         GenericSensor();
         
+        /**
+         * @brief Constructor with the sensor parent link
+         * 
+         * @param sensor_link the sensor parent link
+         */
         GenericSensor(urdf::LinkConstSharedPtr sensor_link);
         
+        /**
+         * @brief Getter for the sensor parent link name
+         * 
+         * @return the parent link name
+         */
         const std::string& getParentLinkName() const;
         
+        /**
+         * @brief Getter for the sensor name
+         * 
+         * @return the sensor name
+         */
         const std::string& getSensorName() const;
         
+        /**
+         * @brief Getter for the sensor pose w.r.t. the parent link
+         * 
+         * @return the sensor pose w.r.t. the parent link
+         */
         const Eigen::Affine3d& getSensorPose() const;
         
+        /**
+         * @brief Getter for the timestamp of the last sensor reading
+         * 
+         * @return the timestamp of the last sensor reading
+         */
         double getTimestamp() const;
         
+        /**
+         * @brief Setter for the timestamp of the sensor reading
+         * 
+         * @param timestamp the timestamp to set
+         * @return void
+         */
         void setTimestamp(double timestamp);
-        
         
         
     protected:

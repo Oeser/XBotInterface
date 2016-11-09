@@ -27,13 +27,17 @@ namespace XBot {
 
 class RobotChain;
     
+/**
+ * @brief Kinematic chain useful for a model abstraction
+ * 
+ */
 class ModelChain : public KinematicChain {
     
 public:
     
-    friend XBot::RobotChain;
-    
     typedef std::shared_ptr<ModelChain> Ptr;
+    
+    friend XBot::RobotChain;
 
     // Getters for RX
 

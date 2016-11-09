@@ -1571,9 +1571,9 @@ bool XBot::KinematicChain::hasJoint(const std::string& joint_name) const
     return _joint_name_map.count(joint_name) > 0;
 }
 
-bool XBot::KinematicChain::hasJoint(int id) const
+bool XBot::KinematicChain::hasJoint(int joint_id) const
 {
-    return _joint_id_map.count(id) > 0;
+    return _joint_id_map.count(joint_id) > 0;
 }
 
 void KinematicChain::getEffortLimits(Eigen::VectorXd& tau_max) const

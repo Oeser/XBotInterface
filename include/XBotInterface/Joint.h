@@ -44,7 +44,9 @@ class Joint
 
 public:
     
-    // specify friendships
+    typedef std::shared_ptr<Joint> Ptr;
+    typedef std::shared_ptr<const Joint> ConstPtr;
+    
     friend XBot::KinematicChain;
     friend XBot::RobotChain;
     friend XBot::XBotInterface;
@@ -67,18 +69,6 @@ public:
           int joint_id,
           urdf::JointConstSharedPtr urdf_joint,
           const std::string &chain_name);
-
-    /**
-     * @brief Shared pointer to Joint
-     * 
-     */
-    typedef std::shared_ptr<Joint> Ptr;
-    
-    /**
-     * @brief Const shared pointer to Joint
-     * 
-     */
-    typedef std::shared_ptr<const Joint> ConstPtr;
 
     /**
      * @brief Getter for the joint name
@@ -377,6 +367,18 @@ protected:
      * @brief Synchronize the current Joint with another Joint object
      * 
      * @param other The Joint object from which we synchronize the current object
+     * @param flags Flags to specify what part of the state must be synchronized. By default (i.e. if
+     * this argument is omitted) the whole state is synchronized. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     *  - Sync::Position, 
+     *  - Sync::Velocity
+     *  - Sync::Acceleration
+     *  - Sync::Effort
+     *  - Sync::Stiffness 
+     *  - Sync::Damping 
+     *  - Sync::Impedance
+     *  - Sync::All
      * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False * otherwise
      */
     template <typename... SyncFlags>
@@ -386,6 +388,18 @@ protected:
      * @brief Set the joint references (TX) from other joint state (RX)
      * 
      * @param other The Joint object which references are read from
+     * @param flags Flags to specify what part of the state must be synchronized. By default (i.e. if
+     * this argument is omitted) the whole state is synchronized. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     *  - Sync::Position, 
+     *  - Sync::Velocity
+     *  - Sync::Acceleration
+     *  - Sync::Effort
+     *  - Sync::Stiffness 
+     *  - Sync::Damping 
+     *  - Sync::Impedance
+     *  - Sync::All
      * @return True if the synchronization is feasible ( i.e. the two Joint object have exactly the same names/ids). False * otherwise.
      */
     template <typename... SyncFlags>
@@ -616,6 +630,8 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
     ///////////////////
     
     _temperature = other._temperature;
+    
+    return true;
 
 }
 
@@ -661,6 +677,8 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
     if(sync_damping){
         _damping = other._damping;
     }
+    
+    return true;
 }
 
 

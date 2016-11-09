@@ -31,8 +31,9 @@ bool RobotChain::setReferenceFrom(const ModelChain& model_chain)
     // TBD: check that chains are indeed omologues??
     int pos = 0;
     for (const XBot::Joint::Ptr & j : model_chain._joint_vector) {
-        _joint_vector[pos++]->setReferenceFrom(*j);
+        _joint_vector[pos++]->setReferenceFrom(*j);  // TBD check the return
     }    
+    return true; // TBD check the above TBD
 }
 
 
