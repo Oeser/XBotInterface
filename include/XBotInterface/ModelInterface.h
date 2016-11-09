@@ -471,6 +471,16 @@ public:
      * @return True if joint_id is a valid joint ID.
      */
     bool getJointSelectionMatrix( int joint_id, Eigen::RowVectorXd& S ) const;
+    
+    /**
+     * @brief Applies a mask corresponding to the specified chain to the jacobian provided as an argument.
+     * This amounts to setting the columns of the jacobian corresponding the the chain to zero.
+     * 
+     * @param chain_name The name of the chain.
+     * @param J The jacobian which the mask has to be applied to.
+     * @return True if chain_name is a valid chain name and J has the correct row size.
+     */
+    bool maskJacobian( const std::string& chain_name, KDL::Jacobian& J) const;
 
     // EIGEN OVERLOADS
     /**
@@ -698,6 +708,16 @@ public:
      */
     bool setGravity( const std::string& reference_frame, 
                      const Eigen::Vector3d& gravity );
+    
+    /**
+     * @brief Applies a mask corresponding to the specified chain to the jacobian provided as an argument.
+     * This amounts to setting the columns of the jacobian corresponding the the chain to zero.
+     * 
+     * @param chain_name The name of the chain.
+     * @param J The jacobian which the mask has to be applied to.
+     * @return True if chain_name is a valid chain name and J has the correct row size.
+     */
+    bool maskJacobian( const std::string& chain_name, Eigen::MatrixXd& J) const;
 
     
     // Getters for RX
