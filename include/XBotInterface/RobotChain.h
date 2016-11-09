@@ -60,8 +60,8 @@ public:
     using KinematicChain::setStiffness;
     using KinematicChain::setDamping;
     
-    
-    bool setReferenceFrom(const ModelChain& model_chain);
+    template <typename... SyncFlags>
+    bool setReferenceFrom(const ModelChain& model_chain, SyncFlags... flags);
     
     
 protected:
@@ -86,5 +86,16 @@ private:
     
     
 };
+
+template <typename... SyncFlags>
+bool RobotChain::setReferenceFrom(const ModelChain& other, SyncFlags... flags)
+{
+    
+    int pos = 0;
+    for (const XBot::Joint::Ptr & j : other._joint_vector) {
+        _joint_vector[pos++]->setReferenceFrom(*j, flags...);
+    }
+}
+
 } // end namespace XBot
 #endif
