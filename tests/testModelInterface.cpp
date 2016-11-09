@@ -233,6 +233,31 @@ TEST_F(testModelInterface, checkPoseConsistency){
     
 }
 
+TEST_F(testModelInterface, checkJacobianMask){
+    
+    Eigen::MatrixXd J;
+    
+    
+    auto chains = model_ptr->getChainNames();
+    
+    J.setRandom(6, model_ptr->getJointNum());
+    
+    for( int iter = 0; iter < 100; iter++){
+        
+        int random_chain = rand()%chains.size();
+        
+        model_ptr->maskJacobian(chains[random_chain], J);
+        
+        for(int i = 0; i < model_ptr->chain(chains[random_chain]).getJointNum(); i++){
+            EXPECT_EQ( J.col(model_ptr->getDofIndex(model_ptr->chain(chains[random_chain]).getJointName(i))).norm(), 0.0 );
+        }
+        
+    }
+    
+    
+    
+}
+
 
 int main ( int argc, char **argv )
 {
