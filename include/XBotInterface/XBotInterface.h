@@ -289,6 +289,52 @@ namespace XBot {
         */
         ImuSensor::ConstPtr getImu(const std::string& parent_link_name) const;
 
+        /**
+         * @brief Converts a state vector for the whole robot to its JointNameMap representation.
+         * Note that the output map is not cleared before it is filled. It is the responsibility of
+         * the user to do so if required.
+         * 
+         * @param vector A state vector for the whole robot (its size must match getJointNum())
+         * @param name_map The output map to be filled
+         * @return True if the input vector is valid.
+         */
+        bool eigenToMap(const Eigen::VectorXd& vector, JointNameMap& name_map) const;
+        
+        /**
+         * @brief Converts a state vector for the whole robot to its JointIdMap representation.
+         * Note that the output map is not cleared before it is filled. It is the responsibility of
+         * the user to do so if required.
+         * 
+         * @param vector A state vector for the whole robot (its size must match getJointNum())
+         * @param id_map The output map to be filled
+         * @return True if the input vector is valid.
+         */
+        bool eigenToMap(const Eigen::VectorXd& vector, JointIdMap& id_map) const;
+        
+        /**
+         * @brief Converts a state vector for an arbitrary subset of the robot state (specified 
+         * as a JointNameMap) to its Eigen representation.
+         * Note that the output vector is resized and set to zero if its size does not match the
+         * number of joints. 
+         * 
+         * @param map A JointNameMap contaning the state of the robot (or a part of it)
+         * @param vector The output vector to be filled.
+         * @return True if the input map contains valid joints.
+         */
+        bool mapToEigen(const JointNameMap& map, Eigen::VectorXd& vector) const;
+        
+        /**
+         * @brief Converts a state vector for an arbitrary subset of the robot state (specified 
+         * as a JointIdMap) to its Eigen representation.
+         * Note that the output vector is resized and set to zero if its size does not match the
+         * number of joints. 
+         * 
+         * @param map A JointIdMap contaning the state of the robot (or a part of it)
+         * @param vector The output vector to be filled.
+         * @return True if the input map contains valid joints.
+         */
+        bool mapToEigen(const JointIdMap& map, Eigen::VectorXd& vector) const;
+
 
 
         // Getters for RX

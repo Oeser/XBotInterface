@@ -1824,3 +1824,63 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
     
     return success;
 }
+
+bool XBot::XBotInterface::eigenToMap(const Eigen::VectorXd& vector, XBot::JointIdMap& id_map) const
+{
+    if( vector.size() != _joint_num ){
+        std::cerr << "ERROR in " << __func__ << "! Input vector has " << vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        const Joint& j = *_ordered_joint_vector[i];
+        id_map[j.getJointId()] = vector(i);
+    }
+    
+    return true;
+}
+
+bool XBot::XBotInterface::eigenToMap(const Eigen::VectorXd& vector, XBot::JointNameMap& name_map) const
+{
+    if( vector.size() != _joint_num ){
+        std::cerr << "ERROR in " << __func__ << "! Input vector has " << vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        const Joint& j = *_ordered_joint_vector[i];
+        name_map[j.getJointName()] = vector(i);
+    }
+    
+    return true;
+}
+
+bool XBot::XBotInterface::mapToEigen(const XBot::JointIdMap& map, Eigen::VectorXd& vector) const
+{
+    bool success = true;
+    
+    for(const auto& id_pair : map){
+        auto it = _joint_id_to_eigen_id.find(id_pair.first);
+        if( it != _joint_id_to_eigen_id.end() ){
+            success = true;
+            vector(it->second) = id_pair.second;
+        }
+    }
+    
+    return success;
+}
+
+bool XBot::XBotInterface::mapToEigen(const XBot::JointNameMap& map, Eigen::VectorXd& vector) const
+{
+    bool success = true;
+    
+    for(const auto& id_pair : map){
+        auto it = _joint_name_to_eigen_id.find(id_pair.first);
+        if( it != _joint_name_to_eigen_id.end() ){
+            success = true;
+            vector(it->second) = id_pair.second;
+        }
+    }
+    
+    return success;
+}
