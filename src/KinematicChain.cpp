@@ -25,7 +25,7 @@ namespace XBot
 
 KinematicChain::KinematicChain() :
     _chain_name("dummy_chain"),
-    _joint_num(-1),
+    _joint_num(0),
     _is_virtual(false)
 {
 
