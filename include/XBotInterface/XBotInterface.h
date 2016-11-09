@@ -225,7 +225,7 @@ namespace XBot {
          * to the joint namd "joint_name".
          * 
          * @param joint_name The name of the required joint.
-         * @return The Eigen index of the required joint.
+         * @return The Eigen index of the required joint. A value of -1 is returned when joint_name is not valid.
          */
         int getDofIndex(const std::string& joint_name) const;
         
@@ -235,7 +235,7 @@ namespace XBot {
          * to the joint with the given ID.
          * 
          * @param joint_id The ID of the required joint.
-         * @return The Eigen index of the required joint.
+         * @return The Eigen index of the required joint. A value of -1 is returned when joint_id is not valid.
          */
         int getDofIndex(int joint_id) const;
         
