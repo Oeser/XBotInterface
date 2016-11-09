@@ -1098,17 +1098,15 @@ bool KinematicChain::setTemperature(int i, double temp)
 
 bool KinematicChain::setDamping(const JointNameMap &D)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : D) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setDamping(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = D.find(joint_name);
+        if( it != D.end() ){
+            joint_pair.second->setDamping(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1116,17 +1114,15 @@ bool KinematicChain::setDamping(const JointNameMap &D)
 
 bool KinematicChain::setJointEffort(const JointNameMap &tau)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : tau) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setJointEffort(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = tau.find(joint_name);
+        if( it != tau.end() ){
+            joint_pair.second->setJointEffort(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1134,17 +1130,15 @@ bool KinematicChain::setJointEffort(const JointNameMap &tau)
 
 bool KinematicChain::setEffortReference(const JointNameMap &tau)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : tau) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setEffortReference(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = tau.find(joint_name);
+        if( it != tau.end() ){
+            joint_pair.second->setEffortReference(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1152,35 +1146,32 @@ bool KinematicChain::setEffortReference(const JointNameMap &tau)
 
 bool KinematicChain::setJointPosition(const JointNameMap &q)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : q) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setJointPosition(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = q.find(joint_name);
+        if( it != q.end() ){
+            joint_pair.second->setJointPosition(it->second);
+            success = true;
         }
-
     }
 
     return success;
+    
 }
 
 bool KinematicChain::setJointVelocity(const JointNameMap &qdot)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : qdot) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setJointVelocity(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = qdot.find(joint_name);
+        if( it != qdot.end() ){
+            joint_pair.second->setJointVelocity(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1188,18 +1179,15 @@ bool KinematicChain::setJointVelocity(const JointNameMap &qdot)
 
 bool XBot::KinematicChain::setJointAcceleration(const JointNameMap& qddot)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : qddot) {
-        const std::string &joint_name = jointname_value_pair.first;
-        auto it = _joint_name_map.find(joint_name);
-        if ( it != _joint_name_map.end() ) {
-            it->second->setJointAcceleration(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = qddot.find(joint_name);
+        if( it != qddot.end() ){
+            joint_pair.second->setJointAcceleration(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1208,17 +1196,15 @@ bool XBot::KinematicChain::setJointAcceleration(const JointNameMap& qddot)
 
 bool KinematicChain::setMotorPosition(const JointNameMap &q)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : q) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setMotorPosition(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = q.find(joint_name);
+        if( it != q.end() ){
+            joint_pair.second->setMotorPosition(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1226,17 +1212,15 @@ bool KinematicChain::setMotorPosition(const JointNameMap &q)
 
 bool KinematicChain::setMotorVelocity(const JointNameMap &qdot)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : qdot) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setMotorVelocity(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = qdot.find(joint_name);
+        if( it != qdot.end() ){
+            joint_pair.second->setMotorVelocity(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1244,17 +1228,15 @@ bool KinematicChain::setMotorVelocity(const JointNameMap &qdot)
 
 bool KinematicChain::setPositionReference(const JointNameMap &q)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : q) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setPositionReference(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = q.find(joint_name);
+        if( it != q.end() ){
+            joint_pair.second->setPositionReference(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1262,17 +1244,15 @@ bool KinematicChain::setPositionReference(const JointNameMap &q)
 
 bool KinematicChain::setStiffness(const JointNameMap &K)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : K) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setStiffness(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = K.find(joint_name);
+        if( it != K.end() ){
+            joint_pair.second->setStiffness(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1280,17 +1260,15 @@ bool KinematicChain::setStiffness(const JointNameMap &K)
 
 bool KinematicChain::setTemperature(const JointNameMap &temp)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : temp) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setTemperature(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = temp.find(joint_name);
+        if( it != temp.end() ){
+            joint_pair.second->setTemperature(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1298,35 +1276,29 @@ bool KinematicChain::setTemperature(const JointNameMap &temp)
 
 bool KinematicChain::setVelocityReference(const JointNameMap &qdot)
 {
-    bool success = true;
-
-    for (const auto & jointname_value_pair : qdot) {
-        const std::string &joint_name = jointname_value_pair.first;
-        if (_joint_name_map.count(joint_name)) {
-            _joint_name_map.at(joint_name)->setVelocityReference(jointname_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_name << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_name_map ){
+        const std::string& joint_name = joint_pair.first;
+        auto it = qdot.find(joint_name);
+        if( it != qdot.end() ){
+            joint_pair.second->setVelocityReference(it->second);
+            success = true;
         }
-
     }
 
-    return success;
-}
+    return success;}
 
 bool KinematicChain::setDamping(const JointIdMap &D)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : D) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setDamping(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint with ID " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = D.find(joint_pair.first);
+        if( it != D.end() ){
+            joint_pair.second->setDamping(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1334,17 +1306,14 @@ bool KinematicChain::setDamping(const JointIdMap &D)
 
 bool KinematicChain::setJointEffort(const JointIdMap &tau)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : tau) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setJointEffort(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = tau.find(joint_pair.first);
+        if( it != tau.end() ){
+            joint_pair.second->setJointEffort(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1352,17 +1321,14 @@ bool KinematicChain::setJointEffort(const JointIdMap &tau)
 
 bool KinematicChain::setEffortReference(const JointIdMap &tau)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : tau) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setEffortReference(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = tau.find(joint_pair.first);
+        if( it != tau.end() ){
+            joint_pair.second->setEffortReference(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1371,17 +1337,14 @@ bool KinematicChain::setEffortReference(const JointIdMap &tau)
 
 bool KinematicChain::setJointPosition(const JointIdMap &q)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : q) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setJointPosition(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = q.find(joint_pair.first);
+        if( it != q.end() ){
+            joint_pair.second->setJointPosition(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1390,17 +1353,14 @@ bool KinematicChain::setJointPosition(const JointIdMap &q)
 
 bool KinematicChain::setJointVelocity(const JointIdMap &qdot)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : qdot) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setJointVelocity(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = qdot.find(joint_pair.first);
+        if( it != qdot.end() ){
+            joint_pair.second->setJointVelocity(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1408,18 +1368,14 @@ bool KinematicChain::setJointVelocity(const JointIdMap &qdot)
 
 bool XBot::KinematicChain::setJointAcceleration(const JointIdMap& qddot)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : qddot) {
-        int joint_id = jointid_value_pair.first;
-        auto it = _joint_id_map.find(joint_id);
-        if ( it != _joint_id_map.end() ) {
-            it->second->setJointAcceleration(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = qddot.find(joint_pair.first);
+        if( it != qddot.end() ){
+            joint_pair.second->setJointAcceleration(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1428,17 +1384,14 @@ bool XBot::KinematicChain::setJointAcceleration(const JointIdMap& qddot)
 
 bool KinematicChain::setMotorPosition(const JointIdMap &q)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : q) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setMotorPosition(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = q.find(joint_pair.first);
+        if( it != q.end() ){
+            joint_pair.second->setMotorPosition(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1448,17 +1401,14 @@ bool KinematicChain::setMotorPosition(const JointIdMap &q)
 
 bool KinematicChain::setMotorVelocity(const JointIdMap &qdot)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : qdot) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setMotorVelocity(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = qdot.find(joint_pair.first);
+        if( it != qdot.end() ){
+            joint_pair.second->setMotorVelocity(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1466,17 +1416,14 @@ bool KinematicChain::setMotorVelocity(const JointIdMap &qdot)
 
 bool KinematicChain::setPositionReference(const JointIdMap &q)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : q) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setPositionReference(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = q.find(joint_pair.first);
+        if( it != q.end() ){
+            joint_pair.second->setPositionReference(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1485,17 +1432,14 @@ bool KinematicChain::setPositionReference(const JointIdMap &q)
 
 bool KinematicChain::setStiffness(const JointIdMap &K)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : K) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setStiffness(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = K.find(joint_pair.first);
+        if( it != K.end() ){
+            joint_pair.second->setStiffness(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1503,17 +1447,14 @@ bool KinematicChain::setStiffness(const JointIdMap &K)
 
 bool KinematicChain::setTemperature(const JointIdMap &temp)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : temp) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setTemperature(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = temp.find(joint_pair.first);
+        if( it != temp.end() ){
+            joint_pair.second->setTemperature(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1521,17 +1462,14 @@ bool KinematicChain::setTemperature(const JointIdMap &temp)
 
 bool KinematicChain::setVelocityReference(const JointIdMap &qdot)
 {
-    bool success = true;
-
-    for (const auto & jointid_value_pair : qdot) {
-        int joint_id = jointid_value_pair.first;
-        if (_joint_id_map.count(joint_id)) {
-            _joint_id_map.at(joint_id)->setVelocityReference(jointid_value_pair.second);
-        } else {
-            success = false;
-            std::cerr << "ERROR in function " << __func__ << "! Joint " << joint_id << " is NOT defined!!" << std::endl;
+    bool success = false;
+    
+    for( const auto& joint_pair : _joint_id_map ){
+        auto it = qdot.find(joint_pair.first);
+        if( it != qdot.end() ){
+            joint_pair.second->setVelocityReference(it->second);
+            success = true;
         }
-
     }
 
     return success;
@@ -1606,8 +1544,9 @@ const std::vector< std::string >& XBot::KinematicChain::getJointNames() const
 
 XBot::Joint::ConstPtr XBot::KinematicChain::getJointById(int id) const
 {
-    if(_joint_id_map.count(id)){
-        return _joint_id_map.at(id);
+    auto it = _joint_id_map.find(id);
+    if( it != _joint_id_map.end() ){
+        return it->second;
     }
     else{
         std::cerr << "ERROR chain " << _chain_name << " does not contain joint ID " << id << "!" << std::endl;
@@ -1617,8 +1556,9 @@ XBot::Joint::ConstPtr XBot::KinematicChain::getJointById(int id) const
 
 XBot::Joint::ConstPtr XBot::KinematicChain::getJointByName(const std::string& joint_name) const
 {
-    if(_joint_name_map.count(joint_name)){
-        return _joint_name_map.at(joint_name);
+    auto it = _joint_name_map.find(joint_name);
+    if( it != _joint_name_map.end() ){
+        return it->second;
     }
     else{
         std::cerr << "ERROR chain " << _chain_name << " does not contain joint " << joint_name << "!" << std::endl;
