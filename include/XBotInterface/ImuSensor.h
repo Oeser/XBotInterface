@@ -30,35 +30,101 @@ class ImuSensor : public GenericSensor {
 public:
     
     typedef std::shared_ptr<ImuSensor> Ptr;
-    
     typedef std::shared_ptr<ImuSensor> ConstPtr;
-    
-    ImuSensor(urdf::LinkConstSharedPtr sensor_link);
 
+    /**
+     * @brief Default constructor
+     * 
+     */
     ImuSensor();
     
+    /**
+     * @brief  Constructor with the sensor parent link
+     * 
+     * @param sensor_link the sensor parent link
+     */
+    ImuSensor(urdf::LinkConstSharedPtr sensor_link);
+    
+    /**
+     * @brief Getter for the IMU orientation as a quaternion 
+     * 
+     * @param orientation the IMU orientation as a quaternion 
+     * @return void
+     */
     void getOrientation(Eigen::Quaterniond& orientation) const;
     
+    /**
+     * @brief Getter for the IMU orientation as a rotation matrix 
+     * 
+     * @param orientation the IMU orientation as a rotation matrix 
+     * @return void
+     */
     void getOrientation(Eigen::Matrix3d& orientation) const;
     
+    /**
+     * @brief Getter for the IMU linear acceleration
+     * 
+     * @param acceleration the IMU linear acceleration
+     * @return void
+     */
     void getLinearAcceleration(Eigen::Vector3d& acceleration) const;
     
+    /**
+     * @brief Getter for the IMU angular velocity
+     * 
+     * @param angular_velocity the IMU angular velocity
+     * @return void
+     */
     void getAngularVelocity(Eigen::Vector3d& angular_velocity) const;
     
+    /**
+     * @brief Getter for the IMU data i.e. orientation(as a quaternion), linear acceleration and angular velocity
+     * 
+     * @param orientation the IMU orientation as a quaternion 
+     * @param acceleration the IMU linear acceleration
+     * @param angular_velocity the IMU angular velocity
+     * @return void
+     */
     void getImuData(Eigen::Quaterniond& orientation, 
                     Eigen::Vector3d& acceleration,
                     Eigen::Vector3d& angular_velocity) const;
                     
+   /**
+    * @brief Getter for the IMU data i.e. orientation(as a rotation matrix), linear acceleration and angular velocity
+    * 
+    * @param orientation the IMU orientation as a rotation matrix
+    * @param accelerationthe the IMU linear acceleration
+    * @param angular_velocity the IMU angular velocity
+    * @return void
+    */
     void getImuData(Eigen::Matrix3d& orientation, 
                     Eigen::Vector3d& acceleration,
                     Eigen::Vector3d& angular_velocity) const;
                     
+   /**
+    * @brief Setter for the IMU data i.e. orientation(as a quaternion), linear acceleration, angular velocity and a timestamp
+    * 
+    * @param orientation the IMU orientation as a quaternion to set
+    * @param acceleration the IMU linear acceleration to set
+    * @param angular_velocity the IMU angular velocity to set
+    * @param timestamp IMU data reading timestamp to set
+    * @return void
+    */
     void setImuData(Eigen::Quaterniond& orientation, 
                     Eigen::Vector3d& acceleration,
                     Eigen::Vector3d& angular_velocity,
                     double timestamp
                    );
     
+   /**
+    * @brief Setter for the IMU data i.e. orientation(as a rotation matrix), linear acceleration, angular velocity and a timestamp
+    * 
+    * @param orientation the IMU orientation as a rotation matrix to set
+    * @param acceleration the IMU linear acceleration to set
+    * @param angular_velocity the IMU angular velocity to set
+    * @param timestamp IMU data reading timestamp to set
+    * @return void
+    */
     void setImuData(Eigen::Matrix3d& orientation, 
                     Eigen::Vector3d& acceleration,
                     Eigen::Vector3d& angular_velocity,

@@ -39,29 +39,100 @@ class RobotInterface : public XBotInterface
 
 public:
     
+    typedef std::shared_ptr<RobotInterface> Ptr;
+    typedef std::shared_ptr<const RobotInterface> ConstPtr;
 
+    /**
+     * @brief Default constructor
+     * 
+     */
     RobotInterface();
 
-    typedef std::shared_ptr<RobotInterface> Ptr;
 
+    /**
+     * @brief Getter for the robot singleton
+     * 
+     * @param path_to_cfg path to the config file where the robot parameters(e.g. control framework, internal model ...) are specified
+     * @param argc executable arc
+     * @param argv executable argv
+     * @return a shared pointer to the RobotInterface instance
+     */
     static RobotInterface::Ptr getRobot(const std::string &path_to_cfg, int argc, char **argv);
     
+    /**
+     * @brief Getter for the internal model instance
+     * 
+     * @return the internal model instance
+     */
     ModelInterface& model();
+    
     RobotInterface& operator=(const RobotInterface& other) = delete;
     RobotInterface(const RobotInterface& other) = delete;
     
-    virtual double getTime() const = 0;
-    virtual bool isRunning() const = 0;
+    /**
+     * @brief Getter for the time in the robot framework
+     * 
+     * @return the time in the robot framework
+     */
 
+    virtual double getTime() const = 0;
+    
+    /**
+     * @brief ...
+     * 
+     * @return bool
+     */
+    virtual bool isRunning() const = 0;
+    
+    /**
+     * @brief Reads the current state of the robot calling sense_internal() and read_sensors() implemented by the derived class. 
+     * It synchronizes the internal model if the sync_model param is true.
+     * 
+     * @param sync_model sync flag: true if the internal model needs to be synchronized with the robot
+     * @return true if the sense is successful, false otherwise
+     */
     bool sense(bool sync_model = true);
+    
+    /**
+     * @brief Moves the robot calling the move_internal() implemented by the derived class
+     * 
+     * @return true if the move is successful, false otherwis
+     */
     bool move();
     
+    /**
+     * @brief Getter for the robot chain with a certain chain_name
+     * 
+     * @param chain_name the requested chain name 
+     * @return the robot chain with the requested chain_name
+     */
     RobotChain& operator()(const std::string& chain_name);
+    
+    /**
+     * @brief Getter for the robot chain with a certain chain_name
+     * 
+     * @param chain_name the requested chain name 
+     * @return the robot chain with the requested chain_name
+     */
     RobotChain& chain(const std::string& chain_name);
+    
+    /**
+     * @brief Getter for the standard kinematic group arm: you can quickly access the i-th arm in the order specified in the SRDF
+     * 
+     * @param arm_id the id of the requested arm (i.e. the index as specifed in the SRDF group
+     * @return the arm chain with the requested arm_id
+     */
     RobotChain& arm(int arm_id);
+    
+    /**
+     * @brief Getter for the standard kinematic group leg: you can quickly access the i-th leg in the order specified in the SRDF
+     * 
+     * @param arm_id the id of the requested leg (i.e. the index as specifed in the SRDF group
+     * @return the leg chain with the requested leg_id
+     */
     RobotChain& leg(int leg_id);
 
-/**
+   /**
     * @brief Sets the robot references according to a ModelInterface.
     * Flags can be specified to select a part of the state to be synchronized.
     * 
@@ -88,6 +159,7 @@ public:
     template <typename... SyncFlags>
     bool setReferenceFrom(const ModelInterface& model, SyncFlags... flags);
 
+    // TBD how to handle them????
     virtual bool setControlMode(const std::map<std::string, std::string> &joint_control_mode_map) = 0;
     virtual bool setControlMode(const std::string &robot_control_mode) = 0;
     virtual bool getControlMode(std::map<std::string, std::string> &joint_control_mode_map) = 0;
@@ -140,7 +212,6 @@ protected:
     virtual bool move_internal() = 0;
     virtual bool read_sensors() = 0;
     virtual bool init_robot(const std::string& path_to_cfg) = 0;
-    
     
 
     // Setters for RX

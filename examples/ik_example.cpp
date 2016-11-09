@@ -218,10 +218,12 @@ int main(int argc, char **argv){
     robot.setPositionReference(bad_joints_new_ref); 
     
     /* To send the reference that we set to the controller, we just
-     * do robot.move()
+     * do robot.move() : we don't want to command that kind of configuration,
+     * let's just print the whole robot configuration!
      */
+    std::cout << "Random home configuration" << std::endl;
+    std::cout << robot << std::endl;
     
-//     robot.move();
     
     /* Sleep for a while to allow the robot execute the commanded reference */
     sleep(1);

@@ -36,17 +36,21 @@
 
 namespace XBot
 {
-// TBD update liburdf-headers-dev to version >0.4
-// typedef boost::shared_ptr<urdf::Joint const> JointConstSharedPtr;
-// typedef boost::shared_ptr<urdf::Link const> LinkConstSharedPtr;
-
+    
 // NOTE forward declaration because of friendship
 class XBotInterface;
 
+/**
+ * @brief Kinematic chain abstraction as a set of joints and sensors.
+ * 
+ */
 class KinematicChain
 {
 
 public:
+
+    typedef std::shared_ptr<KinematicChain> Ptr;
+    typedef std::shared_ptr<const KinematicChain> ConstPtr;
     
     friend XBot::XBotInterface;
 
@@ -85,12 +89,6 @@ public:
      *
      */
     KinematicChain &operator= (const KinematicChain &rhs);
-
-    /**
-     * @brief shared pointer to a KinematicChain
-     * 
-     */
-    typedef std::shared_ptr<KinematicChain> Ptr;
     
     /**
      * @brief Gets the chain joints group state configuration as specified in the robot SRDF.
@@ -358,12 +356,40 @@ public:
      */
     int getJointId(int i) const;
     
+    /**
+     * @brief Getter for the chain dof index (local index of a joint inside a chain, this means 
+     *        that the base link of the chain has dof index = 0, tip link of the chain has dof index = getJointNum()-1 )
+     *        of a joint with the requested joint id.
+     * 
+     * @param joint_id the requested joint id
+     * @return the chain dof index of a joint with the requested joint id
+     */
     int getChainDofIndex(int joint_id) const;
     
+    /**
+     * @brief Getter for the chain dof index (local index of a joint inside a chain, this means 
+     *        that the base link of the chain has dof index = 0, tip link of the chain has dof index = getJointNum()-1 )
+     *        of a joint with the requested joint name.
+     * 
+     * @param joint_name the requested joint name
+     * @return the chain dof index of a joint with the requested joint name
+     */
     int getChainDofIndex(const std::string& joint_name) const;
     
-    bool hasJoint(int id) const;
+    /**
+     * @brief check if the chain has a joint with a certain id
+     * 
+     * @param joint_id the requested joint id
+     * @return true if the joint with with_id is present in the chain
+     */
+    bool hasJoint(int joint_id) const;
     
+    /**
+     * @brief check if the chain has a joint with a certain name
+     * 
+     * @param joint_name the requested joint name
+     * @return true if the joint with joint_name is present in the chain
+     */
     bool hasJoint(const std::string& joint_name) const;
     
     /**
@@ -382,8 +408,6 @@ public:
      * belonging to the chain
      */
     int getJointNum() const;
-    
-
 
     /**
      * @brief Method returning the vector of urdf::Joints corresponding to the chain.
@@ -399,6 +423,13 @@ public:
      */
     const std::vector< urdf::LinkConstSharedPtr > &getUrdfLinks() const;
     
+    
+    /**
+     * @brief Updates the current object (this) by performing a shallow copy with the chain passed as argument
+     * 
+     * @param chain the chain to shallow copy
+     * @return void
+     */
     void shallowCopy(const KinematicChain& chain);
     
     /**
@@ -529,6 +560,24 @@ public:
     bool setStiffness(int i, double K);
     bool setDamping(int i, double D);
     
+    /**
+     * @brief Synchronize the current KinematicChain with another KinematicChain object
+     * 
+     * @param other The KinematicChain object from which we synchronize the current object
+     * @param flags Flags to specify what part of the state must be synchronized. By default (i.e. if
+     * this argument is omitted) the whole state is synchronized. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     *  - Sync::Position, 
+     *  - Sync::Velocity
+     *  - Sync::Acceleration
+     *  - Sync::Effort
+     *  - Sync::Stiffness 
+     *  - Sync::Damping 
+     *  - Sync::Impedance
+     *  - Sync::All
+     * @return bool
+     */
     template <typename... SyncFlags>
     bool syncFrom(const KinematicChain& other, SyncFlags... flags);
     
@@ -561,9 +610,6 @@ protected:
     
     std::vector<ImuSensor::Ptr> _imu_vector;
     std::map<std::string, ImuSensor::Ptr> _imu_map;
-    
-    
-    
     
     /**
      * @brief Getter for the i-th Joint Ptr 
@@ -599,17 +645,17 @@ private:
 
 };
 
-    std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
+std::ostream& operator<<(std::ostream& os, const XBot::KinematicChain& c);
+
+template <typename... SyncFlags>
+bool KinematicChain::syncFrom(const KinematicChain &other, SyncFlags... flags)
+{
     
-    template <typename... SyncFlags>
-    bool KinematicChain::syncFrom(const KinematicChain &other, SyncFlags... flags)
-    {
-        
-        int pos = 0;
-        for (const XBot::Joint::Ptr & j : other._joint_vector) {
-            _joint_vector[pos++]->syncFrom(*j, flags...);
-        }
+    int pos = 0;
+    for (const XBot::Joint::Ptr & j : other._joint_vector) {
+        _joint_vector[pos++]->syncFrom(*j, flags...);
     }
+}
     
 }
 

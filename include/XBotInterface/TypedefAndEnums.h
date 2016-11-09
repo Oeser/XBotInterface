@@ -47,6 +47,20 @@ namespace XBot{
     // ENUM //
     //////////
  
+    /**
+     * @brief enum class that represents a set of flags to specify what part of the robot/model state needs to be synchronized. 
+     * By default (i.e. if this argument is omitted) the whole state is used. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     * - Sync::Position, 
+     * - Sync::Velocity
+     * - Sync::Acceleration
+     * - Sync::Effort
+     * - Sync::Stiffness 
+     * - Sync::Damping 
+     * - Sync::Impedance
+     * - Sync::All
+     */
     enum class Sync {
         
         Position ,
