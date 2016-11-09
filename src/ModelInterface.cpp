@@ -604,6 +604,33 @@ bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name
 }
 
 
+bool XBot::ModelInterface::maskJacobian(const std::string& chain_name, Eigen::MatrixXd& J) const
+{
+    if( J.cols() < getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided jacobian has less than " << getJointNum() << " columns!" << std::endl;
+        return false;
+    }
+    auto it = _chain_map.find(chain_name);
+    if( it == _chain_map.end() ){
+        std::cerr << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << std::endl;
+        return false;
+    }
+    
+    const KinematicChain& chain = *(it->second);
+    for( int i = 0; i < chain.getJointNum(); i++ ){
+        int dof_idx = getDofIndex(chain.getJointId(i));
+        J.col(dof_idx).setZero();
+    }
+    
+    return true;
+}
+
+bool XBot::ModelInterface::maskJacobian(const std::string& chain_name, KDL::Jacobian& J) const
+{
+    const Eigen::MatrixXd& Je = J.data;
+    return maskJacobian(chain_name, const_cast<Eigen::MatrixXd&>(Je));
+}
+
 
 
 
