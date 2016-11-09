@@ -68,6 +68,18 @@ public:
      * @brief Setter for the robot chain references using a model chain
      * 
      * @param model_chain the model chain reference to set on the current robot chain
+     * @param flags Flags to specify what part of the state must be synchronized. By default (i.e. if
+     * this argument is omitted) the whole state is synchronized. Otherwise, an arbitrary number of flags
+     * can be specified in order to select a subset of the state. The flags must be of the enum type
+     * XBot::Sync, which can take the following values:
+     *  - Sync::Position, 
+     *  - Sync::Velocity
+     *  - Sync::Acceleration
+     *  - Sync::Effort
+     *  - Sync::Stiffness 
+     *  - Sync::Damping 
+     *  - Sync::Impedance
+     *  - Sync::All
      * @return true on success, false otherwise
      */
     template <typename... SyncFlags>
