@@ -380,8 +380,7 @@ int main(int argc, char **argv){
         
         // Set the desired end-effector pose at current time
         desired_pose.linear() = initial_pose.linear();
-        desired_pose.translation() = initial_pose.translation() + Eigen::Vector3d(0,0,1)*0.5*length*std::sin(2*3.1415/period*time);
-        
+        desired_pose.translation() = initial_pose.translation() + Eigen::Vector3d(0,0,1)*0.5*length*(1-std::cos(2*3.1415/period*time));
         // Compute the pose corresponding to the model state
         model.getPose(end_effector, base_frame, actual_pose);
         
