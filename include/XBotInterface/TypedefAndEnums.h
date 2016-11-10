@@ -21,6 +21,7 @@
 #define __XBOT_ENUM__
 
 #include <map>
+#include <unordered_map>
 #include <string>
 
 namespace XBot{
@@ -34,13 +35,13 @@ namespace XBot{
      * IDs are not required to be consecutive) and value representing a joint state (e.g. position,
      * torque, ...)
      */
-    typedef std::map<int, double> JointIdMap;
+    typedef std::unordered_map<int, double> JointIdMap;
     
     /**
      * @brief std::map with key representing the joint human-readable name and value 
      * representing a joint state (e.g. position, torque, ...)
      */
-    typedef std::map<std::string, double> JointNameMap;
+    typedef std::unordered_map<std::string, double> JointNameMap;
     
     
     //////////
