@@ -78,7 +78,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/ImuSensor.cpp
                                  src/bprinter/table_printer.cpp)
                                  
-target_link_libraries(XBotInterface ${XBotCoreModel_LIBRARIES}
+target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     yaml-cpp
                                     ${sharedlibpp_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}

@@ -63,12 +63,24 @@ public:
      const urdf::ModelInterface& getUrdf() const;
 
      /**
+      * @brief getUrdfPath Getter for the path to the URDF model
+      * @return a reference to std::string
+      */
+     const std::string& getUrdfPath() const;
+
+     /**
       * @brief Getter fot the robot SRDF model corresponding to the SRDF xml file
       * specified in the YAML config file.
       *
       * @return A reference to const srdf_advd::Model
       */
      const srdf_advr::Model& getSrdf() const;
+
+     /**
+      * @brief getSrdfPath Getter for the path to the SRDF model
+      * @return a reference to std::string
+      */
+     const std::string& getSrdfPath() const;
 
      /**
       * @brief Returns the robot URDF xml as a string. The URDF file is specified
