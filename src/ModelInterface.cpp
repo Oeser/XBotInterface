@@ -340,7 +340,7 @@ void XBot::ModelInterface::getCOM(Eigen::Vector3d& com_position) const
 void XBot::ModelInterface::getCOMJacobian(Eigen::MatrixXd& J) const
 {
     getCOMJacobian(_tmp_kdl_jacobian);
-    J = _tmp_kdl_jacobian.data;
+    J = _tmp_kdl_jacobian.data.block(0,0,3,getJointNum());
 }
 
 void XBot::ModelInterface::getCOMVelocity(Eigen::Vector3d& velocity) const

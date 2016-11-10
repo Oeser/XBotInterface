@@ -258,6 +258,70 @@ TEST_F(testModelInterface, checkJacobianMask){
     
 }
 
+TEST_F( testModelInterface, checkCOM ){
+ 
+    XBot::ModelInterface& model = *model_ptr;
+    
+    for(int iter=0; iter < 100; iter++){
+    
+    Eigen::VectorXd q, q1, q2, qdot;
+    q.setRandom(model.getJointNum());
+    qdot.setRandom(model.getJointNum());
+    
+    
+    model.setJointPosition(q);
+    model.setJointVelocity(qdot);
+    model.update();
+    
+    Eigen::MatrixXd Jcom, Jcom_hat;
+    Eigen::Vector3d com, com1, com2, dcom;
+    model.getCOMJacobian(Jcom);
+    model.getCOM(com);
+    model.getCOMVelocity(dcom);
+    
+    EXPECT_EQ( Jcom.rows(), 3 );
+    EXPECT_EQ( Jcom.cols(), model.getJointNum() );
+    
+    
+    Eigen::Vector3d dcom1;
+    dcom1 = Jcom*qdot;
+    
+    EXPECT_NEAR( (dcom-dcom1).norm(), 0, 0.0001 );
+    
+    double step_size = 0.000001;
+    Jcom_hat.resize(Jcom.rows(), Jcom.cols());
+    
+    for(int i = 0; i < model.getJointNum(); i++){
+        
+        q1 = q;
+        q2 = q;
+        q2(i) += step_size/2;
+        q1(i) -= step_size/2;
+        
+        model.setJointPosition(q2);
+        model.update();
+        model.getCOM(com2);
+        
+        model.setJointPosition(q1);
+        model.update();
+        model.getCOM(com1);
+        
+        
+        Jcom_hat.col(i) = (com2-com1)/step_size;
+        
+        
+    }
+    
+    
+    EXPECT_NEAR( (Jcom-Jcom_hat).norm()/Jcom.size(), 0, 0.00001 );
+    EXPECT_NEAR( (dcom-Jcom_hat*qdot).norm(), 0, 0.0001);
+    
+    }
+    
+    
+    
+}
+
 
 int main ( int argc, char **argv )
 {
