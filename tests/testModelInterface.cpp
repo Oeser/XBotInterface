@@ -258,6 +258,12 @@ TEST_F(testModelInterface, checkJacobianMask){
     
 }
 
+TEST_F(testModelInterface, checkRelativeJacobian){
+ 
+    // TODO
+    
+}
+
 TEST_F( testModelInterface, checkCOM ){
  
     XBot::ModelInterface& model = *model_ptr;

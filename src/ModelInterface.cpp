@@ -395,6 +395,32 @@ bool XBot::ModelInterface::getJacobian(const std::string& link_name, KDL::Jacobi
 
 }
 
+bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name, 
+                                               const std::string& base_link_name,
+                                               KDL::Jacobian& J) const
+{
+    bool success = getJacobian(target_link_name, _tmp_kdl_jacobian);
+    success = getJacobian(base_link_name, J) && success;
+    
+    J.data -= _tmp_kdl_jacobian.data;
+    
+    success = getOrientation(target_link_name, base_link_name, _tmp_kdl_rotation) && success;
+    
+    J.changeBase(_tmp_kdl_rotation);
+    
+    return success;
+}
+
+bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name, 
+                                               const std::string& base_link_name, 
+                                               Eigen::MatrixXd& J) const
+{
+    bool success = getRelativeJacobian(target_link_name, base_link_name, _tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+    return success;
+}
+
+
 
 bool XBot::ModelInterface::getPose(const std::string& source_frame, 
                                    const std::string& target_frame, 

@@ -280,6 +280,19 @@ public:
      */
     bool getJacobian( const std::string& link_name, 
                       KDL::Jacobian& J) const;
+                      
+    /**
+     * @brief Gets the relative Jacobian of target_link_name w.r.t to base_link_name.
+     * The result is represented in the reference frame of base_link_name.
+     * 
+     * @param target_link_name The name of the target link
+     * @param base_link_name The name of the base link
+     * @param J The requested jacobian.
+     * @return bool
+     */
+    bool getRelativeJacobian( const std::string& target_link_name, 
+                              const std::string& base_link_name,
+                              KDL::Jacobian& J) const;
 
     /**
     * @brief Gets the velocity twist of link_name (first linear, then angular velocity). 
@@ -581,6 +594,19 @@ public:
     bool getJacobian( const std::string& link_name, 
                       const Eigen::Vector3d& reference_point, 
                       Eigen::MatrixXd& J);
+    
+    /**
+     * @brief Gets the relative Jacobian of target_link_name w.r.t to base_link_name.
+     * The result is represented in the reference frame of base_link_name.
+     * 
+     * @param target_link_name The name of the target link
+     * @param base_link_name The name of the base link
+     * @param J The requested jacobian.
+     * @return bool
+     */
+    bool getRelativeJacobian( const std::string& target_link_name, 
+                              const std::string& base_link_name,
+                              Eigen::MatrixXd& J) const;
     
     /**
      * @brief Gets the COM position vector w.r.t. the world frame
