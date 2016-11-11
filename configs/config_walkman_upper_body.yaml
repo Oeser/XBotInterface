@@ -26,6 +26,7 @@ RobotInterfaceYARP:
   path_to_shared_lib: "libRobotInterfaceYARP.so"
   subclass_factory_name: "robot_interface_yarp"
   module_prefix: "test_YARP"
+  robot_name: "bigman"
   # different config files for module_prefix
   
 RobotInterfaceDUMMY:
