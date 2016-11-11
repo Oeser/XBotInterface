@@ -1899,3 +1899,13 @@ void XBot::XBotInterface::printTracking() const
         c.second->printTracking();
     }
 }
+
+const std::string& XBot::XBotInterface::getUrdfPath() const
+{
+    return _urdf_path;
+}
+
+const std::string& XBot::XBotInterface::getSrdfPath() const
+{
+    return _srdf_path;
+}

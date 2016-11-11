@@ -1,9 +1,9 @@
-# WALKMAN config
+# COMAN config
 
 XBotInterface:
-  urdf_path: "urdf/bigman.urdf"
-  srdf_path: "srdf/bigman.srdf"
-  joint_map_path: "joint_map/bigman_ecat_joint_map.yaml"
+  urdf_path: "urdf/coman.urdf"
+  srdf_path: "srdf/coman.srdf"
+  joint_map_path: "joint_map/coman_ecat_joint_map.yaml"
 
 RobotInterface:
   framework_name: "YARP"
@@ -17,13 +17,7 @@ RobotInterfaceYARP:
   path_to_shared_lib: "libRobotInterfaceYARP.so"
   subclass_factory_name: "robot_interface_yarp"
   module_prefix: "test_YARP"
-  robot_name: "bigman"
   # different config files for module_prefix
-  
-RobotInterfaceDUMMY:
-  subclass_name: "RobotInterfaceDUMMY"
-  path_to_shared_lib: "libRobotInterfaceDUMMY.so"
-  subclass_factory_name: "robot_interface_dummy"
 
 ModelInterfaceRBDL:
   subclass_name: "ModelInterfaceRBDL"
