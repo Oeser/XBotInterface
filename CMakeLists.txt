@@ -44,13 +44,15 @@ include(MacroOptionalBuild)
 
 
 find_package(XBotCoreModel REQUIRED)
+find_package(sharedlibpp REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(sharedlibpp REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 
 option(BUILD_TESTS "Compile XBotInterface tests" FALSE)
+
+
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${RobotInterfaceROS_INCLUDE_DIRS}
@@ -61,6 +63,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${bprinter_INCLUDE_DIRS}
                             )      
                             
+
                             
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
@@ -79,12 +82,22 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/bprinter/table_printer.cpp)
                                  
 target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
-                                    yaml-cpp
                                     ${sharedlibpp_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
                                     ${eigen_conversions_LIBRARIES}
                                     ${bprinter_LIBRARIES}
                                     )
+
+                                    
+target_include_directories(XBotInterface PUBLIC
+                            ${XBotCoreModel_INCLUDE_DIRS}
+                            ${RobotInterfaceROS_INCLUDE_DIRS}
+                            ${EIGEN3_INCLUDE_DIR}
+                            ${kdl_parser_INCLUDE_DIRS}
+                            ${orocos_kdl_INCLUDE_DIRS}
+                            ${sharedlibpp_INCLUDE_DIRS}
+                            ${bprinter_INCLUDE_DIRS}
+                            )
 
 add_executable(test_exec src/main_test.cpp)
 target_link_libraries(test_exec XBotInterface)
