@@ -25,12 +25,14 @@ int main(int argc, char **argv){
     
     q_target = qmin;
     
+    srand(robot.getTime());
+    
     for( int i = 0; i < qmax.size(); i++ ){
         double rr = rand()/double(RAND_MAX);
         q_target(i) = qmin(i) + rr * (qmax(i)-qmin(i));
     }
     
-    q_target = q_homing*1.5;
+//     q_target = q_homing*1.5;
     
     
     Eigen::VectorXd q, qref, qdot, qdotref, qddotref, tau, tauref;

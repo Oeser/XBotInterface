@@ -409,7 +409,7 @@ int main(int argc, char **argv){
         model.update();
         
         // Use the model state as a reference for controllers
-        robot.setReferenceFrom(model, XBot::Sync::Position);
+        robot.setReferenceFrom(model, Sync::Position);
         robot.move();
         
         // sleep a bit
