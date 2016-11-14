@@ -1997,9 +1997,9 @@ void XBot::KinematicChain::printTracking() const
         double pos_err = getPositionReference(i) - getJointPosition(i);
         double pos_err_rel = pos_err / getPositionReference(i);
         double tau_err = getEffortReference(i) - getJointEffort(i);
-        double tau_err_rel = pos_err / getEffortReference(i);
+        double tau_err_rel = tau_err / getEffortReference(i);
         double vel_err = getVelocityReference(i) - getJointVelocity(i);
-        double vel_err_rel = pos_err / getVelocityReference(i);
+        double vel_err_rel = vel_err / getVelocityReference(i);
 
         
         tp << getJointName(i) << getJointId(i) << getJointPosition(i) << getPositionReference(i) << pos_err << pos_err_rel*100 << getJointEffort(i) << getEffortReference(i) << tau_err << tau_err_rel*100 << getJointVelocity(i) << getVelocityReference(i) << vel_err << vel_err_rel*100;
