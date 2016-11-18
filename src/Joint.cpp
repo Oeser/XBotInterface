@@ -335,4 +335,44 @@ std::ostream& XBot::operator<< ( std::ostream& os, const XBot::Joint& j )
     return os;
 }
 
+void XBot::Joint::enforceEffortLimit(double& tau) const
+{
+    if( tau < -_urdf_joint->limits->effort ){
+        tau = -_urdf_joint->limits->effort; 
+        return;
+    }
+    
+    if( tau > _urdf_joint->limits->effort ){
+        tau = _urdf_joint->limits->effort; 
+        return;
+    }
+}
+
+void XBot::Joint::enforceJointLimits(double& q) const
+{
+    if( q < _urdf_joint->limits->lower ){
+        q = _urdf_joint->limits->lower; 
+        return;
+    }
+    
+    if( q > _urdf_joint->limits->upper ){
+        q = _urdf_joint->limits->upper; 
+        return;
+    }
+}
+
+void XBot::Joint::enforceVelocityLimit(double& qdot) const
+{
+    if( qdot < -_urdf_joint->limits->velocity ){
+        qdot = -_urdf_joint->limits->velocity; 
+        return;
+    }
+    
+    if( qdot > _urdf_joint->limits->velocity ){
+        qdot = _urdf_joint->limits->velocity; 
+        return;
+    }
+}
+
+
 

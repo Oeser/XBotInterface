@@ -1180,6 +1180,12 @@ public:
      * @return True if all joints are within their limits.
      */
      bool checkEffortLimits ( const Eigen::VectorXd& tau ) const;
+     
+     bool enforceJointLimits( Eigen::VectorXd& q ) const;
+     
+     bool enforceEffortLimit( Eigen::VectorXd& tau ) const;
+     
+     bool enforceVelocityLimit( Eigen::VectorXd& qdot ) const;
 
      /**
       * @brief Synchronize the current XBotInterface with another XBotInterface object

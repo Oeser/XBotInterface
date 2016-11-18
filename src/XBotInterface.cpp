@@ -1909,3 +1909,46 @@ const std::string& XBot::XBotInterface::getSrdfPath() const
 {
     return _srdf_path;
 }
+
+bool XBot::XBotInterface::enforceEffortLimit(Eigen::VectorXd& tau) const
+{
+    if( tau.size() != getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided vector has " << tau.size() << " elements != " << getJointNum() << " the size of the robot!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        _ordered_joint_vector[i]->enforceEffortLimit(tau(i));
+    }
+    
+    return true;
+}
+
+bool XBot::XBotInterface::enforceJointLimits(Eigen::VectorXd& q) const
+{
+    if( q.size() != getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided vector has " << q.size() << " elements != " << getJointNum() << " the size of the robot!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        _ordered_joint_vector[i]->enforceJointLimits(q(i));
+    }
+    
+    return true;
+}
+
+bool XBot::XBotInterface::enforceVelocityLimit(Eigen::VectorXd& qdot) const
+{
+    if( qdot.size() != getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided vector has " << qdot.size() << " elements != " << getJointNum() << " the size of the robot!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        _ordered_joint_vector[i]->enforceVelocityLimit(qdot(i));
+    }
+    
+    return true;
+}
+

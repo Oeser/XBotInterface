@@ -141,6 +141,13 @@ public:
      */
     bool checkEffortLimit(double tau) const;
     
+
+    void enforceJointLimits(double& q) const;
+    
+    void enforceVelocityLimit(double& qdot) const;
+    
+    void enforceEffortLimit(double& tau) const;
+    
     /**
      * @brief Getter for the urdf Joint object
      * 

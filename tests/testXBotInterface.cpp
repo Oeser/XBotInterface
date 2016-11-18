@@ -604,6 +604,7 @@ TEST_F(testXbotInterface, checkJointLimits){
     }
     
     Eigen::VectorXd q_in_range, tau_in_range, qdot_in_range;
+    Eigen::VectorXd q_enforced, tau_enforced, qdot_enforced;
     Eigen::VectorXd q_out_range, tau_out_range, qdot_out_range;
     std::vector<std::string> bad_joints, expected_bad_joints;
     
@@ -646,6 +647,12 @@ TEST_F(testXbotInterface, checkJointLimits){
         EXPECT_FALSE( xbint.checkJointLimits(q_out_range, bad_joints) );
         EXPECT_FALSE( xbint.checkJointLimits(q_out_range) );
         EXPECT_TRUE( bad_joints == expected_bad_joints );
+        q_enforced = q_in_range;
+        xbint.enforceJointLimits(q_enforced);
+        EXPECT_TRUE( (q_enforced.array() == q_in_range.array()).all() );
+        q_enforced = q_out_range;
+        xbint.enforceJointLimits(q_enforced);
+        EXPECT_TRUE( xbint.checkJointLimits(q_enforced) );
         
         bad_joints.clear();
         EXPECT_TRUE( xbint.checkEffortLimits(tau_in_range, bad_joints) );
@@ -654,6 +661,12 @@ TEST_F(testXbotInterface, checkJointLimits){
         EXPECT_FALSE( xbint.checkEffortLimits(tau_out_range, bad_joints) );
         EXPECT_FALSE( xbint.checkEffortLimits(tau_out_range) );
         EXPECT_TRUE( bad_joints == expected_bad_joints );
+        tau_enforced = tau_in_range;
+        xbint.enforceEffortLimit(tau_enforced);
+        EXPECT_TRUE( (tau_enforced.array() == tau_in_range.array()).all() );
+        tau_enforced = tau_out_range;
+        xbint.enforceEffortLimit(tau_enforced);
+        EXPECT_TRUE( xbint.checkEffortLimits(q_enforced) );
         
         bad_joints.clear();
         EXPECT_TRUE( xbint.checkVelocityLimits(qdot_in_range, bad_joints) );
@@ -662,10 +675,17 @@ TEST_F(testXbotInterface, checkJointLimits){
         EXPECT_FALSE( xbint.checkVelocityLimits(qdot_out_range, bad_joints) );
         EXPECT_FALSE( xbint.checkVelocityLimits(qdot_out_range) );
         EXPECT_TRUE( bad_joints == expected_bad_joints );
+        qdot_enforced = qdot_in_range;
+        xbint.enforceVelocityLimit(qdot_enforced);
+        EXPECT_TRUE( (qdot_enforced.array() == qdot_in_range.array()).all() );
+        qdot_enforced = qdot_out_range;
+        xbint.enforceVelocityLimit(qdot_enforced);
+        EXPECT_TRUE( xbint.checkVelocityLimits(qdot_enforced) );
     
     }
     
 }
+
 
 
 int main ( int argc, char **argv )

@@ -2008,4 +2008,47 @@ void XBot::KinematicChain::printTracking() const
     tp.PrintFooter();
 }
 
+bool XBot::KinematicChain::enforceEffortLimit(Eigen::VectorXd& tau) const
+{
+    if( tau.size() != getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided vector has " << tau.size() << " elements != " << getJointNum() << " the size of the chain!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        _joint_vector[i]->enforceEffortLimit(tau(i));
+    }
+    
+    return true;
+}
+
+bool XBot::KinematicChain::enforceJointLimits(Eigen::VectorXd& q) const
+{
+    if( q.size() != getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided vector has " << q.size() << " elements != " << getJointNum() << " the size of the chain!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        _joint_vector[i]->enforceJointLimits(q(i));
+    }
+    
+    return true;
+}
+
+bool XBot::KinematicChain::enforceVelocityLimit(Eigen::VectorXd& qdot) const
+{
+    if( qdot.size() != getJointNum() ){
+        std::cerr << "ERROR in " << __func__ << "! Provided vector has " << qdot.size() << " elements != " << getJointNum() << " the size of the chain!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        _joint_vector[i]->enforceVelocityLimit(qdot(i));
+    }
+    
+    return true;
+}
+
+
 } // end namespace XBot

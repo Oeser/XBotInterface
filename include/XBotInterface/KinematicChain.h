@@ -273,6 +273,12 @@ public:
      */
     bool checkEffortLimits(const Eigen::VectorXd& tau) const;
     
+    bool enforceJointLimits(Eigen::VectorXd& q) const;
+    
+    bool enforceVelocityLimit(Eigen::VectorXd& qdot) const;
+    
+    bool enforceEffortLimit(Eigen::VectorXd& tau) const;
+    
     /**
      * @brief add a joint in the kinematic chain pushing it in the end of the chain
      * 
