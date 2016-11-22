@@ -8,7 +8,7 @@ find_dependency(YCM)
 find_dependency(XBotCoreModel)
 find_dependency(sharedlibpp)
 find_dependency(kdl_parser)
-find_dependency(Eigen3)
+find_package(Eigen3)
 find_dependency(orocos_kdl)
 find_dependency(eigen_conversions)
 
