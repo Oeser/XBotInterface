@@ -19,8 +19,6 @@
 
 #include <XBotInterface/XBotInterface.h>
 
-#define CONFIG_MIDDLE_PATH "/external/XBotInterface/configs/"
-
 
 XBot::XBotInterface::XBotInterface()
 {
@@ -100,10 +98,9 @@ bool XBot::XBotInterface::hasChain(const std::string& chain_name) const
 }
 
 
-bool XBot::XBotInterface::computeAbsolutePath ( const std::string& input_path,
+bool XBot::XBotInterface::computeAbsolutePath (  const std::string& input_path,
                                                  const std::string& middle_path,
-                                                 std::string& absolute_path, 
-                                                 std::string extension)
+                                                 std::string& absolute_path)
 {
     // if not an absolute path
     if(!(input_path.at(0) == '/')) {
@@ -115,7 +112,6 @@ bool XBot::XBotInterface::computeAbsolutePath ( const std::string& input_path,
             // default relative path when working with the superbuild
             current_path += middle_path;
             current_path += input_path;
-            current_path += extension;
             absolute_path = current_path;
             return true;
         }
@@ -150,7 +146,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     // check the urdf_filename
     if(x_bot_interface["urdf_path"]) {
         computeAbsolutePath(x_bot_interface["urdf_path"].as<std::string>(), 
-                            CONFIG_MIDDLE_PATH,
+                            "",
                             _urdf_path); 
     }
     else {
@@ -160,8 +156,8 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     
     // check the srdf_filename
     if(x_bot_interface["srdf_path"]) {
-        computeAbsolutePath(x_bot_interface["srdf_path"].as<std::string>(), 
-                            CONFIG_MIDDLE_PATH,
+        computeAbsolutePath(x_bot_interface["srdf_path"].as<std::string>(),
+                            "",
                             _srdf_path); 
     }
     else {
@@ -172,7 +168,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     // check joint_map_config
     if(x_bot_interface["joint_map_path"]) {
         computeAbsolutePath(x_bot_interface["joint_map_path"].as<std::string>(), 
-                            CONFIG_MIDDLE_PATH,
+                            "",
                             _joint_map_config); 
     }
     else {
