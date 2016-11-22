@@ -1239,8 +1239,7 @@ protected:
 
      static bool computeAbsolutePath ( const std::string& input_path,
                                        const std::string& midlle_path,
-                                       std::string& absolute_path,
-                                       std::string extension = "" );
+                                       std::string& absolute_path );
 
      const std::vector<std::string>& getModelOrderedChainName() const;
 
