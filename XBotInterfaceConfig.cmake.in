@@ -4,6 +4,7 @@ set(XBotInterface_VERSION @XBotInterface_VERSION@)
 
 set_and_check(XBotInterface_INCLUDEDIR "@PACKAGE_XBotInterface_INCLUDEDIR@")
 include(CMakeFindDependencyMacro)
+find_dependency(YCM)
 find_dependency(XBotCoreModel)
 find_dependency(sharedlibpp)
 find_dependency(kdl_parser)

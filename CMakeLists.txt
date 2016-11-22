@@ -24,6 +24,7 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0017 NEW)
 endif(COMMAND cmake_policy)
 
+
 include(ExternalProject)
 project(XBotInterface)
 
@@ -42,6 +43,8 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(MacroOptionalBuild)
 
+# find first YCM in order to have ${YCM_MODULE_PATH} defined for 3rd party software like Eigen3
+find_package(YCM REQUIRED)
 
 find_package(XBotCoreModel REQUIRED)
 find_package(sharedlibpp REQUIRED)
