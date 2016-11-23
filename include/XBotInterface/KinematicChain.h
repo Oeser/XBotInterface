@@ -273,11 +273,75 @@ public:
      */
     bool checkEffortLimits(const Eigen::VectorXd& tau) const;
     
+    /**
+      * @brief Modifies the input joint position vector by enforcing joint limits. 
+      * 
+      * @param q The input joint position vector. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
     bool enforceJointLimits(Eigen::VectorXd& q) const;
     
+    /**
+      * @brief Modifies the input joint velcoity vector by enforcing joint limits. 
+      * 
+      * @param qdot The input joint velocity vector. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
     bool enforceVelocityLimit(Eigen::VectorXd& qdot) const;
     
+    /**
+      * @brief Modifies the input joint effort vector by enforcing effort limits. 
+      * 
+      * @param tau The input joint effort vector. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
     bool enforceEffortLimit(Eigen::VectorXd& tau) const;
+    
+    /**
+     * @brief Converts a state vector for an arbitrary subset of the chain state (specified 
+     * as a JointIdMap) to its Eigen representation.
+     * Note that the output vector is resized and set to zero if its size does not match the
+     * number of joints. Otherwise, unspecified components are left untouched.
+     * 
+     * @param id_map A JointIdMap contaning the state of the robot (or a part of it)
+     * @param eigen_vector The output vector to be filled.
+     * @return True if the input map contains valid joints.
+     */
+    bool mapToEigen(const JointIdMap& id_map, Eigen::VectorXd& eigen_vector) const;
+    
+    /**
+     * @brief Converts a state vector for an arbitrary subset of the chain state (specified 
+     * as a JointNameMap) to its Eigen representation.
+     * Note that the output vector is resized and set to zero if its size does not match the
+     * number of joints. Otherwise, unspecified components are left untouched.
+     * 
+     * @param name_map A JointNameMap contaning the state of the robot (or a part of it)
+     * @param eigen_vector The output vector to be filled.
+     * @return True if the input map contains valid joints.
+     */
+    bool mapToEigen(const JointNameMap& name_map, Eigen::VectorXd& eigen_vector) const;
+    
+    /**
+     * @brief Converts a state vector for the whole chain to its JointIdMap representation.
+     * Note that the output map is not cleared before it is filled. It is the responsibility of
+     * the user to do so if required.
+     * 
+     * @param eigen_vector A state vector for the whole robot (its size must match getJointNum())
+     * @param id_map The output map to be filled
+     * @return True if the input vector is valid.
+     */
+    bool eigenToMap(const Eigen::VectorXd& eigen_vector, JointIdMap& id_map) const;
+    
+    /**
+     * @brief Converts a state vector for the whole chain to its JointNameMap representation.
+     * Note that the output map is not cleared before it is filled. It is the responsibility of
+     * the user to do so if required.
+     * 
+     * @param eigen_vector A state vector for the whole robot (its size must match getJointNum())
+     * @param name_map The output map to be filled
+     * @return True if the input vector is valid.
+     */
+    bool eigenToMap(const Eigen::VectorXd& eigen_vector, JointNameMap& name_map) const;
     
     /**
      * @brief add a joint in the kinematic chain pushing it in the end of the chain

@@ -2050,5 +2050,74 @@ bool XBot::KinematicChain::enforceVelocityLimit(Eigen::VectorXd& qdot) const
     return true;
 }
 
+bool XBot::KinematicChain::eigenToMap(const Eigen::VectorXd& eigen_vector, JointNameMap& namemap) const
+{
+    if( eigen_vector.size() != _joint_num ){
+        std::cerr << "ERROR in " << __func__ << "! Input vector has " << eigen_vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        const Joint& j = *_joint_vector[i];
+        namemap[j.getJointName()] = eigen_vector(i);
+    }
+    
+    return true;
+}
+
+bool XBot::KinematicChain::eigenToMap(const Eigen::VectorXd& eigen_vector, JointIdMap& idmap) const
+{
+    if( eigen_vector.size() != _joint_num ){
+        std::cerr << "ERROR in " << __func__ << "! Input vector has " << eigen_vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
+        return false;
+    }
+    
+    for(int i = 0; i < _joint_num; i++){
+        const Joint& j = *_joint_vector[i];
+        idmap[j.getJointId()] = eigen_vector(i);
+    }
+    
+    return true;
+}
+
+bool XBot::KinematicChain::mapToEigen(const JointNameMap& namemap, Eigen::VectorXd& eigen_vector) const
+{
+    bool success = true;
+    
+    if( eigen_vector.size() != getJointNum() ){
+        eigen_vector.setZero(getJointNum());
+    }
+    
+    for(const auto& id_pair : namemap){
+        auto it = _joint_name_map.find(id_pair.first);
+        if( it != _joint_name_map.end() ){
+            success = true;
+            eigen_vector(getChainDofIndex(it->first)) = id_pair.second;
+        }
+    }
+    
+    return success;
+}
+
+bool XBot::KinematicChain::mapToEigen(const JointIdMap& idmap, Eigen::VectorXd& eigen_vector) const
+{
+    bool success = true;
+    
+    if( eigen_vector.size() != getJointNum() ){
+        eigen_vector.setZero(getJointNum());
+    }
+    
+    for(const auto& id_pair : idmap){
+        auto it = _joint_id_map.find(id_pair.first);
+        if( it != _joint_id_map.end() ){
+            success = true;
+            eigen_vector(getChainDofIndex(it->first)) = id_pair.second;
+        }
+    }
+    
+    return success;
+}
+
+
 
 } // end namespace XBot
