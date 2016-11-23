@@ -1855,6 +1855,10 @@ bool XBot::XBotInterface::mapToEigen(const XBot::JointIdMap& map, Eigen::VectorX
 {
     bool success = true;
     
+    if( vector.size() != getJointNum() ){
+        vector.setZero(getJointNum());
+    }
+    
     for(const auto& id_pair : map){
         auto it = _joint_id_to_eigen_id.find(id_pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1869,6 +1873,10 @@ bool XBot::XBotInterface::mapToEigen(const XBot::JointIdMap& map, Eigen::VectorX
 bool XBot::XBotInterface::mapToEigen(const XBot::JointNameMap& map, Eigen::VectorXd& vector) const
 {
     bool success = true;
+    
+    if( vector.size() != getJointNum() ){
+        vector.setZero(getJointNum());
+    }
     
     for(const auto& id_pair : map){
         auto it = _joint_name_to_eigen_id.find(id_pair.first);

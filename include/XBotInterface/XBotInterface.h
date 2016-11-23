@@ -328,7 +328,7 @@ public:
      * @brief Converts a state vector for an arbitrary subset of the robot state (specified 
      * as a JointNameMap) to its Eigen representation.
      * Note that the output vector is resized and set to zero if its size does not match the
-     * number of joints. 
+     * number of joints. Otherwise, unspecified components are left untouched.
      * 
      * @param map A JointNameMap contaning the state of the robot (or a part of it)
      * @param vector The output vector to be filled.
@@ -340,7 +340,7 @@ public:
      * @brief Converts a state vector for an arbitrary subset of the robot state (specified 
      * as a JointIdMap) to its Eigen representation.
      * Note that the output vector is resized and set to zero if its size does not match the
-     * number of joints. 
+     * number of joints. Otherwise, unspecified components are left untouched.
      * 
      * @param map A JointIdMap contaning the state of the robot (or a part of it)
      * @param vector The output vector to be filled.
@@ -1181,10 +1181,28 @@ public:
      */
      bool checkEffortLimits ( const Eigen::VectorXd& tau ) const;
      
+     /**
+      * @brief Modifies the input joint position vector by enforcing joint limits. 
+      * 
+      * @param q The input joint position vector. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
      bool enforceJointLimits( Eigen::VectorXd& q ) const;
      
+     /**
+      * @brief Modifies the input joint effort vector by enforcing effort limits. 
+      * 
+      * @param tau The input joint effort vector. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
      bool enforceEffortLimit( Eigen::VectorXd& tau ) const;
      
+     /**
+      * @brief Modifies the input joint velcoity vector by enforcing joint limits. 
+      * 
+      * @param qdot The input joint velocity vector. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
      bool enforceVelocityLimit( Eigen::VectorXd& qdot ) const;
 
      /**
