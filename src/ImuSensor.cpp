@@ -98,8 +98,20 @@ void ImuSensor::setImuData(Eigen::Quaterniond& orientation,
     setTimestamp(timestamp);
 }
 
-    
-    
-    
-    
+std::ostream& operator<<(std::ostream& os, const ImuSensor& j)
+{
+    os << "IMU name: " << j.getSensorName() << std::endl;
+    os << "Parent link: " << j.getParentLinkName() << std::endl;
+    os << "Sensor frame to parent link frame transform: " << std::endl;
+    os << "Orientation: \n" << j.getSensorPose().linear() << std::endl;
+    os << "Position: \n" << j.getSensorPose().translation() << std::endl;
+    os << "Sensed values ###########" << std::endl;
+    os << "\tAcceleration: " << j._lin_acc.transpose() << std::endl;
+    os << "\tAngular velocity: " << j._angular_velocity << std::endl;
+    os << "\t\Orientation: \n" << j._orientation << std::endl;
+
 }
+
+
+}
+

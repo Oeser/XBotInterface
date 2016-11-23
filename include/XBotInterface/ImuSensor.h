@@ -30,7 +30,7 @@ class ImuSensor : public GenericSensor {
 public:
     
     typedef std::shared_ptr<ImuSensor> Ptr;
-    typedef std::shared_ptr<ImuSensor> ConstPtr;
+    typedef std::shared_ptr<const ImuSensor> ConstPtr;
 
     /**
      * @brief Default constructor
@@ -131,6 +131,8 @@ public:
                     double timestamp
                    );
 
+    friend std::ostream& operator<< ( std::ostream& os, const XBot::ImuSensor& j );
+    
 protected:
     
 private:
