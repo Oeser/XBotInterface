@@ -23,8 +23,12 @@
 #include <map>
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 namespace XBot{
+    
+    class ImuSensor;
+    class ForceTorqueSensor;
     
     /*////////////
     /* TYPEDEF  */
@@ -43,6 +47,19 @@ namespace XBot{
      */
     typedef std::unordered_map<std::string, double> JointNameMap;
     
+    /**
+     * @brief std::map with key representing the FT sensor human-readable name and value 
+     * representing a const shared pointer to the FT itself.
+     * 
+     */
+    typedef std::map<std::string, std::shared_ptr<const ForceTorqueSensor> > ForceTorqueMap;
+    
+    /**
+     * @brief std::map with key representing the IMU sensor human-readable name and value 
+     * representing a const shared pointer to the IMU itself.
+     * 
+     */
+    typedef std::map<std::string, std::shared_ptr<const ImuSensor> > ImuMap;
     
     //////////
     // ENUM //
