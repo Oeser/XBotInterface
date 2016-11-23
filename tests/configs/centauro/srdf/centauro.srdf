@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot name="centauro">
+
+
+   <group name="front_left_leg">
+      <chain base_link="pelvis" tip_link="knee_1"/>
+   </group>
+   
+   <group name="front_right_leg">
+      <chain base_link="pelvis" tip_link="knee_2"/>
+   </group>
+   
+   <group name="rear_right_leg">
+      <chain base_link="pelvis" tip_link="knee_3"/>
+   </group>
+   
+   <group name="rear_left_leg">
+      <chain base_link="pelvis" tip_link="knee_4"/>
+   </group>
+   
+   <group name="left_arm">
+      <chain base_link="torso_2" tip_link="arm1_7"/>
+   </group>
+   
+   <group name="right_arm">
+      <chain base_link="torso_2" tip_link="arm2_7"/>
+   </group>-->
+   
+   <group name="torso">
+      <chain base_link="pelvis" tip_link="torso_2"/>
+   </group>
+
+   <group name="legs">
+      <group name="front_left_leg"/>
+      <group name="front_right_leg"/>
+      <group name="rear_right_leg"/>
+      <group name="rear_left_leg"/>
+   </group>
+   
+    <group name="arms">
+      <group name="left_arm"/>
+      <group name="right_arm"/>
+   </group>
+   
+
+   
+    <group name="force_torque_sensors">
+        <joint name="ft_foot_1_joint"/>
+        <joint name="ft_foot_2_joint"/>
+        <joint name="ft_foot_3_joint"/>
+        <joint name="ft_foot_4_joint"/>
+    </group>
+   
+   <group name="chains">
+       
+	<group name="left_arm"/>
+	<group name="right_arm"/>
+    
+	<group name="torso"/>
+    
+    <group name="front_left_leg"/>
+    <group name="front_right_leg"/>
+    <group name="rear_right_leg"/>
+    <group name="rear_left_leg"/>
+    
+   </group>
+   
+
+
+</robot>
