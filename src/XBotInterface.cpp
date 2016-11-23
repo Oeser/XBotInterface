@@ -146,7 +146,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     // check the urdf_filename
     if(x_bot_interface["urdf_path"]) {
         computeAbsolutePath(x_bot_interface["urdf_path"].as<std::string>(), 
-                            "",
+                            "/",
                             _urdf_path); 
     }
     else {
@@ -157,7 +157,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     // check the srdf_filename
     if(x_bot_interface["srdf_path"]) {
         computeAbsolutePath(x_bot_interface["srdf_path"].as<std::string>(),
-                            "",
+                            "/",
                             _srdf_path); 
     }
     else {
@@ -168,7 +168,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     // check joint_map_config
     if(x_bot_interface["joint_map_path"]) {
         computeAbsolutePath(x_bot_interface["joint_map_path"].as<std::string>(), 
-                            "",
+                            "/",
                             _joint_map_config); 
     }
     else {
