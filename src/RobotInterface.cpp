@@ -87,7 +87,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
 }
 
 
-XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg, int argc, char **argv)
+XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg, AnyMapConstPtr any_map)
 {
     // NOTE singleton
     if (_instance_ptr) {
@@ -97,10 +97,6 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     if (!parseYAML(path_to_cfg)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return _instance_ptr;
-    }
-    
-    if (_framework == "ROS") {
-        ros::init(argc, argv, "from_config"); // TBD remove this ugly reference to implementation details
     }
 
     // loading the requested model interface internal to the robot
@@ -117,7 +113,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     }
     // open and init robot interface
     _robot_interface_instance.open(_robot_interface_factory); 
-    _robot_interface_instance->init(path_to_cfg);
+    _robot_interface_instance->init(path_to_cfg, any_map);
     // static instance of the robot interface
     _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;});
     
@@ -153,7 +149,7 @@ bool XBot::RobotInterface::move()
     return move_internal();
 }
 
-bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
+bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg, AnyMapConstPtr any_map)
 {
     // Fill _robot_chain_map with shallow copies of chains in _chain_map
     
@@ -169,7 +165,7 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
     }
     
     // Call virtual init_robot
-    bool success = init_robot(path_to_cfg);
+    bool success = init_robot(path_to_cfg, any_map);
     
     _ordered_chain_names.clear();
     for( const std::string& s : model().getModelOrderedChainName() ){

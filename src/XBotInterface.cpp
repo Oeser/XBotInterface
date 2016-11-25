@@ -183,7 +183,7 @@ const std::string& XBot::XBotInterface::getPathToConfig() const
     return _path_to_cfg;
 }
 
-bool XBot::XBotInterface::init(const std::string &path_to_cfg)
+bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr any_map)
 {
     // store path to config
     _path_to_cfg = path_to_cfg;
@@ -227,7 +227,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg)
     }
 
     // call virtual init_internal
-    bool success = init_internal(path_to_cfg);
+    bool success = init_internal(path_to_cfg, any_map);
     
     // after subclasses have done their work inside init_internal, compute joint number
     _joint_num = 0;

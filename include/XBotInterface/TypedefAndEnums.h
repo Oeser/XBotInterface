@@ -24,11 +24,13 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <boost/any.hpp>
 
 namespace XBot{
     
     class ImuSensor;
     class ForceTorqueSensor;
+    
     
     /*////////////
     /* TYPEDEF  */
@@ -60,6 +62,25 @@ namespace XBot{
      * 
      */
     typedef std::map<std::string, std::shared_ptr<const ImuSensor> > ImuMap;
+    
+    /**
+     * @brief std::map map with key representing a parameter name and value representing
+     * the parameter value. Note that thanks to the use of boost::any it can be of any type.
+     * 
+     */
+    typedef std::map<std::string, boost::any> AnyMap;
+    
+    /**
+     * @brief Shared pointer to AnyMap
+     * 
+     */
+    typedef std::shared_ptr<AnyMap> AnyMapPtr;
+    
+    /**
+     * @brief Shared pointer to AnyMap
+     * 
+     */
+    typedef std::shared_ptr<const AnyMap> AnyMapConstPtr;
     
     //////////
     // ENUM //

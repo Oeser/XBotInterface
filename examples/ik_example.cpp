@@ -34,7 +34,7 @@ int main(int argc, char **argv){
      * always get a handle (a pointer) to the same object.
      */
     
-    RobotInterface& robot = *RobotInterface::getRobot(path_to_config_file, argc, argv);
+    RobotInterface& robot = *RobotInterface::getRobot(path_to_config_file);
     
     /* We now want to update the robot internal state with the latest sensor
      * readings. This is done by a method called sense(). 
