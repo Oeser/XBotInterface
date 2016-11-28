@@ -38,6 +38,18 @@ public:
     
     RobotChain();
     
+    // Control mode
+    
+    bool setControlMode(const ControlMode& control_mode);
+    bool setControlMode(const std::map<std::string, ControlMode>& control_mode);
+    bool setControlMode(const std::map<int, ControlMode>& control_mode);
+    bool setControlMode(double i, const ControlMode& control_mode);
+    
+    bool getControlMode(ControlMode& control_mode) const;
+    void getControlMode(std::map<std::string, ControlMode>& control_mode) const;
+    void getControlMode(std::map<int, ControlMode>& control_mode) const;
+    bool getControlMode(double i, ControlMode& control_mode) const;
+    
     // Getters for RX
 
     using KinematicChain::getJointPosition;

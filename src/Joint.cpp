@@ -22,7 +22,8 @@
 XBot::Joint::Joint() :
     _joint_name(""),
     _joint_id(-1),
-    _chain_name("")
+    _chain_name(""),
+    _control_mode(ControlMode::Idle())
 {
     init();
 }
@@ -34,7 +35,8 @@ XBot::Joint::Joint ( const std::string& joint_name,
     _joint_name(joint_name),
     _joint_id(joint_id),
     _urdf_joint(urdf_joint),
-    _chain_name(chain_name)
+    _chain_name(chain_name),
+    _control_mode(ControlMode::Idle())
 {
     init();
 }
