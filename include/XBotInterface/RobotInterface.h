@@ -161,10 +161,11 @@ public:
 
     // Control mode
     bool setControlMode(const ControlMode& control_mode);
+    bool setControlMode(const std::string& chain_name, const ControlMode& control_mode);
     bool setControlMode(const std::map<std::string, ControlMode>& control_mode);
     bool setControlMode(const std::map<int, ControlMode>& control_mode);
     
-    bool getControlMode(ControlMode& control_mode) const;
+
     void getControlMode(std::map<std::string, ControlMode>& control_mode) const;
     void getControlMode(std::map<int, ControlMode>& control_mode) const;
     
@@ -217,6 +218,7 @@ protected:
     virtual bool move_internal() = 0;
     virtual bool read_sensors() = 0;
     virtual bool init_robot(const std::string& path_to_cfg) = 0;
+    virtual bool set_control_mode_internal(int joint_id, const ControlMode& control_mode);
     
 
     // Setters for RX
@@ -260,6 +262,8 @@ private:
     
     double _ts_rx;
     double _ts_tx;
+    
+    
 
 };
 

@@ -37,6 +37,7 @@ namespace XBot
     
     class KinematicChain;
     class RobotChain;
+    class RobotInterface;
     class XBotInterface;
 
 /**
@@ -55,6 +56,7 @@ public:
     friend XBot::KinematicChain;
     friend XBot::RobotChain;
     friend XBot::XBotInterface;
+    friend XBot::RobotInterface;
 
     /**
      * @brief Default constructor

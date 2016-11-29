@@ -376,5 +376,16 @@ void XBot::Joint::enforceVelocityLimit(double& qdot) const
     }
 }
 
+void XBot::Joint::getControlMode(XBot::ControlMode& control_mode) const
+{
+    control_mode = _control_mode;
+}
+
+void XBot::Joint::setControlMode(const XBot::ControlMode& control_mode)
+{
+    _control_mode = control_mode;
+}
+
+
 
 
