@@ -108,7 +108,7 @@ std::ostream& operator<<(std::ostream& os, const ImuSensor& j)
     os << "Sensed values ###########" << std::endl;
     os << "\tAcceleration: " << j._lin_acc.transpose() << std::endl;
     os << "\tAngular velocity: " << j._angular_velocity << std::endl;
-    os << "\t\Orientation: \n" << j._orientation << std::endl;
+    os << "\tOrientation: \n" << j._orientation << std::endl;
 
 }
 
