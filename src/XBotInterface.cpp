@@ -1729,6 +1729,11 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                     return false;
                 }
                 
+                if(!hasJoint(joint_name)){
+                    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
+                    return false;
+                }
+                
                 q[joint_name] = joint_value[0];
 
             }
@@ -1766,7 +1771,15 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                     return false;
                 }
                 
+                if(!hasJoint(joint_name)){
+                    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
+                    return false;
+                }
+                
                 int joint_id = getJointByName(joint_name)->getJointId();
+                
+                
+                
                 q[joint_id] = joint_value[0];
 
             }
@@ -1802,6 +1815,11 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                 
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
+                    return false;
+                }
+                
+                if(!hasJoint(joint_name)){
+                    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
                     return false;
                 }
                 
