@@ -158,10 +158,16 @@ public:
     template <typename... SyncFlags>
     bool setReferenceFrom(const ModelInterface& model, SyncFlags... flags);
 
-    // TBD how to handle them????
-    virtual bool setControlMode(const std::map<std::string, std::string> &joint_control_mode_map) = 0;
-    virtual bool setControlMode(const std::string &robot_control_mode) = 0;
-    virtual bool getControlMode(std::map<std::string, std::string> &joint_control_mode_map) = 0;
+    // Control mode
+    bool setControlMode(const ControlMode& control_mode);
+    bool setControlMode(const std::string& chain_name, const ControlMode& control_mode);
+    bool setControlMode(const std::map<std::string, ControlMode>& control_mode);
+    bool setControlMode(const std::map<int, ControlMode>& control_mode);
+    
+
+    void getControlMode(std::map<std::string, ControlMode>& control_mode) const;
+    void getControlMode(std::map<int, ControlMode>& control_mode) const;
+    
     
     // Getters for RX
 
@@ -211,7 +217,7 @@ protected:
     virtual bool move_internal() = 0;
     virtual bool read_sensors() = 0;
     virtual bool init_robot(const std::string& path_to_cfg, AnyMapConstPtr any_map) = 0;
-    
+    virtual bool set_control_mode_internal(int joint_id, const ControlMode& control_mode);
 
     // Setters for RX
     
@@ -254,6 +260,8 @@ private:
     
     double _ts_rx;
     double _ts_tx;
+    
+    
 
 };
 

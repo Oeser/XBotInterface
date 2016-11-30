@@ -24,7 +24,9 @@ namespace XBot {
 RobotChain::RobotChain()
 {
 
+    
 }
+
 
 
 

@@ -222,6 +222,129 @@ double XBot::RobotInterface::getTimestampTx() const
     return _ts_tx;
 }
 
+bool XBot::RobotInterface::set_control_mode_internal(int joint_id, const XBot::ControlMode& control_mode)
+{
+    return true;
+}
+
+
+void XBot::RobotInterface::getControlMode(std::map< int, XBot::ControlMode >& control_mode) const
+{
+    ControlMode ctrl;
+    for(int i = 0; i < getJointNum(); i++){
+        _ordered_joint_vector[i]->getControlMode(ctrl);
+        control_mode[_ordered_joint_vector[i]->getJointId()] = ctrl;
+    }
+}
+
+void XBot::RobotInterface::getControlMode(std::map< std::string, XBot::ControlMode >& control_mode) const
+{
+    ControlMode ctrl;
+    for(int i = 0; i < getJointNum(); i++){
+        _ordered_joint_vector[i]->getControlMode(ctrl);
+        control_mode[_ordered_joint_vector[i]->getJointName()] = ctrl;
+    }
+}
+
+
+
+bool XBot::RobotInterface::setControlMode(const std::map< int, XBot::ControlMode >& control_mode)
+{
+    bool success = true;
+    
+    for( const auto& pair: control_mode ){
+        
+        auto it = _joint_id_to_eigen_id.find(pair.first);
+        
+        if( it != _joint_id_to_eigen_id.end() ){
+            
+            bool set_internal_success = set_control_mode_internal(pair.first, pair.second);
+            
+            if(set_internal_success){
+                _ordered_joint_vector[it->second]->setControlMode(pair.second);
+            }
+            
+            success = success && set_internal_success;
+        }
+        
+    }
+    
+    return success;
+}
+
+bool XBot::RobotInterface::setControlMode(const std::map< std::string, XBot::ControlMode >& control_mode)
+{
+    bool success = true;
+    
+    for( const auto& pair: control_mode ){
+
+        auto it = _joint_name_to_eigen_id.find(pair.first);
+        
+        if( it != _joint_name_to_eigen_id.end() ){
+            
+            bool set_internal_success = set_control_mode_internal(_ordered_joint_vector[it->second]->getJointId(), pair.second);
+            
+            if(set_internal_success){
+                _ordered_joint_vector[it->second]->setControlMode(pair.second);
+            }
+            
+            success = set_internal_success && success;
+        }
+        
+    }
+    
+    return success;
+}
+
+bool XBot::RobotInterface::setControlMode(const XBot::ControlMode& control_mode)
+{
+    bool success = true;
+    
+    for( int i = 0; i < getJointNum(); i++ ){
+        
+        bool set_internal_success = success = set_control_mode_internal(_ordered_joint_vector[i]->getJointId(), control_mode);
+        
+        if(set_internal_success){
+            _ordered_joint_vector[i]->setControlMode(control_mode);
+        }
+        
+        success = set_internal_success && success;
+    }
+    
+    return success;
+}
+
+
+
+bool XBot::RobotInterface::setControlMode(const std::string& chain_name, const XBot::ControlMode& control_mode)
+{
+    auto it = _chain_map.find(chain_name);
+    
+    if( it == _chain_map.end() ){
+        std::cerr << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << std::endl;
+        return false;
+    }
+    
+    bool success = true;
+    
+    for( int i = 0; i < it->second->getJointNum(); i++){
+        
+        bool set_internal_success = set_control_mode_internal(it->second->getJoint(i)->getJointId(), control_mode);
+        
+        if( set_internal_success ){
+            it->second->getJointInternal(i)->setControlMode(control_mode);
+        }
+        
+        success = success && set_internal_success;
+    }
+    
+    return success;
+}
+
+
+
+
+
 
 
 
