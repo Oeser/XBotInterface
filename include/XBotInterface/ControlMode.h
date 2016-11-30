@@ -48,12 +48,6 @@ namespace XBot{
         bool isStiffnessEnabled() const;
         bool isDampingEnabled() const;
         
-        bool setPositionEnabled(bool is_enabled);
-        bool setVelocityEnabled(bool is_enabled);
-        bool setEffortEnabled(bool is_enabled);
-        bool setStiffnessEnabled(bool is_enabled);
-        bool setDampingEnabled(bool is_enabled);
-        
         ControlMode operator+(const ControlMode& ctrl_mode);
         bool operator==(const ControlMode& ctrl_mode);
         
@@ -81,6 +75,12 @@ namespace XBot{
         bool _effort_enabled;
         bool _stiffness_enabled;
         bool _damping_enabled;
+        
+        bool setPositionEnabled(bool is_enabled);
+        bool setVelocityEnabled(bool is_enabled);
+        bool setEffortEnabled(bool is_enabled);
+        bool setStiffnessEnabled(bool is_enabled);
+        bool setDampingEnabled(bool is_enabled);
         
     };
     
