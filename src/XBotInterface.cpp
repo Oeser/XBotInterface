@@ -61,6 +61,14 @@ XBot::XBotInterface::XBotInterface(const XBot::XBotInterface &other):
         _ordered_joint_vector.push_back(jptr);
     }
     
+    for( const auto& j : other._joint_vector ){
+        
+        Joint::Ptr jptr = std::make_shared<Joint>();
+        *jptr = *j;
+        
+        _joint_vector.push_back(jptr);
+    }
+    
     for( const auto& ft_pair : other._ft_map ){
      
         ForceTorqueSensor::Ptr ftptr = std::make_shared<ForceTorqueSensor>();
@@ -219,6 +227,10 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
         _imu_map.insert(imu_map.begin(),
                        imu_map.end());
         
+        for( int i = 0; i < actual_chain->getJointNum(); i++){
+            _joint_vector.push_back(actual_chain->getJointInternal(i));
+        }
+        
     }
     
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
@@ -252,6 +264,8 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
             eigen_id++;
         }
     }
+    
+    _joint_vector = _ordered_joint_vector;
     
     return success;
     
@@ -311,18 +325,20 @@ int XBot::XBotInterface::legs() const
 }
 
 
-
 int XBot::XBotInterface::arms() const
 {
     return _XBotModel.get_arms_chain().size();
 }
 
 
-
-
 bool XBot::XBotInterface::hasJoint(const std::string &joint_name) const
 {
     return std::find(_ordered_joint_name.begin(), _ordered_joint_name.end(), joint_name) !=  _ordered_joint_name.end();
+}
+
+bool XBot::XBotInterface::hasJoint(int joint_id) const
+{
+    return std::find(_ordered_joint_id.begin(), _ordered_joint_id.end(), joint_id) !=  _ordered_joint_id.end();
 }
 
 
@@ -1479,6 +1495,7 @@ XBot::XBotInterface &XBot::XBotInterface::operator=(const XBot::XBotInterface &r
     std::swap(_ft_map, tmp._ft_map);
     std::swap(_imu_map, tmp._imu_map);
     std::swap(_ordered_chain_names, tmp._ordered_chain_names);
+    std::swap(_joint_vector, tmp._joint_vector);
 
 }
 
@@ -1973,4 +1990,83 @@ bool XBot::XBotInterface::enforceVelocityLimit(Eigen::VectorXd& qdot) const
     
     return true;
 }
+
+
+
+XBot::Joint::Ptr XBot::XBotInterface::getJointByNameInternal(const std::string& joint_name) const
+{
+    auto it = _joint_name_to_eigen_id.find(joint_name);
+    
+    if( it != _joint_name_to_eigen_id.end() ){
+        return _ordered_joint_vector[it->second];
+    }
+    
+    for( const auto& c : _chain_map){
+        const XBot::KinematicChain& chain = *c.second;
+        if(chain.hasJoint(joint_name)) return chain.getJointInternal(chain.getChainDofIndex(joint_name));
+    }
+    std::cerr << "ERROR in " << __func__ << ". Joint " << joint_name << " is NOT defined!" << std::endl;
+    return XBot::Joint::Ptr();
+}
+
+XBot::Joint::Ptr XBot::XBotInterface::getJointByDofIndexInternal(int dof_index) const
+{
+    if(_ordered_joint_vector.size() > 0){
+        if(_ordered_joint_vector.size() > dof_index){
+            return _ordered_joint_vector[dof_index];
+        }
+        else{
+            std::cerr << "ERROR in " << __func__ << "! Requesting joint with dof index " << dof_index << " which exceeds the dof number " << getJointNum() << "!" << std::endl;
+            return Joint::Ptr();
+        }
+    }
+    else{
+    
+        std::cerr << "ERROR in " << __func__ << "! Joint order unavailable!" << std::endl;
+        
+        return Joint::Ptr();
+        
+    }
+
+}
+
+XBot::Joint::Ptr XBot::XBotInterface::getJointByIdInternal(int joint_id) const
+{
+    auto it = _joint_id_to_eigen_id.find(joint_id);
+    
+    if( it != _joint_id_to_eigen_id.end() ){
+        return _ordered_joint_vector[it->second];
+    }
+    
+    for( const auto& c : _chain_map){
+        const XBot::KinematicChain& chain = *c.second;
+        if(chain.hasJoint(joint_id)) return chain.getJointInternal(chain.getChainDofIndex(joint_id));
+    }
+    std::cerr << "ERROR in " << __func__ << ". Joint " << joint_id << " is NOT defined!" << std::endl;
+    return XBot::Joint::Ptr();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
