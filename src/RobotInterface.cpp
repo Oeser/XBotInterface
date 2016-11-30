@@ -232,8 +232,8 @@ void XBot::RobotInterface::getControlMode(std::map< int, XBot::ControlMode >& co
 {
     ControlMode ctrl;
     for(int i = 0; i < getJointNum(); i++){
-        _ordered_joint_vector[i]->getControlMode(ctrl);
-        control_mode[_ordered_joint_vector[i]->getJointId()] = ctrl;
+        _joint_vector[i]->getControlMode(ctrl);
+        control_mode[_joint_vector[i]->getJointId()] = ctrl;
     }
 }
 
@@ -241,8 +241,8 @@ void XBot::RobotInterface::getControlMode(std::map< std::string, XBot::ControlMo
 {
     ControlMode ctrl;
     for(int i = 0; i < getJointNum(); i++){
-        _ordered_joint_vector[i]->getControlMode(ctrl);
-        control_mode[_ordered_joint_vector[i]->getJointName()] = ctrl;
+        _joint_vector[i]->getControlMode(ctrl);
+        control_mode[_joint_vector[i]->getJointName()] = ctrl;
     }
 }
 
@@ -254,20 +254,19 @@ bool XBot::RobotInterface::setControlMode(const std::map< int, XBot::ControlMode
     
     for( const auto& pair: control_mode ){
         
-        auto it = _joint_id_to_eigen_id.find(pair.first);
         
-        if( it != _joint_id_to_eigen_id.end() ){
+        if( hasJoint(pair.first) ){
             
             bool set_internal_success = set_control_mode_internal(pair.first, pair.second);
             
             if(set_internal_success){
-                _ordered_joint_vector[it->second]->setControlMode(pair.second);
-                std::cout << "INFO: Joint " << _ordered_joint_vector[it->second]->getJointName() <<
-                             " - with id : " << it->first << " - control mode changed to " << pair.second.getName() << std::endl;
+                getJointByIdInternal(pair.first)->setControlMode(pair.second);
+                std::cout << "INFO: Joint " << getJointByIdInternal(pair.first)->getJointName() <<
+                             " - with id : " << pair.first << " - control mode changed to " << pair.second.getName() << std::endl;
             }
             else {
-                std::cout << "WARNING: Joint " << _ordered_joint_vector[it->second]->getJointName() <<
-                             " - with id : " << it->first << " - CANNOT change control mode to " << pair.second.getName() << std::endl;
+                std::cout << "WARNING: Joint " << getJointByIdInternal(pair.first)->getJointName() <<
+                             " - with id : " << pair.first << " - CANNOT change control mode to " << pair.second.getName() << std::endl;
             }
             
             success = success && set_internal_success;
@@ -284,21 +283,19 @@ bool XBot::RobotInterface::setControlMode(const std::map< std::string, XBot::Con
     
     for( const auto& pair: control_mode ){
 
-        auto it = _joint_name_to_eigen_id.find(pair.first);
-        
-        if( it != _joint_name_to_eigen_id.end() ){
+        if( hasJoint(pair.first) ){
             
-            bool set_internal_success = set_control_mode_internal(_ordered_joint_vector[it->second]->getJointId(), pair.second);
+            bool set_internal_success = set_control_mode_internal(getJointByNameInternal(pair.first)->getJointId(), pair.second);
             
             if(set_internal_success){
-                _ordered_joint_vector[it->second]->setControlMode(pair.second);
-                std::cout << "INFO: Joint " << it->first << " - with id : "
-                          << _ordered_joint_vector[it->second]->getJointId() 
+                getJointByNameInternal(pair.first)->setControlMode(pair.second);
+                std::cout << "INFO: Joint " << pair.first << " - with id : "
+                          << getJointByNameInternal(pair.first)->getJointId() 
                           << " - control mode changed to " << pair.second.getName() << std::endl;
             }
             else {
-                std::cout << "WARNING: Joint " << it->first  << " - with id : " 
-                          << _ordered_joint_vector[it->second]->getJointId() << " - CANNOT change control mode to " 
+                std::cout << "WARNING: Joint " << pair.first  << " - with id : " 
+                          << getJointByNameInternal(pair.first)->getJointId() << " - CANNOT change control mode to " 
                           << pair.second.getName() << std::endl;
             }
             
@@ -316,17 +313,17 @@ bool XBot::RobotInterface::setControlMode(const XBot::ControlMode& control_mode)
     
     for( int i = 0; i < getJointNum(); i++ ){
         
-        bool set_internal_success = success = set_control_mode_internal(_ordered_joint_vector[i]->getJointId(), control_mode);
+        bool set_internal_success = success = set_control_mode_internal(_joint_vector[i]->getJointId(), control_mode);
         
         if(set_internal_success){
-            _ordered_joint_vector[i]->setControlMode(control_mode);
-            std::cout << "INFO: Joint " << _ordered_joint_vector[i]->getJointName() << " - with id : "
-                      << _ordered_joint_vector[i]->getJointId()
+            _joint_vector[i]->setControlMode(control_mode);
+            std::cout << "INFO: Joint " << _joint_vector[i]->getJointName() << " - with id : "
+                      << _joint_vector[i]->getJointId()
                       << " - control mode changed to " << control_mode.getName() << std::endl;
         }
         else {
-            std::cout << "WARNING: Joint " << _ordered_joint_vector[i]->getJointName()  << " - with id : " 
-                      << _ordered_joint_vector[i]->getJointId() << " - CANNOT change control mode to " 
+            std::cout << "WARNING: Joint " << _joint_vector[i]->getJointName()  << " - with id : " 
+                      << _joint_vector[i]->getJointId() << " - CANNOT change control mode to " 
                       << control_mode.getName() << std::endl;
         }
         

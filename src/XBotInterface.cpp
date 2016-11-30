@@ -325,18 +325,20 @@ int XBot::XBotInterface::legs() const
 }
 
 
-
 int XBot::XBotInterface::arms() const
 {
     return _XBotModel.get_arms_chain().size();
 }
 
 
-
-
 bool XBot::XBotInterface::hasJoint(const std::string &joint_name) const
 {
     return std::find(_ordered_joint_name.begin(), _ordered_joint_name.end(), joint_name) !=  _ordered_joint_name.end();
+}
+
+bool XBot::XBotInterface::hasJoint(int joint_id) const
+{
+    return std::find(_ordered_joint_id.begin(), _ordered_joint_id.end(), joint_id) !=  _ordered_joint_id.end();
 }
 
 

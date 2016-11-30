@@ -191,6 +191,15 @@ public:
       * @return True if the required joint is defined and enabled.
       */
      bool hasJoint ( const std::string& joint_name ) const;
+     
+     /**
+      * @brief Checks that a joint with ID "joint_id" is defined as an enabled
+      * joint inside the interface.
+      *
+      * @param joint_id The ID of the joint we want to check existence for.
+      * @return True if the required joint is defined and enabled.
+      */
+     bool hasJoint ( int joint_id ) const;
 
      /**
       * @brief Getter for the number of enabled joints.
