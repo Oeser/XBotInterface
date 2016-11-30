@@ -39,6 +39,7 @@ namespace XBot
     
 // NOTE forward declaration because of friendship
 class XBotInterface;
+class RobotInterface;
 
 /**
  * @brief Kinematic chain abstraction as a set of joints and sensors.
@@ -53,6 +54,7 @@ public:
     typedef std::shared_ptr<const KinematicChain> ConstPtr;
     
     friend XBot::XBotInterface;
+    friend XBot::RobotInterface;
 
     /**
      * @brief Default constructor
