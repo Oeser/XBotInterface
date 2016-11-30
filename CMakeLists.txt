@@ -58,7 +58,6 @@ option(BUILD_TESTS "Compile XBotInterface tests" FALSE)
 
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
-                            ${RobotInterfaceROS_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
@@ -95,7 +94,6 @@ target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     
 target_include_directories(XBotInterface PUBLIC
                             ${XBotCoreModel_INCLUDE_DIRS}
-                            ${RobotInterfaceROS_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
