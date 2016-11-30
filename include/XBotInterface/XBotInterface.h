@@ -1240,6 +1240,13 @@ public:
 
 protected:
 
+    // Joint getters for developers
+
+    
+    Joint::Ptr getJointByNameInternal(const std::string& joint_name) const;
+    Joint::Ptr getJointByIdInternal(int joint_id) const;
+    Joint::Ptr getJointByDofIndexInternal(int dof_index) const;
+
 
 
      // Chain getter for developers
@@ -1267,6 +1274,7 @@ protected:
 
      std::map<std::string, XBot::KinematicChain::Ptr> _chain_map;
      std::vector<Joint::Ptr> _ordered_joint_vector;
+     std::vector<Joint::Ptr> _joint_vector;
      std::map<std::string, ForceTorqueSensor::Ptr> _ft_map;
      std::map<std::string, ImuSensor::Ptr> _imu_map;
      std::vector<std::string> _ordered_chain_names;
