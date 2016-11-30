@@ -81,6 +81,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/GenericSensor.cpp
                                  src/ForceTorqueSensor.cpp
                                  src/ImuSensor.cpp
+                                 src/ControlMode.cpp
                                  src/bprinter/table_printer.cpp)
                                  
 target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}

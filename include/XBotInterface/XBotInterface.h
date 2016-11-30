@@ -49,7 +49,7 @@ public:
      XBotInterface& operator= ( const XBotInterface& rhs );
      virtual ~XBotInterface();
 
-     bool init ( const std::string& path_to_cfg );
+     bool init ( const std::string& path_to_cfg, AnyMapConstPtr any_map = AnyMapConstPtr() );
 
 
      // URDF, SRDF getters
@@ -1249,7 +1249,7 @@ protected:
 
 
 
-     virtual bool init_internal ( const std::string& path_to_cfg ) {
+     virtual bool init_internal ( const std::string& path_to_cfg, AnyMapConstPtr any_map ) {
           return true;
      }
 

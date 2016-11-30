@@ -104,7 +104,7 @@ bool XBot::ModelInterface::isFloatingBase() const
 }
 
 
-XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg )
+XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
 {
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
@@ -137,7 +137,7 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     
     // open and init robot interface
     model_instance.open(_model_interface_factory); 
-    model_instance->init(path_to_cfg);
+    model_instance->init(path_to_cfg, any_map);
     // static instance of the robot interface
     instance_ptr = std::shared_ptr<ModelInterface>(&model_instance.getContent(), [](ModelInterface* ptr){return;});
 
@@ -145,7 +145,7 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
 }
 
  
-bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg)
+bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapConstPtr any_map)
 {
 
     // set is_floating_base

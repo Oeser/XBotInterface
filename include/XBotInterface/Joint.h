@@ -28,11 +28,16 @@
 #include <bprinter/table_printer.h>
 
 
+#include <XBotInterface/ControlMode.h>
+
+
+
 namespace XBot
 {
     
     class KinematicChain;
     class RobotChain;
+    class RobotInterface;
     class XBotInterface;
 
 /**
@@ -51,6 +56,7 @@ public:
     friend XBot::KinematicChain;
     friend XBot::RobotChain;
     friend XBot::XBotInterface;
+    friend XBot::RobotInterface;
 
     /**
      * @brief Default constructor
@@ -147,6 +153,9 @@ public:
     void enforceVelocityLimit(double& qdot) const;
     
     void enforceEffortLimit(double& tau) const;
+    
+    
+    
     
     /**
      * @brief Getter for the urdf Joint object
@@ -383,6 +392,14 @@ protected:
      */
     double getDamping() const;
     
+    //////////////////
+    // CONTROL MODE //
+    //////////////////
+    
+    void setControlMode(const ControlMode& control_mode);
+    
+    void getControlMode(ControlMode& control_mode) const;
+    
     
     /**
      * @brief Synchronize the current Joint with another Joint object
@@ -551,6 +568,8 @@ private:
      * 
      */
     double _damping;
+    
+    ControlMode _control_mode;
     
     /**
      * @brief initialize joint internal varibles

@@ -53,11 +53,10 @@ public:
      * @brief Getter for the robot singleton
      * 
      * @param path_to_cfg path to the config file where the robot parameters(e.g. control framework, internal model ...) are specified
-     * @param argc executable arc
-     * @param argv executable argv
+     * @param any_map a map with objects needed by RobotInterface actual implementations
      * @return a shared pointer to the RobotInterface instance
      */
-    static RobotInterface::Ptr getRobot(const std::string &path_to_cfg, int argc, char **argv);
+    static RobotInterface::Ptr getRobot(const std::string &path_to_cfg, AnyMapConstPtr any_map = AnyMapConstPtr());
     
     /**
      * @brief Getter for the internal model instance
@@ -159,10 +158,16 @@ public:
     template <typename... SyncFlags>
     bool setReferenceFrom(const ModelInterface& model, SyncFlags... flags);
 
-    // TBD how to handle them????
-    virtual bool setControlMode(const std::map<std::string, std::string> &joint_control_mode_map) = 0;
-    virtual bool setControlMode(const std::string &robot_control_mode) = 0;
-    virtual bool getControlMode(std::map<std::string, std::string> &joint_control_mode_map) = 0;
+    // Control mode
+    bool setControlMode(const ControlMode& control_mode);
+    bool setControlMode(const std::string& chain_name, const ControlMode& control_mode);
+    bool setControlMode(const std::map<std::string, ControlMode>& control_mode);
+    bool setControlMode(const std::map<int, ControlMode>& control_mode);
+    
+
+    void getControlMode(std::map<std::string, ControlMode>& control_mode) const;
+    void getControlMode(std::map<int, ControlMode>& control_mode) const;
+    
     
     // Getters for RX
 
@@ -211,8 +216,8 @@ protected:
     virtual bool sense_internal() = 0;
     virtual bool move_internal() = 0;
     virtual bool read_sensors() = 0;
-    virtual bool init_robot(const std::string& path_to_cfg) = 0;
-    
+    virtual bool init_robot(const std::string& path_to_cfg, AnyMapConstPtr any_map) = 0;
+    virtual bool set_control_mode_internal(int joint_id, const ControlMode& control_mode);
 
     // Setters for RX
     
@@ -231,7 +236,7 @@ protected:
 
 private:
     
-    virtual bool init_internal(const std::string &path_to_cfg);
+    virtual bool init_internal(const std::string &path_to_cfg, AnyMapConstPtr any_map);
     
     using XBotInterface::_chain_map;
     using XBotInterface::_ordered_joint_vector;
@@ -255,6 +260,8 @@ private:
     
     double _ts_rx;
     double _ts_tx;
+    
+    
 
 };
 

@@ -8,7 +8,7 @@ int main(int argc, char **argv){
  
     std::string path_to_config_file(argv[1]); // from command line
 
-    XBot::RobotInterface& robot = *XBot::RobotInterface::getRobot(path_to_config_file, argc, argv);
+    XBot::RobotInterface& robot = *XBot::RobotInterface::getRobot(path_to_config_file);
     XBot::ModelInterface& model = *XBot::ModelInterface::getModel(path_to_config_file);
     
     

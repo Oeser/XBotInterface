@@ -37,6 +37,7 @@ public:
     typedef std::shared_ptr<RobotChain> Ptr;
     
     RobotChain();
+
     
     // Getters for RX
 

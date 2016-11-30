@@ -73,9 +73,10 @@ public:
      * loaded.
      * 
      * @param path_to_cfg Path to the YAML configuration file.
+     * @param any_map a map with objects needed by RobotInterface actual implementations
      * @return A shared pointer to a new instance of ModelInterface.
      */
-    static ModelInterface::Ptr getModel(const std::string &path_to_cfg);
+    static ModelInterface::Ptr getModel(const std::string &path_to_cfg, AnyMapConstPtr any_map = AnyMapConstPtr());
     
     
     /**
@@ -768,7 +769,7 @@ public:
 
 protected:
     
-    virtual bool init_internal(const std::string &path_to_cfg);
+    virtual bool init_internal(const std::string &path_to_cfg, AnyMapConstPtr any_map);
     virtual bool init_model(const std::string &path_to_cfg) = 0;
     
     inline void rotationEigenToKDL(const Eigen::Matrix3d& eigen_rotation, KDL::Rotation& kdl_rotation) const;

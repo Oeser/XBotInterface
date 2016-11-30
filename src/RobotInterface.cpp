@@ -87,7 +87,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg)
 }
 
 
-XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg, int argc, char **argv)
+XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg, AnyMapConstPtr any_map)
 {
     // NOTE singleton
     if (_instance_ptr) {
@@ -97,10 +97,6 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     if (!parseYAML(path_to_cfg)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return _instance_ptr;
-    }
-    
-    if (_framework == "ROS") {
-        ros::init(argc, argv, "from_config"); // TBD remove this ugly reference to implementation details
     }
 
     // loading the requested model interface internal to the robot
@@ -117,7 +113,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
     }
     // open and init robot interface
     _robot_interface_instance.open(_robot_interface_factory); 
-    _robot_interface_instance->init(path_to_cfg);
+    _robot_interface_instance->init(path_to_cfg, any_map);
     // static instance of the robot interface
     _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;});
     
@@ -153,7 +149,7 @@ bool XBot::RobotInterface::move()
     return move_internal();
 }
 
-bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
+bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg, AnyMapConstPtr any_map)
 {
     // Fill _robot_chain_map with shallow copies of chains in _chain_map
     
@@ -169,7 +165,7 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg)
     }
     
     // Call virtual init_robot
-    bool success = init_robot(path_to_cfg);
+    bool success = init_robot(path_to_cfg, any_map);
     
     _ordered_chain_names.clear();
     for( const std::string& s : model().getModelOrderedChainName() ){
@@ -225,6 +221,129 @@ double XBot::RobotInterface::getTimestampTx() const
 {
     return _ts_tx;
 }
+
+bool XBot::RobotInterface::set_control_mode_internal(int joint_id, const XBot::ControlMode& control_mode)
+{
+    return true;
+}
+
+
+void XBot::RobotInterface::getControlMode(std::map< int, XBot::ControlMode >& control_mode) const
+{
+    ControlMode ctrl;
+    for(int i = 0; i < getJointNum(); i++){
+        _ordered_joint_vector[i]->getControlMode(ctrl);
+        control_mode[_ordered_joint_vector[i]->getJointId()] = ctrl;
+    }
+}
+
+void XBot::RobotInterface::getControlMode(std::map< std::string, XBot::ControlMode >& control_mode) const
+{
+    ControlMode ctrl;
+    for(int i = 0; i < getJointNum(); i++){
+        _ordered_joint_vector[i]->getControlMode(ctrl);
+        control_mode[_ordered_joint_vector[i]->getJointName()] = ctrl;
+    }
+}
+
+
+
+bool XBot::RobotInterface::setControlMode(const std::map< int, XBot::ControlMode >& control_mode)
+{
+    bool success = true;
+    
+    for( const auto& pair: control_mode ){
+        
+        auto it = _joint_id_to_eigen_id.find(pair.first);
+        
+        if( it != _joint_id_to_eigen_id.end() ){
+            
+            bool set_internal_success = set_control_mode_internal(pair.first, pair.second);
+            
+            if(set_internal_success){
+                _ordered_joint_vector[it->second]->setControlMode(pair.second);
+            }
+            
+            success = success && set_internal_success;
+        }
+        
+    }
+    
+    return success;
+}
+
+bool XBot::RobotInterface::setControlMode(const std::map< std::string, XBot::ControlMode >& control_mode)
+{
+    bool success = true;
+    
+    for( const auto& pair: control_mode ){
+
+        auto it = _joint_name_to_eigen_id.find(pair.first);
+        
+        if( it != _joint_name_to_eigen_id.end() ){
+            
+            bool set_internal_success = set_control_mode_internal(_ordered_joint_vector[it->second]->getJointId(), pair.second);
+            
+            if(set_internal_success){
+                _ordered_joint_vector[it->second]->setControlMode(pair.second);
+            }
+            
+            success = set_internal_success && success;
+        }
+        
+    }
+    
+    return success;
+}
+
+bool XBot::RobotInterface::setControlMode(const XBot::ControlMode& control_mode)
+{
+    bool success = true;
+    
+    for( int i = 0; i < getJointNum(); i++ ){
+        
+        bool set_internal_success = success = set_control_mode_internal(_ordered_joint_vector[i]->getJointId(), control_mode);
+        
+        if(set_internal_success){
+            _ordered_joint_vector[i]->setControlMode(control_mode);
+        }
+        
+        success = set_internal_success && success;
+    }
+    
+    return success;
+}
+
+
+
+bool XBot::RobotInterface::setControlMode(const std::string& chain_name, const XBot::ControlMode& control_mode)
+{
+    auto it = _chain_map.find(chain_name);
+    
+    if( it == _chain_map.end() ){
+        std::cerr << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << std::endl;
+        return false;
+    }
+    
+    bool success = true;
+    
+    for( int i = 0; i < it->second->getJointNum(); i++){
+        
+        bool set_internal_success = set_control_mode_internal(it->second->getJoint(i)->getJointId(), control_mode);
+        
+        if( set_internal_success ){
+            it->second->getJointInternal(i)->setControlMode(control_mode);
+        }
+        
+        success = success && set_internal_success;
+    }
+    
+    return success;
+}
+
+
+
+
 
 
 
