@@ -499,22 +499,22 @@ bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
     return success;
 }
 
-bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, 
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
                                             const Eigen::Vector3d& source_point, 
-                                            Eigen::Vector3d& target_point) const
+                                            Eigen::Vector3d& world_point) const
 {
     tf::vectorEigenToKDL(source_point, _tmp_kdl_vector_1);
-    bool success = getPointPosition(target_frame, _tmp_kdl_vector_1, _tmp_kdl_vector);
-    tf::vectorKDLToEigen(_tmp_kdl_vector, target_point);
+    bool success = getPointPosition(source_frame, _tmp_kdl_vector_1, _tmp_kdl_vector);
+    tf::vectorKDLToEigen(_tmp_kdl_vector, world_point);
     return success;
 }
 
-bool XBot::ModelInterface::getPointPosition(const std::string& target_frame, 
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
                                             const KDL::Vector& source_point, 
-                                            KDL::Vector& target_point) const
+                                            KDL::Vector& world_point) const
 {
-    bool success = getPose(target_frame, _tmp_kdl_frame);
-    target_point = _tmp_kdl_frame.Inverse(source_point);
+    bool success = getPose(source_frame, _tmp_kdl_frame);
+    world_point = _tmp_kdl_frame*(source_point);
     return success;
 }
 

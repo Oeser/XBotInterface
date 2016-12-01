@@ -209,7 +209,7 @@ public:
     bool getPose( const std::string& source_frame,
                   const std::string& target_frame,
                   KDL::Frame& pose ) const;
-                  
+
     /**
     * @brief Computes the orientation of the source_frame w.r.t. the world frame
     * 
@@ -231,20 +231,20 @@ public:
     bool getOrientation(const std::string& source_frame,
                         const std::string& target_frame,
                         KDL::Rotation& orientation) const;
-                            
-                            
+
+                        
     /**
-    * @brief Gets the position in target_frame coordinates for a source_point expressed w.r.t. world frame.
+    * @brief Gets the position in world coordinates for a source_point expressed w.r.t. a source_frame.
     * 
-    * @param target_frame True if target_frame is a valid link name.
-    * @param source_point The source_point in world coordinates.
-    * @param target_point The requested point in target_frame coordinates.
-    * @return True if target_frame is a valid link name.
+    * @param source_frame The frame according to which source_point is expressed.
+    * @param source_point The source_point in source-frame coordinates.
+    * @param world_point The requested point in world coordinates.
+    * @return True if source_frame is a valid link name.
     */
-    bool getPointPosition(const std::string& target_frame,
+    bool getPointPosition(const std::string& source_frame,
                           const KDL::Vector& source_point,
-                          KDL::Vector& target_point) const;   
-                            
+                          KDL::Vector& world_point) const;
+
     /**
     * @brief Gets the position in target_frame coordinates for a source_point expressed w.r.t. source_frame.
     * 
@@ -547,16 +547,16 @@ public:
                             const std::string& target_frame,
                             Eigen::Matrix3d& orientation) const;                       
     /**
-    * @brief Gets the position in target_frame coordinates for a source_point expressed w.r.t. world frame.
+    * @brief Gets the position in world coordinates for a source_point expressed w.r.t. a source_frame.
     * 
-    * @param target_frame True if target_frame is a valid link name.
-    * @param source_point The source_point in world coordinates.
-    * @param target_point The requested point in target_frame coordinates.
-    * @return True if target_frame is a valid link name.
+    * @param source_frame The frame according to which source_point is expressed.
+    * @param source_point The source_point in source-frame coordinates.
+    * @param world_point The requested point in world coordinates.
+    * @return True if source_frame is a valid link name.
     */
-    bool getPointPosition(  const std::string& target_frame,
+    bool getPointPosition(  const std::string& source_frame,
                             const Eigen::Vector3d& source_point,
-                            Eigen::Vector3d& target_point) const; 
+                            Eigen::Vector3d& world_point) const; 
                             
     /**
     * @brief Gets the position in target_frame coordinates for a source_point expressed w.r.t. source_frame.
