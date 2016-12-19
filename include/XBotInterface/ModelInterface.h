@@ -457,6 +457,16 @@ public:
     virtual void computeInverseDynamics( Eigen::VectorXd& tau) const = 0;
     
     /**
+     * @brief Computes inverse dynamics for a constrained system.
+     * 
+     * @param J The constraint jacobian
+     * @param weights Torque weights for weighted least-squares computation (only matters if system is floating-base)
+     * @param tau The resultind ID torque vector
+     * @return True if input has correct dimensions and computation goes alright.
+     */
+    bool computeConstrainedInverseDynamics( const Eigen::MatrixXd& J, const Eigen::VectorXd& weights, Eigen::VectorXd& tau) const;
+    
+    /**
      * @brief Gets a selection matrix for the requested chain, i.e. a matrix S such that the product
      * of S by the configuration vector returns the sub-vector pertaining to the specified chain.
      * 

@@ -18,6 +18,8 @@
 */
 
 #include <XBotInterface/ModelInterface.h>
+#include <eigen3/Eigen/QR>
+#include <eigen3/Eigen/SVD>
 
 // NOTE Static members need to be defined in the cpp 
 shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
@@ -657,9 +659,28 @@ bool XBot::ModelInterface::maskJacobian(const std::string& chain_name, KDL::Jaco
     return maskJacobian(chain_name, const_cast<Eigen::MatrixXd&>(Je));
 }
 
+bool XBot::ModelInterface::computeConstrainedInverseDynamics(const Eigen::MatrixXd& J, 
+                                                             const Eigen::VectorXd& weights, 
+                                                             Eigen::VectorXd& tau) const
+{
+    int num_constraints = J.rows();
+    Eigen::VectorXd _h, _b, _w;
+    Eigen::MatrixXd _Q, _A;
+    computeInverseDynamics(_h);
+    
+    Eigen::HouseholderQR<Eigen::MatrixXd> _qr(J.transpose());
+    _Q = _qr.householderQ();
+    
+    _b = (_Q.transpose() * _h).tail(getJointNum() - num_constraints);
+    _A = _Q.bottomRows(getJointNum()).transpose().bottomRows(getJointNum() - num_constraints);
+    
+    _w = weights.array().inverse().sqrt();
+    
+    _A.noalias() = _A*_w.asDiagonal();
+    
+    tau = _w.asDiagonal() * _A.jacobiSvd(Eigen::ComputeThinU|Eigen::ComputeThinV).solve(_b);
 
-
-
+}
 
 
 
