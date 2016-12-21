@@ -264,11 +264,22 @@ bool XBot::ModelInterface::fillModelOrderedChain()
             else{
                 return false;
             }
-        
+            
         }
         
         
     }
+    
+    // Since fixed controlled joints do not appear in the model, some chains may
+    // be missing. So we add them!
+    
+    for( const auto& pair : _chain_map ){
+        auto it = std::find(_ordered_chain_names.begin(), _ordered_chain_names.end(), pair.first);
+        if( it == _ordered_chain_names.end() ){
+            _ordered_chain_names.push_back(pair.first);
+        }
+    }
+    
     //_model_ordered_chain_name;
     
     std::cout << "Model ordered chains: " << std::endl;
