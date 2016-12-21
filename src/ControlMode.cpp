@@ -37,7 +37,12 @@ _name("")
 
 }
 
-ControlMode::ControlMode(const std::string& name, bool position_enabled, bool velocity_enabled, bool effort_enabled, bool stiffness_enabled, bool damping_enabled):
+ControlMode::ControlMode(const std::string& name, 
+                         bool position_enabled, 
+                         bool velocity_enabled, 
+                         bool effort_enabled, 
+                         bool stiffness_enabled, 
+                         bool damping_enabled):
 _position_enabled(position_enabled),
 _velocity_enabled(velocity_enabled),
 _effort_enabled(effort_enabled),
