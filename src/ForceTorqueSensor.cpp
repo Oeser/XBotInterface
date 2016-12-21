@@ -21,8 +21,8 @@
 
 namespace XBot {
     
-ForceTorqueSensor::ForceTorqueSensor(urdf::LinkConstSharedPtr ft_link):
-GenericSensor::GenericSensor(ft_link),
+ForceTorqueSensor::ForceTorqueSensor(urdf::LinkConstSharedPtr ft_link, int sensor_id):
+GenericSensor::GenericSensor(ft_link, sensor_id),
 _fx(0), _fy(0), _fz(0), _tx(0), _ty(0), _tz(0)
 {
 

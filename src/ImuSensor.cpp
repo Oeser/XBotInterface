@@ -28,8 +28,8 @@ _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identit
 
 }
 
-ImuSensor::ImuSensor(urdf::LinkConstSharedPtr sensor_link): 
-GenericSensor(sensor_link),
+ImuSensor::ImuSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id): 
+GenericSensor(sensor_link, sensor_id),
 _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identity())
 {
 

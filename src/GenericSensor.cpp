@@ -21,8 +21,9 @@
 
 namespace XBot {
     
-GenericSensor::GenericSensor(urdf::LinkConstSharedPtr sensor_link):
-_timestamp(-1)
+GenericSensor::GenericSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id):
+_timestamp(-1),
+_sensor_id(sensor_id)
 {
     
     _sensor_name = sensor_link->name;
@@ -56,6 +57,12 @@ const std::string& GenericSensor::getSensorName() const
 {
     return _sensor_name;
 }
+
+const int GenericSensor::getSensorId() const
+{
+    return _sensor_id;
+}
+
 /*
 KDL::Frame GenericSensor::sensorPose() const
 {

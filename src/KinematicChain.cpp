@@ -79,13 +79,14 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     for( const auto& ft_name_id : _XBotModel.get_ft_sensors() ){
         
         const std::string& ft_joint_name = ft_name_id.first;
+        const int ft_id = ft_name_id.second;
         std::string ft_link_name = robot_urdf.getJoint(ft_joint_name)->child_link_name;
         const std::string& ft_parent_link_name = robot_urdf.getJoint(ft_joint_name)->parent_link_name;
         
         // check the FT on this chain
         for( const auto& link_in_chain : _urdf_links) {
             if(link_in_chain->name == ft_parent_link_name) {
-                ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name));
+                ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name), ft_id);
                 _ft_vector.push_back(ft_ptr);
                 _ft_map[ft_ptr->getSensorName()] = ft_ptr;
                 std::cout << "****************** FOUND FT " << ft_link_name << " ON CHAIN " << getChainName() << std::endl;
@@ -99,13 +100,14 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     for( const auto& imu_name_id : _XBotModel.get_imu_sensors() ){
         
         const std::string& imu_joint_name = imu_name_id.first;
+        const int imu_id = imu_name_id.second;
         std::string imu_link_name = robot_urdf.getJoint(imu_joint_name)->child_link_name;
         std::string imu_parent_link_name = robot_urdf.getJoint(imu_joint_name)->parent_link_name;
      
         // check the if IMU is on this chain
         for( const auto& link_in_chain : _urdf_links) {
             if(link_in_chain->name == imu_parent_link_name) {
-                ImuSensor::Ptr imu_ptr = std::make_shared<ImuSensor>(robot_urdf.getLink(imu_link_name));
+                ImuSensor::Ptr imu_ptr = std::make_shared<ImuSensor>(robot_urdf.getLink(imu_link_name), imu_id);
                 _imu_vector.push_back(imu_ptr);
                 _imu_map[imu_ptr->getSensorName()] = imu_ptr;
                 std::cout << "****************** FOUND IMU " << imu_link_name << " ON CHAIN " << getChainName() << std::endl;
