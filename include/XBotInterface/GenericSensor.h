@@ -50,8 +50,9 @@ namespace XBot {
          * @brief Constructor with the sensor parent link
          * 
          * @param sensor_link the sensor parent link
+         * @param sensor_id the sensor id
          */
-        GenericSensor(urdf::LinkConstSharedPtr sensor_link);
+        GenericSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id);
         
         /**
          * @brief Getter for the sensor parent link name
@@ -66,6 +67,13 @@ namespace XBot {
          * @return the sensor name
          */
         const std::string& getSensorName() const;
+        
+        /**
+         * @brief Getter for the sensor id
+         * 
+         * @return the sensor id
+         */
+        const int getSensorId() const;
         
         /**
          * @brief Getter for the sensor pose w.r.t. the parent link
@@ -95,6 +103,8 @@ namespace XBot {
     private:
         
         std::string _sensor_name;
+        int _sensor_id;
+        
         std::string _parent_link_name;
         Eigen::Affine3d _parent_link_T_sensor_link;
         double _timestamp;

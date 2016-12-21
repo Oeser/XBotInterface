@@ -42,8 +42,9 @@ public:
      * @brief  Constructor with the sensor parent link
      * 
      * @param sensor_link the sensor parent link
+     * @param sensor_id the sensor id
      */
-    ImuSensor(urdf::LinkConstSharedPtr sensor_link);
+    ImuSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id);
     
     /**
      * @brief Getter for the IMU orientation as a quaternion 

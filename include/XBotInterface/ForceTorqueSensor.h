@@ -57,8 +57,9 @@ public:
      * @brief Constructor with the Force-Torque parent link
      * 
      * @param ft_link the FOrce-Torque parent link
+     * @param sensor_id the sensor id
      */
-    ForceTorqueSensor(urdf::LinkConstSharedPtr ft_link);
+    ForceTorqueSensor(urdf::LinkConstSharedPtr ft_link, int sensor_id);
     
     /**
      * @brief Getter for the Force-Torque measured wrench
