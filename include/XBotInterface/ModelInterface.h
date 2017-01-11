@@ -756,6 +756,13 @@ public:
      */
     bool maskJacobian( const std::string& chain_name, Eigen::MatrixXd& J) const;
 
+    /**
+     * @brief getLinkID return the link ID
+     * @param link_name the name fo the link
+     * @return ID of the link, -1 if the link does not exist
+     */
+    virtual int getLinkID(const std::string& link_name) const = 0;
+
     
     // Getters for RX
 
