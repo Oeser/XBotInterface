@@ -1,8 +1,8 @@
 # CENTAURO config
 XBotInterface:
-  urdf_path: "configs/ADVR_shared/centauro/urdf/centauro_upperbody.urdf"
-  srdf_path: "configs/ADVR_shared/centauro/srdf/centauro_upperbody.srdf"
-  joint_map_path: "configs/ADVR_shared/centauro/joint_map/centauro_test_joint_map_upperbody.yaml"
+  urdf_path: "external/XBotInterface/tests/configs/centauro/urdf/centauro_upperbody.urdf"
+  srdf_path: "external/XBotInterface/tests/configs/centauro/srdf/centauro_upperbody.srdf"
+  joint_map_path: "external/XBotInterface/tests/configs/centauro/joint_map/centauro_test_joint_map_upperbody.yaml"
 
 RobotInterface:
   framework_name: "ROS"
