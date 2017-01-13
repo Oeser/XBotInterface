@@ -30,6 +30,8 @@
 #include <XBotInterface/KinematicChain.h>
 #include <XBotInterface/TypedefAndEnums.h>
 
+#include <spdlog/ConsoleLogger.hpp>
+
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
 namespace XBot {
@@ -310,8 +312,8 @@ public:
      * any IMU.
      */
      ImuSensor::ConstPtr getImu ( const std::string& parent_link_name ) const;
-		
-	/**
+                
+        /**
      * @brief Converts a state vector for the whole robot to its JointNameMap representation.
      * Note that the output map is not cleared before it is filled. It is the responsibility of
      * the user to do so if required.
@@ -1232,6 +1234,11 @@ public:
      const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
 
      friend std::ostream& operator<< ( std::ostream& os, const XBot::XBotInterface& robot );
+     
+    /**
+     * @brief Getter for a console Logger
+     */
+    static ConsoleLogger::Ptr getConsoleLogger();
 
     /**
      * @brief Print a pretty table about the robot state.

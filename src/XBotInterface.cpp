@@ -2046,6 +2046,10 @@ XBot::Joint::Ptr XBot::XBotInterface::getJointByIdInternal(int joint_id) const
     return XBot::Joint::Ptr();
 }
 
+ConsoleLogger::Ptr XBot::XBotInterface::getConsoleLogger()
+{
+
+}
 
 
 
