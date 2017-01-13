@@ -386,6 +386,15 @@ void XBot::Joint::setControlMode(const XBot::ControlMode& control_mode)
     _control_mode = control_mode;
 }
 
+bool XBot::Joint::isFixedControlledJoint() const
+{
+    if ( _urdf_joint->type == urdf::Joint::FIXED ) {
+        // NOTE if we arrive here we are 100% sure that the joint is specified in the SRDF controlled_joints group and it is FIXED 
+        return true;
+    }
+    
+    return false;
+}
 
 
 

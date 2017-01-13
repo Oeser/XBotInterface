@@ -175,6 +175,15 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg, AnyMapC
             }
     }
     
+    // Since fixed controlled joints do not appear in the model, some chains may
+    // be missing. So we add them!
+    for( const auto& pair : _chain_map ){
+        auto it = std::find(_ordered_chain_names.begin(), _ordered_chain_names.end(), pair.first);
+        if( it == _ordered_chain_names.end() ){
+            _ordered_chain_names.push_back(pair.first);
+        }
+    }
+    
     return success;
 }
 

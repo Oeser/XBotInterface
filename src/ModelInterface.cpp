@@ -177,8 +177,10 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
     }
     
     // Fill _model_chain_map with shallow copies of chains in _chain_map
-    
     _model_chain_map.clear();
+    
+    // update model _chain_map removing the chain with only controlled fixed joint
+    seekAndDestroyFixedControlledJoints();
     
     for( const auto& c : _chain_map){
         
@@ -268,16 +270,6 @@ bool XBot::ModelInterface::fillModelOrderedChain()
         }
         
         
-    }
-    
-    // Since fixed controlled joints do not appear in the model, some chains may
-    // be missing. So we add them!
-    
-    for( const auto& pair : _chain_map ){
-        auto it = std::find(_ordered_chain_names.begin(), _ordered_chain_names.end(), pair.first);
-        if( it == _ordered_chain_names.end() ){
-            _ordered_chain_names.push_back(pair.first);
-        }
     }
     
     //_model_ordered_chain_name;
@@ -693,6 +685,25 @@ bool XBot::ModelInterface::computeConstrainedInverseDynamics(const Eigen::Matrix
 
 }
 
+void XBot::ModelInterface::seekAndDestroyFixedControlledJoints()
+{
+    for( auto& c : _chain_map) {
+        XBot::KinematicChain& kin_chain = *c.second;
+        // find the joints to remove
+        
+        for(int i = 0; i < kin_chain.getJointNum(); i++) {
+            if( kin_chain.getJoint(i)->isFixedControlledJoint() ) {
+                // remove the joints
+                kin_chain.removeJoint(i);
+                i--;
+            }
+        }
+        // remove the chains if it is empty
+        if(kin_chain.getJointNum() == 0) {
+            _chain_map.erase(c.first);
+        }
+    }
+}
 
 
 
