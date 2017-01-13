@@ -179,6 +179,14 @@ public:
      * @return void
      */
     void printTracking() const;
+    
+     /**
+     * @brief return true if the joint is specified fixed in the model, but inside the controlled_joints group of the SRDF
+     * e.g. Hands
+     * 
+     * @return true if the joint is fixed and controlled
+     */
+    bool isFixedControlledJoint() const;
 
 protected:
     
@@ -457,6 +465,8 @@ protected:
      * @return true if the joint is virtual. False otherwise
      */
     bool isVirtualJoint();
+    
+   
     
 
 private:
