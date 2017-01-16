@@ -1,0 +1,22 @@
+#include <XBotInterface/RobotInterface.h>
+
+int main(int argc, char **argv){
+ 
+    std::string path_to_config_file(argv[1]); // from command line
+
+    XBot::RobotInterface& robot = *XBot::RobotInterface::getRobot(path_to_config_file);
+    XBot::ModelInterface& model = *XBot::ModelInterface::getModel(path_to_config_file);
+    
+    while(robot.isRunning()){
+     
+        robot.sense();
+        
+        robot.print();
+        
+        usleep(10000);
+        
+    }
+    
+    return 0;
+    
+}
