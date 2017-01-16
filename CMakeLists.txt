@@ -100,7 +100,7 @@ target_include_directories(XBotInterface PUBLIC
                             ${sharedlibpp_INCLUDE_DIRS}
                             ${bprinter_INCLUDE_DIRS}
                             )
-add_executable(loggertest examples/Test.cpp)
+
 add_executable(test_exec src/main_test.cpp)
 target_link_libraries(test_exec XBotInterface)
 
