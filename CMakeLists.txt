@@ -63,14 +63,14 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
                             ${sharedlibpp_INCLUDE_DIRS}
                             ${bprinter_INCLUDE_DIRS}
-                            )      
-                            
+                            )
 
-                            
+
+
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
 
-add_library(XBotInterface SHARED ${XBotInterface_INCLUDES} 
+add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/XBotInterface.cpp
                                  src/RobotInterface.cpp
                                  src/KinematicChain.cpp
@@ -83,7 +83,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/ImuSensor.cpp
                                  src/ControlMode.cpp
                                  src/bprinter/table_printer.cpp)
-                                 
+
 target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     ${sharedlibpp_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
@@ -91,7 +91,7 @@ target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     ${bprinter_LIBRARIES}
                                     )
 
-                                    
+
 target_include_directories(XBotInterface PUBLIC
                             ${XBotCoreModel_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIRS}
@@ -100,7 +100,7 @@ target_include_directories(XBotInterface PUBLIC
                             ${sharedlibpp_INCLUDE_DIRS}
                             ${bprinter_INCLUDE_DIRS}
                             )
-
+add_executable(loggertest examples/Test.cpp)
 add_executable(test_exec src/main_test.cpp)
 target_link_libraries(test_exec XBotInterface)
 
@@ -181,5 +181,5 @@ optional_build(examples examples ON)
 if(BUILD_TESTS)
   enable_testing()
   add_custom_target(test_verbose ${CMAKE_CTEST_COMMAND} -V)
-  add_subdirectory(tests)  
+  add_subdirectory(tests)
 endif()
