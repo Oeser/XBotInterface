@@ -1234,12 +1234,6 @@ public:
      const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
 
      friend std::ostream& operator<< ( std::ostream& os, const XBot::XBotInterface& robot );
-     
-    /**
-     * @brief Getter for a console Logger
-     */
-    static ConsoleLogger::Ptr getConsoleLogger();
-
     /**
      * @brief Print a pretty table about the robot state.
      * 
