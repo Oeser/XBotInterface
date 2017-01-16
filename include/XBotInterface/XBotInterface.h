@@ -30,8 +30,6 @@
 #include <XBotInterface/KinematicChain.h>
 #include <XBotInterface/TypedefAndEnums.h>
 
-#include <spdlog/ConsoleLogger.hpp>
-
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
 namespace XBot {
