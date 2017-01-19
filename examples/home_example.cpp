@@ -17,7 +17,7 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    logger.info().log() << "q homing : " << qhome << logger.endl();
+    logger.info() << "q homing : " << qhome << logger.endl();
 
     Eigen::VectorXd qinitial;
 
@@ -40,7 +40,7 @@ int main(int argc, char **argv){
         robot.setPositionReference(qinitial+alpha*(qhome-qinitial));
 
 
-        logger.info().log() << "q ref : " << qinitial+alpha*(qhome-qinitial) << logger.endl();
+        logger.info() << "q ref : " << qinitial+alpha*(qhome-qinitial) << logger.endl();
 
         robot.move();
 

@@ -21,9 +21,9 @@ int main(int argc, char **argv){
     int i = 0;
     while(i < LOG_ITERATION) {
 
-        file_logger.info().log() << q.transpose() << 12 << "test1 " << __func__  << q.transpose() << "test2 " << file_logger.endl();
-        console_logger.warning().log() << "warn1 " << __func__  << q.transpose() << " warn2 " << console_logger.endl();
-        console_logger.error().log() << "error  " << __func__  << q.transpose() << " --- " << console_logger.endl();
+        file_logger.info() << q.transpose() << 12 << "test1 " << __func__  << q.transpose() << "test2 " << file_logger.endl();
+        console_logger.warning() << "warn1 " << __func__  << q.transpose() << " warn2 " << console_logger.endl();
+        console_logger.error() << "error  " << __func__  << q.transpose() << " --- " << console_logger.endl();
 
         mfile_logger.add("q_v", q);
         mfile_logger.add("A_v", A);
