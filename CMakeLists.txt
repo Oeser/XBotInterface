@@ -146,8 +146,7 @@ set_target_properties(XBotInterface PROPERTIES VERSION ${${VARS_PREFIX}_VERSION}
                                                SOVERSION ${${VARS_PREFIX}_VERSION})
 
 install(DIRECTORY include/
-        DESTINATION "${${VARS_PREFIX}_INSTALL_INCLUDEDIR}"
-        FILES_MATCHING PATTERN "*.h*")
+        DESTINATION "${${VARS_PREFIX}_INSTALL_INCLUDEDIR}")
 
 install(TARGETS XBotInterface
         EXPORT XBotInterface
