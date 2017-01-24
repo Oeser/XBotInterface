@@ -3,7 +3,7 @@
 
 #include <unistd.h>
 
-#define LOG_ITERATION 1e3
+#define LOG_ITERATION 40e3
 #define LOG_PERIOD_MICRO 1e4
 
 int main(int argc, char **argv){
@@ -31,7 +31,7 @@ int main(int argc, char **argv){
         mfile_logger.add("A_v", A);
         mfile_logger.add("scalar", double(i)/1.2345);
 
-        usleep(LOG_PERIOD_MICRO);
+//         usleep(LOG_PERIOD_MICRO);
         i++;
     }
 
