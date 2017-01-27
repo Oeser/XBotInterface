@@ -3,8 +3,8 @@
 
 #include <unistd.h>
 
-#define LOG_ITERATION 4e3
-#define LOG_PERIOD_MICRO 1e4
+#define LOG_ITERATION 4e1
+#define LOG_PERIOD_MICRO 1e5
 
 int main(int argc, char **argv){
 
@@ -17,7 +17,8 @@ int main(int argc, char **argv){
     Eigen::MatrixXd A;
 
 
-    mfile_logger.createVectorVariable("q_v", 5, 1, 3000);
+    mfile_logger.createVectorVariable("q_v", 5, 1, 30);
+    mfile_logger.createMatrixVariable("A_v", 6, 6, 1, 30);
 
     q.setConstant(5,0.123456789);
     A.setConstant(6,6,0.123456789);
@@ -27,10 +28,10 @@ int main(int argc, char **argv){
 
         file_logger.info() << "Vector q is :" << q.transpose() << file_logger.endl();
         console_logger.warning() << "Vector q is :" << q.transpose() << console_logger.endl();
-        console_logger.error() << "Vector q is :" << q.transpose() << console_logger.endl();
+//         console_logger.error() << "Vector q is :" << q.transpose() << console_logger.endl();
 
         mfile_logger.add("q_v", q*std::sin(i/100.0));
-//         mfile_logger.add("A_v", A);
+        mfile_logger.add("A_v", A*i);
 //         mfile_logger.add("scalar", double(i)/1.2345);
 
 //         usleep(LOG_PERIOD_MICRO);
