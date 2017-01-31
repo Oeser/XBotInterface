@@ -3,7 +3,7 @@
 
 #include <unistd.h>
 
-#define LOG_ITERATION 4e1
+#define LOG_ITERATION 4e3
 #define LOG_PERIOD_MICRO 1e5
 
 int main(int argc, char **argv){
@@ -17,8 +17,8 @@ int main(int argc, char **argv){
     Eigen::MatrixXd A;
 
 
-    mfile_logger.createVectorVariable("q_v", 5, 1, 30);
-    mfile_logger.createMatrixVariable("A_v", 6, 6, 1, 30);
+    mfile_logger.createVectorVariable("q_v", 5, 1);
+    mfile_logger.createMatrixVariable("A_v", 6, 6, 1);
 
     q.setConstant(5,0.123456789);
     A.setConstant(6,6,0.123456789);
