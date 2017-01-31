@@ -1,4 +1,4 @@
-# 
+#
 #  Copyright (C) 2016 IIT-ADVR
 #  Author: Luca Muratore
 #  email: luca.muratore@iit.it
@@ -54,12 +54,12 @@ add_executable(log_example log_example.cpp)
 ##########
 ## Link ##
 ##########
-target_link_libraries(ik_example XBotInterface)
-target_link_libraries(id_example XBotInterface)
-target_link_libraries(read_example XBotInterface)
-target_link_libraries(home_example XBotInterface)
+target_link_libraries(ik_example XBotInterface XBotLogger)
+target_link_libraries(id_example XBotInterface XBotLogger)
+target_link_libraries(read_example XBotInterface XBotLogger)
+target_link_libraries(home_example XBotInterface XBotLogger)
 
-target_link_libraries(log_example XBotInterface)
+target_link_libraries(log_example XBotInterface XBotLogger)
 
 #############
 ## Install ##
