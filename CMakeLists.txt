@@ -103,7 +103,7 @@ target_include_directories(XBotInterface PUBLIC
                             )
 
 add_library(XBotLogger SHARED src/Logger.cpp)
-target_link_libraries(XBotLogger PUBLIC matio)
+target_link_libraries(XBotLogger PUBLIC matio pthread)
 
 
 add_executable(test_exec src/main_test.cpp)
