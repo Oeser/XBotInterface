@@ -25,6 +25,7 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <tuple>
 #include <XBotInterface/RobotInterface.h>
 #include <XBotInterface/Logger.hpp>
 
@@ -33,35 +34,49 @@ namespace XBot {
 namespace FSM {
 
     /**
-     * @brief Base class for defining custom events which states can react to.
-     *
-     */
-    class Event {};
-
-    /**
      * @brief Base class for defining custom messages that can be processed by
      * the states during the entry phase.
      *
      */
-    class Message {};
+    struct Message {
+        std::string message;
+    };
+
+    /**
+     * @brief Base class for defining custom events which states can react to.
+     * Notice that events can also be used as messages to be passed among states.
+     */
+    struct Event : Message {
+        std::string name;
+    };
 
     // Forward declaration for State class
-    template <typename StateType> class State;
+    template <typename StateType, typename SharedDataType> class State;
 
+    /**
+     * @brief Default SharedData class
+     *
+     */
+    struct SharedDataBase {};
 
     /**
      * @brief Class implementing a finite state machine with states inheriting
-     * from the user-defined class StateType, which must provided as the only
-     * template parameter.
+     * from the user-defined class StateType, which must provided as the first
+     * template parameter. The second template parameter (optional) represents
+     * a custom class for holding shared data among states.
      */
-    template <typename StateType>
+    template <typename StateType, typename SharedDataType = SharedDataBase>
     class StateMachine {
 
     public:
 
-        friend class State<StateType>;
+        friend class State<StateType, SharedDataType>;
 
-        StateMachine(): fsm_ptr(this), _is_fsm_init(false) {}
+        StateMachine():
+            fsm_ptr(this),
+            _is_fsm_init(false),
+            _data(std::make_shared<SharedDataType>())
+        {}
 
         bool init( const std::string& initial_state_name ){
             return init(initial_state_name, Message());
@@ -98,6 +113,7 @@ namespace FSM {
             }
 
             state->_parent_fsm = fsm_ptr;
+            state->data = _data;
             _registered_states[state->get_name()] = state;
 
             return true;
@@ -131,6 +147,16 @@ namespace FSM {
             return true;
         }
 
+        std::shared_ptr<const StateType> get_current_state() const
+        {
+            return _current_state;
+        }
+
+        SharedDataType& shared_data()
+        {
+            return *_data;
+        }
+
     protected:
 
     private:
@@ -143,7 +169,7 @@ namespace FSM {
 
             if( it == _registered_states.end() )
             {
-                std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << "! Initial state " <<
+                std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << "! State " <<
                 next_state_name <<
                 " was not registered with this state machine! Call register_state()!" << std::endl;
 
@@ -166,22 +192,27 @@ namespace FSM {
 
         bool _is_fsm_init;
 
+        std::shared_ptr<SharedDataType> _data;
+
 
     };
 
 
+
+
     /**
      * @brief By inheriting from the State class, the user of the FSM defines
-     * a base class for all custom states.  The only template parameter
+     * a base class for all custom states.  The first template parameter
      * is the base class for user-defined states, according to the Curiously
-     * Recurring Template Pattern (CRTP).
+     * Recurring Template Pattern (CRTP). The second template parameter (optional)
+     * is a custom class for holding data which is shared among all states.
      */
-    template <typename StateType>
+    template <typename StateType, typename SharedDataType = SharedDataBase>
     class State {
 
     public:
 
-        friend class StateMachine<StateType>;
+        friend class StateMachine<StateType, SharedDataType>;
 
         virtual std::string get_name() const = 0;
 
@@ -192,6 +223,8 @@ namespace FSM {
 
 
     protected:
+
+        std::shared_ptr<SharedDataType> data;
 
         template <typename MessageType>
         bool transit( const std::string& next_state_name, const MessageType& msg )
@@ -219,7 +252,7 @@ namespace FSM {
 
     private:
 
-        StateMachine<StateType> * _parent_fsm;
+        StateMachine<StateType, SharedDataType> * _parent_fsm;
 
     };
 
