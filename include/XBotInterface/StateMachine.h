@@ -103,6 +103,8 @@ namespace FSM {
 
             _current_state = _previous_state = it->second;
             _current_state->entry(msg);
+            
+            _is_fsm_init = true;
 
             return true;
         }
