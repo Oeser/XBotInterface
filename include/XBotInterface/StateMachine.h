@@ -118,7 +118,7 @@ namespace FSM {
             }
 
             state->_parent_fsm = fsm_ptr;
-            state->data = _data;
+            state->_data = _data;
             _registered_states[state->get_name()] = state;
 
             return true;
@@ -228,9 +228,12 @@ namespace FSM {
 
 
     protected:
-
-        std::shared_ptr<SharedDataType> data;
-
+        
+        SharedDataType& shared_data() 
+        {
+            return *_data;
+        }
+        
         template <typename MessageType>
         bool transit( const std::string& next_state_name, const MessageType& msg )
         {
@@ -260,6 +263,8 @@ namespace FSM {
 
 
     private:
+        
+        std::shared_ptr<SharedDataType> _data;
 
         StateMachine<StateType, SharedDataType> * _parent_fsm;
 
