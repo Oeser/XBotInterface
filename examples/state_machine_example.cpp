@@ -1,3 +1,4 @@
+#define XBOT_MULTIPLE_FSM_MODE
 #include <XBotInterface/StateMachine.h>
 #include <iostream>
 
@@ -44,6 +45,7 @@ public:
 };
 
 
+struct SharedData {};
 
 
 // TWO: define the base class for all states of the FSM, by inheriting from FSM::State.
@@ -52,7 +54,7 @@ public:
 // A virtual react() method must be defined
 // for all events and an entry method for all messages.
 // This is how we tell the state machine to listen to certain events/messages
-class LocomotionState :  public FSM::State<LocomotionState> {
+class LocomotionState :  public FSM::State<LocomotionState, SharedData> {
 
 public:
 
@@ -110,10 +112,20 @@ public:
 };
 
 
+
+
+FSM::StateMachine<LocomotionState, SharedData> fsm;
+
+template <typename E>
+bool XBot::FSM::broadcast_event(const E& e){
+    return fsm.send_event(e);
+}
+
+
 int main(int argc, char** argv){
 
     // Instantiate the FSM, providing the state base class as template parameter
-    FSM::StateMachine<LocomotionState> fsm;
+//     fsm = FSM::StateMachine<LocomotionState>();
 
     // Construct states and register states with the FSM
     fsm.register_state(std::make_shared<Idle>());
@@ -129,7 +141,7 @@ int main(int argc, char** argv){
         fsm.run(time, 0.01);
 
        if( i == 200 ){
-           fsm.send_event(LiftLeg(1,2));
+           FSM::broadcast_event(LiftLeg(1,2));
        }
 
     }

@@ -59,6 +59,11 @@ namespace FSM {
      */
     struct SharedDataBase {};
 
+#ifdef XBOT_MULTIPLE_FSM_MODE
+    template <typename EventType>
+    bool broadcast_event(const EventType& e);
+#endif
+
     /**
      * @brief Class implementing a finite state machine with states inheriting
      * from the user-defined class StateType, which must provided as the first
@@ -245,7 +250,11 @@ namespace FSM {
         template <typename EventType>
         void send_event(const EventType& e)
         {
+#ifdef XBOT_MULTIPLE_FSM_MODE
+            broadcast_event(e);
+#else
             _parent_fsm->send_event(e);
+#endif
         }
 
 
