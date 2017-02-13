@@ -186,7 +186,7 @@ namespace FSM {
 
         std::shared_ptr<StateType> _current_state, _previous_state;
 
-        StateMachine<StateType> * fsm_ptr;
+        StateMachine<StateType, SharedDataType> * fsm_ptr;
 
         std::unordered_map<std::string, std::shared_ptr<StateType>> _registered_states;
 
