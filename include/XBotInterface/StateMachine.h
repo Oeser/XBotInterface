@@ -25,6 +25,8 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#include <XBotInterface/RobotInterface.h>
+#include <XBotInterface/Logger.hpp>
 
 namespace XBot {
 
@@ -59,14 +61,14 @@ namespace FSM {
 
         friend class State<StateType>;
 
-        StateMachine(): fsm_ptr(this) {}
+        StateMachine(): fsm_ptr(this), _is_fsm_init(false) {}
 
-        void init( const std::string& initial_state_name ){
-            init(initial_state_name, Message());
+        bool init( const std::string& initial_state_name ){
+            return init(initial_state_name, Message());
         }
 
         template <typename MessageType>
-        void init( const std::string& initial_state_name, const MessageType& msg )
+        bool init( const std::string& initial_state_name, const MessageType& msg )
         {
             auto it = _registered_states.find(initial_state_name);
 
@@ -76,36 +78,57 @@ namespace FSM {
                 initial_state_name <<
                 " was not registered with this state machine! Call register_state()!" << std::endl;
 
-                return;
+                return false;
             }
 
             _current_state = _previous_state = it->second;
             _current_state->entry(msg);
+
+            return true;
         }
 
-        void register_state( std::shared_ptr<StateType> state )
+        bool register_state( std::shared_ptr<StateType> state )
         {
             if( _registered_states.count(state->get_name()) ){
                 std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << "! State " <<
                 state->get_name() <<
                 " has already beed registered with this state machine!" << std::endl;
 
-                return;
+                return false;
             }
 
             state->_parent_fsm = fsm_ptr;
             _registered_states[state->get_name()] = state;
 
+            return true;
+
         }
 
         template <typename EventType>
-        void send_event(const EventType& event)
+        bool send_event(const EventType& event)
         {
+            if(!_is_fsm_init){
+                std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << "! State machine "  <<
+                " has not been initialized! Call init()!" << std::endl;
+
+                return false;
+            }
+
             _current_state->react(event);
+            return true;
         }
 
-        void run(double time, double period){
+        bool run(double time, double period){
+
+            if(!_is_fsm_init){
+                std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << "! State machine "  <<
+                " has not been initialized! Call init()!" << std::endl;
+
+                return false;
+            }
+
             _current_state->run(time, period);
+            return true;
         }
 
     protected:
@@ -114,7 +137,7 @@ namespace FSM {
 
 
         template <typename MessageType>
-        void transit( const std::string& next_state_name, const MessageType& msg )
+        bool transit( const std::string& next_state_name, const MessageType& msg )
         {
             auto it = _registered_states.find(next_state_name);
 
@@ -124,13 +147,15 @@ namespace FSM {
                 next_state_name <<
                 " was not registered with this state machine! Call register_state()!" << std::endl;
 
-                return;
+                return false;
             }
 
             _current_state->exit();
             _previous_state = _current_state;
             _current_state = it->second;
             _current_state->entry(msg);
+
+            return true;
         }
 
         std::shared_ptr<StateType> _current_state, _previous_state;
@@ -139,6 +164,7 @@ namespace FSM {
 
         std::unordered_map<std::string, std::shared_ptr<StateType>> _registered_states;
 
+        bool _is_fsm_init;
 
 
     };
@@ -168,14 +194,14 @@ namespace FSM {
     protected:
 
         template <typename MessageType>
-        void transit( const std::string& next_state_name, const MessageType& msg )
+        bool transit( const std::string& next_state_name, const MessageType& msg )
         {
-            _parent_fsm->transit(next_state_name, msg);
+            return _parent_fsm->transit(next_state_name, msg);
         }
 
-        void transit( const std::string& next_state_name )
+        bool transit( const std::string& next_state_name )
         {
-            _parent_fsm->transit(next_state_name, Message());
+            return _parent_fsm->transit(next_state_name, Message());
         }
 
         std::string get_previous_state_name() const
