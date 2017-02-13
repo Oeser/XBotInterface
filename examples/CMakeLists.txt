@@ -50,6 +50,7 @@ add_executable(read_example read_example.cpp)
 add_executable(home_example home_example.cpp)
 
 add_executable(log_example log_example.cpp)
+add_executable(state_machine_example state_machine_example.cpp)
 
 ##########
 ## Link ##
@@ -60,6 +61,7 @@ target_link_libraries(read_example XBotInterface XBotLogger)
 target_link_libraries(home_example XBotInterface XBotLogger)
 
 target_link_libraries(log_example XBotInterface XBotLogger)
+target_link_libraries(state_machine_example XBotInterface XBotLogger)
 
 #############
 ## Install ##
