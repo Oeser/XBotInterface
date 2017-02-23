@@ -291,7 +291,7 @@ public:
      * @param J The requested jacobian.
      * @return bool
      */
-    bool getRelativeJacobian( const std::string& target_link_name, 
+    virtual bool getRelativeJacobian( const std::string& target_link_name,
                               const std::string& base_link_name,
                               KDL::Jacobian& J) const;
 
