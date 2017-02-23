@@ -354,6 +354,14 @@ public:
     void pushBackJoint(Joint::Ptr joint);
     
     /**
+     * @brief remove the i-th joint in the kinematic chain 
+     * 
+     * @param i the joint i-th position
+     * @return void
+     */
+    void removeJoint(int i);
+    
+    /**
      * @brief Method for determining whether a chain is virtual, i.e. contains all virtual joints
      * 
      * @return A boolean set to true if chain is virtual, false otherwise.

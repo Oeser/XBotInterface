@@ -310,8 +310,8 @@ public:
      * any IMU.
      */
      ImuSensor::ConstPtr getImu ( const std::string& parent_link_name ) const;
-		
-	/**
+                
+        /**
      * @brief Converts a state vector for the whole robot to its JointNameMap representation.
      * Note that the output map is not cleared before it is filled. It is the responsibility of
      * the user to do so if required.
@@ -1215,11 +1215,11 @@ public:
      bool enforceVelocityLimit( Eigen::VectorXd& qdot ) const;
 
      /**
-      * @brief Synchronize the current XBotInterface with another XBotInterface object
+      * @brief Synchronize the current XBotInterface with another XBotInterface object: only the common chains will be taken into account.
       * 
       * @param flags ...
       * @param other The XBotInterface object from which we synchronize the current object
-      * @return True if the synchronization is feasible ( i.e. the two XBotInterface object have the same chains). False * otherwise
+      * @return Always true because we support synchronization btw XBotInterfaces with different chains.
       */
      template <typename... SyncFlags>
      bool sync ( const XBotInterface& other, SyncFlags... flags );
@@ -1232,7 +1232,6 @@ public:
      const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
 
      friend std::ostream& operator<< ( std::ostream& os, const XBot::XBotInterface& robot );
-
     /**
      * @brief Print a pretty table about the robot state.
      * 
@@ -1322,12 +1321,13 @@ bool XBot::XBotInterface::sync ( const XBot::XBotInterface &other, SyncFlags... 
           if ( _chain_map.count ( chain_name ) ) {
                _chain_map.at ( chain_name )->syncFrom ( chain, flags... );
 
-          } else {
-               if ( !chain.isVirtual() ) {
-                    std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
-                    success = false;
-               }
-          }
+          } 
+//           else {
+//                if ( !chain.isVirtual() ) {
+//                     std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
+//                     success = false;
+//                }
+//           }
      }
      return success;
 }

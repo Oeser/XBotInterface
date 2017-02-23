@@ -233,6 +233,16 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     if(joint->getJointId() < 0) _is_virtual = true;
 }
 
+void XBot::KinematicChain::removeJoint(int i)
+{
+    _joint_name_map.erase(getJointName(i));
+    _joint_id_map.erase(getJointId(i));
+    _joint_vector.erase(_joint_vector.begin() + i);
+    _ordered_joint_name.erase(_ordered_joint_name.begin() + i);
+    _joint_num--;
+}
+
+
 const std::vector< urdf::JointConstSharedPtr > &KinematicChain::getUrdfJoints() const
 {
     return _urdf_joints;

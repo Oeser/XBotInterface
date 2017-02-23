@@ -841,6 +841,8 @@ private:
 
     using XBotInterface::sync;
     
+    void seekAndDestroyFixedControlledJoints();
+    
 };
 };
 
