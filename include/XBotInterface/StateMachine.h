@@ -80,7 +80,8 @@ namespace FSM {
         StateMachine():
             fsm_ptr(this),
             _is_fsm_init(false),
-            _data(std::make_shared<SharedDataType>())
+            _data(std::make_shared<SharedDataType>()),
+            _console_logger(XBot::ConsoleLogger::getLogger())
         {}
 
         bool init( const std::string& initial_state_name ){
@@ -98,12 +99,13 @@ namespace FSM {
                 initial_state_name <<
                 " was not registered with this state machine! Call register_state()!" << std::endl;
 
+                abort();
                 return false;
             }
 
             _current_state = _previous_state = it->second;
             _current_state->entry(msg);
-            
+
             _is_fsm_init = true;
 
             return true;
@@ -179,7 +181,7 @@ namespace FSM {
                 std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << "! State " <<
                 next_state_name <<
                 " was not registered with this state machine! Call register_state()!" << std::endl;
-
+                abort();
                 return false;
             }
 
@@ -200,6 +202,7 @@ namespace FSM {
         bool _is_fsm_init;
 
         std::shared_ptr<SharedDataType> _data;
+        XBot::ConsoleLogger::Ptr _console_logger;
 
 
     };
@@ -230,12 +233,17 @@ namespace FSM {
 
 
     protected:
-        
-        SharedDataType& shared_data() 
+
+        SharedDataType& shared_data()
         {
             return *_data;
         }
-        
+
+        XBot::ConsoleLogger& console()
+        {
+            return *_parent_fsm->_console_logger;
+        }
+
         template <typename MessageType>
         bool transit( const std::string& next_state_name, const MessageType& msg )
         {
@@ -265,7 +273,7 @@ namespace FSM {
 
 
     private:
-        
+
         std::shared_ptr<SharedDataType> _data;
 
         StateMachine<StateType, SharedDataType> * _parent_fsm;
