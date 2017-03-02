@@ -29,6 +29,7 @@
 #include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
 #include <XBotInterface/TypedefAndEnums.h>
+#include <XBotInterface/Logger.hpp>
 
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
@@ -269,6 +270,34 @@ public:
       * @return True if chain_name is a valid chain name.
       */
      bool getDofIndex ( const std::string& chain_name, std::vector<int>& ids ) const;
+
+     // Logging utilities
+
+     /**
+      * @brief Pre-allocates memory for logging
+      * the robot state to a mat file.
+      *
+      * @param file_name Path to the mat file to be saved (without .mat extension, example: "/tmp/robot_state_log")
+      * @param buffer_size The number of log elements after which old data are overwritten.
+      * @param interleave Data are actually logged every interleave calls to log().
+      */
+     void initLog(std::string file_name, int buffer_size = -1, int interleave = 1);
+
+     /**
+      * @brief Logs the current robot state.
+      *
+      * @param timestamp Time stamp for current robot state.
+      * @return void
+      */
+     void log(double timestamp) const;
+
+     /**
+      * @brief Dump logged data to .mat file. Since this is a computationally costly
+      * operation which involves writing to disk, it should not be called inside any
+      * high-rate loop.
+      *
+      */
+     void flushLog();
 
 
      // Force-torque sensors
@@ -1310,6 +1339,8 @@ private:
 
      int _joint_num;
 
+     mutable Eigen::VectorXd _qlink, _qmot, _qdotlink, _qdotmot, _tau, _stiffness, _damping, _temp;
+
      std::string _urdf_string, _srdf_string;
      std::string _urdf_path;
      std::string _srdf_path;
@@ -1319,6 +1350,8 @@ private:
      std::vector<int> _ordered_joint_id;
 
      std::string _path_to_cfg;
+
+     MatLogger::Ptr _matlogger;
 
      bool parseYAML ( const std::string &path_to_cfg );
 
