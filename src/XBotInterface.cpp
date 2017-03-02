@@ -2103,6 +2103,11 @@ void XBot::XBotInterface::initLog(std::string filename, int buffer_size, int int
 
 void XBot::XBotInterface::log(double time) const
 {
+    if(!_matlogger){
+        std::cout << "ERROR in " << __PRETTY_FUNCTION__ << "! initLog() has NOT been called!" << std::endl;
+        return;
+    }
+    
     getJointPosition(_qlink);
     getMotorPosition(_qmot);
     getJointVelocity(_qdotlink);
