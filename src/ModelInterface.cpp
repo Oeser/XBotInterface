@@ -21,7 +21,7 @@
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
 
-// NOTE Static members need to be defined in the cpp 
+// NOTE Static members need to be defined in the cpp
 shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
 std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > > XBot::ModelInterface::_model_interface_instance;
 
@@ -38,13 +38,13 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["ModelInterface"]) {
-        x_bot_interface = root_cfg["ModelInterface"]; 
+        x_bot_interface = root_cfg["ModelInterface"];
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!!" << std::endl;
         return false;
     }
-    
+
     // check model type
     if(x_bot_interface["model_type"]) {
         vars["model_type"] = x_bot_interface["model_type"].as<std::string>();
@@ -53,21 +53,21 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << "  does not contain model_type mandatory node!!" << std::endl;
         return false;
     }
-    
+
     // subclass forced
     vars["subclass_name"] = std::string("ModelInterface") + vars.at("model_type");
     vars["path_to_shared_lib"] = "";
     // check the path to shared lib
     if(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(), 
+        computeAbsolutePath(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(),
                             LIB_MIDDLE_PATH,
-                            vars.at("path_to_shared_lib")); 
+                            vars.at("path_to_shared_lib"));
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << vars.at("subclass_name") << " mandatory node!!" << std::endl;
         return false;
     }
-    
+
     if(root_cfg[vars.at("subclass_name")]["subclass_factory_name"]) {
         vars["subclass_factory_name"] = root_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
     }
@@ -75,7 +75,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         std::cerr << "ERROR in " << __func__ << " : " << vars.at("subclass_name") << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
-    
+
     return true;
 
 }
@@ -91,7 +91,7 @@ bool XBot::ModelInterface::isFloatingBase() const
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["ModelInterface"]) {
-        x_bot_interface = root_cfg["ModelInterface"]; 
+        x_bot_interface = root_cfg["ModelInterface"];
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!" << std::endl;
@@ -111,16 +111,16 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
     std::map<std::string, std::string> vars;
-    
+
     // parsing YAML
     if (!parseYAML(path_to_cfg, vars)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
-    
-    
-    
-    
+
+
+
+
     // loading the requested robot interface
     _model_interface_factory.open( vars.at("path_to_shared_lib").c_str(),
                                    vars.at("subclass_factory_name").c_str());
@@ -129,16 +129,16 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
         printf("error (%s) : %s\n", shlibpp::Vocab::decode(_model_interface_factory.getStatus()).c_str(),
                _model_interface_factory.getLastNativeError().c_str());
     }
-    
+
     // save the instance
     std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > ali_ptr(new shlibpp::SharedLibraryClass<XBot::ModelInterface>(_model_interface_factory));
-    
+
     _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >());
-    
+
     shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  *_model_interface_instance[_model_interface_instance.size()-1];
-    
+
     // open and init robot interface
-    model_instance.open(_model_interface_factory); 
+    model_instance.open(_model_interface_factory);
     model_instance->init(path_to_cfg, any_map);
     // static instance of the robot interface
     instance_ptr = std::shared_ptr<ModelInterface>(&model_instance.getContent(), [](ModelInterface* ptr){return;});
@@ -146,12 +146,12 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     return instance_ptr;
 }
 
- 
+
 bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapConstPtr any_map)
 {
 
     // set is_floating_base
-    
+
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
         std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
@@ -160,38 +160,38 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
-    
+
     if(!init_model(path_to_cfg)){
-        
+
         std::cerr << "ERROR in " << __func__ << ": model interface could not be initialized!" << std::endl;
-        
+
         return false;
     }
-    
+
     if(!fillModelOrderedChain()){
-     
+
         std::cerr << "ERROR in " << __func__ << ": model interface could not be loaded! Model joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << std::endl;
-        
+
         return false;
-        
+
     }
-    
+
     // Fill _model_chain_map with shallow copies of chains in _chain_map
     _model_chain_map.clear();
-    
+
     // update model _chain_map removing the chain with only controlled fixed joint
     seekAndDestroyFixedControlledJoints();
-    
+
     for( const auto& c : _chain_map){
-        
+
         ModelChain::Ptr model_chain(new ModelChain());
         model_chain->shallowCopy(*c.second);
-        
+
         _model_chain_map[c.first] = model_chain;
-        
+
     }
-    
-    
+
+
 
     return true;
 }
@@ -200,83 +200,93 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
 bool XBot::ModelInterface::fillModelOrderedChain()
 {
-    
+
     bool success = true;
-    
+
     std::vector<std::string> model_ordered_joint_name;
     this->getModelOrderedJoints(model_ordered_joint_name);
-    
+
     // if model is floating base add virtual chain with six virtual joints,
     // which are the first six provided by getModelOrderedJoints
-    
+
     int joint_idx = 0;
     _joint_id_to_model_id.clear();
     if(isFloatingBase()) {
-        
+
         std::string virtual_chain_name("virtual_chain");
-        
+
         _chain_map[virtual_chain_name] = std::make_shared<XBot::KinematicChain>(virtual_chain_name);
-        
+
         for(int i=0; i<6; i++){
-            XBot::Joint::Ptr jptr = std::make_shared<Joint>(model_ordered_joint_name[i], 
-                                                            -(i+1), 
-                                                            urdf::JointConstSharedPtr(),
+
+            urdf::JointSharedPtr virtual_joint(new urdf::Joint);
+            virtual_joint->type = urdf::Joint::UNKNOWN;
+            virtual_joint->limits.reset(new urdf::JointLimits);
+            virtual_joint->limits->effort = 1e9;
+            virtual_joint->limits->lower = -1e9;
+            virtual_joint->limits->upper = +1e9;
+            virtual_joint->limits->velocity = 1e9;
+
+
+            XBot::Joint::Ptr jptr = std::make_shared<Joint>(model_ordered_joint_name[i],
+                                                            -(i+1),
+                                                            virtual_joint, 
                                                             virtual_chain_name);
-            
+
             _chain_map.at(virtual_chain_name)->pushBackJoint(jptr);
-            
+
             _joint_id_to_model_id[jptr->getJointId()] = joint_idx;
-            
+
             joint_idx++;
         }
-        
+
 //         _model_ordered_chain_name.push_back(virtual_chain_name);
     }
-    
-    
+
+
     _ordered_chain_names.clear();
     joint_idx = 0;
     while( joint_idx < model_ordered_joint_name.size() ){
-     
+
         // compute the chain which the joint being processed belongs to
         std::string joint_name = model_ordered_joint_name[joint_idx];
         XBot::Joint::ConstPtr joint_ptr = getJointByName(joint_name);
         if(!joint_ptr) {
             return false;
         }
-        
+
         std::string chain_name = joint_ptr->getChainName();
-        
+
         _ordered_chain_names.push_back(chain_name);
-        
+
         // check that the joint that follow are equal to the chain ones,
         // ordered from base link to tip link
         const XBot::KinematicChain& chain = *_chain_map.at(chain_name);
-        
+
         int chain_joint_num = chain.getJointNum();
-        
+
         for( int i = 0; i < chain_joint_num; i++ ){
-            
+
             if( chain.getJointName(i) == model_ordered_joint_name[joint_idx] ){
-                
+
                 _joint_id_to_model_id[chain.getJointId(i)] = joint_idx;
                 joint_idx++;
-                
+
             }
             else{
                 return false;
             }
-            
+
         }
-        
-        
+
+
     }
-    
+
     //_model_ordered_chain_name;
-    
+
     std::cout << "Model ordered chains: " << std::endl;
     for(const auto& s : _ordered_chain_names) std::cout << s << std::endl;
-        
+
     return success;
 }
 
@@ -315,13 +325,13 @@ XBot::ModelChain& XBot::ModelInterface::chain(const std::string& chain_name)
 }
 
 
-bool XBot::ModelInterface::getAccelerationTwist(const std::string& link_name, 
+bool XBot::ModelInterface::getAccelerationTwist(const std::string& link_name,
                                                   Eigen::Matrix< double, 6, 1 >& acceleration) const
 {
     bool success = getAccelerationTwist(link_name, _tmp_kdl_twist);
-    
+
     tf::twistKDLToEigen(_tmp_kdl_twist, acceleration);
-    
+
     return success;
 }
 
@@ -329,9 +339,9 @@ bool XBot::ModelInterface::getAccelerationTwist(const std::string& link_name,
 bool XBot::ModelInterface::getCOM(const std::string& reference_frame, Eigen::Vector3d& com_position) const
 {
     bool success = getCOM(reference_frame, _tmp_kdl_vector);
- 
+
     tf::vectorKDLToEigen(_tmp_kdl_vector, com_position);
-    
+
     return success;
 }
 
@@ -357,9 +367,9 @@ void XBot::ModelInterface::getCOMVelocity(Eigen::Vector3d& velocity) const
 bool XBot::ModelInterface::getGravity(const std::string& reference_frame, Eigen::Vector3d& gravity) const
 {
     bool success = getGravity(reference_frame, _tmp_kdl_vector);
-    
+
     tf::vectorKDLToEigen(_tmp_kdl_vector, gravity);
-    
+
     return success;
 }
 
@@ -389,7 +399,7 @@ bool XBot::ModelInterface::getGravity(const std::string& reference_frame, KDL::V
 {
     getGravity(gravity);
     bool success = getPose(reference_frame, _tmp_kdl_frame);
-    gravity = _tmp_kdl_frame.Inverse(gravity); 
+    gravity = _tmp_kdl_frame.Inverse(gravity);
     return success;
 }
 
@@ -400,24 +410,24 @@ bool XBot::ModelInterface::getJacobian(const std::string& link_name, KDL::Jacobi
 
 }
 
-bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name, 
+bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name,
                                                const std::string& base_link_name,
                                                KDL::Jacobian& J) const
 {
     bool success = getJacobian(target_link_name, _tmp_kdl_jacobian);
     success = getJacobian(base_link_name, J) && success;
-    
+
     J.data -= _tmp_kdl_jacobian.data;
-    
+
     success = getOrientation(target_link_name, base_link_name, _tmp_kdl_rotation) && success;
-    
+
     J.changeBase(_tmp_kdl_rotation);
-    
+
     return success;
 }
 
-bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name, 
-                                               const std::string& base_link_name, 
+bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name,
+                                               const std::string& base_link_name,
                                                Eigen::MatrixXd& J) const
 {
     bool success = getRelativeJacobian(target_link_name, base_link_name, _tmp_kdl_jacobian);
@@ -427,21 +437,21 @@ bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_na
 
 
 
-bool XBot::ModelInterface::getPose(const std::string& source_frame, 
-                                   const std::string& target_frame, 
+bool XBot::ModelInterface::getPose(const std::string& source_frame,
+                                   const std::string& target_frame,
                                    KDL::Frame& pose) const
 {
     bool success_source = getPose(source_frame, _tmp_kdl_frame);
     bool success_target = getPose(target_frame, _tmp_kdl_frame_1);
-    
+
     pose = _tmp_kdl_frame_1.Inverse()*_tmp_kdl_frame;
-    
+
 }
 
 
 
-bool XBot::ModelInterface::getOrientation(const std::string& source_frame, 
-                                          const std::string& target_frame, 
+bool XBot::ModelInterface::getOrientation(const std::string& source_frame,
+                                          const std::string& target_frame,
                                           Eigen::Matrix3d& orientation) const
 {
     bool success = getOrientation(source_frame, target_frame, _tmp_kdl_rotation);
@@ -456,8 +466,8 @@ bool XBot::ModelInterface::getOrientation(const std::string& target_frame, KDL::
     return success;;
 }
 
-bool XBot::ModelInterface::getOrientation(const std::string& source_frame, 
-                                          const std::string& target_frame, 
+bool XBot::ModelInterface::getOrientation(const std::string& source_frame,
+                                          const std::string& target_frame,
                                           KDL::Rotation& orientation) const
 {
     bool success = getOrientation(source_frame, _tmp_kdl_rotation);
@@ -473,8 +483,8 @@ bool XBot::ModelInterface::getOrientation(const std::string& target_frame, Eigen
     return success;
 }
 
-bool XBot::ModelInterface::getJacobian(const std::string& link_name, 
-                                       const Eigen::Vector3d& point, 
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const Eigen::Vector3d& point,
                                        Eigen::MatrixXd& J)
 {
     tf::vectorEigenToKDL(point, _tmp_kdl_vector);
@@ -483,9 +493,9 @@ bool XBot::ModelInterface::getJacobian(const std::string& link_name,
     return success;
 }
 
-bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
-                                            const std::string& target_frame, 
-                                            const Eigen::Vector3d& source_point, 
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
+                                            const std::string& target_frame,
+                                            const Eigen::Vector3d& source_point,
                                             Eigen::Vector3d& target_point) const
 {
     tf::vectorEigenToKDL(source_point, _tmp_kdl_vector);
@@ -494,9 +504,9 @@ bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
     return success;
 }
 
-bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
-                                            const std::string& target_frame, 
-                                            const KDL::Vector& source_point, 
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
+                                            const std::string& target_frame,
+                                            const KDL::Vector& source_point,
                                             KDL::Vector& target_point) const
 {
     bool success = getPose(source_frame, target_frame, _tmp_kdl_frame);
@@ -504,8 +514,8 @@ bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
     return success;
 }
 
-bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
-                                            const Eigen::Vector3d& source_point, 
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
+                                            const Eigen::Vector3d& source_point,
                                             Eigen::Vector3d& world_point) const
 {
     tf::vectorEigenToKDL(source_point, _tmp_kdl_vector_1);
@@ -514,8 +524,8 @@ bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
     return success;
 }
 
-bool XBot::ModelInterface::getPointPosition(const std::string& source_frame, 
-                                            const KDL::Vector& source_point, 
+bool XBot::ModelInterface::getPointPosition(const std::string& source_frame,
+                                            const KDL::Vector& source_point,
                                             KDL::Vector& world_point) const
 {
     bool success = getPose(source_frame, _tmp_kdl_frame);
@@ -528,7 +538,7 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame, Eigen::Affin
     bool success = getPose(source_frame, _tmp_kdl_frame);
     tf::transformKDLToEigen(_tmp_kdl_frame, pose);
     return success;
-    
+
 }
 
 bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::string& target_frame, Eigen::Affine3d& pose) const
@@ -538,7 +548,7 @@ bool XBot::ModelInterface::getPose(const std::string& source_frame, const std::s
     return success;
 }
 
-bool XBot::ModelInterface::getVelocityTwist(const std::string& link_name, 
+bool XBot::ModelInterface::getVelocityTwist(const std::string& link_name,
                                               Eigen::Matrix< double, int(6), int(1) >& velocity) const
 {
     bool success = getVelocityTwist(link_name, _tmp_kdl_twist);
@@ -550,7 +560,7 @@ bool XBot::ModelInterface::setFloatingBasePose(const Eigen::Affine3d& floating_b
 {
     tf::transformEigenToKDL(floating_base_pose, _tmp_kdl_frame);
     return setFloatingBasePose(_tmp_kdl_frame);
-    
+
 }
 
 bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const Eigen::Vector3d& gravity)
@@ -572,8 +582,8 @@ bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const 
     return success;
 }
 
-bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name, 
-                         const Eigen::Vector3d& point, 
+bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name,
+                         const Eigen::Vector3d& point,
                          Eigen::Matrix<double,6,1>& jdotqdot) const
 {
     tf::vectorEigenToKDL(point, _tmp_kdl_vector);
@@ -583,8 +593,8 @@ bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name,
 }
 
 
-bool XBot::ModelInterface::getPointAcceleration(const std::string& link_name, 
-                                                const Eigen::Vector3d& point, 
+bool XBot::ModelInterface::getPointAcceleration(const std::string& link_name,
+                                                const Eigen::Vector3d& point,
                                                 Eigen::Vector3d& acceleration) const
 {
     tf::vectorEigenToKDL(point, _tmp_kdl_vector);
@@ -599,21 +609,21 @@ void XBot::ModelInterface::getCOMAcceleration(Eigen::Vector3d& acceleration) con
     tf::vectorKDLToEigen(_tmp_kdl_vector, acceleration);
 }
 
-bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name, 
+bool XBot::ModelInterface::getChainSelectionMatrix(const std::string& chain_name,
                                                    Eigen::MatrixXd& S) const
 {
 
     if(!getDofIndex(chain_name, _tmp_int_vector)) return false;
-    
+
     S.setZero(_tmp_int_vector.size(), getJointNum());
     for( int i = 0; i < _tmp_int_vector.size(); i++ ){
         S(i, _tmp_int_vector[i]) = 1;
     }
-    
+
     return true;
 }
 
-bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id, 
+bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id,
                                                    Eigen::RowVectorXd& S) const
 {
     int idx = getDofIndex(joint_id);
@@ -625,11 +635,11 @@ bool XBot::ModelInterface::getJointSelectionMatrix(int joint_id,
 }
 
 
-bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name, 
+bool XBot::ModelInterface::getJointSelectionMatrix(const std::string& joint_name,
                                                    Eigen::RowVectorXd& S) const
 {
     int joint_id = getDofIndex(joint_name);
-    if( joint_id < 0 ) return false; 
+    if( joint_id < 0 ) return false;
     S.setZero(getJointNum());
     S(joint_id) = 1;
 }
@@ -646,13 +656,13 @@ bool XBot::ModelInterface::maskJacobian(const std::string& chain_name, Eigen::Ma
         std::cerr << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << std::endl;
         return false;
     }
-    
+
     const KinematicChain& chain = *(it->second);
     for( int i = 0; i < chain.getJointNum(); i++ ){
         int dof_idx = getDofIndex(chain.getJointId(i));
         J.col(dof_idx).setZero();
     }
-    
+
     return true;
 }
 
@@ -662,25 +672,25 @@ bool XBot::ModelInterface::maskJacobian(const std::string& chain_name, KDL::Jaco
     return maskJacobian(chain_name, const_cast<Eigen::MatrixXd&>(Je));
 }
 
-bool XBot::ModelInterface::computeConstrainedInverseDynamics(const Eigen::MatrixXd& J, 
-                                                             const Eigen::VectorXd& weights, 
+bool XBot::ModelInterface::computeConstrainedInverseDynamics(const Eigen::MatrixXd& J,
+                                                             const Eigen::VectorXd& weights,
                                                              Eigen::VectorXd& tau) const
 {
     int num_constraints = J.rows();
     Eigen::VectorXd _h, _b, _w;
     Eigen::MatrixXd _Q, _A;
     computeInverseDynamics(_h);
-    
+
     Eigen::HouseholderQR<Eigen::MatrixXd> _qr(J.transpose());
     _Q = _qr.householderQ();
-    
+
     _b = (_Q.transpose() * _h).tail(getJointNum() - num_constraints);
     _A = _Q.bottomRows(getJointNum()).transpose().bottomRows(getJointNum() - num_constraints);
-    
+
     _w = weights.array().inverse().sqrt();
-    
+
     _A.noalias() = _A*_w.asDiagonal();
-    
+
     tau = _w.asDiagonal() * _A.jacobiSvd(Eigen::ComputeThinU|Eigen::ComputeThinV).solve(_b);
 
 }
@@ -690,7 +700,7 @@ void XBot::ModelInterface::seekAndDestroyFixedControlledJoints()
     for( auto& c : _chain_map) {
         XBot::KinematicChain& kin_chain = *c.second;
         // find the joints to remove
-        
+
         for(int i = 0; i < kin_chain.getJointNum(); i++) {
             if( kin_chain.getJoint(i)->isFixedControlledJoint() ) {
                 // remove the joints
