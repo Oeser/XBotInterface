@@ -398,5 +398,9 @@ bool XBot::Joint::isFixedControlledJoint() const
     return false;
 }
 
+urdf::JointConstSharedPtr XBot::Joint::getUrdfJoint() const
+{
+    return _urdf_joint;
+}
 
 
