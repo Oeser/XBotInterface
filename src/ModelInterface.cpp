@@ -18,6 +18,9 @@
 */
 
 #include <XBotInterface/ModelInterface.h>
+
+#include <srdfdom_advr/model.h>
+
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
 
