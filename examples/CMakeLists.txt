@@ -55,13 +55,13 @@ add_executable(state_machine_example state_machine_example.cpp)
 ##########
 ## Link ##
 ##########
-target_link_libraries(ik_example XBotInterface XBotLogger)
-target_link_libraries(id_example XBotInterface XBotLogger)
-target_link_libraries(read_example XBotInterface XBotLogger)
-target_link_libraries(home_example XBotInterface XBotLogger)
+target_link_libraries(ik_example XBotInterface )
+target_link_libraries(id_example XBotInterface )
+target_link_libraries(read_example XBotInterface )
+target_link_libraries(home_example XBotInterface )
 
-target_link_libraries(log_example XBotInterface XBotLogger)
-target_link_libraries(state_machine_example XBotInterface XBotLogger)
+target_link_libraries(log_example XBotInterface )
+target_link_libraries(state_machine_example XBotInterface )
 
 #############
 ## Install ##

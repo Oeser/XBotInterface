@@ -69,6 +69,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
 
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
+# 
 
 add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/XBotInterface.cpp
@@ -84,14 +85,8 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/ControlMode.cpp
                                  src/bprinter/table_printer.cpp
                                  src/ConfigHelper.cpp
+                                 src/Logger.cpp
                                  )
-
-target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
-                                    ${sharedlibpp_LIBRARIES}
-                                    ${orocos_kdl_LIBRARIES}
-                                    ${eigen_conversions_LIBRARIES}
-                                    ${bprinter_LIBRARIES}
-                                    )
 
 
 target_include_directories(XBotInterface PUBLIC
@@ -103,8 +98,13 @@ target_include_directories(XBotInterface PUBLIC
                             ${bprinter_INCLUDE_DIRS}
                             )
 
-add_library(XBotLogger SHARED src/Logger.cpp)
-target_link_libraries(XBotLogger PUBLIC matio pthread)
+target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
+                                    ${sharedlibpp_LIBRARIES}
+                                    ${orocos_kdl_LIBRARIES}
+                                    ${eigen_conversions_LIBRARIES}
+                                    ${bprinter_LIBRARIES}
+                                    matio pthread
+                                    )
 
 
 add_executable(test_exec src/main_test.cpp)
@@ -173,46 +173,6 @@ install_basic_package_files(XBotInterface VARS_PREFIX ${VARS_PREFIX}
                                     TARGETS_PROPERTY ${VARS_PREFIX}_TARGETS
                                     NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
-########################################################################
-
-set(VARS_PREFIX "XBotLogger")
-
-set(XBotLogger_MAJOR_VERSION 0)
-set(XBotLogger_MINOR_VERSION 1)
-set(XBotLogger_PATCH_VERSION 0)
-set(XBotLogger_VERSION ${XBotLogger_MAJOR_VERSION}.${XBotLogger_MINOR_VERSION}.${XBotLogger_PATCH_VERSION})
-
-find_package(YCM REQUIRED)
-include(YCMDefaultDirs)
-ycm_default_dirs(${VARS_PREFIX})
-
-target_include_directories(XBotLogger PUBLIC "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>"
-                                                "$<INSTALL_INTERFACE:${${VARS_PREFIX}_INSTALL_INCLUDEDIR}>")
-
-set_target_properties(XBotLogger PROPERTIES VERSION ${${VARS_PREFIX}_VERSION}
-                                               SOVERSION ${${VARS_PREFIX}_VERSION})
-
-install(DIRECTORY include/
-        DESTINATION "${${VARS_PREFIX}_INSTALL_INCLUDEDIR}")
-
-install(TARGETS XBotLogger
-        EXPORT XBotLogger
-        ARCHIVE DESTINATION "${${VARS_PREFIX}_INSTALL_BINDIR}" COMPONENT lib
-        RUNTIME DESTINATION "${${VARS_PREFIX}_INSTALL_BINDIR}" COMPONENT bin
-        LIBRARY DESTINATION "${${VARS_PREFIX}_INSTALL_LIBDIR}" COMPONENT shlib)
-
-
-
-#enabling it will add all XBotLogger dependencies as dependencies for third party users
-set_property(GLOBAL APPEND PROPERTY ${VARS_PREFIX}_TARGETS XBotLogger)
-
-
-include(InstallBasicPackageFiles)
-install_basic_package_files(XBotLogger VARS_PREFIX ${VARS_PREFIX}
-                                    VERSION ${${VARS_PREFIX}_VERSION}
-                                    COMPATIBILITY SameMajorVersion
-                                    TARGETS_PROPERTY ${VARS_PREFIX}_TARGETS
-                                    NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
 include(AddUninstallTarget)
 
