@@ -56,6 +56,13 @@ public:
      // URDF, SRDF getters
 
      /**
+      * @brief Gets the path to the YAML config file used to build the XBotInterface
+      *
+      * @return Path to config file.
+      */
+     const std::string& getPathToConfig() const;
+
+     /**
       * @brief Getter for the robot URDF model corresponding to the URDF xml file
       * specified in the YAML config file.
       *
@@ -1313,7 +1320,6 @@ protected:
           return true;
      }
 
-     const std::string& getPathToConfig() const;
 
      static bool computeAbsolutePath ( const std::string& input_path,
                                        const std::string& midlle_path,
