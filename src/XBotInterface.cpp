@@ -52,39 +52,39 @@ XBot::XBotInterface::XBotInterface(const XBot::XBotInterface &other):
         _chain_map[chain_name] = chainptr;
 
     }
-    
+
     for( const auto& j : other._ordered_joint_vector ){
-        
+
         Joint::Ptr jptr = std::make_shared<Joint>();
         *jptr = *j;
-        
+
         _ordered_joint_vector.push_back(jptr);
     }
-    
+
     for( const auto& j : other._joint_vector ){
-        
+
         Joint::Ptr jptr = std::make_shared<Joint>();
         *jptr = *j;
-        
+
         _joint_vector.push_back(jptr);
     }
-    
+
     for( const auto& ft_pair : other._ft_map ){
-     
+
         ForceTorqueSensor::Ptr ftptr = std::make_shared<ForceTorqueSensor>();
         *ftptr = *ft_pair.second;
-        
+
         _ft_map[ft_pair.first] = ftptr;
-        
+
     }
-    
+
     for( const auto& imu_pair : other._imu_map ){
-     
+
         ImuSensor::Ptr imuptr = std::make_shared<ImuSensor>();
         *imuptr = *imu_pair.second;
-        
+
         _imu_map[imu_pair.first] = imuptr;
-        
+
     }
 
 }
@@ -144,40 +144,40 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
     YAML::Node x_bot_interface;
     if(root_cfg["XBotInterface"]) {
-        x_bot_interface = root_cfg["XBotInterface"]; 
+        x_bot_interface = root_cfg["XBotInterface"];
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain XBotInterface mandatory node!!" << std::endl;
         return false;
     }
-   
+
     // check the urdf_filename
     if(x_bot_interface["urdf_path"]) {
-        computeAbsolutePath(x_bot_interface["urdf_path"].as<std::string>(), 
+        computeAbsolutePath(x_bot_interface["urdf_path"].as<std::string>(),
                             "/",
-                            _urdf_path); 
+                            _urdf_path);
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain urdf_path mandatory node!!" << std::endl;
         return false;
     }
-    
+
     // check the srdf_filename
     if(x_bot_interface["srdf_path"]) {
         computeAbsolutePath(x_bot_interface["srdf_path"].as<std::string>(),
                             "/",
-                            _srdf_path); 
+                            _srdf_path);
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain srdf_path mandatory node!!" << std::endl;
         return false;
     }
-    
+
     // check joint_map_config
     if(x_bot_interface["joint_map_path"]) {
-        computeAbsolutePath(x_bot_interface["joint_map_path"].as<std::string>(), 
+        computeAbsolutePath(x_bot_interface["joint_map_path"].as<std::string>(),
                             "/",
-                            _joint_map_config); 
+                            _joint_map_config);
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain joint_map_path mandatory node!!" << std::endl;
@@ -199,7 +199,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
     parseYAML(path_to_cfg);
     // initialize the model
     if (!_XBotModel.init(_urdf_path, _srdf_path, _joint_map_config)) {
-        printf("ERROR: model initialization failed, please check the urdf_path and srdf_path in your YAML config file.\n"); 
+        printf("ERROR: model initialization failed, please check the urdf_path and srdf_path in your YAML config file.\n");
         return false;
     }
     // generate the robot
@@ -218,21 +218,21 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
         XBot::KinematicChain::Ptr actual_chain = std::make_shared<KinematicChain>(chain_name,
                                                                     _XBotModel);
         _chain_map[chain_name] = actual_chain;
-        
+
         const std::map< std::string, ForceTorqueSensor::Ptr >& ft_map = _chain_map.at(chain_name)->getForceTorqueInternal();
         _ft_map.insert(ft_map.begin(),
                        ft_map.end());
-        
+
         const std::map< std::string, ImuSensor::Ptr >& imu_map = _chain_map.at(chain_name)->getImuInternal();
         _imu_map.insert(imu_map.begin(),
                        imu_map.end());
-        
+
         for( int i = 0; i < actual_chain->getJointNum(); i++){
             _joint_vector.push_back(actual_chain->getJointInternal(i));
         }
-        
+
     }
-    
+
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
     if (_XBotModel.getDisabledJoints().size() > 0) {
          std::cerr << "WARNING in " << __func__ << " : disabled joint detected in the specified SRDF. URDF must be updated accordingly (we hope you did it)." << std::endl;
@@ -240,20 +240,20 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
 
     // call virtual init_internal
     bool success = init_internal(path_to_cfg, any_map);
-    
+
     // after subclasses have done their work inside init_internal, compute joint number
     _joint_num = 0;
     for( const auto& c : _chain_map ){
         _joint_num += c.second->getJointNum();
     }
-    
+
     // fill the joint id to eigen id
     _ordered_joint_vector.clear();
     _joint_name_to_eigen_id.clear();
     _ordered_joint_id.clear();
     _ordered_joint_name.clear();
     int eigen_id = 0;
-    
+
     for( const std::string& chain_name : getModelOrderedChainName() ) {
         for( int i = 0; i < _chain_map.at(chain_name)->getJointNum(); i++) {
             _joint_id_to_eigen_id[_chain_map.at(chain_name)->getJointId(i)] = eigen_id;
@@ -264,32 +264,32 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
             eigen_id++;
         }
     }
-    
+
     _joint_vector = _ordered_joint_vector;
-    
+
     return success;
-    
+
 }
 
-bool XBot::XBotInterface::getDofIndex ( const std::string& chain_name, std::vector< int >& ids ) const 
+bool XBot::XBotInterface::getDofIndex ( const std::string& chain_name, std::vector< int >& ids ) const
 {
     auto it = _chain_map.find(chain_name);
     if( it != _chain_map.end() ){
-        
+
         const KinematicChain& chain = *(it->second);
         ids.resize(chain.getJointNum());
         for(int i=0; i< chain.getJointNum(); i++){
             ids[i] = _joint_id_to_eigen_id.at(chain.getJointId(i));
         }
-        
+
     }
     else{
      std::cerr << "ERROR in " << __func__ << ": requested chain " << chain_name << " is not defined!" << std::endl;
      return false;
     }
-    
+
     return true;
-    
+
 }
 
 int XBot::XBotInterface::getDofIndex(const std::string& joint_name) const
@@ -302,7 +302,7 @@ int XBot::XBotInterface::getDofIndex(const std::string& joint_name) const
         std::cerr << "ERROR in " << __func__ << ": joint " << joint_name << " NOT defined!!!" << std::endl;
         return -1;
     }
-    
+
 }
 
 int XBot::XBotInterface::getDofIndex(int joint_id) const
@@ -345,11 +345,11 @@ bool XBot::XBotInterface::hasJoint(int joint_id) const
 XBot::Joint::ConstPtr XBot::XBotInterface::getJointByName(const std::string& joint_name) const
 {
     auto it = _joint_name_to_eigen_id.find(joint_name);
-    
+
     if( it != _joint_name_to_eigen_id.end() ){
         return _ordered_joint_vector[it->second];
     }
-    
+
     for( const auto& c : _chain_map){
         const XBot::KinematicChain& chain = *c.second;
         if(chain.hasJoint(joint_name)) return chain.getJointByName(joint_name);
@@ -363,7 +363,7 @@ XBot::Joint::ConstPtr XBot::XBotInterface::getJointByDofIndex(int idx) const
     if( idx < getJointNum() ){
         return _ordered_joint_vector[idx];
     }
-    
+
     std::cerr << "ERROR in " << __func__ << ". Less than " << idx+1 << " joints are defined!" << std::endl;
     return XBot::Joint::ConstPtr();
 }
@@ -371,16 +371,16 @@ XBot::Joint::ConstPtr XBot::XBotInterface::getJointByDofIndex(int idx) const
 XBot::Joint::ConstPtr XBot::XBotInterface::getJointByID(int joint_id) const
 {
     auto it = _joint_id_to_eigen_id.find(joint_id);
-    
+
     if( it != _joint_id_to_eigen_id.end() ){
         return _ordered_joint_vector[it->second];
     }
-    
+
     for( const auto& c : _chain_map){
         const XBot::KinematicChain& chain = *c.second;
         if(chain.hasJoint(joint_id)) return chain.getJointById(joint_id);
     }
-    
+
     std::cerr << "ERROR in " << __func__ << ". Joint " << joint_id << " is NOT defined!" << std::endl;
     return XBot::Joint::ConstPtr();
 }
@@ -391,11 +391,11 @@ XBot::Joint::ConstPtr XBot::XBotInterface::getJointByID(int joint_id) const
 bool XBot::XBotInterface::getJointPosition(Eigen::VectorXd &q) const
 {
     q.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         q(i) = _ordered_joint_vector[i]->getJointPosition();
     }
-    
+
     return true;
 }
 
@@ -462,11 +462,11 @@ bool XBot::XBotInterface::getPositionReference(JointIdMap &q) const
 bool XBot::XBotInterface::getPositionReference(Eigen::VectorXd &q) const
 {
     q.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         q(i) = _ordered_joint_vector[i]->getPositionReference();
     }
-    
+
     return true;
 }
 
@@ -536,15 +536,15 @@ bool XBot::XBotInterface::getJointAcceleration(JointNameMap& qddot) const
         const Joint::Ptr& joint = _ordered_joint_vector[i];
         qddot[joint->getJointName()] = joint->getJointAcceleration();
     }
-    
+
 //     for (const auto & chain_name_ptr_pair : _chain_map) {
-// 
+//
 //         const KinematicChain &chain = *chain_name_ptr_pair.second;
-// 
+//
 //         for (int j = 0; j < chain.getJointNum(); j++) {
 //             qddot[chain.getJointName(j)] = chain.getJointAcceleration(j);
 //         }
-// 
+//
 //     }
 }
 
@@ -705,21 +705,21 @@ bool XBot::XBotInterface::getJointVelocity(JointIdMap &qdot) const
 
 bool XBot::XBotInterface::getJointAcceleration(JointIdMap& qddot) const
 {
-    
+
     for(int i = 0; i < _joint_num; i++){
         const Joint::Ptr& joint = _ordered_joint_vector[i];
         qddot[joint->getJointId()] = joint->getJointAcceleration();
-        
+
     }
-    
+
 //     for (const auto & chain_name_ptr_pair : _chain_map) {
-// 
+//
 //         const KinematicChain &chain = *chain_name_ptr_pair.second;
-// 
+//
 //         for (int j = 0; j < chain.getJointNum(); j++) {
 //             qddot[chain.getJointId(j)] = chain.getJointAcceleration(j);
 //         }
-// 
+//
 //     }
 }
 
@@ -790,52 +790,52 @@ bool XBot::XBotInterface::getTemperature(JointIdMap &temp) const
 bool XBot::XBotInterface::getDamping(Eigen::VectorXd &D) const
 {
     D.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         D(i) = _ordered_joint_vector[i]->getDamping();
     }
-    
+
     return true;
 }
 
 bool XBot::XBotInterface::getJointEffort(Eigen::VectorXd &tau) const
 {
     tau.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         tau(i) = _ordered_joint_vector[i]->getJointEffort();
     }
-    
+
     return true;
 }
 
 bool XBot::XBotInterface::getEffortReference(Eigen::VectorXd &tau) const
 {
     tau.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         tau(i) = _ordered_joint_vector[i]->getEffortReference();
     }
-    
+
     return true;
 }
 
 bool XBot::XBotInterface::getJointVelocity(Eigen::VectorXd &qdot) const
 {
     qdot.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         qdot(i) = _ordered_joint_vector[i]->getJointVelocity();
     }
-    
+
     return true;
 }
 
 bool XBot::XBotInterface::getJointAcceleration(Eigen::VectorXd& qddot) const
 {
-    
+
     qddot.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         qddot(i) = _ordered_joint_vector[i]->getJointAcceleration();
     }
@@ -847,7 +847,7 @@ bool XBot::XBotInterface::getJointAcceleration(Eigen::VectorXd& qddot) const
 bool XBot::XBotInterface::getMotorPosition(Eigen::VectorXd &q) const
 {
     q.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         q(i) = _ordered_joint_vector[i]->getMotorPosition();
     }
@@ -858,7 +858,7 @@ bool XBot::XBotInterface::getMotorPosition(Eigen::VectorXd &q) const
 bool XBot::XBotInterface::getMotorVelocity(Eigen::VectorXd &qdot) const
 {
     qdot.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         qdot(i) = _ordered_joint_vector[i]->getMotorVelocity();
     }
@@ -869,7 +869,7 @@ bool XBot::XBotInterface::getMotorVelocity(Eigen::VectorXd &qdot) const
 bool XBot::XBotInterface::getStiffness(Eigen::VectorXd &K) const
 {
     K.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         K(i) = _ordered_joint_vector[i]->getStiffness();
     }
@@ -880,7 +880,7 @@ bool XBot::XBotInterface::getStiffness(Eigen::VectorXd &K) const
 bool XBot::XBotInterface::getTemperature(Eigen::VectorXd &temp) const
 {
     temp.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         temp(i) = _ordered_joint_vector[i]->getTemperature();
     }
@@ -891,7 +891,7 @@ bool XBot::XBotInterface::getTemperature(Eigen::VectorXd &temp) const
 bool XBot::XBotInterface::getVelocityReference(Eigen::VectorXd &qdot) const
 {
     qdot.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         qdot(i) = _ordered_joint_vector[i]->getVelocityReference();
     }
@@ -903,7 +903,7 @@ bool XBot::XBotInterface::getVelocityReference(Eigen::VectorXd &qdot) const
 bool XBot::XBotInterface::setJointPosition(const JointNameMap &q)
 {
     bool success = false;
-    
+
     for(const auto& pair : q){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -911,14 +911,14 @@ bool XBot::XBotInterface::setJointPosition(const JointNameMap &q)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setMotorPosition(const JointNameMap &q)
 {
     bool success = false;
-    
+
     for(const auto& pair : q){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -926,14 +926,14 @@ bool XBot::XBotInterface::setMotorPosition(const JointNameMap &q)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setPositionReference(const JointNameMap &q)
 {
     bool success = false;
-    
+
     for(const auto& pair : q){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -941,14 +941,14 @@ bool XBot::XBotInterface::setPositionReference(const JointNameMap &q)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setJointEffort(const JointNameMap &tau)
 {
     bool success = false;
-    
+
     for(const auto& pair : tau){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -956,14 +956,14 @@ bool XBot::XBotInterface::setJointEffort(const JointNameMap &tau)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setEffortReference(const JointNameMap &tau)
 {
     bool success = false;
-    
+
     for(const auto& pair : tau){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -971,14 +971,14 @@ bool XBot::XBotInterface::setEffortReference(const JointNameMap &tau)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setJointVelocity(const JointNameMap &qdot)
 {
     bool success = false;
-    
+
     for(const auto& pair : qdot){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -986,14 +986,14 @@ bool XBot::XBotInterface::setJointVelocity(const JointNameMap &qdot)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setJointAcceleration(const JointNameMap& qddot)
 {
     bool success = false;
-    
+
     for(const auto& pair : qddot){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1001,7 +1001,7 @@ bool XBot::XBotInterface::setJointAcceleration(const JointNameMap& qddot)
             success = true;
         }
     }
-    
+
     return success;
 }
 
@@ -1009,7 +1009,7 @@ bool XBot::XBotInterface::setJointAcceleration(const JointNameMap& qddot)
 bool XBot::XBotInterface::setMotorVelocity(const JointNameMap &qdot)
 {
     bool success = false;
-    
+
     for(const auto& pair : qdot){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1017,14 +1017,14 @@ bool XBot::XBotInterface::setMotorVelocity(const JointNameMap &qdot)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setVelocityReference(const JointNameMap &qdot)
 {
     bool success = false;
-    
+
     for(const auto& pair : qdot){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1032,14 +1032,14 @@ bool XBot::XBotInterface::setVelocityReference(const JointNameMap &qdot)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setTemperature(const JointNameMap &temp)
 {
     bool success = false;
-    
+
     for(const auto& pair : temp){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1047,14 +1047,14 @@ bool XBot::XBotInterface::setTemperature(const JointNameMap &temp)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setStiffness(const JointNameMap &K)
 {
     bool success = false;
-    
+
     for(const auto& pair : K){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1062,7 +1062,7 @@ bool XBot::XBotInterface::setStiffness(const JointNameMap &K)
             success = true;
         }
     }
-    
+
     return success;
 }
 
@@ -1072,11 +1072,11 @@ bool XBot::XBotInterface::setDamping ( const Eigen::VectorXd& D )
         std::cerr << "ERROR in " << __func__ << " : argument has wrong size " << D.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setDamping(D(i));
     }
-    
+
     return true;
 }
 
@@ -1086,11 +1086,11 @@ bool XBot::XBotInterface::setJointEffort ( const Eigen::VectorXd& tau )
         std::cerr << "ERROR in " << __func__ << " : tau has wrong size " << tau.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setJointEffort(tau(i));
     }
-    
+
     return true;
 }
 
@@ -1100,11 +1100,11 @@ bool XBot::XBotInterface::setEffortReference ( const Eigen::VectorXd& tau )
         std::cerr << "ERROR in " << __func__ << " : tau has wrong size " << tau.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setEffortReference(tau(i));
     }
-    
+
     return true;
 }
 
@@ -1114,11 +1114,11 @@ bool XBot::XBotInterface::setJointPosition ( const Eigen::VectorXd& q )
         std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setJointPosition(q(i));
     }
-    
+
     return true;
 }
 
@@ -1128,11 +1128,11 @@ bool XBot::XBotInterface::setJointVelocity ( const Eigen::VectorXd& qdot )
         std::cerr << "ERROR in " << __func__ << " : qdot has wrong size " << qdot.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setJointVelocity(qdot(i));
     }
-    
+
     return true;
 }
 
@@ -1142,11 +1142,11 @@ bool XBot::XBotInterface::setJointAcceleration(const Eigen::VectorXd& qddot)
         std::cerr << "ERROR in " << __func__ << " : qddot has wrong size " << qddot.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setJointAcceleration(qddot(i));
     }
-    
+
     return true;
 }
 
@@ -1157,11 +1157,11 @@ bool XBot::XBotInterface::setMotorPosition( const Eigen::VectorXd& q )
         std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setMotorPosition(q(i));
     }
-    
+
     return true;
 }
 
@@ -1171,11 +1171,11 @@ bool XBot::XBotInterface::setMotorVelocity( const Eigen::VectorXd& qdot )
         std::cerr << "ERROR in " << __func__ << " : qdot has wrong size " << qdot.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setMotorVelocity(qdot(i));
     }
-    
+
     return true;
 }
 
@@ -1185,11 +1185,11 @@ bool XBot::XBotInterface::setPositionReference ( const Eigen::VectorXd& q )
         std::cerr << "ERROR in " << __func__ << " : q has wrong size " << q.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setPositionReference(q(i));
     }
-    
+
     return true;
 }
 
@@ -1199,11 +1199,11 @@ bool XBot::XBotInterface::setStiffness ( const Eigen::VectorXd& K )
         std::cerr << "ERROR in " << __func__ << " : K has wrong size " << K.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setStiffness(K(i));
     }
-    
+
     return true;
 }
 
@@ -1213,11 +1213,11 @@ bool XBot::XBotInterface::setTemperature ( const Eigen::VectorXd& temp )
         std::cerr << "ERROR in " << __func__ << " : temp has wrong size " << temp.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setTemperature(temp(i));
     }
-    
+
     return true;
 }
 
@@ -1227,11 +1227,11 @@ bool XBot::XBotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
         std::cerr << "ERROR in " << __func__ << " : qdot has wrong size " << qdot.rows() << " != robot joint number " << _joint_num << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->setVelocityReference(qdot(i));
     }
-    
+
     return true;
 }
 
@@ -1242,7 +1242,7 @@ bool XBot::XBotInterface::setVelocityReference ( const Eigen::VectorXd& qdot )
 bool XBot::XBotInterface::setDamping(const JointNameMap &D)
 {
     bool success = false;
-    
+
     for(const auto& pair : D){
         auto it = _joint_name_to_eigen_id.find(pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1250,14 +1250,14 @@ bool XBot::XBotInterface::setDamping(const JointNameMap &D)
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setDamping ( const JointIdMap& D )
 {
     bool success = false;
-    
+
     for(const auto& pair : D){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1265,7 +1265,7 @@ bool XBot::XBotInterface::setDamping ( const JointIdMap& D )
             success = true;
         }
     }
-    
+
     return success;
 }
 
@@ -1273,7 +1273,7 @@ bool XBot::XBotInterface::setDamping ( const JointIdMap& D )
 bool XBot::XBotInterface::setJointEffort ( const JointIdMap& tau )
 {
     bool success = false;
-    
+
     for(const auto& pair : tau){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1281,14 +1281,14 @@ bool XBot::XBotInterface::setJointEffort ( const JointIdMap& tau )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setEffortReference ( const JointIdMap& tau )
 {
     bool success = false;
-    
+
     for(const auto& pair : tau){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1296,14 +1296,14 @@ bool XBot::XBotInterface::setEffortReference ( const JointIdMap& tau )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setJointPosition ( const JointIdMap& q ) // TBD profile vs unordered maps
 {
     bool success = false;
-    
+
     for(const auto& pair : q){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1311,14 +1311,14 @@ bool XBot::XBotInterface::setJointPosition ( const JointIdMap& q ) // TBD profil
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setJointVelocity ( const JointIdMap& qdot )
 {
     bool success = false;
-    
+
     for(const auto& pair : qdot){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1326,14 +1326,14 @@ bool XBot::XBotInterface::setJointVelocity ( const JointIdMap& qdot )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setJointAcceleration(const JointIdMap& qddot)
 {
     bool success = false;
-    
+
     for(const auto& pair : qddot){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1341,7 +1341,7 @@ bool XBot::XBotInterface::setJointAcceleration(const JointIdMap& qddot)
             success = true;
         }
     }
-    
+
     return success;
 }
 
@@ -1349,7 +1349,7 @@ bool XBot::XBotInterface::setJointAcceleration(const JointIdMap& qddot)
 bool XBot::XBotInterface::setMotorPosition( const JointIdMap& q )
 {
     bool success = false;
-    
+
     for(const auto& pair : q){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1357,14 +1357,14 @@ bool XBot::XBotInterface::setMotorPosition( const JointIdMap& q )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setMotorVelocity( const JointIdMap& qdot )
 {
     bool success = false;
-    
+
     for(const auto& pair : qdot){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1372,14 +1372,14 @@ bool XBot::XBotInterface::setMotorVelocity( const JointIdMap& qdot )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setPositionReference ( const JointIdMap& q )
 {
     bool success = false;
-    
+
     for(const auto& pair : q ){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1387,14 +1387,14 @@ bool XBot::XBotInterface::setPositionReference ( const JointIdMap& q )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setStiffness ( const JointIdMap& K )
 {
     bool success = false;
-    
+
     for(const auto& pair : K){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1402,14 +1402,14 @@ bool XBot::XBotInterface::setStiffness ( const JointIdMap& K )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setTemperature ( const JointIdMap& temp )
 {
     bool success = false;
-    
+
     for(const auto& pair : temp){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1417,14 +1417,14 @@ bool XBot::XBotInterface::setTemperature ( const JointIdMap& temp )
             success = true;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::setVelocityReference ( const JointIdMap& qdot )
 {
     bool success = false;
-    
+
     for(const auto& pair : qdot){
         auto it = _joint_id_to_eigen_id.find(pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1432,7 +1432,7 @@ bool XBot::XBotInterface::setVelocityReference ( const JointIdMap& qdot )
             success = true;
         }
     }
-    
+
     return success;
 }
 
@@ -1509,22 +1509,22 @@ bool XBot::XBotInterface::checkEffortLimits(const Eigen::VectorXd& tau) const
         }
         idx += chain.getJointNum();
     }
-    
+
     return true;
 }
 
-bool XBot::XBotInterface::checkEffortLimits(const Eigen::VectorXd& tau, 
+bool XBot::XBotInterface::checkEffortLimits(const Eigen::VectorXd& tau,
                                              std::vector< std::string >& violating_joints) const
 {
     bool success = true;
-    
+
     int idx = 0;
     for( const std::string& s : getModelOrderedChainName() ){
         const KinematicChain& chain = *_chain_map.at(s);
         success = chain.checkEffortLimits(tau.segment(idx, chain.getJointNum()), violating_joints) && success;
         idx += chain.getJointNum();
     }
-    
+
     return success;
 }
 
@@ -1538,22 +1538,22 @@ bool XBot::XBotInterface::checkJointLimits(const Eigen::VectorXd& q) const
         }
         idx += chain.getJointNum();
     }
-    
+
     return true;
 }
 
-bool XBot::XBotInterface::checkJointLimits(const Eigen::VectorXd& q, 
+bool XBot::XBotInterface::checkJointLimits(const Eigen::VectorXd& q,
                                             std::vector< std::string >& violating_joints) const
 {
     bool success = true;
-    
+
     int idx = 0;
     for( const std::string& s : getModelOrderedChainName() ){
         const KinematicChain& chain = *_chain_map.at(s);
         success = chain.checkJointLimits(q.segment(idx, chain.getJointNum()), violating_joints) && success;
         idx += chain.getJointNum();
     }
-    
+
     return success;
 }
 
@@ -1567,39 +1567,39 @@ bool XBot::XBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot) const
         }
         idx += chain.getJointNum();
     }
-    
+
     return true;
 }
 
-bool XBot::XBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot, 
+bool XBot::XBotInterface::checkVelocityLimits(const Eigen::VectorXd& qdot,
                                                std::vector< std::string >& violating_joints) const
 {
     bool success = true;
-    
+
     int idx = 0;
     for( const std::string& s : getModelOrderedChainName() ){
         const KinematicChain& chain = *_chain_map.at(s);
         success = chain.checkVelocityLimits(qdot.segment(idx, chain.getJointNum()), violating_joints) && success;
         idx += chain.getJointNum();
     }
-    
+
     return success;
 }
 
 void XBot::XBotInterface::getEffortLimits(Eigen::VectorXd& tau_max) const
 {
     tau_max.resize(_joint_num);
-    
+
     int idx = 0;
     for( const std::string& c : getModelOrderedChainName() ){
-        
+
         const KinematicChain& chain = *_chain_map.at(c);
-        
+
         for(int i = 0; i < chain.getJointNum(); i++){
             chain.getEffortLimits(i, tau_max(idx));
             idx++;
         }
-        
+
     }
 }
 
@@ -1607,34 +1607,34 @@ void XBot::XBotInterface::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd
 {
     q_min.resize(_joint_num);
     q_max.resize(_joint_num);
-    
+
     int idx = 0;
     for( const std::string& c : getModelOrderedChainName() ){
-        
+
         const KinematicChain& chain = *_chain_map.at(c);
-        
+
         for(int i = 0; i < chain.getJointNum(); i++){
             chain.getJointLimits(i, q_min(idx), q_max(idx));
             idx++;
         }
-        
+
     }
 }
 
 void XBot::XBotInterface::getVelocityLimits(Eigen::VectorXd& qdot_max) const
 {
     qdot_max.resize(_joint_num);
-    
+
     int idx = 0;
     for( const std::string& c : getModelOrderedChainName() ){
-        
+
         const KinematicChain& chain = *_chain_map.at(c);
-        
+
         for(int i = 0; i < chain.getJointNum(); i++){
             chain.getVelocityLimits(i, qdot_max(idx));
             idx++;
         }
-        
+
     }
 }
 
@@ -1660,7 +1660,7 @@ XBot::ForceTorqueSensor::ConstPtr XBot::XBotInterface::getForceTorque(const std:
     for( const auto& ft_pair : _ft_map ) {
 
         ForceTorqueSensor::ConstPtr ft = ft_pair.second;
-        
+
         if(ft->getParentLinkName() == parent_link_name){
             return ft;
         }
@@ -1673,12 +1673,12 @@ XBot::ForceTorqueSensor::ConstPtr XBot::XBotInterface::getForceTorque(const std:
 std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > XBot::XBotInterface::getForceTorque()
 {
    std::map< std::string, XBot::ForceTorqueSensor::ConstPtr > ft_map;
-   
+
    for( const auto& ft_ptr_pair : _ft_map ){
-       
+
         ft_map[ft_ptr_pair.first] = ft_ptr_pair.second;
    }
-   
+
    return ft_map;
 }
 
@@ -1692,7 +1692,7 @@ XBot::ImuSensor::ConstPtr XBot::XBotInterface::getImu(const std::string& parent_
     for( const auto& imu_pair : _imu_map ) {
 
         ImuSensor::ConstPtr imu = imu_pair.second;
-        
+
         if(imu->getParentLinkName() == parent_link_name){
             return imu;
         }
@@ -1705,12 +1705,12 @@ XBot::ImuSensor::ConstPtr XBot::XBotInterface::getImu(const std::string& parent_
 std::map< std::string, XBot::ImuSensor::ConstPtr > XBot::XBotInterface::getImu()
 {
    std::map< std::string, XBot::ImuSensor::ConstPtr > imu_map;
-   
+
    for( const auto& imu_ptr_pair : _imu_map ){
-       
+
         imu_map[imu_ptr_pair.first] = imu_ptr_pair.second;
    }
-   
+
    return imu_map;
 }
 
@@ -1725,78 +1725,78 @@ const std::vector<int>& XBot::XBotInterface::getEnabledJointId() const
     return _ordered_joint_id;
 }
 
-bool XBot::XBotInterface::getRobotState(const std::string& state_name, 
+bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                                         JointNameMap& q) const
 {
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
-        
+
         if( state.group_ == "chains" && state.name_ == state_name ){
-            
+
             success = true;
-            
+
             for( const auto& value_pair : state.joint_values_ ){
-                
+
                 const std::string& joint_name = value_pair.first;
                 const std::vector<double>& joint_value = value_pair.second;
-                
+
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
                     return false;
                 }
-                
+
                 if(!hasJoint(joint_name)){
                     std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
                     return false;
                 }
-                
+
                 q[joint_name] = joint_value[0];
 
             }
 
         }
-        
-        
+
+
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
     }
-    
+
     return success;
 }
 
-bool XBot::XBotInterface::getRobotState(const std::string& state_name, 
+bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                                         JointIdMap& q) const
 {
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
-        
+
         if( state.group_ == "chains" && state.name_ == state_name ){
-            
+
             success = true;
-            
+
             for( const auto& value_pair : state.joint_values_ ){
-                
+
                 const std::string& joint_name = value_pair.first;
                 const std::vector<double>& joint_value = value_pair.second;
-                
+
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
                     return false;
                 }
-                
+
                 if(!hasJoint(joint_name)){
                     std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
                     return false;
                 }
-                
+
                 int joint_id = getJointByName(joint_name)->getJointId();
-                
-                
-                
+
+
+
                 q[joint_id] = joint_value[0];
 
             }
@@ -1804,42 +1804,42 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
         }
 
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
     }
-    
+
     return success;
 }
 
-bool XBot::XBotInterface::getRobotState(const std::string& state_name, 
+bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                                         Eigen::VectorXd& q) const
 {
-    
+
     q.setZero(getJointNum());
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
-        
+
         if( state.group_ == "chains" && state.name_ == state_name ){
-            
+
             success = true;
-            
+
             for( const auto& value_pair : state.joint_values_ ){
-                
+
                 const std::string& joint_name = value_pair.first;
                 const std::vector<double>& joint_value = value_pair.second;
-                
+
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
                     return false;
                 }
-                
+
                 if(!hasJoint(joint_name)){
                     std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
                     return false;
                 }
-                
+
                 int dof_index = getDofIndex(joint_name);
                 q[dof_index] = joint_value[0];
 
@@ -1848,11 +1848,11 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
         }
 
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
     }
-    
+
     return success;
 }
 
@@ -1862,12 +1862,12 @@ bool XBot::XBotInterface::eigenToMap(const Eigen::VectorXd& vector, XBot::JointI
         std::cerr << "ERROR in " << __func__ << "! Input vector has " << vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         const Joint& j = *_ordered_joint_vector[i];
         id_map[j.getJointId()] = vector(i);
     }
-    
+
     return true;
 }
 
@@ -1877,23 +1877,23 @@ bool XBot::XBotInterface::eigenToMap(const Eigen::VectorXd& vector, XBot::JointN
         std::cerr << "ERROR in " << __func__ << "! Input vector has " << vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         const Joint& j = *_ordered_joint_vector[i];
         name_map[j.getJointName()] = vector(i);
     }
-    
+
     return true;
 }
 
 bool XBot::XBotInterface::mapToEigen(const XBot::JointIdMap& map, Eigen::VectorXd& vector) const
 {
     bool success = true;
-    
+
     if( vector.size() != getJointNum() ){
         vector.setZero(getJointNum());
     }
-    
+
     for(const auto& id_pair : map){
         auto it = _joint_id_to_eigen_id.find(id_pair.first);
         if( it != _joint_id_to_eigen_id.end() ){
@@ -1901,18 +1901,18 @@ bool XBot::XBotInterface::mapToEigen(const XBot::JointIdMap& map, Eigen::VectorX
             vector(it->second) = id_pair.second;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::XBotInterface::mapToEigen(const XBot::JointNameMap& map, Eigen::VectorXd& vector) const
 {
     bool success = true;
-    
+
     if( vector.size() != getJointNum() ){
         vector.setZero(getJointNum());
     }
-    
+
     for(const auto& id_pair : map){
         auto it = _joint_name_to_eigen_id.find(id_pair.first);
         if( it != _joint_name_to_eigen_id.end() ){
@@ -1920,7 +1920,7 @@ bool XBot::XBotInterface::mapToEigen(const XBot::JointNameMap& map, Eigen::Vecto
             vector(it->second) = id_pair.second;
         }
     }
-    
+
     return success;
 }
 
@@ -1955,11 +1955,11 @@ bool XBot::XBotInterface::enforceEffortLimit(Eigen::VectorXd& tau) const
         std::cerr << "ERROR in " << __func__ << "! Provided vector has " << tau.size() << " elements != " << getJointNum() << " the size of the robot!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->enforceEffortLimit(tau(i));
     }
-    
+
     return true;
 }
 
@@ -1969,13 +1969,32 @@ bool XBot::XBotInterface::enforceJointLimits(Eigen::VectorXd& q) const
         std::cerr << "ERROR in " << __func__ << "! Provided vector has " << q.size() << " elements != " << getJointNum() << " the size of the robot!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->enforceJointLimits(q(i));
     }
-    
+
     return true;
 }
+
+bool XBot::XBotInterface::enforceJointLimits(XBot::JointNameMap& q) const
+{
+    for( auto& pair : q ){
+        getJointByName(pair.first)->enforceJointLimits(pair.second);
+    }
+
+    return true;
+}
+
+bool XBot::XBotInterface::enforceJointLimits(XBot::JointIdMap& q) const
+{
+    for( auto& pair : q ){
+        getJointByID(pair.first)->enforceJointLimits(pair.second);
+    }
+
+    return true;
+}
+
 
 bool XBot::XBotInterface::enforceVelocityLimit(Eigen::VectorXd& qdot) const
 {
@@ -1983,11 +2002,11 @@ bool XBot::XBotInterface::enforceVelocityLimit(Eigen::VectorXd& qdot) const
         std::cerr << "ERROR in " << __func__ << "! Provided vector has " << qdot.size() << " elements != " << getJointNum() << " the size of the robot!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _ordered_joint_vector[i]->enforceVelocityLimit(qdot(i));
     }
-    
+
     return true;
 }
 
@@ -1996,11 +2015,11 @@ bool XBot::XBotInterface::enforceVelocityLimit(Eigen::VectorXd& qdot) const
 XBot::Joint::Ptr XBot::XBotInterface::getJointByNameInternal(const std::string& joint_name) const
 {
     auto it = _joint_name_to_eigen_id.find(joint_name);
-    
+
     if( it != _joint_name_to_eigen_id.end() ){
         return _ordered_joint_vector[it->second];
     }
-    
+
     for( const auto& c : _chain_map){
         const XBot::KinematicChain& chain = *c.second;
         if(chain.hasJoint(joint_name)) return chain.getJointInternal(chain.getChainDofIndex(joint_name));
@@ -2021,11 +2040,11 @@ XBot::Joint::Ptr XBot::XBotInterface::getJointByDofIndexInternal(int dof_index) 
         }
     }
     else{
-    
+
         std::cerr << "ERROR in " << __func__ << "! Joint order unavailable!" << std::endl;
-        
+
         return Joint::Ptr();
-        
+
     }
 
 }
@@ -2033,11 +2052,11 @@ XBot::Joint::Ptr XBot::XBotInterface::getJointByDofIndexInternal(int dof_index) 
 XBot::Joint::Ptr XBot::XBotInterface::getJointByIdInternal(int joint_id) const
 {
     auto it = _joint_id_to_eigen_id.find(joint_id);
-    
+
     if( it != _joint_id_to_eigen_id.end() ){
         return _ordered_joint_vector[it->second];
     }
-    
+
     for( const auto& c : _chain_map){
         const XBot::KinematicChain& chain = *c.second;
         if(chain.hasJoint(joint_id)) return chain.getJointInternal(chain.getChainDofIndex(joint_id));
@@ -2047,6 +2066,85 @@ XBot::Joint::Ptr XBot::XBotInterface::getJointByIdInternal(int joint_id) const
 }
 
 
+void XBot::XBotInterface::initLog(std::string filename, int buffer_size, int interleave)
+{
+    _matlogger = XBot::MatLogger::getLogger(filename);
+
+    _matlogger->createVectorVariable("joint_position", getJointNum(), interleave, buffer_size);
+    _matlogger->createVectorVariable("motor_position", getJointNum(), interleave, buffer_size);
+
+    _matlogger->createVectorVariable("joint_velocity", getJointNum(), interleave, buffer_size);
+    _matlogger->createVectorVariable("motor_velocity", getJointNum(), interleave, buffer_size);
+
+    _matlogger->createVectorVariable("joint_effort", getJointNum(), interleave, buffer_size);
+
+    _matlogger->createVectorVariable("impedance_k", getJointNum(), interleave, buffer_size);
+    _matlogger->createVectorVariable("impedance_d", getJointNum(), interleave, buffer_size);
+
+    _matlogger->createVectorVariable("temperature", getJointNum(), interleave, buffer_size);
+
+    _matlogger->createVectorVariable("position_reference", getJointNum(), interleave, buffer_size);
+    _matlogger->createVectorVariable("effort_reference", getJointNum(), interleave, buffer_size);
+    _matlogger->createVectorVariable("velocity_reference", getJointNum(), interleave, buffer_size);
+
+    _matlogger->createScalarVariable("time", interleave, buffer_size);
+
+    getJointPosition(_qlink);
+    getMotorPosition(_qmot);
+    getJointVelocity(_qdotlink);
+    getMotorVelocity(_qdotmot);
+    getJointEffort(_tau);
+    getStiffness(_stiffness);
+    getDamping(_damping);
+    getTemperature(_temp);
+
+
+}
+
+void XBot::XBotInterface::log(double time) const
+{
+    if(!_matlogger){
+        std::cout << "ERROR in " << __PRETTY_FUNCTION__ << "! initLog() has NOT been called!" << std::endl;
+        return;
+    }
+    
+    getJointPosition(_qlink);
+    getMotorPosition(_qmot);
+    getJointVelocity(_qdotlink);
+    getMotorVelocity(_qdotmot);
+    getJointEffort(_tau);
+    getStiffness(_stiffness);
+    getDamping(_damping);
+    getTemperature(_temp);
+
+    _matlogger->add("joint_position", _qlink);
+    _matlogger->add("motor_position", _qmot);
+
+    _matlogger->add("joint_velocity", _qdotlink);
+    _matlogger->add("motor_velocity", _qdotmot);
+
+    _matlogger->add("joint_effort", _tau);
+
+    _matlogger->add("impedance_k", _stiffness);
+    _matlogger->add("impedance_d", _damping);
+
+    _matlogger->add("temperature", _temp);
+
+    _matlogger->add("time", time);
+
+    getPositionReference(_qlink);
+    getVelocityReference(_qdotlink);
+    getEffortReference(_tau);
+
+    _matlogger->add("position_reference", _qlink);
+    _matlogger->add("velocity_reference", _qdotlink);
+    _matlogger->add("effort_reference", _tau);
+}
+
+void XBot::XBotInterface::flushLog()
+{
+    _matlogger->flush();
+}
 
 
 

@@ -28,8 +28,8 @@ XBot::Joint::Joint() :
     init();
 }
 
-XBot::Joint::Joint ( const std::string& joint_name, 
-                     int joint_id, 
+XBot::Joint::Joint ( const std::string& joint_name,
+                     int joint_id,
                      urdf::JointConstSharedPtr urdf_joint,
                      const std::string& chain_name ) :
     _joint_name(joint_name),
@@ -66,7 +66,7 @@ void XBot::Joint::init()
     _damping = 0;
 }
 
-bool XBot::Joint::isVirtualJoint()
+bool XBot::Joint::isVirtualJoint() const
 {
     return (_joint_id < 0);
 }
@@ -300,7 +300,7 @@ void XBot::Joint::printTracking() const
     tp.AddColumn("Vel ref", 7);
     tp.AddColumn("Vel err", 7);
     tp.AddColumn("Vel err%", 8);
-    
+
     double pos_err = getPositionReference() - getJointPosition();
     double pos_err_rel = pos_err / getPositionReference();
     double tau_err = getEffortReference() - getJointEffort();
@@ -314,9 +314,9 @@ void XBot::Joint::printTracking() const
 }
 
 
-std::ostream& XBot::operator<< ( std::ostream& os, const XBot::Joint& j ) 
+std::ostream& XBot::operator<< ( std::ostream& os, const XBot::Joint& j )
 {
-        
+
     os << "Joint id: " << j.getJointId() << std::endl;
     os << "Joint name: " << j.getJointName() << std::endl;
     os << "RX values ###########" << std::endl;
@@ -326,26 +326,26 @@ std::ostream& XBot::operator<< ( std::ostream& os, const XBot::Joint& j )
     os << "\tMotor velocity: " << j.getJointVelocity() << std::endl;
     os << "\tEffort: " << j.getJointEffort() << std::endl;
     os << "\tTemperature: " << j.getTemperature() << std::endl;
-    
+
     os << "TX values ###########" << std::endl;
     os << "\tLink position ref: " << j.getPositionReference() << std::endl;
     os << "\tLink velocity ref: " << j.getVelocityReference() << std::endl;
     os << "\tEffort ref: " << j.getEffortReference() << std::endl;
     os << "\tStiffness: " << j.getStiffness() << std::endl;
     os << "\tDamping: " << j.getDamping() << std::endl;
-    
+
     return os;
 }
 
 void XBot::Joint::enforceEffortLimit(double& tau) const
 {
     if( tau < -_urdf_joint->limits->effort ){
-        tau = -_urdf_joint->limits->effort; 
+        tau = -_urdf_joint->limits->effort;
         return;
     }
-    
+
     if( tau > _urdf_joint->limits->effort ){
-        tau = _urdf_joint->limits->effort; 
+        tau = _urdf_joint->limits->effort;
         return;
     }
 }
@@ -353,12 +353,12 @@ void XBot::Joint::enforceEffortLimit(double& tau) const
 void XBot::Joint::enforceJointLimits(double& q) const
 {
     if( q < _urdf_joint->limits->lower ){
-        q = _urdf_joint->limits->lower; 
+        q = _urdf_joint->limits->lower;
         return;
     }
-    
+
     if( q > _urdf_joint->limits->upper ){
-        q = _urdf_joint->limits->upper; 
+        q = _urdf_joint->limits->upper;
         return;
     }
 }
@@ -366,12 +366,12 @@ void XBot::Joint::enforceJointLimits(double& q) const
 void XBot::Joint::enforceVelocityLimit(double& qdot) const
 {
     if( qdot < -_urdf_joint->limits->velocity ){
-        qdot = -_urdf_joint->limits->velocity; 
+        qdot = -_urdf_joint->limits->velocity;
         return;
     }
-    
+
     if( qdot > _urdf_joint->limits->velocity ){
-        qdot = _urdf_joint->limits->velocity; 
+        qdot = _urdf_joint->limits->velocity;
         return;
     }
 }
@@ -388,13 +388,19 @@ void XBot::Joint::setControlMode(const XBot::ControlMode& control_mode)
 
 bool XBot::Joint::isFixedControlledJoint() const
 {
+    if( isVirtualJoint() ) return false;
+
     if ( _urdf_joint->type == urdf::Joint::FIXED ) {
-        // NOTE if we arrive here we are 100% sure that the joint is specified in the SRDF controlled_joints group and it is FIXED 
+        // NOTE if we arrive here we are 100% sure that the joint is specified in the SRDF controlled_joints group and it is FIXED
         return true;
     }
-    
+
     return false;
 }
 
+urdf::JointConstSharedPtr XBot::Joint::getUrdfJoint() const
+{
+    return _urdf_joint;
+}
 
 

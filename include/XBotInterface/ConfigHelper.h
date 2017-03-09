@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 IIT-ADVR
+ * Copyright (C) 2017 IIT-ADVR
  * Author: Arturo Laurenzi, Luca Muratore
  * email:  arturo.laurenzi@iit.it, luca.muratore@iit.it
  *
@@ -33,43 +33,9 @@ class ConfigHelper {
 
 public:
 
-    ConfigHelper(std::string path_to_config_file):
-        console(*XBot::ConsoleLogger::getLogger())
-    {
-        std::ifstream fin(path_to_config_file);
-        if (fin.fail()) {
-            console.error() << "in " << __PRETTY_FUNCTION__ << "! Can NOT open " << path_to_config_file << "!" << console.endl();
-        }
+    ConfigHelper(std::string path_to_config_file);
 
-        _current_node = _root_node = YAML::LoadFile(path_to_config_file);
-
-        if(!_root_helper){
-            _root_helper.reset(new ConfigHelper(_root_node));
-        }
-
-    }
-
-    ConfigHelper& operator[](const std::string& subnode_name)
-    {
-        auto it = _instance_map.find(subnode_name);
-
-        if( it == _instance_map.end() ){
-            YAML::Node subnode = _current_node[subnode_name];
-            if( subnode.IsMap() ){
-                _instance_map[subnode_name] = std::shared_ptr<ConfigHelper>(new ConfigHelper(subnode));
-                return *_instance_map[subnode_name];
-            }
-            else{
-                console.error() << "in " << __PRETTY_FUNCTION__ << "! Subnode " << subnode_name << " is not a defined inside \
-                the node " << _current_node.Tag() << console.endl();
-                return *_root_helper;
-            }
-
-        }
-        else{
-            return *(it->second);
-        }
-    }
+    ConfigHelper& operator[](const std::string& subnode_name);
 
     template <typename ParameterType>
     bool get(const std::string& parameter_name, ParameterType& parameter_value) const
@@ -103,8 +69,7 @@ private:
 
 };
 
-std::shared_ptr<ConfigHelper> ConfigHelper::_root_helper;
-std::map<std::string, std::shared_ptr<ConfigHelper>> ConfigHelper::_instance_map;
+
 
 }
 

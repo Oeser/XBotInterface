@@ -40,7 +40,7 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     _joint_num = _XBotModel.get_joint_num(chain_name);
     _XBotModel.get_enabled_joints_in_chain(chain_name, _ordered_joint_name);
     _XBotModel.get_enabled_joint_ids_in_chain(chain_name, _ordered_joint_id);
-    
+
     // Get urdf model
     const urdf::ModelInterface &robot_urdf = *XBotModel.get_urdf_model();
 
@@ -74,15 +74,15 @@ KinematicChain::KinematicChain(const std::string &chain_name,
 
     // Add last link to _urdf_links
     _urdf_links.push_back(robot_urdf.getLink(getChildLinkName(getJointNum() - 1)));
-    
+
     // Add FT
     for( const auto& ft_name_id : _XBotModel.get_ft_sensors() ){
-        
+
         const std::string& ft_joint_name = ft_name_id.first;
         const int ft_id = ft_name_id.second;
         std::string ft_link_name = robot_urdf.getJoint(ft_joint_name)->child_link_name;
         const std::string& ft_parent_link_name = robot_urdf.getJoint(ft_joint_name)->parent_link_name;
-        
+
         // check the FT on this chain
         for( const auto& link_in_chain : _urdf_links) {
             if(link_in_chain->name == ft_parent_link_name) {
@@ -92,18 +92,18 @@ KinematicChain::KinematicChain(const std::string &chain_name,
                 std::cout << "****************** FOUND FT " << ft_link_name << " ON CHAIN " << getChainName() << std::endl;
             }
         }
-        
-        
+
+
     }
-    
+
     // Add IMU
     for( const auto& imu_name_id : _XBotModel.get_imu_sensors() ){
-        
+
         const std::string& imu_joint_name = imu_name_id.first;
         const int imu_id = imu_name_id.second;
         std::string imu_link_name = robot_urdf.getJoint(imu_joint_name)->child_link_name;
         std::string imu_parent_link_name = robot_urdf.getJoint(imu_joint_name)->parent_link_name;
-     
+
         // check the if IMU is on this chain
         for( const auto& link_in_chain : _urdf_links) {
             if(link_in_chain->name == imu_parent_link_name) {
@@ -114,7 +114,7 @@ KinematicChain::KinematicChain(const std::string &chain_name,
             }
         }
 
-        
+
     }
 
 }
@@ -160,7 +160,7 @@ KinematicChain::KinematicChain(const KinematicChain &other):
         _ft_map[ftptr->getSensorName()] = ftptr;
 
     }
-    
+
     for (const ImuSensor::Ptr & other_imuptr : other._imu_vector) {
 
         ImuSensor::Ptr imuptr = std::make_shared<ImuSensor>();
@@ -205,7 +205,7 @@ KinematicChain &KinematicChain::operator=(const KinematicChain &rhs)
 void XBot::KinematicChain::shallowCopy(const KinematicChain& chain)
 {
     *this = chain; // deep copy
-    
+
     // Shallow copy of joint pointers
     _joint_vector = chain._joint_vector;
     _joint_name_map = chain._joint_name_map;
@@ -228,6 +228,7 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     _joint_name_map[joint->getJointName()] = joint;
     _joint_id_map[joint->getJointId()] = joint;
     _joint_vector.push_back(joint);
+    _urdf_joints.push_back(joint->getUrdfJoint());
     _ordered_joint_name.push_back(joint->getJointName());
     _joint_num++;
     if(joint->getJointId() < 0) _is_virtual = true;
@@ -1111,7 +1112,7 @@ bool KinematicChain::setTemperature(int i, double temp)
 bool KinematicChain::setDamping(const JointNameMap &D)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = D.find(joint_name);
@@ -1127,7 +1128,7 @@ bool KinematicChain::setDamping(const JointNameMap &D)
 bool KinematicChain::setJointEffort(const JointNameMap &tau)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = tau.find(joint_name);
@@ -1143,7 +1144,7 @@ bool KinematicChain::setJointEffort(const JointNameMap &tau)
 bool KinematicChain::setEffortReference(const JointNameMap &tau)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = tau.find(joint_name);
@@ -1159,7 +1160,7 @@ bool KinematicChain::setEffortReference(const JointNameMap &tau)
 bool KinematicChain::setJointPosition(const JointNameMap &q)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = q.find(joint_name);
@@ -1170,13 +1171,13 @@ bool KinematicChain::setJointPosition(const JointNameMap &q)
     }
 
     return success;
-    
+
 }
 
 bool KinematicChain::setJointVelocity(const JointNameMap &qdot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = qdot.find(joint_name);
@@ -1192,7 +1193,7 @@ bool KinematicChain::setJointVelocity(const JointNameMap &qdot)
 bool XBot::KinematicChain::setJointAcceleration(const JointNameMap& qddot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = qddot.find(joint_name);
@@ -1209,7 +1210,7 @@ bool XBot::KinematicChain::setJointAcceleration(const JointNameMap& qddot)
 bool KinematicChain::setMotorPosition(const JointNameMap &q)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = q.find(joint_name);
@@ -1225,7 +1226,7 @@ bool KinematicChain::setMotorPosition(const JointNameMap &q)
 bool KinematicChain::setMotorVelocity(const JointNameMap &qdot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = qdot.find(joint_name);
@@ -1241,7 +1242,7 @@ bool KinematicChain::setMotorVelocity(const JointNameMap &qdot)
 bool KinematicChain::setPositionReference(const JointNameMap &q)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = q.find(joint_name);
@@ -1257,7 +1258,7 @@ bool KinematicChain::setPositionReference(const JointNameMap &q)
 bool KinematicChain::setStiffness(const JointNameMap &K)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = K.find(joint_name);
@@ -1273,7 +1274,7 @@ bool KinematicChain::setStiffness(const JointNameMap &K)
 bool KinematicChain::setTemperature(const JointNameMap &temp)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = temp.find(joint_name);
@@ -1289,7 +1290,7 @@ bool KinematicChain::setTemperature(const JointNameMap &temp)
 bool KinematicChain::setVelocityReference(const JointNameMap &qdot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_name_map ){
         const std::string& joint_name = joint_pair.first;
         auto it = qdot.find(joint_name);
@@ -1304,7 +1305,7 @@ bool KinematicChain::setVelocityReference(const JointNameMap &qdot)
 bool KinematicChain::setDamping(const JointIdMap &D)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = D.find(joint_pair.first);
         if( it != D.end() ){
@@ -1319,7 +1320,7 @@ bool KinematicChain::setDamping(const JointIdMap &D)
 bool KinematicChain::setJointEffort(const JointIdMap &tau)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = tau.find(joint_pair.first);
         if( it != tau.end() ){
@@ -1334,7 +1335,7 @@ bool KinematicChain::setJointEffort(const JointIdMap &tau)
 bool KinematicChain::setEffortReference(const JointIdMap &tau)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = tau.find(joint_pair.first);
         if( it != tau.end() ){
@@ -1350,7 +1351,7 @@ bool KinematicChain::setEffortReference(const JointIdMap &tau)
 bool KinematicChain::setJointPosition(const JointIdMap &q)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = q.find(joint_pair.first);
         if( it != q.end() ){
@@ -1366,7 +1367,7 @@ bool KinematicChain::setJointPosition(const JointIdMap &q)
 bool KinematicChain::setJointVelocity(const JointIdMap &qdot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = qdot.find(joint_pair.first);
         if( it != qdot.end() ){
@@ -1381,7 +1382,7 @@ bool KinematicChain::setJointVelocity(const JointIdMap &qdot)
 bool XBot::KinematicChain::setJointAcceleration(const JointIdMap& qddot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = qddot.find(joint_pair.first);
         if( it != qddot.end() ){
@@ -1397,7 +1398,7 @@ bool XBot::KinematicChain::setJointAcceleration(const JointIdMap& qddot)
 bool KinematicChain::setMotorPosition(const JointIdMap &q)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = q.find(joint_pair.first);
         if( it != q.end() ){
@@ -1414,7 +1415,7 @@ bool KinematicChain::setMotorPosition(const JointIdMap &q)
 bool KinematicChain::setMotorVelocity(const JointIdMap &qdot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = qdot.find(joint_pair.first);
         if( it != qdot.end() ){
@@ -1429,7 +1430,7 @@ bool KinematicChain::setMotorVelocity(const JointIdMap &qdot)
 bool KinematicChain::setPositionReference(const JointIdMap &q)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = q.find(joint_pair.first);
         if( it != q.end() ){
@@ -1445,7 +1446,7 @@ bool KinematicChain::setPositionReference(const JointIdMap &q)
 bool KinematicChain::setStiffness(const JointIdMap &K)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = K.find(joint_pair.first);
         if( it != K.end() ){
@@ -1460,7 +1461,7 @@ bool KinematicChain::setStiffness(const JointIdMap &K)
 bool KinematicChain::setTemperature(const JointIdMap &temp)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = temp.find(joint_pair.first);
         if( it != temp.end() ){
@@ -1475,7 +1476,7 @@ bool KinematicChain::setTemperature(const JointIdMap &temp)
 bool KinematicChain::setVelocityReference(const JointIdMap &qdot)
 {
     bool success = false;
-    
+
     for( const auto& joint_pair : _joint_id_map ){
         auto it = qdot.find(joint_pair.first);
         if( it != qdot.end() ){
@@ -1594,9 +1595,9 @@ void KinematicChain::getEffortLimits(Eigen::VectorXd& tau_max) const
         tau_max.setConstant(_joint_num, std::numeric_limits<double>::max());
         return;
     }
-    
+
     tau_max.resize(getJointNum());
-    
+
     for(int i = 0; i < _joint_num; i++){
         tau_max(i) = _urdf_joints[i]->limits->effort;
     }
@@ -1610,11 +1611,11 @@ void KinematicChain::getJointLimits(Eigen::VectorXd& q_min, Eigen::VectorXd& q_m
         q_max.setConstant(_joint_num, std::numeric_limits<double>::max());
         return;
     }
-    
-    
+
+
     q_min.resize(_joint_num);
     q_max.resize(_joint_num);
-    
+
     for(int i = 0; i < _joint_num; i++){
         q_min(i) = _urdf_joints[i]->limits->lower;
         q_max(i) = _urdf_joints[i]->limits->upper;
@@ -1627,9 +1628,9 @@ void KinematicChain::getVelocityLimits(Eigen::VectorXd& qdot_max) const
         qdot_max.setConstant(_joint_num, std::numeric_limits<double>::max());
         return;
     }
-    
+
     qdot_max.resize(getJointNum());
-    
+
     for(int i = 0; i < _joint_num; i++){
         qdot_max(i) = _urdf_joints[i]->limits->velocity;
     }
@@ -1639,52 +1640,52 @@ void KinematicChain::getVelocityLimits(Eigen::VectorXd& qdot_max) const
 bool KinematicChain::checkEffortLimits(const Eigen::VectorXd& tau) const
 {
     if(isVirtual()) return true;
-    
+
     for(int i = 0; i < _joint_num; i++){
         if( std::abs(tau(i)) > _urdf_joints[i]->limits->effort ){
             return false;
         }
     }
-    
+
     return true;
 }
 
-bool KinematicChain::checkEffortLimits(const Eigen::VectorXd& tau, 
+bool KinematicChain::checkEffortLimits(const Eigen::VectorXd& tau,
                                        std::vector< std::string >& violating_joints) const
 {
     if(isVirtual()) return true;
-    
+
     bool success = true;
 //     violating_joints.clear();
-    
+
     for(int i = 0; i < _joint_num; i++){
         if( std::abs(tau(i)) > _urdf_joints[i]->limits->effort ){
             success = false;
             violating_joints.push_back(getJointName(i));
         }
     }
-    
+
     return success;
 }
 
 bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q) const
 {
     if(isVirtual()) return true;
-    
+
     for(int i = 0; i < _joint_num; i++){
         if( q(i) > _urdf_joints[i]->limits->upper || q(i) < _urdf_joints[i]->limits->lower ){
             return false;
         }
     }
-    
+
     return true;
 }
 
-bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q, 
+bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q,
                                       std::vector< std::string >& violating_joints) const
 {
     if(isVirtual()) return true;
-    
+
     bool success = true;
 //     violating_joints.clear();
     for(int i = 0; i < _joint_num; i++){
@@ -1693,38 +1694,38 @@ bool KinematicChain::checkJointLimits(const Eigen::VectorXd& q,
             violating_joints.push_back(getJointName(i));
         }
     }
-    
+
     return success;
 }
 
 bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot) const
 {
     if(isVirtual()) return true;
-    
+
     for(int i = 0; i < _joint_num; i++){
         if( std::abs(qdot(i)) > _urdf_joints[i]->limits->velocity ){
             return false;
         }
     }
-    
+
     return true;
 }
 
-bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot, 
+bool KinematicChain::checkVelocityLimits(const Eigen::VectorXd& qdot,
                                          std::vector< std::string >& violating_joints) const
 {
     if(isVirtual()) return true;
-    
+
     bool success = true;
 //     violating_joints.clear();
-    
+
     for(int i = 0; i < _joint_num; i++){
         if( std::abs(qdot(i)) > _urdf_joints[i]->limits->velocity ){
             success = false;
             violating_joints.push_back(getJointName(i));
         }
     }
-    
+
     return success;
 }
 
@@ -1750,7 +1751,7 @@ Joint::Ptr XBot::KinematicChain::getJointInternal(int i) const
         std::cerr << "ERROR in " << __func__ << "chain " << getChainName() << "has less than " << i+1 << " joints!" << std::endl;
         return Joint::Ptr();
     }
-    
+
     return _joint_vector[i];
 }
 
@@ -1763,18 +1764,18 @@ Joint::ConstPtr KinematicChain::getJoint ( int i ) const
 ForceTorqueSensor::ConstPtr XBot::KinematicChain::getForceTorque(const std::string& link_name) const
 {
     bool success = false;
-    
+
     for( const ForceTorqueSensor::Ptr& ftptr : _ft_vector ){
         if( ftptr->getParentLinkName() == link_name ){
             success = true;
             return ftptr;
         }
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << " " << link_name << " is either undefined or does not contain any FT" << std::endl;
     }
-    
+
     return ForceTorqueSensor::ConstPtr();
 }
 
@@ -1796,18 +1797,18 @@ std::map< std::string, ForceTorqueSensor::Ptr > KinematicChain::getForceTorqueIn
 ImuSensor::ConstPtr XBot::KinematicChain::getImu(const std::string& link_name) const
 {
     bool success = false;
-    
+
     for( const ImuSensor::Ptr& imuptr : _imu_vector ){
         if( imuptr->getParentLinkName() == link_name ){
             success = true;
             return imuptr;
         }
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << " " << link_name << " is either undefined or does not contain any IMU" << std::endl;
     }
-    
+
     return ImuSensor::ConstPtr();
 }
 
@@ -1826,29 +1827,29 @@ std::map< std::string, ImuSensor::Ptr > KinematicChain::getImuInternal() const
 }
 
 
-bool XBot::KinematicChain::getChainState(const std::string& state_name, 
+bool XBot::KinematicChain::getChainState(const std::string& state_name,
                                          Eigen::VectorXd& q) const
 {
-    
+
     q.resize(getJointNum());
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
-        
+
         if( state.group_ == "chains" && state.name_ == state_name ){
-            
+
             success = true;
-            
+
             for( const auto& value_pair : state.joint_values_ ){
-                
+
                 const std::string& joint_name = value_pair.first;
                 const std::vector<double>& joint_value = value_pair.second;
-                
+
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
                     return false;
                 }
-                
+
                 int dof_index = getChainDofIndex(joint_name);
                 q[dof_index] = joint_value[0];
 
@@ -1857,72 +1858,72 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
         }
 
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
     }
-    
+
     return success;
 }
 
-bool XBot::KinematicChain::getChainState(const std::string& state_name, 
+bool XBot::KinematicChain::getChainState(const std::string& state_name,
                                          JointNameMap& q) const
 {
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
-        
+
         if( state.group_ == getChainName() && state.name_ == state_name ){
-            
+
             success = true;
-            
+
             for( const auto& value_pair : state.joint_values_ ){
-                
+
                 const std::string& joint_name = value_pair.first;
                 const std::vector<double>& joint_value = value_pair.second;
-                
+
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
                     return false;
                 }
-                
+
                 q[joint_name] = joint_value[0];
 
             }
 
         }
-        
-        
+
+
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
     }
-    
+
     return success;
 }
 
-bool XBot::KinematicChain::getChainState(const std::string& state_name, 
+bool XBot::KinematicChain::getChainState(const std::string& state_name,
                                          JointIdMap& q) const
 {
 
     bool success = false;
     for( const auto& state : _XBotModel.getGroupStates() ){
-        
+
         if( state.group_ == "chains" && state.name_ == state_name ){
-            
+
             success = true;
-            
+
             for( const auto& value_pair : state.joint_values_ ){
-                
+
                 const std::string& joint_name = value_pair.first;
                 const std::vector<double>& joint_value = value_pair.second;
-                
+
                 if( joint_value.size() != 1 ){
                     std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
                     return false;
                 }
-                
+
                 int joint_id = getJointByName(joint_name)->getJointId();
                 q[joint_id] = joint_value[0];
 
@@ -1931,11 +1932,11 @@ bool XBot::KinematicChain::getChainState(const std::string& state_name,
         }
 
     }
-    
+
     if(!success){
         std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
     }
-    
+
     return success;
 }
 
@@ -1944,9 +1945,9 @@ int XBot::KinematicChain::getChainDofIndex(const std::string& joint_name) const
     for(int i = 0; i < getJointNum(); i++){
         if( _ordered_joint_name[i] == joint_name ) return i;
     }
-    
+
     std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " NOT defined in chain " << getChainName() << "!" << std::endl;
-    
+
     return -1;
 }
 
@@ -1955,9 +1956,9 @@ int XBot::KinematicChain::getChainDofIndex(int joint_id) const
     for(int i = 0; i < getJointNum(); i++){
         if( _ordered_joint_id[i] == joint_id ) return i;
     }
-    
+
     std::cerr << "ERROR in " << __func__ << "! Joint ID" << joint_id << " NOT defined in chain " << getChainName() << "!" << std::endl;
-    
+
     return -1;
 }
 
@@ -2002,10 +2003,10 @@ void XBot::KinematicChain::printTracking() const
     tp.AddColumn("Vel ref", 7);
     tp.AddColumn("Vel err", 7);
     tp.AddColumn("Vel err%", 8);
-    
+
     tp.PrintHeader();
     for( int i = 0; i < _joint_num; i++ ){
-        
+
         double pos_err = getPositionReference(i) - getJointPosition(i);
         double pos_err_rel = pos_err / getPositionReference(i);
         double tau_err = getEffortReference(i) - getJointEffort(i);
@@ -2013,9 +2014,9 @@ void XBot::KinematicChain::printTracking() const
         double vel_err = getVelocityReference(i) - getJointVelocity(i);
         double vel_err_rel = vel_err / getVelocityReference(i);
 
-        
+
         tp << getJointName(i) << getJointId(i) << getJointPosition(i) << getPositionReference(i) << pos_err << pos_err_rel*100 << getJointEffort(i) << getEffortReference(i) << tau_err << tau_err_rel*100 << getJointVelocity(i) << getVelocityReference(i) << vel_err << vel_err_rel*100;
-    
+
     }
     tp.PrintFooter();
 }
@@ -2026,11 +2027,11 @@ bool XBot::KinematicChain::enforceEffortLimit(Eigen::VectorXd& tau) const
         std::cerr << "ERROR in " << __func__ << "! Provided vector has " << tau.size() << " elements != " << getJointNum() << " the size of the chain!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _joint_vector[i]->enforceEffortLimit(tau(i));
     }
-    
+
     return true;
 }
 
@@ -2040,11 +2041,11 @@ bool XBot::KinematicChain::enforceJointLimits(Eigen::VectorXd& q) const
         std::cerr << "ERROR in " << __func__ << "! Provided vector has " << q.size() << " elements != " << getJointNum() << " the size of the chain!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _joint_vector[i]->enforceJointLimits(q(i));
     }
-    
+
     return true;
 }
 
@@ -2054,11 +2055,11 @@ bool XBot::KinematicChain::enforceVelocityLimit(Eigen::VectorXd& qdot) const
         std::cerr << "ERROR in " << __func__ << "! Provided vector has " << qdot.size() << " elements != " << getJointNum() << " the size of the chain!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         _joint_vector[i]->enforceVelocityLimit(qdot(i));
     }
-    
+
     return true;
 }
 
@@ -2068,12 +2069,12 @@ bool XBot::KinematicChain::eigenToMap(const Eigen::VectorXd& eigen_vector, Joint
         std::cerr << "ERROR in " << __func__ << "! Input vector has " << eigen_vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         const Joint& j = *_joint_vector[i];
         namemap[j.getJointName()] = eigen_vector(i);
     }
-    
+
     return true;
 }
 
@@ -2083,23 +2084,23 @@ bool XBot::KinematicChain::eigenToMap(const Eigen::VectorXd& eigen_vector, Joint
         std::cerr << "ERROR in " << __func__ << "! Input vector has " << eigen_vector.size() << "!=" << getJointNum() << " elements!" << std::endl;
         return false;
     }
-    
+
     for(int i = 0; i < _joint_num; i++){
         const Joint& j = *_joint_vector[i];
         idmap[j.getJointId()] = eigen_vector(i);
     }
-    
+
     return true;
 }
 
 bool XBot::KinematicChain::mapToEigen(const JointNameMap& namemap, Eigen::VectorXd& eigen_vector) const
 {
     bool success = true;
-    
+
     if( eigen_vector.size() != getJointNum() ){
         eigen_vector.setZero(getJointNum());
     }
-    
+
     for(const auto& id_pair : namemap){
         auto it = _joint_name_map.find(id_pair.first);
         if( it != _joint_name_map.end() ){
@@ -2107,18 +2108,18 @@ bool XBot::KinematicChain::mapToEigen(const JointNameMap& namemap, Eigen::Vector
             eigen_vector(getChainDofIndex(it->first)) = id_pair.second;
         }
     }
-    
+
     return success;
 }
 
 bool XBot::KinematicChain::mapToEigen(const JointIdMap& idmap, Eigen::VectorXd& eigen_vector) const
 {
     bool success = true;
-    
+
     if( eigen_vector.size() != getJointNum() ){
         eigen_vector.setZero(getJointNum());
     }
-    
+
     for(const auto& id_pair : idmap){
         auto it = _joint_id_map.find(id_pair.first);
         if( it != _joint_id_map.end() ){
@@ -2126,7 +2127,7 @@ bool XBot::KinematicChain::mapToEigen(const JointIdMap& idmap, Eigen::VectorXd& 
             eigen_vector(getChainDofIndex(it->first)) = id_pair.second;
         }
     }
-    
+
     return success;
 }
 

@@ -6,6 +6,7 @@ int main(int argc, char **argv){
     using XBot::Sync;
 
     auto& logger = *XBot::ConsoleLogger::getLogger("home_logger");
+    
 
     std::string path_to_config_file(argv[1]); // from command line
 

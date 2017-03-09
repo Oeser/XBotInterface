@@ -29,6 +29,7 @@
 #include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
 #include <XBotInterface/TypedefAndEnums.h>
+#include <XBotInterface/Logger.hpp>
 
 #define LIB_MIDDLE_PATH "/build/install/lib/"
 
@@ -191,7 +192,7 @@ public:
       * @return True if the required joint is defined and enabled.
       */
      bool hasJoint ( const std::string& joint_name ) const;
-     
+
      /**
       * @brief Checks that a joint with ID "joint_id" is defined as an enabled
       * joint inside the interface.
@@ -270,6 +271,34 @@ public:
       */
      bool getDofIndex ( const std::string& chain_name, std::vector<int>& ids ) const;
 
+     // Logging utilities
+
+     /**
+      * @brief Pre-allocates memory for logging
+      * the robot state to a mat file.
+      *
+      * @param file_name Path to the mat file to be saved (without .mat extension, example: "/tmp/robot_state_log")
+      * @param buffer_size The number of log elements after which old data are overwritten.
+      * @param interleave Data are actually logged every interleave calls to log().
+      */
+     void initLog(std::string file_name, int buffer_size = -1, int interleave = 1);
+
+     /**
+      * @brief Logs the current robot state.
+      *
+      * @param timestamp Time stamp for current robot state.
+      * @return void
+      */
+     void log(double timestamp) const;
+
+     /**
+      * @brief Dump logged data to .mat file. Since this is a computationally costly
+      * operation which involves writing to disk, it should not be called inside any
+      * high-rate loop.
+      *
+      */
+     void flushLog();
+
 
      // Force-torque sensors
 
@@ -310,47 +339,47 @@ public:
      * any IMU.
      */
      ImuSensor::ConstPtr getImu ( const std::string& parent_link_name ) const;
-                
+
         /**
      * @brief Converts a state vector for the whole robot to its JointNameMap representation.
      * Note that the output map is not cleared before it is filled. It is the responsibility of
      * the user to do so if required.
-     * 
+     *
      * @param vector A state vector for the whole robot (its size must match getJointNum())
      * @param name_map The output map to be filled
      * @return True if the input vector is valid.
      */
     bool eigenToMap(const Eigen::VectorXd& vector, JointNameMap& name_map) const;
-    
+
     /**
      * @brief Converts a state vector for the whole robot to its JointIdMap representation.
      * Note that the output map is not cleared before it is filled. It is the responsibility of
      * the user to do so if required.
-     * 
+     *
      * @param vector A state vector for the whole robot (its size must match getJointNum())
      * @param id_map The output map to be filled
      * @return True if the input vector is valid.
      */
     bool eigenToMap(const Eigen::VectorXd& vector, JointIdMap& id_map) const;
-    
+
     /**
-     * @brief Converts a state vector for an arbitrary subset of the robot state (specified 
+     * @brief Converts a state vector for an arbitrary subset of the robot state (specified
      * as a JointNameMap) to its Eigen representation.
      * Note that the output vector is resized and set to zero if its size does not match the
      * number of joints. Otherwise, unspecified components are left untouched.
-     * 
+     *
      * @param map A JointNameMap contaning the state of the robot (or a part of it)
      * @param vector The output vector to be filled.
      * @return True if the input map contains valid joints.
      */
     bool mapToEigen(const JointNameMap& map, Eigen::VectorXd& vector) const;
-    
+
     /**
-     * @brief Converts a state vector for an arbitrary subset of the robot state (specified 
+     * @brief Converts a state vector for an arbitrary subset of the robot state (specified
      * as a JointIdMap) to its Eigen representation.
      * Note that the output vector is resized and set to zero if its size does not match the
      * number of joints. Otherwise, unspecified components are left untouched.
-     * 
+     *
      * @param map A JointIdMap contaning the state of the robot (or a part of it)
      * @param vector The output vector to be filled.
      * @return True if the input map contains valid joints.
@@ -805,7 +834,7 @@ public:
       * @return bool
       */
      bool getPositionReference ( Eigen::VectorXd& q ) const;
-     
+
      /**
       * @brief Gets the robot velocity references as an Eigen vector. The joint order inside
       * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
@@ -816,7 +845,7 @@ public:
       * @return bool
       */
      bool getVelocityReference ( Eigen::VectorXd& qdot ) const;
-     
+
      /**
       * @brief Gets the robot effort references as an Eigen vector. The joint order inside
       * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
@@ -827,29 +856,29 @@ public:
       * @return bool
       */
      bool getEffortReference ( Eigen::VectorXd& tau ) const;
-     
+
      /**
       * @brief Gets the robot stiffness as an Eigen vector. The joint order inside
       * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
       * methods.
-      * 
+      *
       * @param K A reference to an Eigen vector to be filled with the requested joint state.
       * If the provided vector has wrong size it is resized automatically.
       * @return bool
       */
      bool getStiffness ( Eigen::VectorXd& K ) const;
-     
+
      /**
       * @brief Gets the robot damping as an Eigen vector. The joint order inside
       * the vector can be queried by calling the getEnabledJointNames/getEnabledJointId
       * methods.
-      * 
+      *
       * @param D A reference to an Eigen vector to be filled with the requested joint state.
       * If the provided vector has wrong size it is resized automatically.
       * @return bool
       */
      bool getDamping ( Eigen::VectorXd& D ) const;
-     
+
 
      /**
       * @brief Gets the robot position references as a JointIdMap, i.e. a map whose key
@@ -860,7 +889,7 @@ public:
       * @return bool
       */
      bool getPositionReference ( JointIdMap& q ) const;
-     
+
      /**
       * @brief Gets the robot velocity references as a JointIdMap, i.e. a map whose key
       * represents the joint ID and whose value represents the required joint state.
@@ -870,7 +899,7 @@ public:
       * @return bool
       */
      bool getVelocityReference ( JointIdMap& qdot ) const;
-     
+
      /**
       * @brief Gets the robot effort references as a JointIdMap, i.e. a map whose key
       * represents the joint ID and whose value represents the required joint state.
@@ -880,7 +909,7 @@ public:
       * @return bool
       */
      bool getEffortReference ( JointIdMap& tau ) const;
-     
+
      /**
       * @brief Gets the robot stiffness as a JointIdMap, i.e. a map whose key
       * represents the joint ID and whose value represents the required joint state.
@@ -890,7 +919,7 @@ public:
       * @return bool
       */
      bool getStiffness ( JointIdMap& K ) const;
-     
+
      /**
       * @brief Gets the robot damping as a JointIdMap, i.e. a map whose key
       * represents the joint ID and whose value represents the required joint state.
@@ -904,13 +933,13 @@ public:
      /**
       * @brief Gets the robot postion references as a JointNameMap, i.e. a map whose key
       * represents the joint human-readable name and whose value represents the required joint state.
-      * 
+      *
       * @param q A reference to a JointIdMap to be filled with the requested joint state.
       * It is the user responsibility to clear the map before it is filled (if required).
       * @return bool
       */
      bool getPositionReference ( JointNameMap& q ) const;
-     
+
      /**
       * @brief Gets the robot velocity references as a JointNameMap, i.e. a map whose key
       * represents the joint human-readable name and whose value represents the required joint state.
@@ -920,7 +949,7 @@ public:
       * @return bool
       */
      bool getVelocityReference ( JointNameMap& qdot ) const;
-     
+
      /**
       * @brief Gets the robot effort references as a JointNameMap, i.e. a map whose key
       * represents the joint human-readable name and whose value represents the required joint state.
@@ -930,7 +959,7 @@ public:
       * @return bool
       */
      bool getEffortReference ( JointNameMap& tau ) const;
-     
+
      /**
       * @brief Gets the robot stiffness as a JointNameMap, i.e. a map whose key
       * represents the joint human-readable name and whose value represents the required joint state.
@@ -940,7 +969,7 @@ public:
       * @return bool
       */
      bool getStiffness ( JointNameMap& K ) const;
-     
+
      /**
       * @brief Gets the robot damping as a JointNameMap, i.e. a map whose key
       * represents the joint human-readable name and whose value represents the required joint state.
@@ -962,7 +991,7 @@ public:
       * @return True if the size of the provided vector matches getJointNum().
       */
      bool setPositionReference ( const Eigen::VectorXd& q );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint velocity references according to the
       * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
@@ -972,7 +1001,7 @@ public:
       * @return True if the size of the provided vector matches getJointNum().
       */
      bool setVelocityReference ( const Eigen::VectorXd& qdot );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint effort references according to the
       * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
@@ -982,7 +1011,7 @@ public:
       * @return True if the size of the provided vector matches getJointNum().
       */
      bool setEffortReference ( const Eigen::VectorXd& tau );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint stiffness according to the
       * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
@@ -992,7 +1021,7 @@ public:
       * @return True if the size of the provided vector matches getJointNum().
       */
      bool setStiffness ( const Eigen::VectorXd& K );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint damping according to the
       * provided vector, which must be ordered as specified by the getEnabledJointNames/getEnabledJointId
@@ -1011,7 +1040,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setPositionReference ( const JointIdMap& q );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint velocity references according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
       * can include joint states for an arbitrary subset of the whole robot.
@@ -1020,7 +1049,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setVelocityReference ( const JointIdMap& qdot );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint effort references according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
       * can include joint states for an arbitrary subset of the whole robot.
@@ -1029,7 +1058,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setEffortReference ( const JointIdMap& tau );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint stiffness according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
       * can include joint states for an arbitrary subset of the whole robot.
@@ -1038,7 +1067,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setStiffness ( const JointIdMap& K );
-     
+
      /**
       * @brief  Sets the XBotInterface internal joint damping according to the input JointIdMap (i.e. a map whose key represents the joint ID and whose value represents the joint state), which
       * can include joint states for an arbitrary subset of the whole robot.
@@ -1058,7 +1087,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setPositionReference ( const JointNameMap& q );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint velocity references according to the input
       * JointNameMap (i.e. a map whose key represents the joint name and whose value
@@ -1069,7 +1098,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setVelocityReference ( const JointNameMap& qdot );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint effort references according to the input
       * JointNameMap (i.e. a map whose key represents the joint name and whose value
@@ -1080,7 +1109,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setEffortReference ( const JointNameMap& tau );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint stiffness according to the input
       * JointNameMap (i.e. a map whose key represents the joint name and whose value
@@ -1091,7 +1120,7 @@ public:
       * @return True if all joint IDs inside the provided map are valid.
       */
      bool setStiffness ( const JointNameMap& K );
-     
+
      /**
       * @brief Sets the XBotInterface internal joint damping according to the input
       * JointNameMap (i.e. a map whose key represents the joint name and whose value
@@ -1189,26 +1218,42 @@ public:
      * @return True if all joints are within their limits.
      */
      bool checkEffortLimits ( const Eigen::VectorXd& tau ) const;
-     
+
      /**
-      * @brief Modifies the input joint position vector by enforcing joint limits. 
-      * 
+      * @brief Modifies the input joint position map by enforcing joint limits.
+      *
+      * @param q The input joint position map. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
+     bool enforceJointLimits( JointIdMap& q ) const;
+
+     /**
+      * @brief Modifies the input joint position map by enforcing joint limits.
+      *
+      * @param q The input joint position map. Out-of-range components are set to the closest joint limit.
+      * @return True if the provided vector has the correct size.
+      */
+     bool enforceJointLimits( JointNameMap& q ) const;
+
+     /**
+      * @brief Modifies the input joint position vector by enforcing joint limits.
+      *
       * @param q The input joint position vector. Out-of-range components are set to the closest joint limit.
       * @return True if the provided vector has the correct size.
       */
      bool enforceJointLimits( Eigen::VectorXd& q ) const;
-     
+
      /**
-      * @brief Modifies the input joint effort vector by enforcing effort limits. 
-      * 
+      * @brief Modifies the input joint effort vector by enforcing effort limits.
+      *
       * @param tau The input joint effort vector. Out-of-range components are set to the closest joint limit.
       * @return True if the provided vector has the correct size.
       */
      bool enforceEffortLimit( Eigen::VectorXd& tau ) const;
-     
+
      /**
-      * @brief Modifies the input joint velcoity vector by enforcing joint limits. 
-      * 
+      * @brief Modifies the input joint velcoity vector by enforcing joint limits.
+      *
       * @param qdot The input joint velocity vector. Out-of-range components are set to the closest joint limit.
       * @return True if the provided vector has the correct size.
       */
@@ -1216,7 +1261,7 @@ public:
 
      /**
       * @brief Synchronize the current XBotInterface with another XBotInterface object: only the common chains will be taken into account.
-      * 
+      *
       * @param flags ...
       * @param other The XBotInterface object from which we synchronize the current object
       * @return Always true because we support synchronization btw XBotInterfaces with different chains.
@@ -1226,7 +1271,7 @@ public:
 
      /**
       * @brief Getter for the chain map inside the XBotInterface
-      * 
+      *
       * @return the chain map inside the XBotInterface
       */
      const std::map<std::string, XBot::KinematicChain::Ptr>&  getChainMap() const;
@@ -1234,14 +1279,14 @@ public:
      friend std::ostream& operator<< ( std::ostream& os, const XBot::XBotInterface& robot );
     /**
      * @brief Print a pretty table about the robot state.
-     * 
+     *
      * @return void
      */
     void print() const;
-    
+
     /**
      * @brief Print a pretty table about the robot tracking.
-     * 
+     *
      * @return void
      */
     void printTracking() const;
@@ -1250,7 +1295,7 @@ protected:
 
     // Joint getters for developers
 
-    
+
     Joint::Ptr getJointByNameInternal(const std::string& joint_name) const;
     Joint::Ptr getJointByIdInternal(int joint_id) const;
     Joint::Ptr getJointByDofIndexInternal(int dof_index) const;
@@ -1294,6 +1339,8 @@ private:
 
      int _joint_num;
 
+     mutable Eigen::VectorXd _qlink, _qmot, _qdotlink, _qdotmot, _tau, _stiffness, _damping, _temp;
+
      std::string _urdf_string, _srdf_string;
      std::string _urdf_path;
      std::string _srdf_path;
@@ -1303,6 +1350,8 @@ private:
      std::vector<int> _ordered_joint_id;
 
      std::string _path_to_cfg;
+
+     MatLogger::Ptr _matlogger;
 
      bool parseYAML ( const std::string &path_to_cfg );
 
@@ -1321,7 +1370,7 @@ bool XBot::XBotInterface::sync ( const XBot::XBotInterface &other, SyncFlags... 
           if ( _chain_map.count ( chain_name ) ) {
                _chain_map.at ( chain_name )->syncFrom ( chain, flags... );
 
-          } 
+          }
 //           else {
 //                if ( !chain.isVirtual() ) {
 //                     std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
