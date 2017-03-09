@@ -27,14 +27,9 @@ namespace XBot{
     class ControlMode {
       
     public:
+
         
-        ControlMode(bool position_enabled = false, 
-                    bool velocity_enabled = false,
-                    bool effort_enabled = false,
-                    bool stiffness_enabled = false,
-                    bool damping_enabled = false);
-        
-        ControlMode(const std::string& name,
+        ControlMode(const std::string& name = "",
                     bool position_enabled = false, 
                     bool velocity_enabled = false,
                     bool effort_enabled = false,

@@ -20,22 +20,6 @@
 #include <XBotInterface/ControlMode.h>
 
 namespace XBot {
-    
-    
-ControlMode::ControlMode(bool position_enabled, 
-                         bool velocity_enabled, 
-                         bool effort_enabled, 
-                         bool stiffness_enabled, 
-                         bool damping_enabled):
-_position_enabled(position_enabled),
-_velocity_enabled(velocity_enabled),
-_effort_enabled(effort_enabled),
-_stiffness_enabled(stiffness_enabled),
-_damping_enabled(damping_enabled),
-_name("")
-{
-
-}
 
 ControlMode::ControlMode(const std::string& name, 
                          bool position_enabled, 
@@ -61,7 +45,7 @@ ControlMode ControlMode::operator+(const ControlMode& ctrl_mode)
         _name = ctrl_mode._name;
     }
     else if(ctrl_mode._name != "IDLE"){
-        _name = _name + std::string("+") + ctrl_mode._name;
+        _name = _name + std::string(" + ") + ctrl_mode._name;
     }
     
     _position_enabled = _position_enabled || ctrl_mode._position_enabled;
