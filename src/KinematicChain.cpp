@@ -35,7 +35,8 @@ KinematicChain::KinematicChain(const std::string &chain_name,
                                const XBot::XBotCoreModel &XBotModel) :
     _chain_name(chain_name),
     _XBotModel(XBotModel),
-    _is_virtual(false)
+    _is_virtual(false),
+    _joint_num(0)
 {
     _joint_num = _XBotModel.get_joint_num(chain_name);
     _XBotModel.get_enabled_joints_in_chain(chain_name, _ordered_joint_name);
@@ -121,7 +122,8 @@ KinematicChain::KinematicChain(const std::string &chain_name,
 
 KinematicChain::KinematicChain(const std::string& chain_name):
 _chain_name(chain_name),
-_is_virtual(false)
+_is_virtual(false),
+_joint_num(0)
 {
 
 }
@@ -230,7 +232,7 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     _joint_vector.push_back(joint);
     _urdf_joints.push_back(joint->getUrdfJoint());
     _ordered_joint_name.push_back(joint->getJointName());
-    _joint_num++;
+    _joint_num = _joint_vector.size();
     if(joint->getJointId() < 0) _is_virtual = true;
 }
 
