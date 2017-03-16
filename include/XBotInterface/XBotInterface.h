@@ -287,7 +287,7 @@ public:
       * @param logger Shared pointer to MatLogger where logging data has to be saved.
       * @param buffer_size The number of log elements after which old data are overwritten.
       * @param interleave Data are actually logged every interleave calls to log().
-      * @param prefix Prefix which will be appended to all logged variables (empty by default).
+      * @param prefix Prefix which will be preponed to all logged variables (empty by default).
       */
      void initLog(MatLogger::Ptr logger, int buffer_size = -1, int interleave = 1, std::string prefix = "");
 
@@ -296,7 +296,7 @@ public:
       *
       * @param logger Shared pointer to MatLogger where logging data has to be saved.
       * @param timestamp Time stamp for current robot state.
-      * @param prefix Prefix which will be appended to all logged variables (empty by default).
+      * @param prefix Prefix which will be preponed to all logged variables (empty by default).
       * @return void
       */
      void log(MatLogger::Ptr logger, double timestamp, const std::string& prefix = "") const;
