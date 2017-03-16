@@ -2066,28 +2066,32 @@ XBot::Joint::Ptr XBot::XBotInterface::getJointByIdInternal(int joint_id) const
 }
 
 
-void XBot::XBotInterface::initLog(std::string filename, int buffer_size, int interleave)
+void XBot::XBotInterface::initLog(MatLogger::Ptr logger, int buffer_size, int interleave, std::string prefix)
 {
-    _matlogger = XBot::MatLogger::getLogger(filename);
 
-    _matlogger->createVectorVariable("joint_position", getJointNum(), interleave, buffer_size);
-    _matlogger->createVectorVariable("motor_position", getJointNum(), interleave, buffer_size);
+    if( prefix != "" ){
+        prefix = prefix + "_";
+    }
 
-    _matlogger->createVectorVariable("joint_velocity", getJointNum(), interleave, buffer_size);
-    _matlogger->createVectorVariable("motor_velocity", getJointNum(), interleave, buffer_size);
 
-    _matlogger->createVectorVariable("joint_effort", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "joint_position", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "motor_position", getJointNum(), interleave, buffer_size);
 
-    _matlogger->createVectorVariable("impedance_k", getJointNum(), interleave, buffer_size);
-    _matlogger->createVectorVariable("impedance_d", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "joint_velocity", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "motor_velocity", getJointNum(), interleave, buffer_size);
 
-    _matlogger->createVectorVariable("temperature", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "joint_effort", getJointNum(), interleave, buffer_size);
 
-    _matlogger->createVectorVariable("position_reference", getJointNum(), interleave, buffer_size);
-    _matlogger->createVectorVariable("effort_reference", getJointNum(), interleave, buffer_size);
-    _matlogger->createVectorVariable("velocity_reference", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "impedance_k", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "impedance_d", getJointNum(), interleave, buffer_size);
 
-    _matlogger->createScalarVariable("time", interleave, buffer_size);
+    logger->createVectorVariable(prefix + "temperature", getJointNum(), interleave, buffer_size);
+
+    logger->createVectorVariable(prefix + "position_reference", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "effort_reference", getJointNum(), interleave, buffer_size);
+    logger->createVectorVariable(prefix + "velocity_reference", getJointNum(), interleave, buffer_size);
+
+    logger->createScalarVariable(prefix + "time", interleave, buffer_size);
 
     getJointPosition(_qlink);
     getMotorPosition(_qmot);
@@ -2101,13 +2105,13 @@ void XBot::XBotInterface::initLog(std::string filename, int buffer_size, int int
 
 }
 
-void XBot::XBotInterface::log(double time) const
+void XBot::XBotInterface::log(MatLogger::Ptr logger, double timestamp, const std::string& prefix) const
 {
-    if(!_matlogger){
-        std::cout << "ERROR in " << __PRETTY_FUNCTION__ << "! initLog() has NOT been called!" << std::endl;
+    if(!logger){
+        std::cout << "ERROR in " << __PRETTY_FUNCTION__ << "! Provided logger is null!" << std::endl;
         return;
     }
-    
+
     getJointPosition(_qlink);
     getMotorPosition(_qmot);
     getJointVelocity(_qdotlink);
@@ -2117,34 +2121,30 @@ void XBot::XBotInterface::log(double time) const
     getDamping(_damping);
     getTemperature(_temp);
 
-    _matlogger->add("joint_position", _qlink);
-    _matlogger->add("motor_position", _qmot);
+    logger->add( prefix + "joint_position", _qlink);
+    logger->add( prefix + "motor_position", _qmot);
 
-    _matlogger->add("joint_velocity", _qdotlink);
-    _matlogger->add("motor_velocity", _qdotmot);
+    logger->add( prefix + "joint_velocity", _qdotlink);
+    logger->add( prefix + "motor_velocity", _qdotmot);
 
-    _matlogger->add("joint_effort", _tau);
+    logger->add( prefix + "joint_effort", _tau);
 
-    _matlogger->add("impedance_k", _stiffness);
-    _matlogger->add("impedance_d", _damping);
+    logger->add( prefix + "impedance_k", _stiffness);
+    logger->add( prefix + "impedance_d", _damping);
 
-    _matlogger->add("temperature", _temp);
+    logger->add( prefix + "temperature", _temp);
 
-    _matlogger->add("time", time);
+    logger->add( prefix + "time", timestamp);
 
     getPositionReference(_qlink);
     getVelocityReference(_qdotlink);
     getEffortReference(_tau);
 
-    _matlogger->add("position_reference", _qlink);
-    _matlogger->add("velocity_reference", _qdotlink);
-    _matlogger->add("effort_reference", _tau);
+    logger->add( prefix + "position_reference", _qlink);
+    logger->add( prefix + "velocity_reference", _qdotlink);
+    logger->add( prefix + "effort_reference", _tau);
 }
 
-void XBot::XBotInterface::flushLog()
-{
-    _matlogger->flush();
-}
 
 
 
