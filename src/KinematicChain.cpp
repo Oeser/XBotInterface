@@ -100,10 +100,10 @@ KinematicChain::KinematicChain(const std::string &chain_name,
     // Add IMU
     for( const auto& imu_name_id : _XBotModel.get_imu_sensors() ){
 
-        const std::string& imu_joint_name = imu_name_id.first;
         const int imu_id = imu_name_id.second;
-        std::string imu_link_name = robot_urdf.getJoint(imu_joint_name)->child_link_name;
-        std::string imu_parent_link_name = robot_urdf.getJoint(imu_joint_name)->parent_link_name;
+        std::string imu_link_name = imu_name_id.first;
+        std::string imu_parent_link_name =
+                robot_urdf.getLink(imu_link_name)->parent_joint->parent_link_name;
 
         // check the if IMU is on this chain
         for( const auto& link_in_chain : _urdf_links) {

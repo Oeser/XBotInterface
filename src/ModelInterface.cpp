@@ -222,7 +222,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
 
         for(int i=0; i<6; i++){
 
-            urdf::JointSharedPtr virtual_joint(new urdf::Joint);
+            boost::shared_ptr<urdf::Joint> virtual_joint(new urdf::Joint);
             virtual_joint->type = urdf::Joint::UNKNOWN;
             virtual_joint->limits.reset(new urdf::JointLimits);
             virtual_joint->limits->effort = 1e9;
