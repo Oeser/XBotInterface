@@ -233,7 +233,7 @@ bool XBot::ModelInterface::fillModelOrderedChain()
 
             XBot::Joint::Ptr jptr = std::make_shared<Joint>(model_ordered_joint_name[i],
                                                             -(i+1),
-                                                            virtual_joint, 
+                                                            virtual_joint,
                                                             virtual_chain_name);
 
             _chain_map.at(virtual_chain_name)->pushBackJoint(jptr);
@@ -417,12 +417,12 @@ bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_na
                                                const std::string& base_link_name,
                                                KDL::Jacobian& J) const
 {
-    bool success = getJacobian(target_link_name, _tmp_kdl_jacobian);
-    success = getJacobian(base_link_name, J) && success;
+    bool success = getJacobian(base_link_name, _tmp_kdl_jacobian);
+    success = getJacobian(target_link_name, J) && success;
 
     J.data -= _tmp_kdl_jacobian.data;
 
-    success = getOrientation(target_link_name, base_link_name, _tmp_kdl_rotation) && success;
+    success = getOrientation(base_link_name, target_link_name, _tmp_kdl_rotation) && success;
 
     J.changeBase(_tmp_kdl_rotation);
 
