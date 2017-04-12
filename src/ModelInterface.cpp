@@ -413,18 +413,39 @@ bool XBot::ModelInterface::getJacobian(const std::string& link_name, KDL::Jacobi
 
 }
 
+
 bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_name,
                                                const std::string& base_link_name,
                                                KDL::Jacobian& J) const
 {
-    bool success = getJacobian(base_link_name, _tmp_kdl_jacobian);
-    success = getJacobian(target_link_name, J) && success;
+    /* Define some alias for easier reading */
+    KDL::Jacobian& base_jacobian = _tmp_kdl_jacobian;
+    KDL::Jacobian& target_jacobian = J;
+    KDL::Rotation& world_R_base = _tmp_kdl_rotation;
+    KDL::Vector& world_deltap_21 = _tmp_kdl_vector;
 
-    J.data -= _tmp_kdl_jacobian.data;
+    /* Compute base e target link jacobians */
+    bool success = getJacobian(base_link_name, base_jacobian);
+    success = getJacobian(target_link_name, target_jacobian) && success;
 
-    success = getOrientation(base_link_name, target_link_name, _tmp_kdl_rotation) && success;
+    /* Compute orientation of base link w.r.t world */
+    success = getOrientation(base_link_name, world_R_base) && success;
 
-    J.changeBase(_tmp_kdl_rotation);
+    /* Compute the vector origin_target-origin_base w.r.t. world */
+    KDL::Vector world_origin_base, world_origin_target;
+    getPointPosition(base_link_name, KDL::Vector::Zero(), world_origin_base);
+    getPointPosition(target_link_name, KDL::Vector::Zero(), world_origin_target);
+    world_deltap_21 = world_origin_target - world_origin_base;
+
+    /* Change ref point of base jacobian from origin_base to origin_target */
+    base_jacobian.changeRefPoint(world_deltap_21);
+
+    /* Compute relative jacobian in world frame */
+    J.data = target_jacobian.data - base_jacobian.data;
+
+    /* Rotate to base frame */
+    J.changeBase(world_R_base.Inverse());
+
 
     return success;
 }
