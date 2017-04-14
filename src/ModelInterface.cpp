@@ -420,7 +420,7 @@ bool XBot::ModelInterface::getRelativeJacobian(const std::string& target_link_na
 {
     /* Define some alias for easier reading */
     KDL::Jacobian& base_jacobian = _tmp_kdl_jacobian;
-    KDL::Jacobian& target_jacobian = J;
+    KDL::Jacobian& target_jacobian = _tmp_kdl_jacobian_1;
     KDL::Rotation& world_R_base = _tmp_kdl_rotation;
     KDL::Vector& world_deltap_21 = _tmp_kdl_vector;
 

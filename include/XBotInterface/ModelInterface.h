@@ -845,7 +845,7 @@ private:
 
     mutable KDL::Twist _tmp_kdl_twist;
     mutable KDL::Frame _tmp_kdl_frame, _tmp_kdl_frame_1;
-    mutable KDL::Jacobian _tmp_kdl_jacobian;
+    mutable KDL::Jacobian _tmp_kdl_jacobian, _tmp_kdl_jacobian_1;
     mutable KDL::Vector _tmp_kdl_vector, _tmp_kdl_vector_1;
     mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
     mutable std::vector<int> _tmp_int_vector;
