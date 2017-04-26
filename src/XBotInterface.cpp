@@ -267,6 +267,15 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
 
     _joint_vector = _ordered_joint_vector;
 
+    // fill FT & IMU id maps
+    for( const auto& pair : getForceTorqueInternal() ){
+        _ft_id_map[pair.second->getSensorId()] = pair.second;
+    }
+
+    for( const auto pair : getImuInternal() ){
+        _imu_id_map[pair.second->getSensorId()] = pair.second;
+    }
+
     return success;
 
 }
@@ -2143,6 +2152,46 @@ void XBot::XBotInterface::log(MatLogger::Ptr logger, double timestamp, const std
     logger->add( prefix + "position_reference", _qlink);
     logger->add( prefix + "velocity_reference", _qdotlink);
     logger->add( prefix + "effort_reference", _tau);
+}
+
+XBot::ForceTorqueSensor::ConstPtr XBot::XBotInterface::getForceTorque(int ft_id) const
+{
+    auto it = _ft_id_map.find(ft_id);
+
+    if( it == _ft_id_map.end() ){
+        std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << ", FT sensor with given ID " << ft_id << " is NOT defined!\n" <<
+        "Available FT sensor are:\n";
+
+        for( const auto& pair : _ft_map ){
+            std::cerr << "\tName: " << pair.first << ", ID: " << pair.second->getSensorId() << "\n";
+        }
+
+        std::cerr << std::endl;
+
+        return XBot::ForceTorqueSensor::ConstPtr();
+    }
+
+    return it->second;
+}
+
+XBot::ImuSensor::ConstPtr XBot::XBotInterface::getImu(int imu_id) const
+{
+    auto it = _imu_id_map.find(imu_id);
+
+    if( it == _imu_id_map.end() ){
+        std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << ", IMU sensor with given ID " << imu_id << " is NOT defined!\n" <<
+        "Available IMU sensor are:\n";
+
+        for( const auto& pair : _imu_map ){
+            std::cerr << "\tName: " << pair.first << ", ID: " << pair.second->getSensorId() << "\n";
+        }
+
+        std::cerr << std::endl;
+
+        return XBot::ImuSensor::ConstPtr();
+    }
+
+    return it->second;
 }
 
 

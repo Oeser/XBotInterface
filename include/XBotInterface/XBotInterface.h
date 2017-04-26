@@ -323,6 +323,16 @@ public:
      */
      ForceTorqueSensor::ConstPtr getForceTorque ( const std::string& parent_link_name ) const;
 
+     /**
+     * @brief Returns a force-torque sensor given its sensor ID.
+     *
+     * @param ft_id Sensor ID as given by ForceTorqueSensor::getSensorId(). If the sensor fixed joint
+     * is listed inside the joint id map, then the sensor id is the one specified inside such a file.
+     * @return A shared pointer to the required force-torque sensor. The returned pointer is null if
+     * the robot does not have an ft with the requested id.
+     */
+     ForceTorqueSensor::ConstPtr getForceTorque ( int ft_id ) const;
+
      // IMU sensors
 
      /**
@@ -342,6 +352,16 @@ public:
      * any IMU.
      */
      ImuSensor::ConstPtr getImu ( const std::string& parent_link_name ) const;
+
+     /**
+     * @brief Returns an IMU sensor given its sensor ID.
+     *
+     * @param imu_id Sensor ID as given by ImuSensor::getSensorId(). If the sensor fixed joint
+     * is listed inside the joint id map, then the sensor id is the one specified inside such a file.
+     * @return A shared pointer to the required IMU sensor. The returned pointer is null if
+     * the robot does not have an imu with the requested id.
+     */
+     ImuSensor::ConstPtr getImu ( int imu_id ) const;
 
         /**
      * @brief Converts a state vector for the whole robot to its JointNameMap representation.
@@ -1331,7 +1351,9 @@ protected:
      std::vector<Joint::Ptr> _ordered_joint_vector;
      std::vector<Joint::Ptr> _joint_vector;
      std::map<std::string, ForceTorqueSensor::Ptr> _ft_map;
+     std::map<int, ForceTorqueSensor::Ptr> _ft_id_map;
      std::map<std::string, ImuSensor::Ptr> _imu_map;
+     std::map<int, ImuSensor::Ptr> _imu_id_map;
      std::vector<std::string> _ordered_chain_names;
 
      std::map<int, int> _joint_id_to_eigen_id;
