@@ -417,6 +417,17 @@ public:
      */
     virtual void getCOMAcceleration( KDL::Vector& acceleration) const = 0;
 
+
+    /**
+     * @brief Gets the robot mometum about its COM.
+     *
+     * @param centroidal_momentum The robot centroidal momentum. The first three rows represent the
+     * robot linear momentum, while the last three rows contain the angular momentum about the COM,
+     * @return void
+     */
+    virtual void getCentroidalMomentum(Eigen::Vector6d& centroidal_momentum) = 0;
+
+    
     /**
      * @brief Gets the gravity vector expressed in the world frame
      *

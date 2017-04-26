@@ -25,83 +25,84 @@
 #include <string>
 #include <memory>
 #include <boost/any.hpp>
+#include <eigen3/Eigen/Dense>
 
 namespace XBot{
-    
+
     class ImuSensor;
     class ForceTorqueSensor;
-    
-    
+
+
     /*////////////
     /* TYPEDEF  */
     ////////////*/
-    
+
     /**
      * @brief std::map with key representing the joint ID (i.e. its numerical identifier; note that
      * IDs are not required to be consecutive) and value representing a joint state (e.g. position,
      * torque, ...)
      */
     typedef std::unordered_map<int, double> JointIdMap;
-    
+
     /**
-     * @brief std::map with key representing the joint human-readable name and value 
+     * @brief std::map with key representing the joint human-readable name and value
      * representing a joint state (e.g. position, torque, ...)
      */
     typedef std::unordered_map<std::string, double> JointNameMap;
-    
+
     /**
-     * @brief std::map with key representing the FT sensor human-readable name and value 
+     * @brief std::map with key representing the FT sensor human-readable name and value
      * representing a const shared pointer to the FT itself.
-     * 
+     *
      */
     typedef std::map<std::string, std::shared_ptr<const ForceTorqueSensor> > ForceTorqueMap;
-    
+
     /**
-     * @brief std::map with key representing the IMU sensor human-readable name and value 
+     * @brief std::map with key representing the IMU sensor human-readable name and value
      * representing a const shared pointer to the IMU itself.
-     * 
+     *
      */
     typedef std::map<std::string, std::shared_ptr<const ImuSensor> > ImuMap;
-    
+
     /**
      * @brief std::map map with key representing a parameter name and value representing
      * the parameter value. Note that thanks to the use of boost::any it can be of any type.
-     * 
+     *
      */
     typedef std::map<std::string, boost::any> AnyMap;
-    
+
     /**
      * @brief Shared pointer to AnyMap
-     * 
+     *
      */
     typedef std::shared_ptr<AnyMap> AnyMapPtr;
-    
+
     /**
      * @brief Shared pointer to AnyMap
-     * 
+     *
      */
     typedef std::shared_ptr<const AnyMap> AnyMapConstPtr;
-    
+
     //////////
     // ENUM //
     //////////
- 
+
     /**
-     * @brief enum class that represents a set of flags to specify what part of the robot/model state needs to be synchronized. 
+     * @brief enum class that represents a set of flags to specify what part of the robot/model state needs to be synchronized.
      * By default (i.e. if this argument is omitted) the whole state is used. Otherwise, an arbitrary number of flags
      * can be specified in order to select a subset of the state. The flags must be of the enum type
      * XBot::Sync, which can take the following values:
-     * - Sync::Position, 
+     * - Sync::Position,
      * - Sync::Velocity
      * - Sync::Acceleration
      * - Sync::Effort
-     * - Sync::Stiffness 
-     * - Sync::Damping 
+     * - Sync::Stiffness
+     * - Sync::Damping
      * - Sync::Impedance
      * - Sync::All
      */
     enum class Sync {
-        
+
         Position ,
         Velocity,
         Effort,
@@ -109,10 +110,18 @@ namespace XBot{
         Impedance,
         Stiffness,
         Damping,
-        All 
-        
+        All
+
     };
 
+}
+
+namespace Eigen {
+    /**
+     * @brief Typedef for a 6 element column vector of double.
+     * 
+     */
+    typedef Eigen::Matrix<double, 1, 6> Vector6d;
 }
 
 #endif
