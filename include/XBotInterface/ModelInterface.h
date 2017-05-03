@@ -432,7 +432,7 @@ public:
      * @brief Gets the weight of the robot
      * @return a double with the weight of the robot in kg
      */
-    virtual bool getMass() const = 0;
+    virtual double getMass() const = 0;
 
     
     /**
