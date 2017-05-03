@@ -427,6 +427,13 @@ public:
      */
     virtual void getCentroidalMomentum(Eigen::Vector6d& centroidal_momentum) = 0;
 
+
+    /**
+     * @brief Gets the weight of the robot
+     * @return a double with the weight of the robot in kg
+     */
+    virtual bool getMass() const = 0;
+
     
     /**
      * @brief Gets the gravity vector expressed in the world frame
