@@ -204,6 +204,14 @@ public:
     virtual void getModelOrderedJoints( std::vector<std::string>& joint_name ) const = 0;
 
     /**
+     * @brief Gets the number of actuated joints in the model, i.e. possible
+     * virtual joints (floating base models) are not working.
+     *
+     * @return int
+     */
+    int getActuatedJointNum() const;
+
+    /**
      * @brief True if the robot is floating base, false if it has a fixed base.
      *
      * @return True if the robot is floating base, false if it has a fixed base.

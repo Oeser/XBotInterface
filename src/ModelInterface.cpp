@@ -752,6 +752,10 @@ void XBot::ModelInterface::getPosturalJacobian(Eigen::MatrixXd& J) const
 
 
 
+int XBot::ModelInterface::getActuatedJointNum() const
+{
+    return isFloatingBase() ? (getJointNum()-6) : getJointNum();
+}
 
 
 
