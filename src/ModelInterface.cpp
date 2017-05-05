@@ -739,9 +739,15 @@ void XBot::ModelInterface::seekAndDestroyFixedControlledJoints()
     }
 }
 
-
-
-
+void XBot::ModelInterface::getPosturalJacobian(Eigen::MatrixXd& J) const
+{
+    if(isFloatingBase()){
+        _tmp_postural_jacob.setZero(getJointNum() - 6, getJointNum());
+        _tmp_postural_jacob.leftCols(getJointNum() - 6) = Eigen::MatrixXd::Identity(getJointNum() - 6, getJointNum() - 6);
+    }else{
+        _tmp_postural_jacob.setIdentity(getJointNum(), getJointNum());
+    }
+}
 
 
 

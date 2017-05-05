@@ -24,7 +24,6 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0017 NEW)
 endif(COMMAND cmake_policy)
 
-
 include(ExternalProject)
 project(XBotInterface)
 
@@ -69,7 +68,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
 
 # for every file in INCLUDES CMake already sets the property HEADER_FILE_ONLY
 file(GLOB_RECURSE XBotInterface_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" *.h*)
-# 
+#
 
 add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/XBotInterface.cpp
