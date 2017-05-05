@@ -2102,6 +2102,18 @@ void XBot::XBotInterface::initLog(MatLogger::Ptr logger, int buffer_size, int in
 
     logger->createScalarVariable(prefix + "time", interleave, buffer_size);
 
+    for(const auto& pair : _imu_map){
+        std::string imu_name = pair.first;
+        logger->createVectorVariable(prefix + "IMU_" + imu_name + "_lin_acc", 3, interleave, buffer_size);
+        logger->createVectorVariable(prefix + "IMU_" + imu_name + "_ang_vel", 3, interleave, buffer_size);
+        logger->createMatrixVariable(prefix + "IMU_" + imu_name + "_orientation", 3, 3, interleave, buffer_size);
+    }
+
+    for(const auto& pair : _ft_map){
+        std::string ft_name = pair.first;
+        logger->createVectorVariable(prefix + "FT_" + ft_name + "_wrench", 6, interleave, buffer_size);
+    }
+
     getJointPosition(_qlink);
     getMotorPosition(_qmot);
     getJointVelocity(_qdotlink);
@@ -2152,6 +2164,28 @@ void XBot::XBotInterface::log(MatLogger::Ptr logger, double timestamp, const std
     logger->add( prefix + "position_reference", _qlink);
     logger->add( prefix + "velocity_reference", _qdotlink);
     logger->add( prefix + "effort_reference", _tau);
+
+    for(const auto& pair : _imu_map){
+        const std::string& imu_name = pair.first;
+        const ImuSensor& imu = *pair.second;
+        Eigen::Vector3d w, a;
+        Eigen::Quaterniond o;
+        imu.getImuData(o, a, w);
+
+        logger->add(prefix + "IMU_" + imu_name + "_lin_acc", a);
+        logger->add(prefix + "IMU_" + imu_name + "_ang_vel", w);
+        logger->add(prefix + "IMU_" + imu_name + "_orientation", o.matrix());
+    }
+
+    for(const auto& pair : _ft_map){
+        const std::string& ft_name = pair.first;
+        const ForceTorqueSensor& ft = *pair.second;
+        Eigen::Vector6d w;
+        ft.getWrench(w);
+
+        logger->add(prefix + "FT_" + ft_name + "_wrench", w);
+    }
+
 }
 
 XBot::ForceTorqueSensor::ConstPtr XBot::XBotInterface::getForceTorque(int ft_id) const

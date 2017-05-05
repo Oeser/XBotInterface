@@ -313,6 +313,16 @@ public:
                       KDL::Jacobian& J) const;
 
     /**
+    * @brief Gets the Jacacobian matrix corresponding to a joint-space postural task,
+    * i.e. the identity matrix if the robot is fixed-base and a selection matrix for
+    * actuated joints if the robot is floating-base
+    *
+    * @param J The postural jacobian
+    * @return void
+    */
+    void getPosturalJacobian(Eigen::MatrixXd& J) const;
+
+    /**
      * @brief Gets the relative Jacobian of target_link_name w.r.t to base_link_name.
      * The result is represented in the reference frame of base_link_name.
      *
@@ -434,7 +444,7 @@ public:
      */
     virtual double getMass() const = 0;
 
-    
+
     /**
      * @brief Gets the gravity vector expressed in the world frame
      *
