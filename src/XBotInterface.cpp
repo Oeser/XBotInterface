@@ -2089,6 +2089,8 @@ void XBot::XBotInterface::initLog(MatLogger::Ptr logger, int buffer_size, int in
     logger->createVectorVariable(prefix + "joint_velocity", getJointNum(), interleave, buffer_size);
     logger->createVectorVariable(prefix + "motor_velocity", getJointNum(), interleave, buffer_size);
 
+    logger->createVectorVariable(prefix + "joint_acceleration", getJointNum(), interleave, buffer_size);
+
     logger->createVectorVariable(prefix + "joint_effort", getJointNum(), interleave, buffer_size);
 
     logger->createVectorVariable(prefix + "impedance_k", getJointNum(), interleave, buffer_size);
@@ -2122,6 +2124,7 @@ void XBot::XBotInterface::initLog(MatLogger::Ptr logger, int buffer_size, int in
     getStiffness(_stiffness);
     getDamping(_damping);
     getTemperature(_temp);
+
 
 
 }
@@ -2164,6 +2167,9 @@ void XBot::XBotInterface::log(MatLogger::Ptr logger, double timestamp, const std
     logger->add( prefix + "position_reference", _qlink);
     logger->add( prefix + "velocity_reference", _qdotlink);
     logger->add( prefix + "effort_reference", _tau);
+
+    getJointAcceleration(_qlink);
+    logger->add( prefix + "joint_acceleration", _qlink);
 
     for(const auto& pair : _imu_map){
         const std::string& imu_name = pair.first;
