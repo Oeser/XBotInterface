@@ -885,6 +885,7 @@ private:
     mutable KDL::Vector _tmp_kdl_vector, _tmp_kdl_vector_1;
     mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
     mutable std::vector<int> _tmp_int_vector;
+    mutable Eigen::MatrixXd _tmp_postural_jacob;
 
     using XBotInterface::getTemperature;
     using XBotInterface::setTemperature;
