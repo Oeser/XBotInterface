@@ -758,6 +758,12 @@ int XBot::ModelInterface::getActuatedJointNum() const
 }
 
 
+bool XBot::ModelInterface::setFloatingBaseTwist(const Eigen::Vector6d& floating_base_twist)
+{
+    tf::twistEigenToKDL(floating_base_twist, _tmp_kdl_twist);
+    return setFloatingBaseTwist(_tmp_kdl_twist);
+}
+
 
 
 

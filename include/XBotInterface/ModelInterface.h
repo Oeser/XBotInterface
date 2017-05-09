@@ -227,6 +227,14 @@ public:
     virtual bool setFloatingBasePose( const KDL::Frame& floating_base_pose ) = 0;
 
     /**
+    * @brief Sets the floating base twist w.r.t. the world frame
+    *
+    * @param floating_base_twist The twist of the floating base w.r.t. the world
+    * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
+    */
+    virtual bool setFloatingBaseTwist( const KDL::Twist& floating_base_twist ) = 0;
+
+    /**
     * @brief Computes the pose of the source_frame w.r.t. the world frame
     *
     * @param source_frame The source link name.
@@ -580,6 +588,15 @@ public:
     * @return True if the floating_base_pose frame is valid. False otherwise.
     */
     bool setFloatingBasePose( const Eigen::Affine3d& floating_base_pose );
+
+    /**
+    * @brief Sets the floating base twist w.r.t. the world frame
+    *
+    * @param floating_base_twist The twist of the floating base w.r.t. the world
+    * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
+    */
+    virtual bool setFloatingBaseTwist( const Eigen::Vector6d& floating_base_twist );
+
 
     /**
     * @brief Computes the pose of the target_frame w.r.t. the source_frame

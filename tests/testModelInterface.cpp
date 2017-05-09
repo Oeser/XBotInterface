@@ -405,6 +405,35 @@ TEST_F( testModelInterface, checkSetFloatingBasePose ){
 
 }
 
+TEST_F( testModelInterface, checkSetFloatingBasePoseTwist ){
+
+
+    for(int i = 0; i < 100; i++){
+
+        Eigen::Vector6d twist, actual_twist;
+        Eigen::VectorXd q, qdot;
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        twist.setRandom();
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+        fb_model_ptr->setFloatingBaseTwist(twist);
+        fb_model_ptr->update();
+
+        fb_model_ptr->getVelocityTwist("pelvis", actual_twist);
+
+//         std::cout << "****\n" << twist << "\n**\n" << actual_twist << std::endl;
+
+        EXPECT_NEAR( (twist-actual_twist).norm(), 0, 0.0001 );
+
+    }
+
+
+}
+
 int main ( int argc, char **argv )
 {
      testing::InitGoogleTest ( &argc, argv );
