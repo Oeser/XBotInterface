@@ -13,17 +13,19 @@ virtual void SetUp(){
     std::string relative_path = "/external/XBotInterface/tests/configs/centauro/configs/config_centauro_upperbody.yaml";
 
     path_to_cfg = robotology_root + relative_path;
+    path_to_full_body_cfg = robotology_root + "/external/XBotInterface/tests/configs/centauro/configs/config_centauro_full_body.yaml";
 
     std::cout << "PATH TO CFG: " << path_to_cfg << std::endl;
 
     model_ptr = XBot::ModelInterface::getModel(path_to_cfg);
+    fb_model_ptr = XBot::ModelInterface::getModel(path_to_full_body_cfg);
 
 }
 
 virtual void TearDown(){}
 
-XBot::ModelInterface::Ptr model_ptr;
-std::string path_to_cfg;
+XBot::ModelInterface::Ptr model_ptr, fb_model_ptr;
+std::string path_to_cfg, path_to_full_body_cfg;
 
 };
 
@@ -368,8 +370,37 @@ TEST_F( testModelInterface, checkJdotQdot ){
 
     }
 
+}
+
+TEST_F( testModelInterface, checkSetFloatingBasePose ){
 
 
+    for(int i = 0; i < 100; i++){
+
+        Eigen::AngleAxisd rot;
+
+        rot.axis().setRandom();
+        rot.axis() /= rot.axis().norm();
+
+        Eigen::Matrix2d random;
+        random.setRandom();
+        rot.angle() = random(0);
+
+        Eigen::Affine3d pose;
+        pose.linear() = rot.toRotationMatrix();
+        pose.translation().setRandom();
+
+        fb_model_ptr->setFloatingBasePose(pose);
+        fb_model_ptr->update();
+
+        Eigen::Affine3d actual_pose;
+        fb_model_ptr->getPose("pelvis", actual_pose);
+
+//         std::cout << "****\n" << pose.matrix() << "\n" << actual_pose.matrix() << std::endl;
+
+        EXPECT_TRUE( pose.isApprox(actual_pose, 0.0001) );
+
+    }
 
 
 }
