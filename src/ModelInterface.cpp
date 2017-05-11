@@ -79,6 +79,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         return false;
     }
 
+
     return true;
 
 }
@@ -86,9 +87,24 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
 // NOTE check always in the YAML to avoid static issue
 bool XBot::ModelInterface::isFloatingBase() const
 {
+    return _is_floating_base;
+}
+
+
+XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
+{
+    // Model instance to return
+    ModelInterface::Ptr instance_ptr;
+    std::map<std::string, std::string> vars;
+
+    // parsing YAML
+    if (!parseYAML(path_to_cfg, vars)) {
+        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
+        return instance_ptr;
+    }
+
     // check model floating base
     bool is_model_floating_base;
-    std::string path_to_cfg = getPathToConfig();
      // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
     YAML::Node x_bot_interface;
@@ -105,24 +121,6 @@ bool XBot::ModelInterface::isFloatingBase() const
     else {
         std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
     }
-    return is_model_floating_base;
-}
-
-
-XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
-{
-    // Model instance to return
-    ModelInterface::Ptr instance_ptr;
-    std::map<std::string, std::string> vars;
-
-    // parsing YAML
-    if (!parseYAML(path_to_cfg, vars)) {
-        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
-        return instance_ptr;
-    }
-
-
-
 
     // loading the requested robot interface
     _model_interface_factory.open( vars.at("path_to_shared_lib").c_str(),
@@ -142,9 +140,12 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
 
     // open and init robot interface
     model_instance.open(_model_interface_factory);
+    model_instance.getContent()._is_floating_base = is_model_floating_base;
     model_instance->init(path_to_cfg, any_map);
     // static instance of the robot interface
     instance_ptr = std::shared_ptr<ModelInterface>(&model_instance.getContent(), [](ModelInterface* ptr){return;});
+
+
 
     return instance_ptr;
 }

@@ -889,6 +889,8 @@ private:
     static shlibpp::SharedLibraryClassFactory<ModelInterface> _model_interface_factory;
     static std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<ModelInterface> > > _model_interface_instance;
 
+    bool _is_floating_base;
+
     using XBotInterface::_ordered_chain_names;
     std::map<int, int> _joint_id_to_model_id;
 
