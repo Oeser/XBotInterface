@@ -43,9 +43,18 @@ inline Eigen::Matrix3d skewSymmetricMatrix(const Eigen::Vector3d& v){
 }
 
 
+/**
+ * @brief Computes an orientation error between two frames such that
+ * an angular velocity K*e (K > 0) brings "actual" towards "ref"
+ *
+ * @param ref Reference orientation
+ * @param actual Current orientation
+ * @param error The orientation error between ref and actual
+ * @return void
+ */
 inline void computeOrientationError(const Eigen::Matrix3d& ref,
-                             const Eigen::Matrix3d& actual,
-                             Eigen::Vector3d& error)
+                                    const Eigen::Matrix3d& actual,
+                                    Eigen::Vector3d& error)
 {
 
     Eigen::Quaterniond q(actual), q_d(ref);
@@ -60,6 +69,99 @@ inline void computeOrientationError(const Eigen::Matrix3d& ref,
     error = q.w()*q_d.vec() - q_d.w()*q.vec() - q_d.vec().cross(q.vec());
 
 }
+
+template <typename SignalType>
+class SecondOrderFilter {
+
+public:
+
+    typedef std::shared_ptr<SecondOrderFilter<SignalType>> Ptr;
+
+    SecondOrderFilter():
+        _omega(1.0),
+        _eps(0.8),
+        _ts(0.01)
+    {
+        computeCoeff();
+    }
+
+    SecondOrderFilter(double omega, double eps, double ts, const SignalType& initial_state):
+        _omega(omega),
+        _eps(eps),
+        _ts(ts)
+    {
+        computeCoeff();
+        reset(initial_state);
+    }
+
+    void reset(const SignalType& initial_state){
+        _u = initial_state;
+        _y = initial_state;
+        _yd = initial_state*0;
+        _ydd = initial_state*0;
+        _udd = initial_state*0;
+        _ud = initial_state*0;
+    }
+
+    const SignalType& process(const SignalType& input){
+
+
+        _ydd = _yd;
+        _yd = _y;
+        _udd = _ud;
+        _ud = _u;
+
+
+        _u = input;
+        _y = 1.0/_a0 * ( _u + _b1*_ud + _b2*_udd - _a1*_yd - _a2*_ydd );
+
+        return _y;
+    }
+
+    const SignalType& getOutput() const {
+        return _y;
+    }
+
+    void setOmega(double omega){
+        _omega = omega;
+        computeCoeff();
+    }
+
+    void setDamping(double eps){
+        _eps = eps;
+        computeCoeff();
+    }
+
+    void setTimeStep(double ts){
+        _ts = ts;
+        computeCoeff();
+    }
+
+
+private:
+
+    void computeCoeff(){
+        _b1 = 2.0;
+        _b2 = 1.0;
+
+        _a0 = 1.0 + 4.0*_eps/(_omega*_ts) + 4.0/std::pow(_omega*_ts, 2.0);
+        _a1 = 2 - 8.0/std::pow(_omega*_ts, 2.0);
+        _a2 = 1.0 + 4.0/std::pow(_omega*_ts, 2.0) - 4.0*_eps/(_omega*_ts);
+
+        std::cout << "Coeffs: " << 1.0/_a0 << " -- " << _b1/_a0 << " -- " << _b2/_a0 << "\n" <<
+        1.0 << " -- " << _a1/_a0 << " -- " << _a2/_a0 << std::endl;
+    }
+
+    double _omega;
+    double _eps;
+    double _ts;
+
+    double _b1, _b2;
+    double _a0, _a1, _a2;
+
+    SignalType _y, _yd, _ydd, _u, _ud, _udd;
+
+};
 
 
 }
