@@ -176,7 +176,7 @@ install_basic_package_files(XBotInterface VARS_PREFIX ${VARS_PREFIX}
 include(AddUninstallTarget)
 
 # doc
-optional_build(doc doc ON)
+optional_build(docs docs ON)
 # examples
 optional_build(examples examples ON)
 
