@@ -1,0 +1,6 @@
+<map id="XBot::SSLogger" name="XBot::SSLogger">
+<area shape="rect" id="node2" href="$classXBot_1_1SSConsoleLogger.html" title="{XBot::SSConsoleLogger\n||+ SSConsoleLogger()\l}" alt="" coords="13,277,177,355"/>
+<area shape="rect" id="node4" href="$classXBot_1_1SSFileLogger.html" title="{XBot::SSFileLogger\n||+ SSFileLogger()\l}" alt="" coords="207,277,344,355"/>
+<area shape="rect" id="node3" href="$classXBot_1_1SPDConsoleLogger.html" title="{XBot::SPDConsoleLogger\n||+ SPDConsoleLogger()\l# info_internal()\l# warning_internal()\l# error_internal()\l}" alt="" coords="5,403,180,524"/>
+<area shape="rect" id="node5" href="$classXBot_1_1SPDFileLogger.html" title="{XBot::SPDFileLogger\n||+ SPDFileLogger()\l# info_internal()\l# warning_internal()\l# error_internal()\l}" alt="" coords="205,403,351,524"/>
+</map>

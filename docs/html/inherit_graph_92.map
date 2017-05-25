@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classXBot_1_1GenericSensor.html" title="Generic sensor abstraction. " alt="" coords="5,31,151,57"/>
+<area shape="rect" id="node2" href="$classXBot_1_1ForceTorqueSensor.html" title="Force &#45; Torque sensor abstraction: " alt="" coords="199,5,372,32"/>
+<area shape="rect" id="node3" href="$classXBot_1_1ImuSensor.html" title="XBot::ImuSensor" alt="" coords="224,56,347,83"/>
+</map>

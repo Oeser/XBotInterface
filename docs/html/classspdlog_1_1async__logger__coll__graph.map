@@ -1,0 +1,5 @@
+<map id="spdlog::async_logger" name="spdlog::async_logger">
+<area shape="rect" id="node2" href="$classspdlog_1_1logger.html" title="{spdlog::logger\n|# _formatter\l# _level\l# _flush_level\l# _err_handler\l# _last_err_time\l|+ logger()\l+ logger()\l+ logger()\l+ ~logger()\l+ logger()\l+ operator=()\l+ log()\l+ log()\l+ trace()\l+ debug()\land 22 more...\l# _sink_it()\l# _set_pattern()\l# _set_formatter()\l# _default_err_handler()\l# _should_flush_on()\l}" alt="" coords="58,287,217,643"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="184,147,264,224"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="161,5,287,97"/>
+</map>

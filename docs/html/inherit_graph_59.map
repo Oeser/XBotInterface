@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structfmt_1_1internal_1_1Value.html" title="fmt::internal::Value" alt="" coords="5,78,137,105"/>
+<area shape="rect" id="node2" href="$structfmt_1_1internal_1_1Arg.html" title="fmt::internal::Arg" alt="" coords="185,78,304,105"/>
+<area shape="rect" id="node3" href="$classfmt_1_1internal_1_1MakeArg.html" title="fmt::internal::MakeArg\l\&lt; Formatter \&gt;" alt="" coords="359,5,509,47"/>
+<area shape="rect" id="node4" href="$classfmt_1_1internal_1_1MakeValue.html" title="fmt::internal::MakeValue\l\&lt; Formatter \&gt;" alt="" coords="352,71,516,112"/>
+<area shape="rect" id="node5" href="$structfmt_1_1internal_1_1NamedArg.html" title="fmt::internal::NamedArg\l\&lt; Char \&gt;" alt="" coords="353,136,515,177"/>
+<area shape="rect" id="node6" href="$structfmt_1_1internal_1_1NamedArgWithType.html" title="fmt::internal::NamedArgWith\lType\&lt; Char, T \&gt;" alt="" coords="564,136,752,177"/>
+</map>

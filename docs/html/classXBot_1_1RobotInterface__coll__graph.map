@@ -1,0 +1,5 @@
+<map id="XBot::RobotInterface" name="XBot::RobotInterface">
+<area shape="rect" id="node2" href="$classXBot_1_1XBotInterface.html" title="{XBot::XBotInterface\n|# _XBotModel\l|+ XBotInterface()\l+ XBotInterface()\l+ operator=()\l+ ~XBotInterface()\l+ init()\l+ getPathToConfig()\l+ getUrdf()\l+ getUrdfPath()\l+ getSrdf()\l+ getSrdfPath()\land 122 more...\l# getJointByNameInternal()\l# getJointByIdInternal()\l# getJointByDofIndexInternal()\l# getForceTorqueInternal()\l# getImuInternal()\l# init_internal()\l# getModelOrderedChainName()\l# computeAbsolutePath()\l}" alt="" coords="748,485,957,827"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="419,147,499,224"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="396,5,523,97"/>
+</map>

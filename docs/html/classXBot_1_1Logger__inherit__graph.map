@@ -1,0 +1,4 @@
+<map id="XBot::Logger" name="XBot::Logger">
+<area shape="rect" id="node2" href="$classXBot_1_1ConsoleLogger.html" title="{XBot::ConsoleLogger\n||+ getLogger()\l}" alt="" coords="5,175,152,252"/>
+<area shape="rect" id="node3" href="$classXBot_1_1FileLogger.html" title="{XBot::FileLogger\n||+ getLogger()\l}" alt="" coords="177,175,295,252"/>
+</map>

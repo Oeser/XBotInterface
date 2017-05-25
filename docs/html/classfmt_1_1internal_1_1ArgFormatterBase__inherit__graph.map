@@ -1,0 +1,5 @@
+<map id="fmt::internal::ArgFormatterBase&lt; Impl, Char &gt;" name="fmt::internal::ArgFormatterBase&lt; Impl, Char &gt;">
+<area shape="rect" id="node3" href="$classfmt_1_1BasicArgFormatter.html" title="An argument formatter based on the curiously recurring template pattern &lt;http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern&gt;_. " alt="" coords="5,637,164,744"/>
+<area shape="rect" id="node4" href="$classfmt_1_1BasicPrintfArgFormatter.html" title="A printf argument formatter based on the curiously recurring template pattern &lt;http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern&gt;_. " alt="" coords="189,608,378,773"/>
+<area shape="rect" id="node2" href="$classfmt_1_1ArgVisitor.html" title="{fmt::ArgVisitor\&lt; Impl,\l void \&gt;\n||+ report_unhandled_arg()\l+ visit_unhandled_arg()\l+ visit_int()\l+ visit_long_long()\l+ visit_uint()\l+ visit_ulong_long()\l+ visit_bool()\l+ visit_char()\l+ visit_any_int()\l+ visit_double()\land 8 more...\l}" alt="" coords="100,5,267,244"/>
+</map>

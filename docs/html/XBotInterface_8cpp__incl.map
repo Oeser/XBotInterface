@@ -1,0 +1,24 @@
+<map id="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/src/XBotInterface.cpp" name="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/src/XBotInterface.cpp">
+<area shape="rect" id="node2" href="$XBotInterface_8h.html" title="XBotInterface/XBotInterface.h" alt="" coords="380,109,577,136"/>
+<area shape="rect" id="node9" href="$KinematicChain_8h.html" title="XBotInterface/KinematicChain.h" alt="" coords="471,423,681,449"/>
+<area shape="rect" id="node16" href="$TypedefAndEnums_8h.html" title="XBotInterface/TypedefAnd\lEnums.h" alt="" coords="245,676,421,717"/>
+<area shape="rect" id="node31" href="$Logger_8hpp.html" title="XBotInterface/Logger.hpp" alt="" coords="1951,184,2121,211"/>
+<area shape="rect" id="node13" href="$Joint_8h.html" title="XBotInterface/Joint.h" alt="" coords="1371,505,1517,531"/>
+<area shape="rect" id="node25" href="$ForceTorqueSensor_8h.html" title="XBotInterface/ForceTorque\lSensor.h" alt="" coords="684,497,863,539"/>
+<area shape="rect" id="node30" href="$ImuSensor_8h.html" title="XBotInterface/ImuSensor.h" alt="" coords="479,505,659,531"/>
+<area shape="rect" id="node15" href="$SyncFlags_8h.html" title="XBotInterface/SyncFlags.h" alt="" coords="608,594,787,621"/>
+<area shape="rect" id="node19" href="$table__printer_8h.html" title="bprinter/table_printer.h" alt="" coords="1291,594,1442,621"/>
+<area shape="rect" id="node24" href="$ControlMode_8h.html" title="XBotInterface/ControlMode.h" alt="" coords="1721,594,1911,621"/>
+<area shape="rect" id="node23" href="$table__printer_8tpp_8h.html" title="impl/table_printer.tpp.h" alt="" coords="1416,683,1571,710"/>
+<area shape="rect" id="node29" href="$GenericSensor_8h.html" title="XBotInterface/GenericSensor.h" alt="" coords="811,594,1013,621"/>
+<area shape="rect" id="node33" href="$spdlog_8h.html" title="spdlog/spdlog.h" alt="" coords="2853,259,2966,285"/>
+<area shape="rect" id="node34" href="$tweakme_8h.html" title="spdlog/tweakme.h" alt="" coords="2600,341,2728,367"/>
+<area shape="rect" id="node35" href="$common_8h.html" title="spdlog/common.h" alt="" coords="2955,683,3080,710"/>
+<area shape="rect" id="node43" href="$logger_8h.html" title="spdlog/logger.h" alt="" coords="2465,505,2575,531"/>
+<area shape="rect" id="node46" href="$spdlog__impl_8h.html" title="spdlog/details/spdlog\l_impl.h" alt="" coords="3040,333,3184,375"/>
+<area shape="rect" id="node41" href="$null__mutex_8h.html" title="spdlog/details/null\l_mutex.h" alt="" coords="3049,765,3175,807"/>
+<area shape="rect" id="node42" href="$fmt_8h.html" title="spdlog/fmt/fmt.h" alt="" coords="2631,773,2748,799"/>
+<area shape="rect" id="node44" href="$base__sink_8h.html" title="spdlog/sinks/base_sink.h" alt="" coords="2558,594,2727,621"/>
+<area shape="rect" id="node45" href="$logger__impl_8h.html" title="spdlog/details/logger\l_impl.h" alt="" coords="2341,587,2483,628"/>
+<area shape="rect" id="node47" href="$registry_8h.html" title="spdlog/details/registry.h" alt="" coords="3040,423,3200,449"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$structXBot_1_1FSM_1_1Message.html" title="Base class for defining custom messages that can be processed by the states during the entry phase..." alt="" coords="5,5,153,32"/>
+<area shape="rect" id="node2" href="$structXBot_1_1FSM_1_1Event.html" title="Base class for defining custom events which states can react to. " alt="" coords="201,5,331,32"/>
+</map>

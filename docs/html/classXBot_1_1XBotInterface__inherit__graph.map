@@ -1,0 +1,4 @@
+<map id="XBot::XBotInterface" name="XBot::XBotInterface">
+<area shape="rect" id="node2" href="$classXBot_1_1ModelInterface.html" title="ModelInterface is an abstraction layer for a kinematic/dynamic model of a robot. " alt="" coords="5,549,172,846"/>
+<area shape="rect" id="node3" href="$classXBot_1_1RobotInterface.html" title="{XBot::RobotInterface\n||+ RobotInterface()\l+ model()\l+ operator=()\l+ RobotInterface()\l+ getTime()\l+ isRunning()\l+ sense()\l+ move()\l+ operator()()\l+ chain()\land 11 more...\l+ getRobot()\l# sense_internal()\l# move_internal()\l# read_sensors()\l# init_robot()\l# set_control_mode_internal()\l}" alt="" coords="196,541,389,853"/>
+</map>

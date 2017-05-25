@@ -1,0 +1,14 @@
+<map id="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/spdlog/logger.h" name="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/spdlog/logger.h">
+<area shape="rect" id="node2" href="$base__sink_8h.html" title="spdlog/sinks/base_sink.h" alt="" coords="434,303,603,329"/>
+<area shape="rect" id="node5" href="$common_8h.html" title="spdlog/common.h" alt="" coords="392,705,517,732"/>
+<area shape="rect" id="node38" href="$logger__impl_8h.html" title="spdlog/details/logger\l_impl.h" alt="" coords="761,124,903,165"/>
+<area shape="rect" id="node3" href="$sink_8h.html" title="spdlog/sinks/sink.h" alt="" coords="346,459,481,486"/>
+<area shape="rect" id="node4" href="$log__msg_8h.html" title="spdlog/details/log\l_msg.h" alt="" coords="396,541,519,583"/>
+<area shape="rect" id="node35" href="$formatter_8h.html" title="spdlog/formatter.h" alt="" coords="1337,377,1463,404"/>
+<area shape="rect" id="node26" href="$os_8h.html" title="spdlog/details/os.h" alt="" coords="960,631,1091,657"/>
+<area shape="rect" id="node13" href="$null__mutex_8h.html" title="spdlog/details/null\l_mutex.h" alt="" coords="714,780,841,821"/>
+<area shape="rect" id="node14" href="$fmt_8h.html" title="spdlog/fmt/fmt.h" alt="" coords="296,787,413,814"/>
+<area shape="rect" id="node15" href="$format_8h.html" title="spdlog/fmt/bundled\l/format.h" alt="" coords="726,869,858,911"/>
+<area shape="rect" id="node36" href="$pattern__formatter__impl_8h.html" title="spdlog/details/pattern\l_formatter_impl.h" alt="" coords="1327,452,1473,493"/>
+<area shape="rect" id="node39" href="$stdout__sinks_8h.html" title="spdlog/sinks/stdout\l_sinks.h" alt="" coords="1231,213,1366,255"/>
+</map>

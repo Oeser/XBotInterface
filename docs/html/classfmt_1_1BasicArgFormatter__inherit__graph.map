@@ -1,0 +1,4 @@
+<map id="fmt::BasicArgFormatter&lt; Impl, Char &gt;" name="fmt::BasicArgFormatter&lt; Impl, Char &gt;">
+<area shape="rect" id="node2" href="$classfmt_1_1internal_1_1ArgFormatterBase.html" title="{fmt::internal::ArgFormatter\lBase\&lt; Impl, Char \&gt;\n||+ ArgFormatterBase()\l+ visit_any_int()\l+ visit_any_double()\l+ visit_bool()\l+ visit_char()\l+ visit_cstring()\l+ visit_string()\l+ visit_wstring()\l+ visit_pointer()\l# writer()\l# spec()\l# write()\l# write()\l}" alt="" coords="5,292,180,560"/>
+<area shape="rect" id="node3" href="$classfmt_1_1ArgVisitor.html" title="{fmt::ArgVisitor\&lt; Impl,\l void \&gt;\n||+ report_unhandled_arg()\l+ visit_unhandled_arg()\l+ visit_int()\l+ visit_long_long()\l+ visit_uint()\l+ visit_ulong_long()\l+ visit_bool()\l+ visit_char()\l+ visit_any_int()\l+ visit_double()\land 8 more...\l}" alt="" coords="9,5,176,244"/>
+</map>

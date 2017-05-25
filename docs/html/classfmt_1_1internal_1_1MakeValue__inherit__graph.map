@@ -1,0 +1,4 @@
+<map id="fmt::internal::MakeValue&lt; Formatter &gt;" name="fmt::internal::MakeValue&lt; Formatter &gt;">
+<area shape="rect" id="node2" href="$structfmt_1_1internal_1_1Arg.html" title="{fmt::internal::Arg\n|+ type\l|}" alt="" coords="28,307,147,384"/>
+<area shape="rect" id="node3" href="$structfmt_1_1internal_1_1Value.html" title="{fmt::internal::Value\n|+ int_value\l+ uint_value\l+ long_long_value\l+ ulong_long_value\l+ double_value\l+ long_double_value\l+ pointer\l+ string\l+ sstring\l+ ustring\l+ wstring\l+ custom\l+ @3\l|}" alt="" coords="17,5,158,259"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="spdlog::sinks::simple_file_sink&lt; Mutex &gt;" name="spdlog::sinks::simple_file_sink&lt; Mutex &gt;">
+<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1base__sink.html" title="{spdlog::sinks::base\l_sink\&lt; Mutex \&gt;\n|# _mutex\l|+ base_sink()\l+ ~base_sink()\l+ base_sink()\l+ operator=()\l+ log()\l# _sink_it()\l}" alt="" coords="11,219,145,384"/>
+<area shape="rect" id="node3" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="13,5,143,171"/>
+</map>

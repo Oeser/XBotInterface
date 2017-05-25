@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title="STL class. " alt="" coords="5,31,109,57"/>
+<area shape="rect" id="node2" href="$classspdlog_1_1spdlog__ex.html" title="spdlog::spdlog_ex" alt="" coords="157,5,284,32"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="159,56,283,83"/>
+<area shape="rect" id="node4" href="$classfmt_1_1FormatError.html" title="A formatting error such as invalid format string. " alt="" coords="361,31,479,57"/>
+<area shape="rect" id="node5" href="$classfmt_1_1internal_1_1RuntimeError.html" title="fmt::internal::RuntimeError" alt="" coords="332,81,508,108"/>
+<area shape="rect" id="node6" href="$classfmt_1_1SystemError.html" title="An error returned by an operating system or a language runtime, for example a file opening error..." alt="" coords="556,81,679,108"/>
+</map>

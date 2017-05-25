@@ -1,0 +1,4 @@
+<map id="XBot::GenericSensor" name="XBot::GenericSensor">
+<area shape="rect" id="node2" href="$classXBot_1_1ForceTorqueSensor.html" title="Force &#45; Torque sensor abstraction: " alt="" coords="5,233,179,457"/>
+<area shape="rect" id="node3" href="$classXBot_1_1ImuSensor.html" title="{XBot::ImuSensor\n||+ ImuSensor()\l+ ImuSensor()\l+ getOrientation()\l+ getOrientation()\l+ getLinearAcceleration()\l+ getAngularVelocity()\l+ getImuData()\l+ getImuData()\l+ setImuData()\l+ setImuData()\l}" alt="" coords="203,241,370,450"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="spdlog::sinks::wincolor_stderr_sink&lt; Mutex &gt;" name="spdlog::sinks::wincolor_stderr_sink&lt; Mutex &gt;">
+<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1wincolor__sink.html" title="{spdlog::sinks::wincolor\l_sink\&lt; Mutex \&gt;\n|+ BOLD\l+ RED\l+ CYAN\l+ WHITE\l+ YELLOW\l|+ wincolor_sink()\l+ ~wincolor_sink()\l+ wincolor_sink()\l+ operator=()\l+ _sink_it()\l+ flush()\l+ set_color()\l}" alt="" coords="9,432,163,671"/>
+<area shape="rect" id="node3" href="$classspdlog_1_1sinks_1_1base__sink.html" title="{spdlog::sinks::base\l_sink\&lt; Mutex \&gt;\n|# _mutex\l|+ base_sink()\l+ ~base_sink()\l+ base_sink()\l+ operator=()\l+ log()\l# _sink_it()\l}" alt="" coords="19,219,153,384"/>
+<area shape="rect" id="node4" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="21,5,151,171"/>
+</map>

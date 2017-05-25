@@ -1,0 +1,5 @@
+<map id="fmt::ArgFormatter&lt; Char &gt;" name="fmt::ArgFormatter&lt; Char &gt;">
+<area shape="rect" id="node2" href="$classfmt_1_1BasicArgFormatter.html" title="{fmt::BasicArgFormatter\l\&lt; ArgFormatter\&lt; Char \&gt;\l, Char \&gt;\n||+ BasicArgFormatter()\l+ visit_custom()\l}" alt="" coords="21,623,184,744"/>
+<area shape="rect" id="node3" href="$classfmt_1_1internal_1_1ArgFormatterBase.html" title="{fmt::internal::ArgFormatter\lBase\&lt; ArgFormatter\&lt; Char\l \&gt;, Char \&gt;\n||+ ArgFormatterBase()\l+ visit_any_int()\l+ visit_any_double()\l+ visit_bool()\l+ visit_char()\l+ visit_cstring()\l+ visit_string()\l+ visit_wstring()\l+ visit_pointer()\l# writer()\l# spec()\l# write()\l# write()\l}" alt="" coords="13,292,193,575"/>
+<area shape="rect" id="node4" href="$classfmt_1_1ArgVisitor.html" title="{fmt::ArgVisitor\&lt; ArgFormatter\l\&lt; Char \&gt;, void \&gt;\n||+ report_unhandled_arg()\l+ visit_unhandled_arg()\l+ visit_int()\l+ visit_long_long()\l+ visit_uint()\l+ visit_ulong_long()\l+ visit_bool()\l+ visit_char()\l+ visit_any_int()\l+ visit_double()\land 8 more...\l}" alt="" coords="5,5,200,244"/>
+</map>
