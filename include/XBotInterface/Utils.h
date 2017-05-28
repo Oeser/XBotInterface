@@ -23,7 +23,8 @@
 
 #include <XBotInterface/ModelInterface.h>
 
-namespace XBot { namespace Utils {
+namespace XBot { 
+    namespace Utils {
 
 /**
     * @brief Computes a matrix S such that S(a)b = a x b
@@ -80,7 +81,8 @@ public:
     SecondOrderFilter():
         _omega(1.0),
         _eps(0.8),
-        _ts(0.01)
+        _ts(0.01),
+        _reset_has_been_called(false)
     {
         computeCoeff();
     }
@@ -88,13 +90,15 @@ public:
     SecondOrderFilter(double omega, double eps, double ts, const SignalType& initial_state):
         _omega(omega),
         _eps(eps),
-        _ts(ts)
+        _ts(ts),
+        _reset_has_been_called(false)
     {
         computeCoeff();
         reset(initial_state);
     }
 
     void reset(const SignalType& initial_state){
+        _reset_has_been_called = true;
         _u = initial_state;
         _y = initial_state;
         _yd = initial_state*0;
@@ -105,6 +109,8 @@ public:
 
     const SignalType& process(const SignalType& input){
 
+        if(!_reset_has_been_called) reset(input*0);
+        
 
         _ydd = _yd;
         _yd = _y;
@@ -158,13 +164,16 @@ private:
 
     double _b1, _b2;
     double _a0, _a1, _a2;
+    
+    bool _reset_has_been_called;
 
     SignalType _y, _yd, _ydd, _u, _ud, _udd;
 
 };
 
 
-}
+    }
 
+}
 
 #endif
