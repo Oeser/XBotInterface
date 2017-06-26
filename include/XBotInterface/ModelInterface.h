@@ -323,9 +323,24 @@ public:
      *
      * @param link_name The link name
      * @param J  The Jacobian expressed in the world frame
+     * @return True if the link_name and target_frame are valid link names. False otherwise.
+     */
+    bool getJacobian( const std::string& link_name,
+                      KDL::Jacobian& J) const;
+
+    /**
+     * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
+     * the derivative of the configuration vector gives the velocity twist of link_name according to target_frame
+     * (i.e. first linear then angular velocity).
+     * The reference point is the origin of the link with link_name name.
+     *
+     * @param link_name The link name
+     * @param target_frame The target frame name
+     * @param J  The Jacobian expressed in the world frame
      * @return True if the link_name is a valid link name. False otherwise.
      */
     bool getJacobian( const std::string& link_name,
+                      const std::string& target_frame,
                       KDL::Jacobian& J) const;
 
     /**
@@ -675,6 +690,21 @@ public:
      */
     bool getJacobian( const std::string& link_name,
                       Eigen::MatrixXd& J);
+
+    /**
+     * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
+     * the derivative of the configuration vector gives the velocity twist of link_name according to target_frame
+     * (i.e. first linear then angular velocity).
+     * The reference point is the origin of the link with link_name name.
+     *
+     * @param link_name The link name
+     * @param target_frame The target frame name
+     * @param J  The Jacobian expressed in the world frame
+     * @return True if the link_name is a valid link name. False otherwise.
+     */
+    bool getJacobian( const std::string& link_name,
+                      const std::string& target_frame,
+                      Eigen::MatrixXd& J) const;
 
     /**
      * @brief Gets the Jacobian of link_name expressed in the world frame, i.e a matrix such that its product with

@@ -766,6 +766,27 @@ bool XBot::ModelInterface::setFloatingBaseTwist(const Eigen::Vector6d& floating_
 }
 
 
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const std::string& target_frame,
+                                       KDL::Jacobian& J) const
+{
+    bool success = getJacobian(link_name, J);
+    success = getOrientation(target_frame, _tmp_kdl_rotation) && success;
+    J.changeBase(_tmp_kdl_rotation.Inverse());
+    return success;
+}
+
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const std::string& target_frame,
+                                       Eigen::MatrixXd& J) const
+{
+    bool success = getJacobian(link_name, target_frame, _tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+    return success;
+}
+
+
+
 
 
 

@@ -434,6 +434,46 @@ TEST_F( testModelInterface, checkSetFloatingBasePoseTwist ){
 
 }
 
+
+TEST_F( testModelInterface, checkLocalJacobian ){
+
+
+    std::vector<urdf::LinkSharedPtr> links;
+    fb_model_ptr->getUrdf().getLinks(links);
+
+    for(int i = 0; i < links.size(); i++){
+
+        std::string link_name = links[i]->name;
+
+        Eigen::MatrixXd J1, J2;
+        Eigen::VectorXd q;
+        q.setRandom(fb_model_ptr->getJointNum());
+
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->update();
+
+        ASSERT_TRUE(fb_model_ptr->getJacobian(link_name, J1));
+        ASSERT_TRUE(fb_model_ptr->getJacobian(link_name, link_name, J2));
+
+        Eigen::Matrix3d w_R_link;
+        fb_model_ptr->getOrientation(link_name, w_R_link);
+        Eigen::MatrixXd w_I_link(6,6);
+
+        w_I_link << w_R_link, Eigen::Matrix3d::Zero(),
+                    Eigen::Matrix3d::Zero(), w_R_link;
+
+        J1 = w_I_link.transpose() * J1;
+
+
+
+        EXPECT_NEAR( (J1 - J2).norm(), 0, 0.0001 );
+
+    }
+
+
+}
+
 int main ( int argc, char **argv )
 {
      testing::InitGoogleTest ( &argc, argv );
