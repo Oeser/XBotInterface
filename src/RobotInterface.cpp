@@ -140,6 +140,7 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 
 bool XBot::RobotInterface::sense(bool sync_model)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     bool sense_ok = sense_internal();
     bool sensors_ok = read_sensors();
     _ts_rx = getTime();
@@ -152,6 +153,7 @@ bool XBot::RobotInterface::sense(bool sync_model)
 
 bool XBot::RobotInterface::move()
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     _ts_tx = getTime();
     return move_internal();
 }

@@ -31,6 +31,9 @@
 #include <XBotInterface/ModelInterface.h>
 #include <XBotInterface/RobotChain.h>
 
+#include <thread>
+#include <mutex>
+
 namespace XBot
 {
 
@@ -262,6 +265,8 @@ private:
 
     double _ts_rx;
     double _ts_tx;
+    
+    std::mutex _mutex;  // protects sense / move
 
 
 
