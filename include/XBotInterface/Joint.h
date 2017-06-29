@@ -22,10 +22,12 @@
 
 #include <string>
 #include <memory>
+#include <atomic>
 #include <iostream>
 #include <srdfdom_advr/model.h>
 #include <XBotInterface/SyncFlags.h>
 #include <bprinter/table_printer.h>
+
 
 
 #include <XBotInterface/ControlMode.h>
@@ -76,6 +78,20 @@ public:
           int joint_id,
           urdf::JointConstSharedPtr urdf_joint,
           const std::string &chain_name);
+    
+        
+    /**
+     * @brief Copy constructor
+     *
+     */
+    Joint(const Joint& j);
+    
+    /**
+     * @brief operator =
+     *
+     */
+    const Joint& operator=(const Joint& j);
+
 
     /**
      * @brief Getter for the joint name
@@ -470,6 +486,7 @@ protected:
 
 
 private:
+     
     ////////////////
     // Joint info //
     ////////////////
@@ -484,7 +501,7 @@ private:
      * @brief the id of the joint
      *
      */
-    int _joint_id;
+    std::atomic<int> _joint_id;
 
     /**
      * @brief the name of the joint
@@ -507,43 +524,43 @@ private:
      * @brief link side encoder reading
      *
      */
-    double _link_pos;
+    std::atomic<double> _link_pos;
 
     /**
      * @brief motor side encoder reading
      *
      */
-    double _motor_pos;
+    std::atomic<double> _motor_pos;
 
     /**
      * @brief link side velocity
      *
      */
-    double _link_vel;
+    std::atomic<double> _link_vel;
 
     /**
      * @brief motor side velocity
      *
      */
-    double _motor_vel;
+    std::atomic<double> _motor_vel;
 
     /**
      * @brief link side acceleration
      *
      */
-    double _link_acc;
+    std::atomic<double> _link_acc;
 
     /**
      * @brief joint effort (generalized force)
      *
      */
-    double _effort;
+    std::atomic<double> _effort;
 
     /**
      * @brief joint temperature
      *
      */
-    double _temperature;
+    std::atomic<double> _temperature;
 
     /////////////////
     // TX to board //
@@ -553,32 +570,33 @@ private:
      * @brief motor side position reference
      *
      */
-    double _pos_ref;
+    std::atomic<double> _pos_ref;
 
     /**
      * @brief velocity reference
      *
      */
-    double _vel_ref;
+    std::atomic<double> _vel_ref;
 
     /**
      * @brief effort (generalized force) reference
      *
      */
-    double _effort_ref;
+    std::atomic<double> _effort_ref;
 
     /**
      * @brief joint stiffness
      *
      */
-    double _stiffness;
+    std::atomic<double> _stiffness;
 
     /**
      * @brief joint damping
      *
      */
-    double _damping;
+    std::atomic<double> _damping;
 
+    // TBD is it needed?
     ControlMode _control_mode;
 
     /**
@@ -609,7 +627,7 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
 {
 
 
-    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
+    if(_joint_name != other._joint_name || _joint_id.load() != other._joint_id.load()){
         std::cerr << "ERROR in " << __func__ << "! Attempt to synchronize joints with different names/ids!" << std::endl;
         return false;
     }
@@ -635,43 +653,43 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
     if(sync_position){
 
         // RX
-        _link_pos = other._link_pos;
-        _motor_pos = other._motor_pos;
+        _link_pos = other._link_pos.load();
+        _motor_pos = other._motor_pos.load();
 
         // TX
-        _pos_ref = other._pos_ref;
+        _pos_ref = other._pos_ref.load();
     }
 
     if(sync_velocity){
 
         // RX
-        _link_vel = other._link_vel;
-        _motor_vel = other._motor_vel;
+        _link_vel = other._link_vel.load();
+        _motor_vel = other._motor_vel.load();
 
         // TX
-        _vel_ref = other._vel_ref;
+        _vel_ref = other._vel_ref.load();
     }
 
     if(sync_acceleration){
 
-        _link_acc = other._link_acc;
+        _link_acc = other._link_acc.load();
     }
 
     if(sync_effort){
 
         // RX
-        _effort = other._effort;
+        _effort = other._effort.load();
 
         // TX
-        _effort_ref = other._effort_ref;
+        _effort_ref = other._effort_ref.load();
     }
 
     if(sync_stiffness){
-        _stiffness = other._stiffness;
+        _stiffness = other._stiffness.load();
     }
 
     if(sync_damping){
-        _damping = other._damping;
+        _damping = other._damping.load();
     }
 
 
@@ -679,7 +697,7 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
     // RX from board //
     ///////////////////
 
-    _temperature = other._temperature;
+    _temperature = other._temperature.load();
 
     return true;
 
@@ -688,7 +706,7 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
 template <typename... SyncFlags>
 bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
 {
-    if(_joint_name != other._joint_name || _joint_id != other._joint_id){
+    if(_joint_name != other._joint_name || _joint_id.load() != other._joint_id.load()){
         std::cerr << "ERROR in " << __func__ << "! Attempt to set reference from joint with different name/id!" << std::endl;
         return false;
     }
@@ -713,19 +731,19 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
     /////////////////
 
     if(sync_position){
-        _pos_ref = other._link_pos;
+        _pos_ref = other._link_pos.load();
     }
     if(sync_velocity){
-        _vel_ref = other._link_vel;
+        _vel_ref = other._link_vel.load();
     }
     if(sync_effort){
-        _effort_ref = other._effort;
+        _effort_ref = other._effort.load();
     }
     if(sync_stiffness){
-        _stiffness = other._stiffness;
+        _stiffness = other._stiffness.load();
     }
     if(sync_damping){
-        _damping = other._damping;
+        _damping = other._damping.load();
     }
 
     return true;

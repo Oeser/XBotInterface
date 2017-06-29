@@ -28,6 +28,59 @@ XBot::Joint::Joint() :
     init();
 }
 
+XBot::Joint::Joint(const XBot::Joint& j)
+{
+    // ATOMIC
+    this->_damping = j._damping.load();
+    this->_effort = j._effort.load();
+    this->_effort_ref = j._effort_ref.load();
+    this->_joint_id = j._joint_id.load();
+    this->_link_acc = j._link_acc.load();
+    this->_link_pos = j._link_pos.load();
+    this->_link_vel = j._link_vel.load();
+    this->_motor_pos = j._motor_pos.load();
+    this->_motor_vel = j._motor_vel.load();
+    this->_pos_ref = j._pos_ref.load();
+    this->_stiffness = j._stiffness.load();
+    this->_temperature = j._temperature.load();
+    this->_vel_ref = j._vel_ref.load();
+    
+    this->_chain_name = j._chain_name;
+    this->_control_mode = j._control_mode;
+    this->_joint_control_type = j._joint_control_type;
+    this->_joint_name = j._joint_name;
+    this->_urdf_joint = j._urdf_joint;
+}
+
+const XBot::Joint& XBot::Joint::operator=(const XBot::Joint& j)
+{
+    // ATOMIC
+    this->_damping = j._damping.load();
+    this->_effort = j._effort.load();
+    this->_effort_ref = j._effort_ref.load();
+    this->_joint_id = j._joint_id.load();
+    this->_link_acc = j._link_acc.load();
+    this->_link_pos = j._link_pos.load();
+    this->_link_vel = j._link_vel.load();
+    this->_motor_pos = j._motor_pos.load();
+    this->_motor_vel = j._motor_vel.load();
+    this->_pos_ref = j._pos_ref.load();
+    this->_stiffness = j._stiffness.load();
+    this->_temperature = j._temperature.load();
+    this->_vel_ref = j._vel_ref.load();
+    
+    this->_chain_name = j._chain_name;
+    this->_control_mode = j._control_mode;
+    this->_joint_control_type = j._joint_control_type;
+    this->_joint_name = j._joint_name;
+    this->_urdf_joint = j._urdf_joint;
+    
+    return *this;
+}
+
+
+
+
 XBot::Joint::Joint ( const std::string& joint_name,
                      int joint_id,
                      urdf::JointConstSharedPtr urdf_joint,
