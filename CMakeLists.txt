@@ -52,7 +52,7 @@ find_package(Eigen3 REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 
-option(BUILD_TESTS "Compile XBotInterface tests" FALSE)
+option(BUILD_TESTS "Compile XBotInterface tests" TRUE)
 
 
 

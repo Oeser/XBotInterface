@@ -5,7 +5,7 @@ set(PROJECTNAME XBot_tests)
 project(${PROJECTNAME})
 
 #TESTS THAT USES GAZEBO
-set(BUILD_SIMULATION_TESTS OFF CACHE BOOL "Flag to compile tests that uses Gazebo")
+set(BUILD_SIMULATION_TESTS ON CACHE BOOL "Flag to compile tests that uses Gazebo")
 
 if (BUILD_SIMULATION_TESTS)
     add_definitions( -DBUILD_SIMULATION_TESTS=true )
@@ -15,7 +15,7 @@ if (BUILD_SIMULATION_TESTS)
     link_directories(${GAZEBO_LIBRARY_DIRS})
     include_directories(${GAZEBO_INCLUDE_DIRS})
 
-    set(XBOT_SIMULATION_TESTS_VISUALIZATION OFF CACHE BOOL "Flag to show simulation tests")
+    set(XBOT_SIMULATION_TESTS_VISUALIZATION ON CACHE BOOL "Flag to show simulation tests")
     if(XBOT_SIMULATION_TESTS_VISUALIZATION)
         add_definitions( -DOXBOT_SIMULATION_TESTS_VISUALIZATION=true )
     else()
@@ -25,7 +25,7 @@ else()
     add_definitions( -DXBOT_COMPILE_SIMULATION_TESTS==false )
 endif()
 
-option(SHOW_TEST_RESULTS "After running tests, show result plots" FALSE)
+option(SHOW_TEST_RESULTS "After running tests, show result plots" TRUE)
 
 # compite GTest
 find_package(GTest)
