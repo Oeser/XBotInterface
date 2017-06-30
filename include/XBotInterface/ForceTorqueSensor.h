@@ -28,6 +28,7 @@
 #include <Eigen/Geometry>
 #include <srdfdom_advr/model.h>
 #include <XBotInterface/GenericSensor.h>
+#include <atomic>
 
 namespace XBot {
 
@@ -52,6 +53,18 @@ public:
      * 
      */
     ForceTorqueSensor();
+    
+    /**
+     * @brief Copy constructor
+     *
+     */
+    ForceTorqueSensor(const ForceTorqueSensor& f);
+    
+    /**
+     * @brief operator =
+     *
+     */
+    const ForceTorqueSensor& operator=(const ForceTorqueSensor& f);
     
     /**
      * @brief Constructor with the Force-Torque parent link
@@ -141,7 +154,7 @@ public:
 private:
     
 
-    double _fx, _fy, _fz, _tx, _ty, _tz;
+    std::atomic<double> _fx, _fy, _fz, _tx, _ty, _tz;
     
     
 };

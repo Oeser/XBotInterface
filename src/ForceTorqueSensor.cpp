@@ -35,6 +35,31 @@ _fx(0), _fy(0), _fz(0), _tx(0), _ty(0), _tz(0)
 
 }
 
+ForceTorqueSensor::ForceTorqueSensor(const ForceTorqueSensor& f)
+{
+     this->_fx = f._fx.load();
+     this->_fy = f._fy.load();
+     this->_fz = f._fz.load();
+     this->_tx = f._tx.load();
+     this->_ty = f._ty.load();
+     this->_tz = f._tz.load();
+    
+}
+
+const ForceTorqueSensor& ForceTorqueSensor::operator=(const ForceTorqueSensor& f)
+{
+     
+     this->_fx = f._fx.load();
+     this->_fy = f._fy.load();
+     this->_fz = f._fz.load();
+     this->_tx = f._tx.load();
+     this->_ty = f._ty.load();
+     this->_tz = f._tz.load();
+  
+  
+     return *this;
+}
+
 void ForceTorqueSensor::getForce(KDL::Vector& force) const
 {
     force(0) = _fx;

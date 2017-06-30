@@ -267,6 +267,7 @@ private:
     double _ts_tx;
     
     std::mutex _mutex;  // protects sense / move
+    //static std::mutex _robot_mutex; //protects getrobot
 
 
 

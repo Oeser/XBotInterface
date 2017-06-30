@@ -35,9 +35,28 @@ _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identit
 
 }
 
+ImuSensor::ImuSensor(const ImuSensor& i)
+{
+  
+    this->_orientation = i._orientation;
+    this->_lin_acc = i._lin_acc;
+    this->_angular_velocity = i._angular_velocity;
+    
+}
+
+const ImuSensor& ImuSensor::operator=(const ImuSensor& i)
+{
+    this->_orientation = i._orientation;
+    this->_lin_acc = i._lin_acc;
+    this->_angular_velocity = i._angular_velocity;
+    
+    return *this;
+  
+}
 
 void ImuSensor::getAngularVelocity(Eigen::Vector3d& angular_velocity) const
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     angular_velocity = _angular_velocity;
 }
 
@@ -45,6 +64,7 @@ void ImuSensor::getImuData(Eigen::Matrix3d& orientation,
                            Eigen::Vector3d& acceleration, 
                            Eigen::Vector3d& angular_velocity) const
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     orientation = _orientation;
     acceleration = _lin_acc;
     angular_velocity = _angular_velocity;
@@ -54,6 +74,7 @@ void ImuSensor::getImuData(Eigen::Quaterniond& orientation,
                            Eigen::Vector3d& acceleration, 
                            Eigen::Vector3d& angular_velocity) const
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     orientation = Eigen::Quaterniond(_orientation);
     acceleration = _lin_acc;
     angular_velocity = _angular_velocity;
@@ -61,16 +82,19 @@ void ImuSensor::getImuData(Eigen::Quaterniond& orientation,
 
 void ImuSensor::getLinearAcceleration(Eigen::Vector3d& acceleration) const
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     acceleration = _lin_acc;
 }
 
 void ImuSensor::getOrientation(Eigen::Matrix3d& orientation) const
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     orientation = _orientation;
 }
 
 void ImuSensor::getOrientation(Eigen::Quaterniond& orientation) const
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     orientation = Eigen::Quaterniond(_orientation);
 }
 
@@ -80,6 +104,7 @@ void ImuSensor::setImuData(Eigen::Matrix3d& orientation,
                            double timestamp
                           )
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     _orientation = orientation;
     _lin_acc = acceleration;
     _angular_velocity = angular_velocity;
@@ -92,6 +117,7 @@ void ImuSensor::setImuData(Eigen::Quaterniond& orientation,
                            double timestamp
                           )
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     _orientation = orientation.toRotationMatrix();
     _lin_acc = acceleration;
     _angular_velocity = angular_velocity;
@@ -100,6 +126,7 @@ void ImuSensor::setImuData(Eigen::Quaterniond& orientation,
 
 std::ostream& operator<<(std::ostream& os, const ImuSensor& j)
 {
+    
     os << "IMU name: " << j.getSensorName() << std::endl;
     os << "Parent link: " << j.getParentLinkName() << std::endl;
     os << "Sensor frame to parent link frame transform: " << std::endl;

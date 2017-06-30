@@ -95,6 +95,7 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
                                         AnyMapConstPtr any_map,
                                         const std::string& framework)
 {
+    //std::lock_guard<std::mutex> lock(_robot_mutex);
     // NOTE singleton
     if (_instance_ptr) {
         return _instance_ptr;

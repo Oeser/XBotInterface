@@ -22,6 +22,7 @@
 
 #include <XBotInterface/GenericSensor.h>
 #include <Eigen/Geometry>
+#include <mutex>
 
 namespace XBot {
 
@@ -37,6 +38,18 @@ public:
      * 
      */
     ImuSensor();
+    
+     /**
+     * @brief Copy constructor
+     *
+     */
+    ImuSensor(const ImuSensor& i);
+    
+    /**
+     * @brief operator =
+     *
+     */
+    const ImuSensor& operator=(const ImuSensor& i);
     
     /**
      * @brief  Constructor with the sensor parent link
@@ -140,9 +153,7 @@ private:
     
     Eigen::Matrix3d _orientation;
     Eigen::Vector3d _lin_acc, _angular_velocity;
-    
-    
-    
+    mutable std::mutex _mutex;
     
 };
 
