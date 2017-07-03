@@ -77,6 +77,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/RobotChain.cpp
                                  src/ModelChain.cpp
                                  src/Joint.cpp
+                                 src/Hand.cpp
                                  src/ModelInterface.cpp
                                  src/GenericSensor.cpp
                                  src/ForceTorqueSensor.cpp
