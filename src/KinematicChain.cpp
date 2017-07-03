@@ -216,6 +216,7 @@ void XBot::KinematicChain::shallowCopy(const KinematicChain& chain)
     _ft_map = chain._ft_map;
     _imu_vector = chain._imu_vector;
     _imu_map = chain._imu_map;
+    _hand_map = chain._hand_map;
 }
 
 
