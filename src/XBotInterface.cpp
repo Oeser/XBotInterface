@@ -236,7 +236,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
     // hands
     for( const auto& hand_pair : _XBotModel.get_hands() ) {
         _hand_map[hand_pair.first] =  std::make_shared<XBot::Hand>(hand_pair.second, hand_pair.first);
-        _hand_id_map[hand_pair.second] =  std::make_shared<XBot::Hand>(hand_pair.second, hand_pair.first);
+        _hand_id_map[hand_pair.second] =  _hand_map.at(hand_pair.first);
     } 
 
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
