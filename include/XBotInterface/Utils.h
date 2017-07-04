@@ -23,7 +23,7 @@
 
 #include <XBotInterface/ModelInterface.h>
 
-namespace XBot { 
+namespace XBot {
     namespace Utils {
 
 /**
@@ -101,16 +101,16 @@ public:
         _reset_has_been_called = true;
         _u = initial_state;
         _y = initial_state;
-        _yd = initial_state*0;
-        _ydd = initial_state*0;
-        _udd = initial_state*0;
-        _ud = initial_state*0;
+        _yd = initial_state;
+        _ydd = initial_state;
+        _udd = initial_state;
+        _ud = initial_state;
     }
 
     const SignalType& process(const SignalType& input){
 
         if(!_reset_has_been_called) reset(input*0);
-        
+
 
         _ydd = _yd;
         _yd = _y;
@@ -154,8 +154,8 @@ private:
         _a1 = 2 - 8.0/std::pow(_omega*_ts, 2.0);
         _a2 = 1.0 + 4.0/std::pow(_omega*_ts, 2.0) - 4.0*_eps/(_omega*_ts);
 
-        std::cout << "Coeffs: " << 1.0/_a0 << " -- " << _b1/_a0 << " -- " << _b2/_a0 << "\n" <<
-        1.0 << " -- " << _a1/_a0 << " -- " << _a2/_a0 << std::endl;
+        std::cout << "Coeffs: " << 1.0 << " -- " << _b1 << " -- " << _b2 << "\n" <<
+        _a0 << " -- " << _a1 << " -- " << _a2 << std::endl;
     }
 
     double _omega;
@@ -164,7 +164,7 @@ private:
 
     double _b1, _b2;
     double _a0, _a1, _a2;
-    
+
     bool _reset_has_been_called;
 
     SignalType _y, _yd, _ydd, _u, _ud, _udd;
