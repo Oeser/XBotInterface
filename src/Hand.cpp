@@ -44,6 +44,12 @@ void Hand::grasp ( double grasp_percentage )
     _grasp_percentage = grasp_percentage;
 }
 
+double XBot::Hand::getGraspReference()
+{
+    return _grasp_percentage;
+}
+
+
 double Hand::getGraspState() const
 {
     return _grasp_state;

@@ -72,6 +72,13 @@ public:
     void grasp(double grasp_percentage);
     
     /**
+     * @brief get the grasp reference set with grasp_percentage
+     * 
+     * @return double the grasp reference set in previous grasp() function
+     */
+    double getGraspReference();
+    
+    /**
      * @brief get actual grasp percentage
      * 
      * @return double the actual grasp percentage
