@@ -216,9 +216,12 @@ public:
 protected:
 
     virtual bool sense_internal() = 0;
-    virtual bool sense_hands() = 0;
-    virtual bool move_internal() = 0;
     virtual bool read_sensors() = 0;
+    virtual bool sense_hands() = 0;
+    
+    virtual bool move_internal() = 0;
+    virtual bool move_hands() = 0;
+    
     virtual bool init_robot(const std::string& path_to_cfg, AnyMapConstPtr any_map) = 0;
     virtual bool set_control_mode_internal(int joint_id, const ControlMode& control_mode);
 
