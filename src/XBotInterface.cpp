@@ -232,6 +232,12 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
         }
 
     }
+    
+    // hands
+    for( const auto& hand_pair : _XBotModel.get_hands() ) {
+        _hand_map[hand_pair.first] =  std::make_shared<XBot::Hand>(hand_pair.second, hand_pair.first);
+        _hand_id_map[hand_pair.second] =  _hand_map.at(hand_pair.first);
+    } 
 
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
     if (_XBotModel.getDisabledJoints().size() > 0) {
@@ -1727,6 +1733,35 @@ const std::map< std::string, XBot::ImuSensor::Ptr >& XBot::XBotInterface::getImu
 {
     return _imu_map;
 }
+
+
+
+std::map< std::string, XBot::Hand::Ptr > XBot::XBotInterface::getHand()
+{
+    return _hand_map;
+}
+
+XBot::Hand::Ptr XBot::XBotInterface::getHand ( int hand_id ) const
+{
+    auto it = _hand_id_map.find(hand_id);
+
+    if( it == _hand_id_map.end() ){
+        std::cerr << "ERROR in " << __PRETTY_FUNCTION__ << ", HAND with given ID " << hand_id << " is NOT defined!\n" <<
+        "Available HAND are:\n";
+
+        for( const auto& pair : _hand_map ){
+            std::cerr << "\tName: " << pair.first << ", ID: " << pair.second->getHandId() << "\n";
+        }
+
+        std::cerr << std::endl;
+
+        return XBot::Hand::Ptr();
+    }
+
+    return it->second;
+}
+
+
 
 
 const std::vector<int>& XBot::XBotInterface::getEnabledJointId() const

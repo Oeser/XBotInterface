@@ -141,19 +141,26 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 bool XBot::RobotInterface::sense(bool sync_model)
 {
     bool sense_ok = sense_internal();
+    bool sense_hands_ok = sense_hands();
     bool sensors_ok = read_sensors();
+    
     _ts_rx = getTime();
+    
     if (sync_model) {
-        return  (_model->syncFrom(*this)) && sense_ok && sensors_ok;
+        return  (_model->syncFrom(*this)) && sense_ok && sense_hands_ok && sensors_ok;
     }
-    return sense_ok && sensors_ok;
+    return sense_ok && sense_hands_ok && sensors_ok;
 }
 
 
 bool XBot::RobotInterface::move()
 {
     _ts_tx = getTime();
-    return move_internal();
+    
+    bool move_ok = move_internal();
+    bool move_hands_ok = move_hands();
+    
+    return move_ok && move_hands_ok;
 }
 
 bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg, AnyMapConstPtr any_map)

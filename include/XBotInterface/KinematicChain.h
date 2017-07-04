@@ -32,6 +32,7 @@
 #include <XBotCoreModel.h>
 #include <XBotInterface/ForceTorqueSensor.h>
 #include <XBotInterface/ImuSensor.h>
+// #include <XBotInterface/Hand.h>
 
 
 namespace XBot
@@ -690,6 +691,7 @@ protected:
     
     std::vector<ImuSensor::Ptr> _imu_vector;
     std::map<std::string, ImuSensor::Ptr> _imu_map;
+//     std::map<std::string, Hand::Ptr> _hand_map;
     
     /**
      * @brief Getter for the i-th Joint Ptr 
