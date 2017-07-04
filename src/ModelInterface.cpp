@@ -766,6 +766,44 @@ bool XBot::ModelInterface::setFloatingBaseTwist(const Eigen::Vector6d& floating_
 }
 
 
+bool XBot::ModelInterface::getFloatingBasePose(Eigen::Affine3d& floating_base_pose) const
+{
+    bool success = getFloatingBasePose(_tmp_kdl_frame);
+
+    if(success){
+        tf::transformKDLToEigen(_tmp_kdl_frame, floating_base_pose);
+    }
+
+    return success;
+}
+
+bool XBot::ModelInterface::getFloatingBaseTwist(Eigen::Vector6d& floating_base_twist) const
+{
+    bool success = getFloatingBaseTwist(_tmp_kdl_twist);
+
+    if(success){
+        tf::twistKDLToEigen(_tmp_kdl_twist, floating_base_twist);
+    }
+
+    return success;
+}
+
+bool XBot::ModelInterface::getFloatingBasePose(KDL::Frame& floating_base_pose) const
+{
+    std::string fb_link;
+    bool success = getFloatingBaseLink(fb_link);
+    success = getPose(fb_link, floating_base_pose);
+    return success;
+
+}
+
+bool XBot::ModelInterface::getFloatingBaseTwist(KDL::Twist& floating_base_twist) const
+{
+    std::string fb_link;
+    bool success = getFloatingBaseLink(fb_link);
+    success = getVelocityTwist(fb_link, floating_base_twist);
+    return success;
+}
 
 
 

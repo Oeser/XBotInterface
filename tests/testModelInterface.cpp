@@ -396,8 +396,9 @@ TEST_F( testModelInterface, checkSetFloatingBasePose ){
         Eigen::Affine3d actual_pose;
         fb_model_ptr->getPose("pelvis", actual_pose);
 
-//         std::cout << "****\n" << pose.matrix() << "\n" << actual_pose.matrix() << std::endl;
+        EXPECT_TRUE( pose.isApprox(actual_pose, 0.0001) );
 
+        fb_model_ptr->getFloatingBasePose(actual_pose);
         EXPECT_TRUE( pose.isApprox(actual_pose, 0.0001) );
 
     }
@@ -425,7 +426,9 @@ TEST_F( testModelInterface, checkSetFloatingBasePoseTwist ){
 
         fb_model_ptr->getVelocityTwist("pelvis", actual_twist);
 
-//         std::cout << "****\n" << twist << "\n**\n" << actual_twist << std::endl;
+        EXPECT_NEAR( (twist-actual_twist).norm(), 0, 0.0001 );
+
+        fb_model_ptr->getFloatingBaseTwist(actual_twist);
 
         EXPECT_NEAR( (twist-actual_twist).norm(), 0, 0.0001 );
 
