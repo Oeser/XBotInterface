@@ -1,8 +1,8 @@
 <map id="spdlog::sinks::ostream_sink&lt; Mutex &gt;" name="spdlog::sinks::ostream_sink&lt; Mutex &gt;">
-<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1base__sink.html" title="{spdlog::sinks::base\l_sink\&lt; Mutex \&gt;\n|# _mutex\l|+ base_sink()\l+ ~base_sink()\l+ base_sink()\l+ operator=()\l+ log()\l# _sink_it()\l}" alt="" coords="7,473,142,639"/>
-<area shape="rect" id="node3" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="5,259,136,424"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="169,517,263,595"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="160,295,293,387"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="149,132,304,209"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="177,5,277,83"/>
+<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1base__sink.html" title="{spdlog::sinks::base\l_sink\&lt; Mutex \&gt;\n|# _mutex\l|+ base_sink()\l+ ~base_sink()\l+ base_sink()\l+ operator=()\l+ log()\l# _sink_it()\l}" alt="" coords="6,477,140,643"/>
+<area shape="rect" id="node3" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="4,261,133,427"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="167,521,261,599"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="159,298,292,390"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="148,133,301,211"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="175,5,275,83"/>
 </map>

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['jointidmap',['JointIdMap',['../namespaceXBot.html#a58947e0faa26659afe5078e734d6d951',1,'XBot']]],
-  ['jointnamemap',['JointNameMap',['../namespaceXBot.html#a64aa3f492e0435659889a1083ef48e86',1,'XBot']]]
+  ['level_5ft',['level_t',['../namespacespdlog.html#a8585bf495310a6ce695191739351709b',1,'spdlog']]],
+  ['log_5fclock',['log_clock',['../namespacespdlog.html#a173dd7064323e4807d720eabcc95fc73',1,'spdlog']]],
+  ['log_5ferr_5fhandler',['log_err_handler',['../namespacespdlog.html#ad3ed787a29f245c833ef66faf48036e2',1,'spdlog']]]
 ];

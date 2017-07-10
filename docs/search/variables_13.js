@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['value',['value',['../structspdlog_1_1details_1_1null__atomic__int.html#ab433069a53cdd1402dc7b0b942d7095f',1,'spdlog::details::null_atomic_int::value()'],['../structfmt_1_1internal_1_1Value_1_1StringValue.html#a5fcfe566f56e4bbf08748303cd7fa6ca',1,'fmt::internal::Value::StringValue::value()'],['../structfmt_1_1internal_1_1Value_1_1CustomValue.html#aaaa7c10023f8b3886bee9593cddea150',1,'fmt::internal::Value::CustomValue::value()']]],
-  ['values_5f',['values_',['../classfmt_1_1ArgList.html#a6d6ebb19d3418bc3bbb01e242056feaa',1,'fmt::ArgList']]]
+  ['uint_5fvalue',['uint_value',['../structfmt_1_1internal_1_1Value.html#a9ced917767812c9572065509f22bec18',1,'fmt::internal::Value']]],
+  ['ulong_5flong_5fvalue',['ulong_long_value',['../structfmt_1_1internal_1_1Value.html#a78424f46c0150190010e5c27ec3c69a0',1,'fmt::internal::Value']]],
+  ['ulonglong',['ULongLong',['../namespacefmt.html#af495ed85910212d4ba243ae2a8ce8f1f',1,'fmt']]],
+  ['underline',['underline',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#ab90ca08765243397a87ab7d0864c3fb5',1,'spdlog::sinks::ansicolor_sink']]],
+  ['ustring',['ustring',['../structfmt_1_1internal_1_1Value.html#ae89a416df861650100b0bfc207e19204',1,'fmt::internal::Value']]]
 ];

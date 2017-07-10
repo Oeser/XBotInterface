@@ -1,13 +1,13 @@
 <map id="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/XBotInterface/RobotChain.h" name="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/XBotInterface/RobotChain.h">
-<area shape="rect" id="node2" href="$KinematicChain_8h.html" title="XBotInterface/KinematicChain.h" alt="" coords="1041,199,1251,225"/>
-<area shape="rect" id="node28" href="$ModelChain_8h.html" title="XBotInterface/ModelChain.h" alt="" coords="1118,124,1305,151"/>
-<area shape="rect" id="node9" href="$Joint_8h.html" title="XBotInterface/Joint.h" alt="" coords="824,281,969,307"/>
-<area shape="rect" id="node22" href="$ForceTorqueSensor_8h.html" title="XBotInterface/ForceTorque\lSensor.h" alt="" coords="1259,273,1438,315"/>
-<area shape="rect" id="node27" href="$ImuSensor_8h.html" title="XBotInterface/ImuSensor.h" alt="" coords="1612,281,1792,307"/>
-<area shape="rect" id="node11" href="$SyncFlags_8h.html" title="XBotInterface/SyncFlags.h" alt="" coords="166,363,345,389"/>
-<area shape="rect" id="node15" href="$table__printer_8h.html" title="bprinter/table_printer.h" alt="" coords="565,363,716,389"/>
-<area shape="rect" id="node20" href="$ControlMode_8h.html" title="XBotInterface/ControlMode.h" alt="" coords="740,363,931,389"/>
-<area shape="rect" id="node12" href="$TypedefAndEnums_8h.html" title="XBotInterface/TypedefAnd\lEnums.h" alt="" coords="166,437,342,479"/>
-<area shape="rect" id="node19" href="$table__printer_8tpp_8h.html" title="impl/table_printer.tpp.h" alt="" coords="766,445,921,471"/>
-<area shape="rect" id="node26" href="$GenericSensor_8h.html" title="XBotInterface/GenericSensor.h" alt="" coords="1574,363,1777,389"/>
+<area shape="rect" id="node2" href="$KinematicChain_8h.html" title="XBotInterface/KinematicChain.h" alt="" coords="1041,200,1249,227"/>
+<area shape="rect" id="node28" href="$ModelChain_8h.html" title="XBotInterface/ModelChain.h" alt="" coords="1117,125,1304,152"/>
+<area shape="rect" id="node9" href="$Joint_8h.html" title="XBotInterface/Joint.h" alt="" coords="823,283,968,309"/>
+<area shape="rect" id="node22" href="$ForceTorqueSensor_8h.html" title="XBotInterface/ForceTorque\lSensor.h" alt="" coords="1259,275,1437,317"/>
+<area shape="rect" id="node27" href="$ImuSensor_8h.html" title="XBotInterface/ImuSensor.h" alt="" coords="1611,283,1791,309"/>
+<area shape="rect" id="node11" href="$SyncFlags_8h.html" title="XBotInterface/SyncFlags.h" alt="" coords="165,365,344,392"/>
+<area shape="rect" id="node15" href="$table__printer_8h.html" title="bprinter/table_printer.h" alt="" coords="565,365,715,392"/>
+<area shape="rect" id="node20" href="$ControlMode_8h.html" title="XBotInterface/ControlMode.h" alt="" coords="739,365,929,392"/>
+<area shape="rect" id="node12" href="$TypedefAndEnums_8h.html" title="XBotInterface/TypedefAnd\lEnums.h" alt="" coords="165,441,341,482"/>
+<area shape="rect" id="node19" href="$table__printer_8tpp_8h.html" title="impl/table_printer.tpp.h" alt="" coords="765,448,919,475"/>
+<area shape="rect" id="node26" href="$GenericSensor_8h.html" title="XBotInterface/GenericSensor.h" alt="" coords="1573,365,1776,392"/>
 </map>

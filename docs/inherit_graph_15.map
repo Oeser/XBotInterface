@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classfmt_1_1BasicWriter.html" title="This template provides operations for formatting and writing data into a character stream..." alt="" coords="5,46,175,73"/>
-<area shape="rect" id="node2" href="$classfmt_1_1BasicArrayWriter.html" title="This class template provides operations for formatting and writing data into a fixed&#45;size array..." alt="" coords="231,5,379,47"/>
-<area shape="rect" id="node3" href="$classfmt_1_1BasicMemoryWriter.html" title="This class template provides operations for formatting and writing data into a character stream..." alt="" coords="223,71,387,112"/>
+<area shape="rect" id="node1" href="$classfmt_1_1BasicWriter.html" title="This template provides operations for formatting and writing data into a character stream..." alt="" coords="6,45,175,72"/>
+<area shape="rect" id="node2" href="$classfmt_1_1BasicArrayWriter.html" title="This class template provides operations for formatting and writing data into a fixed&#45;size array..." alt="" coords="233,5,381,46"/>
+<area shape="rect" id="node3" href="$classfmt_1_1BasicMemoryWriter.html" title="This class template provides operations for formatting and writing data into a character stream..." alt="" coords="225,70,389,111"/>
 </map>

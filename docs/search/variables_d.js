@@ -9,5 +9,6 @@ var searchData=
   ['on_5fwhite',['on_white',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#a6409455351ea0faea7a4ad267cecb8d4',1,'spdlog::sinks::ansicolor_sink']]],
   ['on_5fyellow',['on_yellow',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#ac84e09c2efee8bf5eacc279431b69c9a',1,'spdlog::sinks::ansicolor_sink']]],
   ['open_5finterval',['open_interval',['../classspdlog_1_1details_1_1file__helper.html#aea72ea8d655bb11f19dbe48477e6c8b3',1,'spdlog::details::file_helper']]],
-  ['open_5ftries',['open_tries',['../classspdlog_1_1details_1_1file__helper.html#a22be952a421d866566eed3a5ce201144',1,'spdlog::details::file_helper']]]
+  ['open_5ftries',['open_tries',['../classspdlog_1_1details_1_1file__helper.html#a22be952a421d866566eed3a5ce201144',1,'spdlog::details::file_helper']]],
+  ['overflow_5fpolicy',['overflow_policy',['../async__logger__impl_8h.html#aa9239ded28f36d3a3033b9fb271fe2c2',1,'async_logger_impl.h']]]
 ];

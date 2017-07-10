@@ -8,7 +8,7 @@ var searchData=
   ['wcharhelper_3c_20t_2c_20wchar_5ft_20_3e',['WCharHelper&lt; T, wchar_t &gt;',['../structfmt_1_1internal_1_1WCharHelper_3_01T_00_01wchar__t_01_4.html',1,'fmt::internal']]],
   ['wcstringref',['WCStringRef',['../namespacefmt.html#ae76542a1eda3b54264fdca97c4506a4d',1,'fmt']]],
   ['what',['what',['../classspdlog_1_1spdlog__ex.html#a9a9b9a7981e472cad06d453e368b6195',1,'spdlog::spdlog_ex']]],
-  ['white',['WHITE',['../classspdlog_1_1sinks_1_1wincolor__sink.html#ae12b15a4d57cd4c656e8b750c434e137',1,'spdlog::sinks::wincolor_sink::WHITE()'],['../classspdlog_1_1sinks_1_1ansicolor__sink.html#a20a0c9cb4c7e445a24e379eb37a80c25',1,'spdlog::sinks::ansicolor_sink::white()'],['../namespacefmt.html#ace617112a82e0f90aac9858ecb446c8aaecc3d2607bf562f107a0f308b61ee810',1,'fmt::WHITE()']]],
+  ['white',['white',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#a20a0c9cb4c7e445a24e379eb37a80c25',1,'spdlog::sinks::ansicolor_sink::white()'],['../classspdlog_1_1sinks_1_1wincolor__sink.html#ae12b15a4d57cd4c656e8b750c434e137',1,'spdlog::sinks::wincolor_sink::WHITE()'],['../namespacefmt.html#ace617112a82e0f90aac9858ecb446c8aaecc3d2607bf562f107a0f308b61ee810',1,'fmt::WHITE()']]],
   ['width',['width',['../structfmt_1_1TypeSpec.html#a469e31c7122bcd1694efb2ccbb815e34',1,'fmt::TypeSpec::width()'],['../structfmt_1_1WidthSpec.html#ad6624ee681712f695f133ba2e9d9ce36',1,'fmt::WidthSpec::width()']]],
   ['width_5f',['width_',['../structfmt_1_1WidthSpec.html#a83fed5d5a674ea54a48feb6edef4c1c7',1,'fmt::WidthSpec']]],
   ['widthhandler',['WidthHandler',['../classfmt_1_1internal_1_1WidthHandler.html#af98b4bed872a72eef079c0f3fcc5f8ad',1,'fmt::internal::WidthHandler']]],
@@ -27,9 +27,11 @@ var searchData=
   ['wincolor_5fstdout_5fsink_5fmt',['wincolor_stdout_sink_mt',['../namespacespdlog_1_1sinks.html#ad9ea22169fb3f90c01ff14db5d161349',1,'spdlog::sinks']]],
   ['wincolor_5fstdout_5fsink_5fst',['wincolor_stdout_sink_st',['../namespacespdlog_1_1sinks.html#a66ad63ca69a2bb0a966ab48f3578eb28',1,'spdlog::sinks']]],
   ['wmemorywriter',['WMemoryWriter',['../namespacefmt.html#a77a0f04bb7dcce3271fe50984c5c9cf3',1,'fmt']]],
+  ['worker_5fwarmup_5fcb',['worker_warmup_cb',['../async__logger__impl_8h.html#a22524e907d814e60aa605c1945a57e61',1,'async_logger_impl.h']]],
   ['write',['write',['../classspdlog_1_1details_1_1file__helper.html#ab86646bf59fce30003bdfedfb29768ae',1,'spdlog::details::file_helper::write()'],['../classfmt_1_1internal_1_1ArgFormatterBase.html#a002d52aca6bc9a70d7eb62c037ffadc4',1,'fmt::internal::ArgFormatterBase::write(bool value)'],['../classfmt_1_1internal_1_1ArgFormatterBase.html#a1a706cd6067d51bfa07d5e6c577e0843',1,'fmt::internal::ArgFormatterBase::write(const char *value)'],['../classfmt_1_1internal_1_1FormatterBase.html#ab29b5470b0f02edfde9b81ba24a51bf6',1,'fmt::internal::FormatterBase::write()'],['../classfmt_1_1BasicWriter.html#aaa83498c649d4a90ea3366bae62f4eac',1,'fmt::BasicWriter::write()'],['../namespacefmt_1_1internal.html#a7c721969e9660580a237bd4130422ab6',1,'fmt::internal::write()']]],
+  ['write_5fstr',['write_str',['../classfmt_1_1BasicWriter.html#a4810d9956ad993cb084c94fcb2de9558',1,'fmt::BasicWriter']]],
   ['writer',['writer',['../classfmt_1_1internal_1_1ArgFormatterBase.html#a042c1243143197b04c5b4d77a89a4fb5',1,'fmt::internal::ArgFormatterBase::writer()'],['../classfmt_1_1BasicFormatter.html#abd5692d2f2123b27da7941d56fc6073c',1,'fmt::BasicFormatter::writer()'],['../namespacefmt.html#a4d870bb235d29dfe8f82e22c4c5574e7',1,'fmt::Writer()']]],
-  ['wstring',['WSTRING',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaae94c5eaf7d9283c167bd88765c18b82c',1,'fmt::internal::Value::WSTRING()'],['../structfmt_1_1internal_1_1Value.html#a2add0d3534ad850a089ba4ed0f60b9d8',1,'fmt::internal::Value::wstring()']]],
+  ['wstring',['wstring',['../structfmt_1_1internal_1_1Value.html#a2add0d3534ad850a089ba4ed0f60b9d8',1,'fmt::internal::Value::wstring()'],['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaae94c5eaf7d9283c167bd88765c18b82c',1,'fmt::internal::Value::WSTRING()']]],
   ['wstringref',['WStringRef',['../namespacefmt.html#a88f11ca64ac292c1e2df229ced839312',1,'fmt']]],
   ['wwriter',['WWriter',['../namespacefmt.html#afeac86b4bae798ed9eaedef61113d0db',1,'fmt']]]
 ];

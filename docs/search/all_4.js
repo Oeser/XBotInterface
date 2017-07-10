@@ -7,7 +7,7 @@ var searchData=
   ['daily_5ffile_5fsink_5fst',['daily_file_sink_st',['../namespacespdlog_1_1sinks.html#a9d69c0cb0db9e5e626fbec51376c840f',1,'spdlog::sinks']]],
   ['daily_5flogger_5fmt',['daily_logger_mt',['../namespacespdlog.html#a79e0c5a2f7dccdba33dba8e6bfe5b871',1,'spdlog']]],
   ['daily_5flogger_5fst',['daily_logger_st',['../namespacespdlog.html#a89d5ee689dc110c1c60e10333f910fc5',1,'spdlog']]],
-  ['damping',['Damping',['../classXBot_1_1ControlMode.html#abeffc472b836027fee177da1856dce80',1,'XBot::ControlMode::Damping()'],['../namespaceXBot.html#a9db88d57fbc78b9c3803075eb4953d73acccc1c20db2a516088fca99fc1fa701a',1,'XBot::Damping()']]],
+  ['damping',['Damping',['../classXBot_1_1ControlMode.html#abeffc472b836027fee177da1856dce80',1,'XBot::ControlMode']]],
   ['dark',['dark',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#a3ef339cc2b1c70a174c01068f645a0ca',1,'spdlog::sinks::ansicolor_sink']]],
   ['data',['data',['../structfmt_1_1internal_1_1DummyInt.html#a0b785da86f9605b7fbebba9014dcfa61',1,'fmt::internal::DummyInt::data()'],['../structXBot_1_1MatLogger_1_1VariableInfo.html#a20a2c789f06c9c4fbb074e5294a4579a',1,'XBot::MatLogger::VariableInfo::data()'],['../classfmt_1_1BasicStringRef.html#ae9c80502c527437215fe1c11dca8b475',1,'fmt::BasicStringRef::data()'],['../classfmt_1_1BasicWriter.html#a62d1c7b5be9c3580326320d5d178d096',1,'fmt::BasicWriter::data()'],['../classfmt_1_1FormatInt.html#a3cad581dde135c51390fd4ebd18d6d1b',1,'fmt::FormatInt::data()'],['../namespacefmt_1_1internal.html#af3cbbbf91dffe18b4cad1116aa088c65',1,'fmt::internal::Data()']]],
   ['dateonly_5fdaily_5ffile_5fname_5fcalculator',['dateonly_daily_file_name_calculator',['../structspdlog_1_1sinks_1_1dateonly__daily__file__name__calculator.html',1,'spdlog::sinks']]],

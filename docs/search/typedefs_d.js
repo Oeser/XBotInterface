@@ -1,13 +1,4 @@
 var searchData=
 [
-  ['simple_5ffile_5fsink_5fmt',['simple_file_sink_mt',['../namespacespdlog_1_1sinks.html#a433fa563f3ad67727dc69441d4461cf5',1,'spdlog::sinks']]],
-  ['simple_5ffile_5fsink_5fst',['simple_file_sink_st',['../namespacespdlog_1_1sinks.html#a502360fd995e524497e9cf40f7e7a476',1,'spdlog::sinks']]],
-  ['sink_5fptr',['sink_ptr',['../namespacespdlog.html#a599f77a083e490c79bbe9d3285c3bc16',1,'spdlog']]],
-  ['sinks_5finit_5flist',['sinks_init_list',['../namespacespdlog.html#aa15ed619cc7c5aafa33938c04022ae35',1,'spdlog']]],
-  ['stderr_5fsink_5fmt',['stderr_sink_mt',['../namespacespdlog_1_1sinks.html#a2a4c7d7516249bb5dab4aeb9473388a8',1,'spdlog::sinks']]],
-  ['stderr_5fsink_5fst',['stderr_sink_st',['../namespacespdlog_1_1sinks.html#a0bfa8bdcabddae15ee61daec310d4967',1,'spdlog::sinks']]],
-  ['stdout_5fsink_5fmt',['stdout_sink_mt',['../namespacespdlog_1_1sinks.html#a757835acbab9c7023644cbccae95eed7',1,'spdlog::sinks']]],
-  ['stdout_5fsink_5fst',['stdout_sink_st',['../namespacespdlog_1_1sinks.html#a8ff85eda7e912b655b41184bb87d389a',1,'spdlog::sinks']]],
-  ['stringref',['StringRef',['../namespacefmt.html#ae5ed3b29f911650a12b4de3d14126c31',1,'fmt']]],
-  ['supported',['Supported',['../structfmt_1_1internal_1_1WCharHelper.html#a245ff9c3b1f1c9bc2dd110c7d247abcd',1,'fmt::internal::WCharHelper::Supported()'],['../structfmt_1_1internal_1_1WCharHelper_3_01T_00_01wchar__t_01_4.html#a5e068234d7ece2fd0e80ebd3b3b79f02',1,'fmt::internal::WCharHelper&lt; T, wchar_t &gt;::Supported()']]]
+  ['type',['type',['../structfmt_1_1internal_1_1EnableIf_3_01true_00_01T_01_4.html#a98d04258f45ca191b0509ef570bcc826',1,'fmt::internal::EnableIf&lt; true, T &gt;::type()'],['../structfmt_1_1internal_1_1Conditional.html#a2670cd09823078e9ac3d59e8ad5e9e5e',1,'fmt::internal::Conditional::type()'],['../structfmt_1_1internal_1_1Conditional_3_01false_00_01T_00_01F_01_4.html#ac36f14451039cf3c26d853b93c9bf234',1,'fmt::internal::Conditional&lt; false, T, F &gt;::type()'],['../structfmt_1_1internal_1_1MakeUnsigned.html#a57cbf18702f14a837ba104412394bfba',1,'fmt::internal::MakeUnsigned::Type()'],['../structfmt_1_1internal_1_1TypeSelector.html#aa2a4ce5a506b026fa2eadce9c14b8841',1,'fmt::internal::TypeSelector::Type()'],['../structfmt_1_1internal_1_1TypeSelector_3_01false_01_4.html#af959045b66d5539844a829910e1bd13e',1,'fmt::internal::TypeSelector&lt; false &gt;::Type()'],['../structfmt_1_1internal_1_1ArgArray_3_01N_00_01true_01_4.html#aeb168342e5c7353d8780f936d393c04f',1,'fmt::internal::ArgArray&lt; N, true &gt;::Type()'],['../structfmt_1_1internal_1_1ArgArray_3_01N_00_01false_01_4.html#ab53fffd4174d8cdc70c205ba6dc54b17',1,'fmt::internal::ArgArray&lt; N, false &gt;::Type()']]]
 ];

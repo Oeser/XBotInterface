@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classXBot_1_1XBotInterface.html" title="XBot::XBotInterface" alt="" coords="5,31,144,57"/>
-<area shape="rect" id="node2" href="$classXBot_1_1ModelInterface.html" title="ModelInterface is an abstraction layer for a kinematic/dynamic model of a robot. " alt="" coords="192,5,337,32"/>
-<area shape="rect" id="node3" href="$classXBot_1_1RobotInterface.html" title="XBot::RobotInterface" alt="" coords="192,56,337,83"/>
+<area shape="rect" id="node1" href="$classXBot_1_1SSLogger.html" title="String Stream Logger. " alt="" coords="6,31,122,57"/>
+<area shape="rect" id="node2" href="$classXBot_1_1SSConsoleLogger.html" title="XBot::SSConsoleLogger" alt="" coords="171,5,335,32"/>
+<area shape="rect" id="node4" href="$classXBot_1_1SSFileLogger.html" title="XBot::SSFileLogger" alt="" coords="185,56,322,83"/>
+<area shape="rect" id="node3" href="$classXBot_1_1SPDConsoleLogger.html" title="XBot::SPDConsoleLogger" alt="" coords="385,5,559,32"/>
+<area shape="rect" id="node5" href="$classXBot_1_1SPDFileLogger.html" title="XBot::SPDFileLogger" alt="" coords="399,56,545,83"/>
 </map>

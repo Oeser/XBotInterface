@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['pattern_5fformatter_5fimpl_2eh',['pattern_formatter_impl.h',['../pattern__formatter__impl_8h.html',1,'']]],
-  ['printf_2eh',['printf.h',['../printf_8h.html',1,'']]]
+  ['os_2eh',['os.h',['../os_8h.html',1,'']]],
+  ['ostr_2eh',['ostr.h',['../ostr_8h.html',1,'']]],
+  ['ostream_2ecc',['ostream.cc',['../ostream_8cc.html',1,'']]],
+  ['ostream_2eh',['ostream.h',['../ostream_8h.html',1,'']]],
+  ['ostream_5fsink_2eh',['ostream_sink.h',['../ostream__sink_8h.html',1,'']]]
 ];

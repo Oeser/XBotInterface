@@ -1,5 +1,5 @@
 <map id="XBot::FSM::Event" name="XBot::FSM::Event">
-<area shape="rect" id="node2" href="$structXBot_1_1FSM_1_1Message.html" title="Base class for defining custom messages that can be processed by the states during the entry phase..." alt="" coords="117,287,265,364"/>
-<area shape="rect" id="node3" title="STL class. " alt="" coords="29,147,109,224"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="5,5,132,97"/>
+<area shape="rect" id="node2" href="$structXBot_1_1FSM_1_1Message.html" title="Base class for defining custom messages that can be processed by the states during the entry phase..." alt="" coords="117,291,264,368"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="28,149,107,227"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="5,6,131,98"/>
 </map>

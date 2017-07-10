@@ -1,4 +1,4 @@
 <map id="XBot::KinematicChain" name="XBot::KinematicChain">
-<area shape="rect" id="node2" href="$classXBot_1_1ModelChain.html" title="Kinematic chain useful for a model abstraction. " alt="" coords="5,417,133,494"/>
-<area shape="rect" id="node3" href="$classXBot_1_1RobotChain.html" title="Kinematic chain useful for a robot abstraction. " alt="" coords="158,409,309,501"/>
+<area shape="rect" id="node2" href="$classXBot_1_1ModelChain.html" title="Kinematic chain useful for a model abstraction. " alt="" coords="5,419,133,496"/>
+<area shape="rect" id="node3" href="$classXBot_1_1RobotChain.html" title="Kinematic chain useful for a robot abstraction. " alt="" coords="158,411,308,503"/>
 </map>

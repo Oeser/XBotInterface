@@ -1,6 +1,6 @@
 <map id="spdlog::sinks::wincolor_sink&lt; Mutex &gt;" name="spdlog::sinks::wincolor_sink&lt; Mutex &gt;">
-<area shape="rect" id="node4" href="$classspdlog_1_1sinks_1_1wincolor__stderr__sink.html" title="{spdlog::sinks::wincolor\l_stderr_sink\&lt; Mutex \&gt;\n||+ wincolor_stderr_sink()\l}" alt="" coords="5,719,167,811"/>
-<area shape="rect" id="node5" href="$classspdlog_1_1sinks_1_1wincolor__stdout__sink.html" title="{spdlog::sinks::wincolor\l_stdout_sink\&lt; Mutex \&gt;\n||+ wincolor_stdout_sink()\l}" alt="" coords="191,719,355,811"/>
-<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1base__sink.html" title="{spdlog::sinks::base\l_sink\&lt; Mutex \&gt;\n|# _mutex\l|+ base_sink()\l+ ~base_sink()\l+ base_sink()\l+ operator=()\l+ log()\l# _sink_it()\l}" alt="" coords="112,219,247,384"/>
-<area shape="rect" id="node3" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="114,5,245,171"/>
+<area shape="rect" id="node4" href="$classspdlog_1_1sinks_1_1wincolor__stderr__sink.html" title="{spdlog::sinks::wincolor\l_stderr_sink\&lt; Mutex \&gt;\n||+ wincolor_stderr_sink()\l}" alt="" coords="5,721,165,813"/>
+<area shape="rect" id="node5" href="$classspdlog_1_1sinks_1_1wincolor__stdout__sink.html" title="{spdlog::sinks::wincolor\l_stdout_sink\&lt; Mutex \&gt;\n||+ wincolor_stdout_sink()\l}" alt="" coords="190,721,353,813"/>
+<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1base__sink.html" title="{spdlog::sinks::base\l_sink\&lt; Mutex \&gt;\n|# _mutex\l|+ base_sink()\l+ ~base_sink()\l+ base_sink()\l+ operator=()\l+ log()\l# _sink_it()\l}" alt="" coords="111,219,245,384"/>
+<area shape="rect" id="node3" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="113,5,243,171"/>
 </map>

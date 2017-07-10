@@ -1,14 +1,14 @@
 <map id="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/XBotInterface/Logger.hpp" name="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/XBotInterface/Logger.hpp">
-<area shape="rect" id="node2" href="$ConfigHelper_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/ConfigHelper.h" alt="" coords="5,124,240,195"/>
-<area shape="rect" id="node4" href="$StateMachine_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/StateMachine.h" alt="" coords="125,480,360,551"/>
-<area shape="rect" id="node5" href="$XBotInterface_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/XBotInterface.h" alt="" coords="315,124,549,195"/>
-<area shape="rect" id="node13" href="$Logger_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/Logger.cpp" alt="" coords="574,131,770,187"/>
-<area shape="rect" id="node3" href="$ConfigHelper_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/ConfigHelper.cpp" alt="" coords="6,250,239,306"/>
-<area shape="rect" id="node6" href="$ModelInterface_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/ModelInterface.h" alt="" coords="469,243,704,313"/>
-<area shape="rect" id="node7" href="$RobotInterface_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/RobotInterface.h" alt="" coords="315,361,549,432"/>
-<area shape="rect" id="node12" href="$XBotInterface_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/XBotInterface.cpp" alt="" coords="728,250,965,306"/>
-<area shape="rect" id="node10" href="$Utils_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/Utils.h" alt="" coords="573,361,808,432"/>
-<area shape="rect" id="node11" href="$ModelInterface_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/ModelInterface.cpp" alt="" coords="832,369,1075,425"/>
-<area shape="rect" id="node8" href="$main__test_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/main\l_test.cpp" alt="" coords="385,480,549,551"/>
-<area shape="rect" id="node9" href="$RobotInterface_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/RobotInterface.cpp" alt="" coords="573,487,816,543"/>
+<area shape="rect" id="node2" href="$ConfigHelper_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/ConfigHelper.h" alt="" coords="5,126,239,197"/>
+<area shape="rect" id="node4" href="$StateMachine_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/StateMachine.h" alt="" coords="125,486,359,557"/>
+<area shape="rect" id="node5" href="$XBotInterface_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/XBotInterface.h" alt="" coords="315,126,548,197"/>
+<area shape="rect" id="node13" href="$Logger_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/Logger.cpp" alt="" coords="574,133,769,189"/>
+<area shape="rect" id="node3" href="$ConfigHelper_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/ConfigHelper.cpp" alt="" coords="6,253,239,309"/>
+<area shape="rect" id="node6" href="$ModelInterface_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/ModelInterface.h" alt="" coords="469,246,703,317"/>
+<area shape="rect" id="node7" href="$RobotInterface_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/RobotInterface.h" alt="" coords="315,366,548,437"/>
+<area shape="rect" id="node12" href="$XBotInterface_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/XBotInterface.cpp" alt="" coords="728,253,964,309"/>
+<area shape="rect" id="node10" href="$Utils_8h.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/include/XBotInterface\l/Utils.h" alt="" coords="573,366,807,437"/>
+<area shape="rect" id="node11" href="$ModelInterface_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/ModelInterface.cpp" alt="" coords="832,373,1075,429"/>
+<area shape="rect" id="node8" href="$main__test_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/main\l_test.cpp" alt="" coords="385,486,548,557"/>
+<area shape="rect" id="node9" href="$RobotInterface_8cpp.html" title="/home/lucamuratore\l/advr&#45;superbuild/external\l/XBotInterface/src/RobotInterface.cpp" alt="" coords="573,493,816,549"/>
 </map>

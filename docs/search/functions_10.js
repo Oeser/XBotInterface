@@ -9,6 +9,7 @@ var searchData=
   ['posimpedance',['PosImpedance',['../classXBot_1_1ControlMode.html#a173c7f0226be5a2646e5f4780e9b9c33',1,'XBot::ControlMode']]],
   ['position',['Position',['../classXBot_1_1ControlMode.html#ac919e9b4bc635f88e2431f1772efb0f2',1,'XBot::ControlMode']]],
   ['precision',['precision',['../structfmt_1_1TypeSpec.html#afa2ebf8c366ef48eea339653afc67c2c',1,'fmt::TypeSpec::precision()'],['../structfmt_1_1AlignSpec.html#acdcb20e3a29b69355825ece5886db27b',1,'fmt::AlignSpec::precision()'],['../structfmt_1_1FormatSpec.html#a4d48f0000dc495b3cc1c6f222e2036a9',1,'fmt::FormatSpec::precision()']]],
+  ['prepare_5fint_5fbuffer',['prepare_int_buffer',['../classfmt_1_1BasicWriter.html#a34540a84c9eaa67f5930c4292a8767d4',1,'fmt::BasicWriter']]],
   ['prevent_5fchild_5ffd',['prevent_child_fd',['../namespacespdlog_1_1details_1_1os.html#a58e68538bb3667c56f3623bf047093d6',1,'spdlog::details::os']]],
   ['print',['print',['../classXBot_1_1Joint.html#a6d41c09cf83cbfc1372ca8f540015dae',1,'XBot::Joint::print()'],['../classXBot_1_1KinematicChain.html#a9dd6f1aa73ac15dcc623c7c6c4a4400a',1,'XBot::KinematicChain::print()'],['../classXBot_1_1XBotInterface.html#a271f654cfc0b29a83dbb958328d60b59',1,'XBot::XBotInterface::print()'],['../namespacefmt.html#adec465a02f79e1e023ec283fa6da9f13',1,'fmt::print(std::FILE *f, CStringRef format_str, ArgList args)'],['../namespacefmt.html#a7d5857e54045ae471cfcee16e50dbe00',1,'fmt::print(CStringRef format_str, ArgList args)'],['../namespacefmt.html#a553a4de7d3382f362eba0a5e2a7c8184',1,'fmt::print(std::ostream &amp;os, CStringRef format_str, ArgList args)']]],
   ['print_5fcolored',['print_colored',['../namespacefmt.html#abf6b311b54f02ca8e4e2c3de4a563517',1,'fmt']]],
@@ -18,6 +19,7 @@ var searchData=
   ['printfooter',['PrintFooter',['../classbprinter_1_1TablePrinter.html#a65a6732835a36a34017ac41b708510ad',1,'bprinter::TablePrinter']]],
   ['printheader',['PrintHeader',['../classbprinter_1_1TablePrinter.html#a4022eb59d90fec098cda994b147ce9b3',1,'bprinter::TablePrinter']]],
   ['printtracking',['printTracking',['../classXBot_1_1Joint.html#a5bf410b5edcc11c7662b8f0a41191d82',1,'XBot::Joint::printTracking()'],['../classXBot_1_1KinematicChain.html#abfe94e3c6448d28435cde7e4b2779182',1,'XBot::KinematicChain::printTracking()'],['../classXBot_1_1XBotInterface.html#a5e46e122fa0ab21c3209f0dd9921de7e',1,'XBot::XBotInterface::printTracking()']]],
+  ['process',['process',['../classXBot_1_1Utils_1_1SecondOrderFilter.html#ac530b19b1a5b076e3cba07a4583b8598',1,'XBot::Utils::SecondOrderFilter']]],
   ['push_5fback',['push_back',['../classfmt_1_1Buffer.html#a4056b71637286b41b3275e3dac57462d',1,'fmt::Buffer']]],
   ['pushbackjoint',['pushBackJoint',['../classXBot_1_1KinematicChain.html#aa078312e3e623bf8f37d41801b81dd1b',1,'XBot::KinematicChain']]]
 ];

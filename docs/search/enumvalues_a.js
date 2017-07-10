@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['named_5farg',['NAMED_ARG',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaaa9af5928e9c0951d7d4f644bc3cae639',1,'fmt::internal::Value']]],
-  ['none',['NONE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa24ae26361d60b04790c06fffecaa7eda',1,'fmt::internal::Value']]]
+  ['magenta',['MAGENTA',['../namespacefmt.html#ace617112a82e0f90aac9858ecb446c8aaff47477fdc6f3b1e6dacda9fa1efb5c1',1,'fmt']]],
+  ['matrix',['Matrix',['../classXBot_1_1MatLogger.html#a25b5b8658087554d8b5be7b23ced3678af53df0293e169f562bc1d9a20e1d2589',1,'XBot::MatLogger']]],
+  ['max_5fpacked_5fargs',['MAX_PACKED_ARGS',['../classfmt_1_1ArgList.html#a87b3fb5d620328ea293dff1e545ca6f0a0623031f26b6d8df9dc978c1e5a2bb16',1,'fmt::ArgList']]],
+  ['minus_5fflag',['MINUS_FLAG',['../namespacefmt.html#ac14c51c5c796819e98c600fd04a2fdbeafc86655957d3b777b4c87eeb32250bc4',1,'fmt']]]
 ];

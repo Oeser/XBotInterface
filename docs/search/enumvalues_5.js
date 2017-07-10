@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['green',['GREEN',['../namespacefmt.html#ace617112a82e0f90aac9858ecb446c8aad5d5d31a970b38e77a13d0f6d1a5438c',1,'fmt']]]
+  ['flush',['flush',['../classspdlog_1_1details_1_1async__log__helper.html#a9e2509510e9e13a28b22aca6c4417017a86f354b8575a1a736775ae003fa344e5',1,'spdlog::details::async_log_helper']]]
 ];

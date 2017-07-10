@@ -1,12 +1,12 @@
 <map id="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/spdlog/sinks/wincolor_sink.h" name="/home/lucamuratore/advr&#45;superbuild/external/XBotInterface/include/spdlog/sinks/wincolor_sink.h">
-<area shape="rect" id="node2" href="$base__sink_8h.html" title="spdlog/sinks/base_sink.h" alt="" coords="1458,124,1627,151"/>
-<area shape="rect" id="node5" href="$common_8h.html" title="spdlog/common.h" alt="" coords="1627,527,1752,553"/>
-<area shape="rect" id="node13" href="$null__mutex_8h.html" title="spdlog/details/null\l_mutex.h" alt="" coords="1959,601,2086,643"/>
-<area shape="rect" id="node3" href="$sink_8h.html" title="spdlog/sinks/sink.h" alt="" coords="1579,281,1714,307"/>
-<area shape="rect" id="node4" href="$log__msg_8h.html" title="spdlog/details/log\l_msg.h" alt="" coords="1429,363,1552,404"/>
-<area shape="rect" id="node35" href="$formatter_8h.html" title="spdlog/formatter.h" alt="" coords="405,199,531,225"/>
-<area shape="rect" id="node26" href="$os_8h.html" title="spdlog/details/os.h" alt="" coords="879,452,1009,479"/>
-<area shape="rect" id="node14" href="$fmt_8h.html" title="spdlog/fmt/fmt.h" alt="" coords="660,609,777,635"/>
-<area shape="rect" id="node15" href="$format_8h.html" title="spdlog/fmt/bundled\l/format.h" alt="" coords="657,691,789,732"/>
-<area shape="rect" id="node36" href="$pattern__formatter__impl_8h.html" title="spdlog/details/pattern\l_formatter_impl.h" alt="" coords="395,273,541,315"/>
+<area shape="rect" id="node2" href="$base__sink_8h.html" title="spdlog/sinks/base_sink.h" alt="" coords="1458,125,1627,152"/>
+<area shape="rect" id="node5" href="$common_8h.html" title="spdlog/common.h" alt="" coords="1627,531,1752,557"/>
+<area shape="rect" id="node13" href="$null__mutex_8h.html" title="spdlog/details/null\l_mutex.h" alt="" coords="1959,606,2085,647"/>
+<area shape="rect" id="node3" href="$sink_8h.html" title="spdlog/sinks/sink.h" alt="" coords="1579,283,1713,309"/>
+<area shape="rect" id="node4" href="$log__msg_8h.html" title="spdlog/details/log\l_msg.h" alt="" coords="1429,366,1552,407"/>
+<area shape="rect" id="node35" href="$formatter_8h.html" title="spdlog/formatter.h" alt="" coords="405,200,531,227"/>
+<area shape="rect" id="node26" href="$os_8h.html" title="spdlog/details/os.h" alt="" coords="879,456,1008,483"/>
+<area shape="rect" id="node14" href="$fmt_8h.html" title="spdlog/fmt/fmt.h" alt="" coords="660,613,776,640"/>
+<area shape="rect" id="node15" href="$format_8h.html" title="spdlog/fmt/bundled\l/format.h" alt="" coords="657,697,788,738"/>
+<area shape="rect" id="node36" href="$pattern__formatter__impl_8h.html" title="spdlog/details/pattern\l_formatter_impl.h" alt="" coords="395,275,541,317"/>
 </map>

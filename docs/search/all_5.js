@@ -1,8 +1,7 @@
 var searchData=
 [
   ['e_5fformatter',['e_formatter',['../classspdlog_1_1details_1_1e__formatter.html',1,'spdlog::details']]],
-  ['effort',['Effort',['../classXBot_1_1ControlMode.html#a08b520d9c880f8cc22660d52247ec662',1,'XBot::ControlMode::Effort()'],['../namespaceXBot.html#a9db88d57fbc78b9c3803075eb4953d73a035b9ae578574cdf728d8760483d8041',1,'XBot::Effort()']]],
-  ['eigen',['Eigen',['../namespaceEigen.html',1,'']]],
+  ['effort',['Effort',['../classXBot_1_1ControlMode.html#a08b520d9c880f8cc22660d52247ec662',1,'XBot::ControlMode']]],
   ['eigentomap',['eigenToMap',['../classXBot_1_1KinematicChain.html#a3897058ec399f288c85432687fcaa439',1,'XBot::KinematicChain::eigenToMap(const Eigen::VectorXd &amp;eigen_vector, JointIdMap &amp;id_map) const '],['../classXBot_1_1KinematicChain.html#aca139df98a27df4e0345bea7d1c6ff1d',1,'XBot::KinematicChain::eigenToMap(const Eigen::VectorXd &amp;eigen_vector, JointNameMap &amp;name_map) const '],['../classXBot_1_1XBotInterface.html#a5f569f3ab26075337b059a73a0164288',1,'XBot::XBotInterface::eigenToMap(const Eigen::VectorXd &amp;vector, JointNameMap &amp;name_map) const '],['../classXBot_1_1XBotInterface.html#afc314feafe32e1c02ad55e1b0a184b08',1,'XBot::XBotInterface::eigenToMap(const Eigen::VectorXd &amp;vector, JointIdMap &amp;id_map) const ']]],
   ['empty',['empty',['../structXBot_1_1MatLogger_1_1VariableInfo.html#aa1bdacf131bb75ee039ca1a08ba6e14c',1,'XBot::MatLogger::VariableInfo']]],
   ['emptyspec',['EmptySpec',['../structfmt_1_1EmptySpec.html',1,'fmt']]],

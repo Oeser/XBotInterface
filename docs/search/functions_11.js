@@ -15,6 +15,7 @@ var searchData=
   ['report_5funknown_5ftype',['report_unknown_type',['../namespacefmt_1_1internal.html#a92bdabe812efd23c6f9686ddd6a7805f',1,'fmt::internal']]],
   ['require_5fnumeric_5fargument',['require_numeric_argument',['../namespacefmt_1_1internal.html#a706fe7cc890026cebbd52e75d8a97afc',1,'fmt::internal']]],
   ['reserve',['reserve',['../classfmt_1_1Buffer.html#a7f46a3ce8d86abe35904f6654bd4ea1e',1,'fmt::Buffer']]],
+  ['reset',['reset',['../classXBot_1_1Utils_1_1SecondOrderFilter.html#a8cb417b02149ad594569784c20c994b2',1,'XBot::Utils::SecondOrderFilter']]],
   ['resize',['resize',['../classfmt_1_1Buffer.html#a20f893164dc20e8ea8c77810d4ea8d59',1,'fmt::Buffer']]],
   ['robotchain',['RobotChain',['../classXBot_1_1RobotChain.html#aa0e8325dcf15b0b4c435f01db9a9a33d',1,'XBot::RobotChain']]],
   ['robotinterface',['RobotInterface',['../classXBot_1_1RobotInterface.html#af77035fbf0fe627452029f9ef154ac0c',1,'XBot::RobotInterface::RobotInterface()'],['../classXBot_1_1RobotInterface.html#a8bf715d323100c3f1aaf03760e40af1f',1,'XBot::RobotInterface::RobotInterface(const RobotInterface &amp;other)=delete']]],

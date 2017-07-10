@@ -9,6 +9,8 @@ var searchData=
   ['_5fft_5fid_5fmap',['_ft_id_map',['../classXBot_1_1XBotInterface.html#a6f5193cbbec876f79750a20660ef43de',1,'XBot::XBotInterface']]],
   ['_5fft_5fmap',['_ft_map',['../classXBot_1_1KinematicChain.html#a8f3e42137d9b9aaecd964c12c227ae3b',1,'XBot::KinematicChain::_ft_map()'],['../classXBot_1_1XBotInterface.html#a9da9c786269f446ba2fab64470b7ee8e',1,'XBot::XBotInterface::_ft_map()']]],
   ['_5fft_5fvector',['_ft_vector',['../classXBot_1_1KinematicChain.html#a6598cb53a2fcc228fd3722e3ec7799b3',1,'XBot::KinematicChain']]],
+  ['_5fhand_5fid_5fmap',['_hand_id_map',['../classXBot_1_1XBotInterface.html#ad95646f9a05decad2b7b74eb95194725',1,'XBot::XBotInterface']]],
+  ['_5fhand_5fmap',['_hand_map',['../classXBot_1_1XBotInterface.html#a1fd7fbea1dd2be09b87e2b55364f429d',1,'XBot::XBotInterface']]],
   ['_5fimu_5fid_5fmap',['_imu_id_map',['../classXBot_1_1XBotInterface.html#ab459959807a1b533e4e9565d9175dba5',1,'XBot::XBotInterface']]],
   ['_5fimu_5fmap',['_imu_map',['../classXBot_1_1KinematicChain.html#a197c4c2c0671d380b57d509c7840ea10',1,'XBot::KinematicChain::_imu_map()'],['../classXBot_1_1XBotInterface.html#a735c7ca854ce08f7f1e7054701b9f0c6',1,'XBot::XBotInterface::_imu_map()']]],
   ['_5fimu_5fvector',['_imu_vector',['../classXBot_1_1KinematicChain.html#a3deb70fff155fa4951b3186b2248ea75',1,'XBot::KinematicChain']]],
