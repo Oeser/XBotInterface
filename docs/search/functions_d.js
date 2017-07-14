@@ -13,6 +13,7 @@ var searchData=
   ['model',['model',['../classXBot_1_1RobotInterface.html#a97415f83b452fd91e05b0fc077d36ade',1,'XBot::RobotInterface']]],
   ['modelinterface',['ModelInterface',['../classXBot_1_1ModelInterface.html#af1c1e06418ccfdb6c2f629ce37009adf',1,'XBot::ModelInterface::ModelInterface()=default'],['../classXBot_1_1ModelInterface.html#a5f5505bdd63991dd9e6fb92bd15e4312',1,'XBot::ModelInterface::ModelInterface(const ModelInterface &amp;other)=delete']]],
   ['move',['move',['../classXBot_1_1RobotInterface.html#aa2294575e399bee4e9ed90cd7335b2cb',1,'XBot::RobotInterface']]],
+  ['move_5fhands',['move_hands',['../classXBot_1_1RobotInterface.html#a38ecf9febf002d0adc1cf735939e7473',1,'XBot::RobotInterface']]],
   ['move_5finternal',['move_internal',['../classXBot_1_1RobotInterface.html#aa27f868efdd35996ce4b109eae2219dc',1,'XBot::RobotInterface']]],
   ['mpmc_5fbounded_5fqueue',['mpmc_bounded_queue',['../classspdlog_1_1details_1_1mpmc__bounded__queue.html#ab624df4f131d8b943bf8c451e643ddcb',1,'spdlog::details::mpmc_bounded_queue']]]
 ];

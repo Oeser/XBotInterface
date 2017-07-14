@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classfmt_1_1ArgVisitor.html" title="fmt::ArgVisitor\&lt; Impl,\l void \&gt;" alt="" coords="5,39,152,80"/>
-<area shape="rect" id="node2" href="$classfmt_1_1internal_1_1ArgFormatterBase.html" title="fmt::internal::ArgFormatter\lBase\&lt; Impl, Char \&gt;" alt="" coords="200,39,375,80"/>
-<area shape="rect" id="node3" href="$classfmt_1_1BasicArgFormatter.html" title="An argument formatter based on the curiously recurring template pattern &lt;http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern&gt;_. " alt="" coords="438,5,597,47"/>
-<area shape="rect" id="node4" href="$classfmt_1_1BasicPrintfArgFormatter.html" title="A printf argument formatter based on the curiously recurring template pattern &lt;http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern&gt;_. " alt="" coords="423,71,612,112"/>
+<area shape="rect" id="node1" href="$classfmt_1_1ArgVisitor.html" title="fmt::ArgVisitor\&lt; Impl,\l void \&gt;" alt="" coords="5,38,152,79"/>
+<area shape="rect" id="node2" href="$classfmt_1_1internal_1_1ArgFormatterBase.html" title="fmt::internal::ArgFormatter\lBase\&lt; Impl, Char \&gt;" alt="" coords="201,38,375,79"/>
+<area shape="rect" id="node3" href="$classfmt_1_1BasicArgFormatter.html" title="An argument formatter based on the curiously recurring template pattern &lt;http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern&gt;_. " alt="" coords="439,5,598,46"/>
+<area shape="rect" id="node4" href="$classfmt_1_1BasicPrintfArgFormatter.html" title="A printf argument formatter based on the curiously recurring template pattern &lt;http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern&gt;_. " alt="" coords="424,70,613,111"/>
 </map>

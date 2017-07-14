@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['main_5ftest_2ecpp',['main_test.cpp',['../main__test_8cpp.html',1,'']]],
-  ['modelchain_2ecpp',['ModelChain.cpp',['../ModelChain_8cpp.html',1,'']]],
-  ['modelchain_2eh',['ModelChain.h',['../ModelChain_8h.html',1,'']]],
-  ['modelinterface_2ecpp',['ModelInterface.cpp',['../ModelInterface_8cpp.html',1,'']]],
-  ['modelinterface_2eh',['ModelInterface.h',['../ModelInterface_8h.html',1,'']]],
-  ['mpmc_5fbounded_5fq_2eh',['mpmc_bounded_q.h',['../mpmc__bounded__q_8h.html',1,'']]],
-  ['msvc_5fsink_2eh',['msvc_sink.h',['../msvc__sink_8h.html',1,'']]]
+  ['log_5fmsg_2eh',['log_msg.h',['../log__msg_8h.html',1,'']]],
+  ['logger_2ecpp',['Logger.cpp',['../Logger_8cpp.html',1,'']]],
+  ['logger_2eh',['logger.h',['../logger_8h.html',1,'']]],
+  ['logger_2ehpp',['Logger.hpp',['../Logger_8hpp.html',1,'']]],
+  ['logger_5fimpl_2eh',['logger_impl.h',['../logger__impl_8h.html',1,'']]]
 ];

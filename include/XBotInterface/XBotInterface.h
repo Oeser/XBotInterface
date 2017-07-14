@@ -28,6 +28,7 @@
 #include <yaml-cpp/yaml.h>
 #include <XBotCoreModel.h>
 #include <XBotInterface/KinematicChain.h>
+#include <XBotInterface/Hand.h>
 #include <XBotInterface/TypedefAndEnums.h>
 #include <XBotInterface/Logger.hpp>
 
@@ -362,8 +363,29 @@ public:
      * the robot does not have an imu with the requested id.
      */
      ImuSensor::ConstPtr getImu ( int imu_id ) const;
+     
+    // Hands
 
-        /**
+     /**
+     * @brief Getter for the hands map pertaining to the whole robot.
+     *
+     * @return A map whose key is the hand name (i.e. the name of the fixed hand joint in the URDF) and
+     * whose value is a shared pointer to the hand.
+     */
+     std::map< std::string, Hand::Ptr > getHand();
+
+     /**
+     * @brief Returns a hand given its hand ID.
+     *
+     * @param hand_id hand ID as given by Hand::getHandId(). If the hand fixed joint
+     * is listed inside the joint id map, then the hand id is the one specified inside such a file.
+     * @return A shared pointer to the required hand. The returned pointer is null if
+     * the robot does not have an hand with the requested id.
+     */
+     Hand::Ptr getHand ( int hand_id ) const;
+     
+
+    /**
      * @brief Converts a state vector for the whole robot to its JointNameMap representation.
      * Note that the output map is not cleared before it is filled. It is the responsibility of
      * the user to do so if required.
@@ -1354,6 +1376,8 @@ protected:
      std::map<int, ForceTorqueSensor::Ptr> _ft_id_map;
      std::map<std::string, ImuSensor::Ptr> _imu_map;
      std::map<int, ImuSensor::Ptr> _imu_id_map;
+     std::map<std::string, Hand::Ptr> _hand_map;
+     std::map<int, Hand::Ptr> _hand_id_map;
      std::vector<std::string> _ordered_chain_names;
 
      std::map<int, int> _joint_id_to_eigen_id;

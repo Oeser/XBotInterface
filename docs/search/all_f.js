@@ -34,5 +34,6 @@ var searchData=
   ['ostream_5fsink_2eh',['ostream_sink.h',['../ostream__sink_8h.html',1,'']]],
   ['ostream_5fsink_5fmt',['ostream_sink_mt',['../namespacespdlog_1_1sinks.html#a5822ee0090061b9982d334e64da1b240',1,'spdlog::sinks']]],
   ['ostream_5fsink_5fst',['ostream_sink_st',['../namespacespdlog_1_1sinks.html#a0cb719bc6348503c00a05697d7eb65ca',1,'spdlog::sinks']]],
-  ['overflow',['overflow',['../classfmt_1_1internal_1_1FormatBuf.html#af5f472241b45d828a8d40cea7694c95c',1,'fmt::internal::FormatBuf']]]
+  ['overflow',['overflow',['../classfmt_1_1internal_1_1FormatBuf.html#af5f472241b45d828a8d40cea7694c95c',1,'fmt::internal::FormatBuf']]],
+  ['overflow_5fpolicy',['overflow_policy',['../async__logger__impl_8h.html#aa9239ded28f36d3a3033b9fb271fe2c2',1,'async_logger_impl.h']]]
 ];

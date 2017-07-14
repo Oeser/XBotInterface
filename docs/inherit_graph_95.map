@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classXBot_1_1Logger.html" title="XBot::Logger" alt="" coords="5,31,104,57"/>
-<area shape="rect" id="node2" href="$classXBot_1_1ConsoleLogger.html" title="XBot::ConsoleLogger" alt="" coords="152,5,299,32"/>
-<area shape="rect" id="node3" href="$classXBot_1_1FileLogger.html" title="XBot::FileLogger" alt="" coords="166,56,285,83"/>
+<area shape="rect" id="node1" href="$classXBot_1_1KinematicChain.html" title="Kinematic chain abstraction as a set of joints and sensors. " alt="" coords="6,31,157,57"/>
+<area shape="rect" id="node2" href="$classXBot_1_1ModelChain.html" title="Kinematic chain useful for a model abstraction. " alt="" coords="205,5,333,32"/>
+<area shape="rect" id="node3" href="$classXBot_1_1RobotChain.html" title="Kinematic chain useful for a robot abstraction. " alt="" coords="205,56,333,83"/>
 </map>

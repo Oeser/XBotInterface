@@ -1,6 +1,6 @@
 <map id="XBot::SPDConsoleLogger" name="XBot::SPDConsoleLogger">
-<area shape="rect" id="node2" href="$classXBot_1_1SSConsoleLogger.html" title="{XBot::SSConsoleLogger\n||+ SSConsoleLogger()\l}" alt="" coords="11,545,175,623"/>
-<area shape="rect" id="node3" href="$classXBot_1_1SSLogger.html" title="String Stream Logger. " alt="" coords="23,301,162,496"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="53,147,133,224"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="29,5,156,97"/>
+<area shape="rect" id="node2" href="$classXBot_1_1SSConsoleLogger.html" title="{XBot::SSConsoleLogger\n||+ SSConsoleLogger()\l}" alt="" coords="10,549,173,627"/>
+<area shape="rect" id="node3" href="$classXBot_1_1SSLogger.html" title="String Stream Logger. " alt="" coords="23,304,161,499"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="52,149,131,227"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="29,6,155,98"/>
 </map>

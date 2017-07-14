@@ -1,9 +1,9 @@
 <map id="fmt::internal::MakeArg&lt; Formatter &gt;" name="fmt::internal::MakeArg&lt; Formatter &gt;">
-<area shape="rect" id="node2" href="$structfmt_1_1internal_1_1Arg.html" title="{fmt::internal::Arg\n|+ type\l|}" alt="" coords="357,419,475,496"/>
-<area shape="rect" id="node3" href="$structfmt_1_1internal_1_1Value.html" title="{fmt::internal::Value\n|+ int_value\l+ uint_value\l+ long_long_value\l+ ulong_long_value\l+ double_value\l+ long_double_value\l+ pointer\l+ @3\l|}" alt="" coords="345,189,487,369"/>
-<area shape="rect" id="node4" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; signed\l char \&gt;\n|+ value\l+ size\l|}" alt="" coords="5,5,152,127"/>
-<area shape="rect" id="node5" href="$structfmt_1_1internal_1_1Value_1_1CustomValue.html" title="{fmt::internal::Value\l::CustomValue\n|+ value\l+ format\l|}" alt="" coords="177,13,309,119"/>
-<area shape="rect" id="node6" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; wchar_t \&gt;\n|+ value\l+ size\l|}" alt="" coords="333,13,499,119"/>
-<area shape="rect" id="node7" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; unsigned\l char \&gt;\n|+ value\l+ size\l|}" alt="" coords="523,5,685,127"/>
-<area shape="rect" id="node8" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; char \&gt;\n|+ value\l+ size\l|}" alt="" coords="709,13,856,119"/>
+<area shape="rect" id="node2" href="$structfmt_1_1internal_1_1Arg.html" title="{fmt::internal::Arg\n|+ type\l|}" alt="" coords="357,424,475,501"/>
+<area shape="rect" id="node3" href="$structfmt_1_1internal_1_1Value.html" title="{fmt::internal::Value\n|+ int_value\l+ uint_value\l+ long_long_value\l+ ulong_long_value\l+ double_value\l+ long_double_value\l+ pointer\l+ @3\l|}" alt="" coords="345,193,485,373"/>
+<area shape="rect" id="node4" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; signed\l char \&gt;\n|+ value\l+ size\l|}" alt="" coords="5,6,152,127"/>
+<area shape="rect" id="node5" href="$structfmt_1_1internal_1_1Value_1_1CustomValue.html" title="{fmt::internal::Value\l::CustomValue\n|+ value\l+ format\l|}" alt="" coords="177,13,308,120"/>
+<area shape="rect" id="node6" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; wchar_t \&gt;\n|+ value\l+ size\l|}" alt="" coords="333,13,499,120"/>
+<area shape="rect" id="node7" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; unsigned\l char \&gt;\n|+ value\l+ size\l|}" alt="" coords="523,6,684,127"/>
+<area shape="rect" id="node8" href="$structfmt_1_1internal_1_1Value_1_1StringValue.html" title="{fmt::internal::Value\l::StringValue\&lt; char \&gt;\n|+ value\l+ size\l|}" alt="" coords="709,13,856,120"/>
 </map>

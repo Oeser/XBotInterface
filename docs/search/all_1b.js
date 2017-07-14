@@ -10,7 +10,7 @@ var searchData=
   ['_7eflag_5fformatter',['~flag_formatter',['../classspdlog_1_1details_1_1flag__formatter.html#a8343c8168122a3d0ac427cac46407fb8',1,'spdlog::details::flag_formatter']]],
   ['_7eformaterror',['~FormatError',['../classfmt_1_1FormatError.html#ae1d51e8343a80529a397ff13015a1f82',1,'fmt::FormatError']]],
   ['_7eformatter',['~formatter',['../classspdlog_1_1formatter.html#a1f8abf4b6d1170d3de4ba46e18c32963',1,'spdlog::formatter']]],
-  ['_7elogger',['~logger',['../classspdlog_1_1logger.html#a3691352a0a61bcba0bf3fb32d236bce5',1,'spdlog::logger']]],
+  ['_7elogger',['~logger',['../classspdlog_1_1logger.html#a500355cbbee3d2330837735f8280093d',1,'spdlog::logger']]],
   ['_7ematlogger',['~MatLogger',['../classXBot_1_1MatLogger.html#a889fd916b3227e2f9ef97f1e10649e9d',1,'XBot::MatLogger']]],
   ['_7ememorybuffer',['~MemoryBuffer',['../classfmt_1_1internal_1_1MemoryBuffer.html#a9d9995949a1aa1011085d3f117001572',1,'fmt::internal::MemoryBuffer']]],
   ['_7empmc_5fbounded_5fqueue',['~mpmc_bounded_queue',['../classspdlog_1_1details_1_1mpmc__bounded__queue.html#acc7315bf7b3065c316fb2007406390ad',1,'spdlog::details::mpmc_bounded_queue']]],

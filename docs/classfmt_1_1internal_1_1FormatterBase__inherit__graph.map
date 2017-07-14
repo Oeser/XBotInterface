@@ -1,6 +1,6 @@
 <map id="fmt::internal::FormatterBase" name="fmt::internal::FormatterBase">
-<area shape="rect" id="node2" href="$classfmt_1_1BasicFormatter.html" title="{fmt::BasicFormatter\l\&lt; Char, ArgFormatter\l\&lt; Char \&gt; \&gt;\n||+ BasicFormatter()\l+ writer()\l+ format()\l+ format()\l}" alt="" coords="5,204,152,355"/>
-<area shape="rect" id="node3" href="$classfmt_1_1BasicFormatter.html" title="{fmt::BasicFormatter\l\&lt; Char, Impl \&gt;\n||+ BasicFormatter()\l+ writer()\l+ format()\l+ format()\l}" alt="" coords="176,211,315,347"/>
-<area shape="rect" id="node4" href="$classfmt_1_1BasicFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="339,211,525,347"/>
-<area shape="rect" id="node5" href="$classfmt_1_1PrintfFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="550,226,709,333"/>
+<area shape="rect" id="node2" href="$classfmt_1_1BasicFormatter.html" title="{fmt::BasicFormatter\l\&lt; Char, ArgFormatter\l\&lt; Char \&gt; \&gt;\n||+ BasicFormatter()\l+ writer()\l+ format()\l+ format()\l}" alt="" coords="5,206,152,357"/>
+<area shape="rect" id="node3" href="$classfmt_1_1BasicFormatter.html" title="{fmt::BasicFormatter\l\&lt; Char, Impl \&gt;\n||+ BasicFormatter()\l+ writer()\l+ format()\l+ format()\l}" alt="" coords="176,213,315,349"/>
+<area shape="rect" id="node4" href="$classfmt_1_1BasicFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="339,213,525,349"/>
+<area shape="rect" id="node5" href="$classfmt_1_1PrintfFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="550,228,708,335"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classfmt_1_1internal_1_1FormatterBase.html" title="fmt::internal::FormatterBase" alt="" coords="5,125,191,152"/>
-<area shape="rect" id="node2" href="$classfmt_1_1BasicFormatter.html" title="fmt::BasicFormatter\l\&lt; Char, ArgFormatter\l\&lt; Char \&gt; \&gt;" alt="" coords="259,5,405,61"/>
-<area shape="rect" id="node3" href="$classfmt_1_1BasicFormatter.html" title="fmt::BasicFormatter\l\&lt; Char, Impl \&gt;" alt="" coords="263,85,401,126"/>
-<area shape="rect" id="node4" href="$classfmt_1_1BasicFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="239,150,425,191"/>
-<area shape="rect" id="node5" href="$classfmt_1_1PrintfFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="253,215,411,257"/>
+<area shape="rect" id="node1" href="$classfmt_1_1internal_1_1FormatterBase.html" title="fmt::internal::FormatterBase" alt="" coords="6,125,191,152"/>
+<area shape="rect" id="node2" href="$classfmt_1_1BasicFormatter.html" title="fmt::BasicFormatter\l\&lt; Char, ArgFormatter\l\&lt; Char \&gt; \&gt;" alt="" coords="260,5,407,61"/>
+<area shape="rect" id="node3" href="$classfmt_1_1BasicFormatter.html" title="fmt::BasicFormatter\l\&lt; Char, Impl \&gt;" alt="" coords="264,85,403,126"/>
+<area shape="rect" id="node4" href="$classfmt_1_1BasicFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="240,150,427,191"/>
+<area shape="rect" id="node5" href="$classfmt_1_1PrintfFormatter.html" title="This template formats data and writes the output to a writer. " alt="" coords="254,215,413,257"/>
 </map>

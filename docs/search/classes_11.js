@@ -1,6 +1,7 @@
 var searchData=
 [
   ['s_5fformatter',['S_formatter',['../classspdlog_1_1details_1_1S__formatter.html',1,'spdlog::details']]],
+  ['secondorderfilter',['SecondOrderFilter',['../classXBot_1_1Utils_1_1SecondOrderFilter.html',1,'XBot::Utils']]],
   ['shareddatabase',['SharedDataBase',['../structXBot_1_1FSM_1_1SharedDataBase.html',1,'XBot::FSM']]],
   ['short_5flevel_5fformatter',['short_level_formatter',['../classspdlog_1_1details_1_1short__level__formatter.html',1,'spdlog::details']]],
   ['signchecker',['SignChecker',['../structfmt_1_1internal_1_1SignChecker.html',1,'fmt::internal']]],

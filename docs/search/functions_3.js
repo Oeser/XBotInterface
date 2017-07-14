@@ -23,6 +23,7 @@ var searchData=
   ['computeinversedynamics',['computeInverseDynamics',['../classXBot_1_1ModelInterface.html#ac4a7df44caf82accca2334b9a84159e2',1,'XBot::ModelInterface']]],
   ['computejdotqdot',['computeJdotQdot',['../classXBot_1_1ModelInterface.html#a88501db5d3d35415d05e1c07cf72d049',1,'XBot::ModelInterface::computeJdotQdot(const std::string &amp;link_name, const KDL::Vector &amp;point, KDL::Twist &amp;jdotqdot) const =0'],['../classXBot_1_1ModelInterface.html#af99faf00b081070b6db28d2ef2f09254',1,'XBot::ModelInterface::computeJdotQdot(const std::string &amp;link_name, const Eigen::Vector3d &amp;point, Eigen::Matrix&lt; double, 6, 1 &gt; &amp;jdotqdot) const ']]],
   ['computenonlinearterm',['computeNonlinearTerm',['../classXBot_1_1ModelInterface.html#a5f7c1192ce387217e8015d94dfd92733',1,'XBot::ModelInterface']]],
+  ['computeorientationerror',['computeOrientationError',['../namespaceXBot_1_1Utils.html#a30549f65c2ee4ebbfa7558adaca94777',1,'XBot::Utils']]],
   ['confighelper',['ConfigHelper',['../classXBot_1_1ConfigHelper.html#a0604cc0f4db33702033c2e3ef8753420',1,'XBot::ConfigHelper']]],
   ['console',['console',['../classXBot_1_1FSM_1_1State.html#a1a68fbeb1d52b491dd6ca595efcb6ef6',1,'XBot::FSM::State']]],
   ['const_5fcheck',['const_check',['../namespacefmt_1_1internal.html#abe2cbab571913bf19a52c6f6bc1b5a5a',1,'fmt::internal']]],

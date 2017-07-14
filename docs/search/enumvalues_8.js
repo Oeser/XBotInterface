@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['last_5finteger_5ftype',['LAST_INTEGER_TYPE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa1cc1a5881e640c0009f58a05b653d535',1,'fmt::internal::Value']]],
-  ['last_5fnumeric_5ftype',['LAST_NUMERIC_TYPE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaad9dbf0826103ba0fed6466a53bb0421b',1,'fmt::internal::Value']]],
-  ['long_5fdouble',['LONG_DOUBLE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa6578a997089147df95c66231c936c43c',1,'fmt::internal::Value']]],
-  ['long_5flong',['LONG_LONG',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa7674f34a96c22fec85d9f27d082b4412',1,'fmt::internal::Value']]]
+  ['info',['INFO',['../namespaceXBot.html#a30d5d97f659326abdecf20f1b1ec9882a551b723eafd6a31d444fcb2f5920fbd3',1,'XBot::INFO()'],['../namespacespdlog_1_1level.html#a35f5227e5daf228d28a207b7b2aefc8ba7f09db55ad64d87e4124f10582cb016f',1,'spdlog::level::info()']]],
+  ['inline_5fbuffer_5fsize',['INLINE_BUFFER_SIZE',['../namespacefmt_1_1internal.html#a855d655a8b82a933597acb9eee31b1a3abf58574b3f45959f076968509372a2fa',1,'fmt::internal']]],
+  ['int',['INT',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa6ab1b5ad31036f4c90bae16e873b3396',1,'fmt::internal::Value']]]
 ];

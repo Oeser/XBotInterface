@@ -1,5 +1,5 @@
 <map id="spdlog::sinks::ansicolor_sink" name="spdlog::sinks::ansicolor_sink">
-<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="5,287,136,452"/>
-<area shape="rect" id="node3" title="STL class. " alt="" coords="165,147,245,224"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="142,5,269,97"/>
+<area shape="rect" id="node2" href="$classspdlog_1_1sinks_1_1sink.html" title="{spdlog::sinks::sink\n||+ sink()\l+ ~sink()\l+ log()\l+ flush()\l+ should_log()\l+ set_level()\l+ level()\l}" alt="" coords="5,291,135,456"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="165,149,244,227"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="142,6,268,98"/>
 </map>

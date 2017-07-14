@@ -4,8 +4,6 @@ var searchData=
   ['argmap',['ArgMap',['../classfmt_1_1ArgList.html#a6e257e0433f829293f077ba81f205ab3',1,'fmt::ArgList']]],
   ['i_5fformatter',['I_formatter',['../classspdlog_1_1details_1_1I__formatter.html',1,'spdlog::details']]],
   ['idle',['Idle',['../classXBot_1_1ControlMode.html#afea522b42b072a0d3267364787b24aa8',1,'XBot::ControlMode']]],
-  ['impedance',['Impedance',['../namespaceXBot.html#a9db88d57fbc78b9c3803075eb4953d73a1722e4dcb079a90ba99fce5b8e31f666',1,'XBot']]],
-  ['imumap',['ImuMap',['../namespaceXBot.html#ad7d8feea5c04873be396dadbadeb12db',1,'XBot']]],
   ['imusensor',['ImuSensor',['../classXBot_1_1ImuSensor.html',1,'XBot']]],
   ['imusensor',['ImuSensor',['../classXBot_1_1ImuSensor.html#ad1bd08b548ec07b0a1b7d1a1d8ff26e1',1,'XBot::ImuSensor::ImuSensor()'],['../classXBot_1_1ImuSensor.html#ae417f058751dfd85a13a8216a4863cbb',1,'XBot::ImuSensor::ImuSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id)']]],
   ['imusensor_2ecpp',['ImuSensor.cpp',['../ImuSensor_8cpp.html',1,'']]],

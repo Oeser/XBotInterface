@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['magenta',['MAGENTA',['../namespacefmt.html#ace617112a82e0f90aac9858ecb446c8aaff47477fdc6f3b1e6dacda9fa1efb5c1',1,'fmt']]],
-  ['matrix',['Matrix',['../classXBot_1_1MatLogger.html#a25b5b8658087554d8b5be7b23ced3678af53df0293e169f562bc1d9a20e1d2589',1,'XBot::MatLogger']]],
-  ['max_5fpacked_5fargs',['MAX_PACKED_ARGS',['../classfmt_1_1ArgList.html#a87b3fb5d620328ea293dff1e545ca6f0a0623031f26b6d8df9dc978c1e5a2bb16',1,'fmt::ArgList']]],
-  ['minus_5fflag',['MINUS_FLAG',['../namespacefmt.html#ac14c51c5c796819e98c600fd04a2fdbeafc86655957d3b777b4c87eeb32250bc4',1,'fmt']]]
+  ['last_5finteger_5ftype',['LAST_INTEGER_TYPE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa1cc1a5881e640c0009f58a05b653d535',1,'fmt::internal::Value']]],
+  ['last_5fnumeric_5ftype',['LAST_NUMERIC_TYPE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaad9dbf0826103ba0fed6466a53bb0421b',1,'fmt::internal::Value']]],
+  ['log',['log',['../classspdlog_1_1details_1_1async__log__helper.html#a9e2509510e9e13a28b22aca6c4417017adc1d71bbb5c4d2a5e936db79ef10c19f',1,'spdlog::details::async_log_helper']]],
+  ['long_5fdouble',['LONG_DOUBLE',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa6578a997089147df95c66231c936c43c',1,'fmt::internal::Value']]],
+  ['long_5flong',['LONG_LONG',['../structfmt_1_1internal_1_1Value.html#a0305339d0a9571e14e26f385367fedaaa7674f34a96c22fec85d9f27d082b4412',1,'fmt::internal::Value']]]
 ];

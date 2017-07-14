@@ -22,7 +22,7 @@ var searchData=
   ['report_5funknown_5ftype',['report_unknown_type',['../namespacefmt_1_1internal.html#a92bdabe812efd23c6f9686ddd6a7805f',1,'fmt::internal']]],
   ['require_5fnumeric_5fargument',['require_numeric_argument',['../namespacefmt_1_1internal.html#a706fe7cc890026cebbd52e75d8a97afc',1,'fmt::internal']]],
   ['reserve',['reserve',['../classfmt_1_1Buffer.html#a7f46a3ce8d86abe35904f6654bd4ea1e',1,'fmt::Buffer']]],
-  ['reset',['reset',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#abc2fbdd293e35b19d5364bfcaf17ae7e',1,'spdlog::sinks::ansicolor_sink']]],
+  ['reset',['reset',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#abc2fbdd293e35b19d5364bfcaf17ae7e',1,'spdlog::sinks::ansicolor_sink::reset()'],['../classXBot_1_1Utils_1_1SecondOrderFilter.html#a8cb417b02149ad594569784c20c994b2',1,'XBot::Utils::SecondOrderFilter::reset()']]],
   ['resize',['resize',['../classfmt_1_1Buffer.html#a20f893164dc20e8ea8c77810d4ea8d59',1,'fmt::Buffer']]],
   ['reverse',['reverse',['../classspdlog_1_1sinks_1_1ansicolor__sink.html#a879f5ac37f5a67702f5c867a0f433ac1',1,'spdlog::sinks::ansicolor_sink']]],
   ['robotchain',['RobotChain',['../classXBot_1_1RobotChain.html',1,'XBot']]],

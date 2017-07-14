@@ -36,10 +36,11 @@ var searchData=
   ['modelinterface_2eh',['ModelInterface.h',['../ModelInterface_8h.html',1,'']]],
   ['months',['months',['../namespacespdlog_1_1details.html#a7ca278377768e9c672144be9506757af',1,'spdlog::details']]],
   ['move',['move',['../classXBot_1_1RobotInterface.html#aa2294575e399bee4e9ed90cd7335b2cb',1,'XBot::RobotInterface']]],
+  ['move_5fhands',['move_hands',['../classXBot_1_1RobotInterface.html#a38ecf9febf002d0adc1cf735939e7473',1,'XBot::RobotInterface']]],
   ['move_5finternal',['move_internal',['../classXBot_1_1RobotInterface.html#aa27f868efdd35996ce4b109eae2219dc',1,'XBot::RobotInterface']]],
   ['mpmc_5fbounded_5fq_2eh',['mpmc_bounded_q.h',['../mpmc__bounded__q_8h.html',1,'']]],
-  ['mpmc_5fbounded_5fqueue',['mpmc_bounded_queue',['../classspdlog_1_1details_1_1mpmc__bounded__queue.html',1,'spdlog::details']]],
   ['mpmc_5fbounded_5fqueue',['mpmc_bounded_queue',['../classspdlog_1_1details_1_1mpmc__bounded__queue.html#ab624df4f131d8b943bf8c451e643ddcb',1,'spdlog::details::mpmc_bounded_queue']]],
+  ['mpmc_5fbounded_5fqueue',['mpmc_bounded_queue',['../classspdlog_1_1details_1_1mpmc__bounded__queue.html',1,'spdlog::details']]],
   ['mpmc_5fbounded_5fqueue_3c_20item_5ftype_20_3e',['mpmc_bounded_queue&lt; item_type &gt;',['../classspdlog_1_1details_1_1mpmc__bounded__queue.html',1,'spdlog::details']]],
   ['msvc_5fsink_2eh',['msvc_sink.h',['../msvc__sink_8h.html',1,'']]]
 ];
