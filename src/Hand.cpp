@@ -22,7 +22,7 @@
 namespace XBot {
 
     
-Hand::Hand ( int hand_id, std::string hand_name ) : _hand_id(hand_id), _hand_name(hand_name)
+Hand::Hand ( int hand_id, std::string hand_name ) : _hand_id(hand_id), _hand_name(hand_name), _grasp_percentage(0)
 {
 
 }
