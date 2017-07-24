@@ -227,12 +227,36 @@ public:
     virtual bool setFloatingBasePose( const KDL::Frame& floating_base_pose ) = 0;
 
     /**
+    * @brief Gets the floating base pose w.r.t. the world frame
+    *
+    * @param floating_base_pose The homogeneous transformation which transforms a point from floating base frame to world frame
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool getFloatingBasePose( KDL::Frame& floating_base_pose ) const;
+
+    /**
     * @brief Sets the floating base twist w.r.t. the world frame
     *
     * @param floating_base_twist The twist of the floating base w.r.t. the world
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
     */
     virtual bool setFloatingBaseTwist( const KDL::Twist& floating_base_twist ) = 0;
+
+    /**
+    * @brief Gets the floating base twist w.r.t. the world frame
+    *
+    * @param floating_base_twist The twist of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool getFloatingBaseTwist( KDL::Twist& floating_base_twist ) const;
+
+    /**
+     * @brief Gets the name of the floating base link
+     *
+     * @param floating_base_link The name of the floating base link
+     * @return True if the the model is floating base. False otherwise.
+     */
+    virtual bool getFloatingBaseLink( std::string& floating_base_link) const = 0;
 
     /**
     * @brief Computes the pose of the source_frame w.r.t. the world frame
@@ -245,10 +269,10 @@ public:
                           KDL::Frame& pose ) const = 0;
 
     /**
-    * @brief Computes the pose of the target_frame w.r.t. the source_frame
+    * @brief Computes the pose of the source_frame w.r.t. the target_frame
     *
-    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
-    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
+    * @param source_frame The source link name.
+    * @param target_frame The target link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to target frame
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
@@ -269,8 +293,8 @@ public:
     /**
     * @brief Computes the orientation of the target_frame w.r.t. the source_frame
     *
-    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
-    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
+    * @param source_frame The source link name.
+    * @param target_frame The target link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to target frame
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
@@ -597,12 +621,28 @@ public:
     */
     virtual bool setFloatingBaseTwist( const Eigen::Vector6d& floating_base_twist );
 
+    /**
+    * @brief Gets the floating base pose w.r.t. the world frame
+    *
+    * @param floating_base_pose The homogeneous transformation which transforms a point from floating base frame to world frame
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool getFloatingBasePose( Eigen::Affine3d& floating_base_pose ) const;
+
 
     /**
-    * @brief Computes the pose of the target_frame w.r.t. the source_frame
+    * @brief Gets the floating base twist w.r.t. the world frame
     *
-    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
-    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
+    * @param floating_base_twist The twist of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool getFloatingBaseTwist( Eigen::Vector6d& floating_base_twist ) const;
+
+    /**
+    * @brief Computes the pose of the source_frame w.r.t. the target_frame
+    *
+    * @param source_frame The source link name.
+    * @param target_frame The target link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to target frame
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
@@ -629,7 +669,7 @@ public:
     bool getOrientation(    const std::string& target_frame,
                             Eigen::Matrix3d& orientation) const;
     /**
-    * @brief Computes the orientation of the target_frame w.r.t. the source_frame
+    * @brief Computes the orientation of the source_frame w.r.t. the target_frame
     *
     * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
     * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
