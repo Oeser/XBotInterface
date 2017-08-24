@@ -182,8 +182,8 @@ public:
     bool load(std::string plugin_name)
     {
         
-        _ioplugin_factory.reset(new shlibpp::SharedLibraryClassFactory<IOPlugin>);
-        _ioplugin_class.reset(new shlibpp::SharedLibraryClass<IOPlugin>);
+        _ioplugin_factory.reset(new shlibpp::SharedLibraryClassFactory<PluginType>);
+        _ioplugin_class.reset(new shlibpp::SharedLibraryClass<PluginType>);
 
         std::string path_to_so = "lib" + plugin_name + ".so";
         computeAbsolutePath(path_to_so, LIB_MIDDLE_PATH, path_to_so);
