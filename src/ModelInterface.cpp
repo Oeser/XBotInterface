@@ -805,8 +805,74 @@ bool XBot::ModelInterface::getFloatingBaseTwist(KDL::Twist& floating_base_twist)
     return success;
 }
 
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const std::string& target_frame,
+                                       KDL::Jacobian& J) const
+{
+    bool success = getJacobian(link_name, J);
+    success = getOrientation(target_frame, _tmp_kdl_rotation) && success;
+    J.changeBase(_tmp_kdl_rotation.Inverse());
+    return success;
+}
+
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const std::string& target_frame,
+                                       Eigen::MatrixXd& J) const
+{
+    bool success = getJacobian(link_name, target_frame, _tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+    return success;
+}
 
 
+bool XBot::ModelInterface::setFloatingBaseAngularVelocity(const Eigen::Vector3d& floating_base_omega)
+{
+    Eigen::Vector6d twist;
+    bool success = getFloatingBaseTwist(twist);
+
+    if(!success) return false;
+
+    twist.tail<3>() = floating_base_omega;
+
+    return setFloatingBaseTwist(twist);
+}
+
+bool XBot::ModelInterface::setFloatingBaseAngularVelocity(const KDL::Vector& floating_base_omega)
+{
+    KDL::Twist twist;
+    bool success = getFloatingBaseTwist(twist);
+
+    if(!success) return false;
+
+    twist.rot = floating_base_omega;
+
+    return setFloatingBaseTwist(twist);
+}
+
+bool XBot::ModelInterface::setFloatingBaseOrientation(const Eigen::Matrix3d& world_R_floating_base)
+{
+    Eigen::Affine3d w_T_fb;
+    bool success = getFloatingBasePose(w_T_fb);
+
+    if(!success) return false;
+
+    w_T_fb.linear() = world_R_floating_base;
+
+    return setFloatingBasePose(w_T_fb);
+
+}
+
+bool XBot::ModelInterface::setFloatingBaseOrientation(const KDL::Rotation& world_R_floating_base)
+{
+    KDL::Frame w_T_fb;
+    bool success = getFloatingBasePose(w_T_fb);
+
+    if(!success) return false;
+
+    w_T_fb.M = world_R_floating_base;
+
+    return setFloatingBasePose(w_T_fb);
+}
 
 
 

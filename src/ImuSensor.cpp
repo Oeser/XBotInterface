@@ -20,7 +20,7 @@
 #include <XBotInterface/ImuSensor.h>
 
 namespace XBot {
-    
+
 ImuSensor::ImuSensor():
 GenericSensor::GenericSensor(),
 _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identity())
@@ -28,7 +28,7 @@ _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identit
 
 }
 
-ImuSensor::ImuSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id): 
+ImuSensor::ImuSensor(urdf::LinkConstSharedPtr sensor_link, int sensor_id):
 GenericSensor(sensor_link, sensor_id),
 _lin_acc(0,0,0), _angular_velocity(0,0,0), _orientation(Eigen::Matrix3d::Identity())
 {
@@ -41,8 +41,8 @@ void ImuSensor::getAngularVelocity(Eigen::Vector3d& angular_velocity) const
     angular_velocity = _angular_velocity;
 }
 
-void ImuSensor::getImuData(Eigen::Matrix3d& orientation, 
-                           Eigen::Vector3d& acceleration, 
+void ImuSensor::getImuData(Eigen::Matrix3d& orientation,
+                           Eigen::Vector3d& acceleration,
                            Eigen::Vector3d& angular_velocity) const
 {
     orientation = _orientation;
@@ -50,8 +50,8 @@ void ImuSensor::getImuData(Eigen::Matrix3d& orientation,
     angular_velocity = _angular_velocity;
 }
 
-void ImuSensor::getImuData(Eigen::Quaterniond& orientation, 
-                           Eigen::Vector3d& acceleration, 
+void ImuSensor::getImuData(Eigen::Quaterniond& orientation,
+                           Eigen::Vector3d& acceleration,
                            Eigen::Vector3d& angular_velocity) const
 {
     orientation = Eigen::Quaterniond(_orientation);
@@ -74,9 +74,9 @@ void ImuSensor::getOrientation(Eigen::Quaterniond& orientation) const
     orientation = Eigen::Quaterniond(_orientation);
 }
 
-void ImuSensor::setImuData(Eigen::Matrix3d& orientation, 
+void ImuSensor::setImuData(Eigen::Matrix3d& orientation,
                            Eigen::Vector3d& acceleration,
-                           Eigen::Vector3d& angular_velocity, 
+                           Eigen::Vector3d& angular_velocity,
                            double timestamp
                           )
 {
@@ -86,7 +86,7 @@ void ImuSensor::setImuData(Eigen::Matrix3d& orientation,
     setTimestamp(timestamp);
 }
 
-void ImuSensor::setImuData(Eigen::Quaterniond& orientation, 
+void ImuSensor::setImuData(Eigen::Quaterniond& orientation,
                            Eigen::Vector3d& acceleration,
                            Eigen::Vector3d& angular_velocity,
                            double timestamp
@@ -107,7 +107,7 @@ std::ostream& operator<<(std::ostream& os, const ImuSensor& j)
     os << "Position: \n" << j.getSensorPose().translation() << std::endl;
     os << "Sensed values ###########" << std::endl;
     os << "\tAcceleration: " << j._lin_acc.transpose() << std::endl;
-    os << "\tAngular velocity: " << j._angular_velocity << std::endl;
+    os << "\tAngular velocity: " << j._angular_velocity.transpose() << std::endl;
     os << "\tOrientation: \n" << j._orientation << std::endl;
 
 }

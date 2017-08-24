@@ -222,9 +222,17 @@ public:
     * @brief Sets the floating base pose w.r.t. the world frame
     *
     * @param floating_base_pose A homogeneous transformation which transforms a point from floating base frame to world frame
-    * @return True if the floating_base_pose frame is valid. False otherwise.
+    * @return True if the model is floating-base. False otherwise.
     */
     virtual bool setFloatingBasePose( const KDL::Frame& floating_base_pose ) = 0;
+
+    /**
+    * @brief Sets the floating base orientation w.r.t. the world frame
+    *
+    * @param world_R_floating_base A rotation matrix which rotates a vector from floating base frame to world frame
+    * @return True if the model is floating-base. False otherwise.
+    */
+    bool setFloatingBaseOrientation( const KDL::Rotation& world_R_floating_base );
 
     /**
     * @brief Gets the floating base pose w.r.t. the world frame
@@ -241,6 +249,14 @@ public:
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
     */
     virtual bool setFloatingBaseTwist( const KDL::Twist& floating_base_twist ) = 0;
+
+    /**
+    * @brief Sets the floating base angular velocity w.r.t. the world frame
+    *
+    * @param floating_base_omega The angular velocity of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool setFloatingBaseAngularVelocity( const KDL::Vector& floating_base_omega );
 
     /**
     * @brief Gets the floating base twist w.r.t. the world frame
@@ -347,9 +363,24 @@ public:
      *
      * @param link_name The link name
      * @param J  The Jacobian expressed in the world frame
+     * @return True if the link_name and target_frame are valid link names. False otherwise.
+     */
+    bool getJacobian( const std::string& link_name,
+                      KDL::Jacobian& J) const;
+
+    /**
+     * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
+     * the derivative of the configuration vector gives the velocity twist of link_name according to target_frame
+     * (i.e. first linear then angular velocity).
+     * The reference point is the origin of the link with link_name name.
+     *
+     * @param link_name The link name
+     * @param target_frame The target frame name
+     * @param J  The Jacobian expressed in the world frame
      * @return True if the link_name is a valid link name. False otherwise.
      */
     bool getJacobian( const std::string& link_name,
+                      const std::string& target_frame,
                       KDL::Jacobian& J) const;
 
     /**
@@ -614,12 +645,28 @@ public:
     bool setFloatingBasePose( const Eigen::Affine3d& floating_base_pose );
 
     /**
+    * @brief Sets the floating base orientation w.r.t. the world frame
+    *
+    * @param world_R_floating_base A rotation matrix which rotates a vector from floating base frame to world frame
+    * @return True if the model is floating-base. False otherwise.
+    */
+    bool setFloatingBaseOrientation( const Eigen::Matrix3d& world_R_floating_base );
+
+    /**
     * @brief Sets the floating base twist w.r.t. the world frame
     *
     * @param floating_base_twist The twist of the floating base w.r.t. the world
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
     */
     virtual bool setFloatingBaseTwist( const Eigen::Vector6d& floating_base_twist );
+
+    /**
+    * @brief Sets the floating base angular velocity w.r.t. the world frame
+    *
+    * @param floating_base_omega The angular velocity of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool setFloatingBaseAngularVelocity( const Eigen::Vector3d& floating_base_omega );
 
     /**
     * @brief Gets the floating base pose w.r.t. the world frame
@@ -715,6 +762,21 @@ public:
      */
     bool getJacobian( const std::string& link_name,
                       Eigen::MatrixXd& J);
+
+    /**
+     * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
+     * the derivative of the configuration vector gives the velocity twist of link_name according to target_frame
+     * (i.e. first linear then angular velocity).
+     * The reference point is the origin of the link with link_name name.
+     *
+     * @param link_name The link name
+     * @param target_frame The target frame name
+     * @param J  The Jacobian expressed in the world frame
+     * @return True if the link_name is a valid link name. False otherwise.
+     */
+    bool getJacobian( const std::string& link_name,
+                      const std::string& target_frame,
+                      Eigen::MatrixXd& J) const;
 
     /**
      * @brief Gets the Jacobian of link_name expressed in the world frame, i.e a matrix such that its product with

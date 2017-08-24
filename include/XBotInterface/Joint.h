@@ -619,7 +619,9 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
          sync_acceleration = false,
          sync_effort = false,
          sync_stiffness = false,
-         sync_damping;
+         sync_damping = false,
+         sync_ft = false,
+         sync_imu = false;
 
     parseFlags(sync_position,
                sync_velocity,
@@ -627,6 +629,8 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
                sync_effort,
                sync_stiffness,
                sync_damping,
+               sync_ft,
+               sync_imu,
                flags...);
 
 
@@ -698,7 +702,9 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
          sync_acceleration = false,
          sync_effort = false,
          sync_stiffness = false,
-         sync_damping;
+         sync_damping = false,
+         sync_ft = false,
+         sync_imu = false;
 
     parseFlags(sync_position,
                sync_velocity,
@@ -706,6 +712,8 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
                sync_effort,
                sync_stiffness,
                sync_damping,
+               sync_ft,
+               sync_imu,
                flags...);
 
     /////////////////
