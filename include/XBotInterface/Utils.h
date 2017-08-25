@@ -174,14 +174,16 @@ private:
 };
 
 
+#define REGISTER_GENERIC_PLUGIN(plugin_name, scoped_class_name, base_class_name) SHLIBPP_DEFINE_SHARED_SUBCLASS(plugin_name ## _factory, scoped_class_name, base_class_name);
+
 template <typename PluginType>
 class PluginLoader {
-    
+
 public:
 
     bool load(std::string plugin_name)
     {
-        
+
         _ioplugin_factory.reset(new shlibpp::SharedLibraryClassFactory<PluginType>);
         _ioplugin_class.reset(new shlibpp::SharedLibraryClass<PluginType>);
 
@@ -207,8 +209,8 @@ public:
         return true;
 
     }
-    
-    
+
+
     PluginType* getPtr()
     {
         if(!_load_success) return nullptr;
@@ -247,8 +249,8 @@ private:
     std::shared_ptr<shlibpp::SharedLibraryClassFactory<PluginType>> _ioplugin_factory;
     std::shared_ptr<shlibpp::SharedLibraryClass<PluginType>> _ioplugin_class;
 
-    bool _load_success; 
-    
+    bool _load_success;
+
 };
 
 
