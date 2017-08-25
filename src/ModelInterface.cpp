@@ -384,7 +384,7 @@ void XBot::ModelInterface::getGravity(Eigen::Vector3d& gravity) const
 }
 
 
-bool XBot::ModelInterface::getJacobian(const std::string& link_name, Eigen::MatrixXd& J)
+bool XBot::ModelInterface::getJacobian(const std::string& link_name, Eigen::MatrixXd& J) const
 {
     bool success = getJacobian(link_name, _tmp_kdl_jacobian);
     J = _tmp_kdl_jacobian.data;
@@ -510,7 +510,7 @@ bool XBot::ModelInterface::getOrientation(const std::string& target_frame, Eigen
 
 bool XBot::ModelInterface::getJacobian(const std::string& link_name,
                                        const Eigen::Vector3d& point,
-                                       Eigen::MatrixXd& J)
+                                       Eigen::MatrixXd& J) const
 {
     tf::vectorEigenToKDL(point, _tmp_kdl_vector);
     bool success = getJacobian(link_name, _tmp_kdl_vector, _tmp_kdl_jacobian);
