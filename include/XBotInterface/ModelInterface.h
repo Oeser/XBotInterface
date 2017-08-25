@@ -506,7 +506,7 @@ public:
      * robot linear momentum, while the last three rows contain the angular momentum about the COM,
      * @return void
      */
-    virtual void getCentroidalMomentum(Eigen::Vector6d& centroidal_momentum) = 0;
+    virtual void getCentroidalMomentum(Eigen::Vector6d& centroidal_momentum) const = 0;
 
 
     /**
@@ -761,7 +761,7 @@ public:
      * @return True if the link_name is a valid link name. False otherwise.
      */
     bool getJacobian( const std::string& link_name,
-                      Eigen::MatrixXd& J);
+                      Eigen::MatrixXd& J) const;
 
     /**
      * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
@@ -789,7 +789,7 @@ public:
      */
     bool getJacobian( const std::string& link_name,
                       const Eigen::Vector3d& reference_point,
-                      Eigen::MatrixXd& J);
+                      Eigen::MatrixXd& J) const;
 
     /**
      * @brief Gets the relative Jacobian of target_link_name w.r.t to base_link_name.
