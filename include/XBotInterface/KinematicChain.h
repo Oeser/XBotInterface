@@ -721,6 +721,7 @@ private:
     
     bool _is_virtual;
     
+    XBot::Joint::Ptr getJointByName(const std::string& joint_name);
     XBot::Joint::ConstPtr getJointByName(const std::string& joint_name) const;
     XBot::Joint::ConstPtr getJointById(int joint_id) const;
 
@@ -733,9 +734,13 @@ template <typename... SyncFlags>
 bool KinematicChain::syncFrom(const KinematicChain &other, SyncFlags... flags)
 {
     
-    int pos = 0;
     for (const XBot::Joint::Ptr & j : other._joint_vector) {
-        _joint_vector[pos++]->syncFrom(*j, flags...);
+        
+        if(hasJoint(j->getJointName())){
+                auto this_joint = getJointByName(j->getJointName());
+                this_joint->syncFrom(*j, flags...);
+        }
+//         _joint_vector[pos++]->syncFrom(*j, flags...);
     }
 }
     
