@@ -874,24 +874,6 @@ bool XBot::ModelInterface::setFloatingBaseOrientation(const KDL::Rotation& world
     return setFloatingBasePose(w_T_fb);
 }
 
-void XBot::ModelInterface::getInertiaInverseTimesVector(const Eigen::VectorXd& vec, Eigen::VectorXd& minv_vec) const
-{
-    ///TODO
-    std::cout<<"TODO!"<<std::endl;
-}
-
-void XBot::ModelInterface::getInertiaInverseTimesMatrix(const Eigen::MatrixXd& Mat, Eigen::MatrixXd& Minv_Mat) const
-{
-    ///TODO
-    std::cout<<"TODO!"<<std::endl;
-}
-
-void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
-{
-    ///TODO
-    std::cout<<"TODO!"<<std::endl;
-}
-
 
 
 
