@@ -477,56 +477,6 @@ TEST_F( testModelInterface, checkLocalJacobian ){
 
 }
 
-TEST_F( testModelInterface, checkInverseInertiaMatrix)
-{
-    for(int i = 0; i < 100; i++){
-
-        Eigen::Vector6d twist, actual_twist;
-        Eigen::VectorXd q, qdot;
-        q.setRandom(fb_model_ptr->getJointNum());
-        qdot.setRandom(fb_model_ptr->getJointNum());
-
-        fb_model_ptr->setJointPosition(q);
-        fb_model_ptr->setJointVelocity(qdot);
-        fb_model_ptr->update();
-
-        Eigen::MatrixXd M(fb_model_ptr->getJointNum(), fb_model_ptr->getJointNum());
-        fb_model_ptr->getInertiaMatrix(M);
-        //std::cout<<"M: \n"<<M<<std::endl;
-
-
-
-        Eigen::MatrixXd M_inverse = M.inverse();
-        Eigen::VectorXd Minvq = M_inverse*(q);
-//        std::cout<<"Minvq: \n"<<Minvq.transpose()<<std::endl;
-        Eigen::VectorXd Minvq2;
-        fb_model_ptr->getInertiaInverseTimesVector(q, Minvq2);
-        //std::cout<<"M*Minvq2q: \n"<<((M*Minvq2)).transpose()<<std::endl;
-        EXPECT_NEAR((Minvq - Minvq2).norm(), 0.0, 1e-7);
-
-
-
-
-        Eigen::MatrixXd T(M.rows(), M.cols());
-        T.setRandom(M.rows(), M.cols());
-
-        Eigen::MatrixXd I = M_inverse*T;
-        //std::cout<<"I: \n"<<I<<std::endl;
-        Eigen::MatrixXd I2;
-        fb_model_ptr->getInertiaInverseTimesMatrix(T, I2);
-        //std::cout<<"I2: \n"<<I2<<std::endl;
-        EXPECT_NEAR((I - I2).norm(), 0.0, 1e-7);
-
-
-
-        Eigen::MatrixXd M_inverse2(fb_model_ptr->getJointNum(), fb_model_ptr->getJointNum());
-        fb_model_ptr->getInertiaInverse(M_inverse2);
-        //std::cout<<"M_inverse2: \n"<<M_inverse2<<std::endl;
-        //std::cout<<"M2: \n"<<M_inverse2.inverse()<<std::endl;
-        EXPECT_NEAR((M_inverse - M_inverse2).norm(), 0.0, 1e-7);
-    }
-}
-
 int main ( int argc, char **argv )
 {
      testing::InitGoogleTest ( &argc, argv );
