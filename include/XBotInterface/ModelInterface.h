@@ -58,7 +58,7 @@ public:
     /**
      * @brief Shared pointer to const ModelInterface
      */
-    typedef std::shared_ptr<ModelInterface> ConstPtr;
+    typedef std::shared_ptr<const ModelInterface> ConstPtr;
 
     // ModelInterface must be default constructible and non-copyable
     ModelInterface() = default;
