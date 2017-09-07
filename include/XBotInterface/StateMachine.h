@@ -80,8 +80,8 @@ namespace FSM {
         StateMachine():
             fsm_ptr(this),
             _is_fsm_init(false),
-            _data(std::make_shared<SharedDataType>()),
-            _console_logger(XBot::ConsoleLogger::getLogger())
+            _data(std::make_shared<SharedDataType>())
+//             _console_logger(XBot::ConsoleLogger::getLogger())
         {}
 
         bool init( const std::string& initial_state_name ){
@@ -202,7 +202,7 @@ namespace FSM {
         bool _is_fsm_init;
 
         std::shared_ptr<SharedDataType> _data;
-        XBot::ConsoleLogger::Ptr _console_logger;
+//         XBot::ConsoleLogger::Ptr _console_logger;
 
 
     };
@@ -239,10 +239,10 @@ namespace FSM {
             return *_data;
         }
 
-        XBot::ConsoleLogger& console()
-        {
-            return *_parent_fsm->_console_logger;
-        }
+//         XBot::ConsoleLogger& console()
+//         {
+//             return *_parent_fsm->_console_logger;
+//         }
 
         template <typename MessageType>
         bool transit( const std::string& next_state_name, const MessageType& msg )
