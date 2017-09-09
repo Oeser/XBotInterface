@@ -471,6 +471,20 @@ public:
      */
     bool getCOM( const std::string& reference_frame,
                          KDL::Vector& com_position ) const;
+                         
+                         
+    /**
+     * @brief Gets the COM Jacobian expressed in the world frame and the d(Jcom)/dt * qdot term, i.e.
+     * the COM acceleration due to joint velocities.
+     *
+     * @param J The COM Jacobian expressed in the world frame. Note that, since the COM is not fixed
+     * to any link, the Jacobian orientation part (i.e. the lower three rows) are undefined and filled with
+     * zeros.
+     * @param dJcomqdot The d(Jcom)/dt * qdot term, i.e. the COM acceleration due to joint velocities.
+     * @return void
+     */
+    virtual void getCOMJacobian( KDL::Jacobian& J, KDL::Vector& dJcomQdot) const;
+    
 
     /**
      * @brief Gets the COM Jacobian expressed in the world frame
@@ -480,7 +494,7 @@ public:
      * zeros.
      * @return void
      */
-    virtual void getCOMJacobian( KDL::Jacobian& J) const = 0;
+    virtual void getCOMJacobian( KDL::Jacobian& J) const;
 
     /**
      * @brief Gets the COM velocity expressed in the world frame
@@ -500,7 +514,7 @@ public:
 
 
     /**
-     * @brief Gets the robot mometum about its COM.
+     * @brief Gets the robot centroidal momentum matrix, i.e. the jacobian of the centroidal momentum.
      *
      * @param centroidal_momentum The robot centroidal momentum. The first three rows represent the
      * robot linear momentum, while the last three rows contain the angular momentum about the COM,
@@ -508,6 +522,25 @@ public:
      */
     virtual void getCentroidalMomentum(Eigen::Vector6d& centroidal_momentum) const = 0;
 
+    /**
+     * @brief Gets the robot centroidal momentum matrix, i.e. the jacobian of the centroidal momentum.
+     *
+     * @param centroidal_momentum_matrix The robot centroidal momentum matrix. The first three rows represent the
+     * jacobian of the robot linear momentum, while the last three rows contain the angular momentum about the COM,
+     * @param CMMdotQdot The d(CMM)/dt * qdot term, i.e. the derivative of the centroidal momentum due to joint velocities.
+     * @return void
+     */
+    virtual void getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix, 
+                                             Eigen::Vector6d& CMMdotQdot) const;
+    
+    /**
+     * @brief Gets the robot mometum about its COM.
+     *
+     * @param centroidal_momentum_matrix The robot centroidal momentum matrix. The first three rows represent the
+     * jacobian of the robot linear momentum, while the last three rows contain the angular momentum about the COM,
+     * @return void
+     */
+    virtual void getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix) const;
 
     /**
      * @brief Gets the weight of the robot
@@ -821,6 +854,18 @@ public:
      */
     bool getCOM( const std::string& reference_frame,
                  Eigen::Vector3d& com_position ) const;
+                 
+    /**
+     * @brief Gets the COM Jacobian expressed in the world frame and the d(Jcom)/dt * qdot term, i.e.
+     * the COM acceleration due to joint velocities.
+     *
+     * @param J The COM Jacobian expressed in the world frame. Note that, since the COM is not fixed
+     * to any link, the Jacobian orientation part (i.e. the lower three rows) are undefined and filled with
+     * zeros.
+     * @param dJcomqdot The d(Jcom)/dt * qdot term, i.e. the COM acceleration due to joint velocities.
+     * @return void
+     */
+    virtual void getCOMJacobian( Eigen::MatrixXd& J, Eigen::Vector3d& dJcomQdot) const;
 
     /**
      * @brief Gets the COM Jacobian expressed in the world frame
@@ -1006,7 +1051,11 @@ private:
     mutable KDL::Vector _tmp_kdl_vector, _tmp_kdl_vector_1;
     mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
     mutable std::vector<int> _tmp_int_vector;
+    mutable std::string _floating_base_link;
     mutable Eigen::MatrixXd _tmp_postural_jacob;
+    mutable Eigen::MatrixXd _tmp_inertia;
+    mutable Eigen::MatrixXd _tmp_jacobian;
+    mutable Eigen::VectorXd _tmp_gcomp, _tmp_nleffect;
 
     using XBotInterface::getTemperature;
     using XBotInterface::setTemperature;

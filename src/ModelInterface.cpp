@@ -874,7 +874,61 @@ bool XBot::ModelInterface::setFloatingBaseOrientation(const KDL::Rotation& world
     return setFloatingBasePose(w_T_fb);
 }
 
+void XBot::ModelInterface::getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix) const
+{
+    Eigen::Vector6d cmmdotqdot;
+    getCentroidalMomentumMatrix(centroidal_momentum_matrix, cmmdotqdot);
+}
 
+void XBot::ModelInterface::getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix, 
+                                                       Eigen::Vector6d& CMMdotQdot) const
+{
+    centroidal_momentum_matrix.setZero(6, getJointNum());
+    
+    if(!isFloatingBase()){
+        std::cerr << "ERROR in " << __func__ << "! Only implemented for floating base robots!" << std::endl;
+        return;
+    }
+    getInertiaMatrix(_tmp_inertia);
+    computeNonlinearTerm(_tmp_nleffect);
+    computeGravityCompensation(_tmp_gcomp);
+    Eigen::Vector3d com;
+    getCOM(com);
+    
+    Eigen::Affine3d w_T_fb;
+    getFloatingBasePose(w_T_fb);
+    
+    Eigen::Vector3d fb_com = w_T_fb.inverse() * com;
+    
+    getFloatingBaseLink(_floating_base_link);
+    getJacobian(_floating_base_link, fb_com, _tmp_jacobian);
+    
+    Eigen::Matrix<double, 6, 6> Ju = _tmp_jacobian.block<6,6>(0,0);
+    Eigen::Matrix<double, 6, 6> Ju_T_inv = Ju.transpose().inverse();
+    
+    centroidal_momentum_matrix = Ju_T_inv * _tmp_inertia.block(0, 0, 6, getJointNum());
+    CMMdotQdot = Ju_T_inv * (_tmp_nleffect - _tmp_gcomp).head<6>();
+    
+}
+
+void XBot::ModelInterface::getCOMJacobian(Eigen::MatrixXd& J, Eigen::Vector3d& dJcomQdot) const
+{
+    Eigen::Vector6d dcmmqdot;
+    getCentroidalMomentumMatrix(_tmp_jacobian, dcmmqdot);
+    J = _tmp_jacobian.topRows(3) / getMass();
+    dJcomQdot = dcmmqdot.head<3>() / getMass();
+}
+
+
+void XBot::ModelInterface::getCOMJacobian(KDL::Jacobian& J, KDL::Vector& dJcomQdot) const
+{
+    std::cout << "TBD IMPLEMENT!!!" << std::endl;
+}
+
+void XBot::ModelInterface::getCOMJacobian(KDL::Jacobian& J) const
+{
+    std::cout << "TBD IMPLEMENT!!!" << std::endl;
+}
 
 
 
