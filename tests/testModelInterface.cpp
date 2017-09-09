@@ -331,6 +331,7 @@ TEST_F( testModelInterface, checkCOM ){
 }
 
 
+
 TEST_F( testModelInterface, checkJdotQdot ){
 
     XBot::ModelInterface& model = *model_ptr;
@@ -471,6 +472,90 @@ TEST_F( testModelInterface, checkLocalJacobian ){
 
 
         EXPECT_NEAR( (J1 - J2).norm(), 0, 0.0001 );
+
+    }
+
+
+}
+
+
+
+TEST_F( testModelInterface, checkCMM ){
+
+
+    for(int i = 0; i < 100; i++){
+
+        Eigen::Vector6d cmom, actual_cmom;
+        Eigen::VectorXd q, qdot;
+        Eigen::MatrixXd cmm;
+        
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+
+
+        fb_model_ptr->getCentroidalMomentum(actual_cmom);
+        fb_model_ptr->getCentroidalMomentumMatrix(cmm);
+        cmom = cmm * qdot;
+        
+        std::cout << cmom.transpose() << std::endl;
+        std::cout << actual_cmom.transpose() << std::endl;
+
+        EXPECT_NEAR( (cmom-actual_cmom).norm(), 0, 0.0001 );
+
+
+
+    }
+
+
+}
+
+TEST_F( testModelInterface, checkCmmDotQdot ){
+
+
+    for(int i = 0; i < 100; i++){
+
+        Eigen::Vector6d cmom, actual_cmom, cmmdotqdot, cmmdotqdot_est;
+        Eigen::VectorXd q, qdot;
+        Eigen::MatrixXd cmm, cmmdot, cmm1;
+        
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+
+
+        fb_model_ptr->getCentroidalMomentum(actual_cmom);
+        fb_model_ptr->getCentroidalMomentumMatrix(cmm, cmmdotqdot);
+        cmom = cmm * qdot;
+        
+        std::cout << cmom.transpose() << std::endl;
+        std::cout << actual_cmom.transpose() << "\n------" << std::endl;
+
+        EXPECT_NEAR( (cmom-actual_cmom).norm(), 0, 0.0001 );
+        
+        double dt = 1e-6;
+        fb_model_ptr->setJointPosition(q + qdot*dt);
+        fb_model_ptr->update();
+        fb_model_ptr->getCentroidalMomentumMatrix(cmm1);
+        
+        cmmdot = (cmm1 - cmm)/dt;
+        
+        cmmdotqdot_est = cmmdot * qdot;
+        
+        std::cout << cmmdotqdot.transpose() << std::endl;
+        std::cout << cmmdotqdot_est.transpose() << std::endl;
+        
+        EXPECT_NEAR( (cmmdotqdot-cmmdotqdot_est).norm(), 0, 0.0001 );
+        
+
+
+
 
     }
 
