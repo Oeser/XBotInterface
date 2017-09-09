@@ -88,6 +88,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& chain(const std::string& chain_name);
+    const ModelChain& chain(const std::string& chain_name) const;
 
     /**
      * @brief Returns a handle to the kinematic chain named chain_name.
@@ -98,6 +99,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& operator()(const std::string& chain_name);
+    const ModelChain& operator()(const std::string& chain_name) const;
 
     /**
      * @brief Returns a handle to the kinematic chain corresponding to the
@@ -109,6 +111,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& arm(int arm_id);
+    const ModelChain& arm(int arm_id) const;
 
     /**
      * @brief Returns a handle to the kinematic chain corresponding to the
@@ -120,6 +123,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& leg(int leg_id);
+    const ModelChain& leg(int leg_id) const;
 
     /**
      * @brief Synchronizes the internal model state to the one of the XBotInterface
