@@ -1080,7 +1080,10 @@ private:
     mutable std::string _floating_base_link;
     mutable Eigen::MatrixXd _tmp_postural_jacob;
     mutable Eigen::MatrixXd _tmp_inertia;
+    mutable Eigen::VectorXd _tmp_inv_inertia;
     mutable Eigen::MatrixXd _tmp_jacobian;
+    mutable Eigen::MatrixXd _tmp_M;
+    mutable Eigen::MatrixXd _tmp_I;
     mutable Eigen::VectorXd _tmp_gcomp, _tmp_nleffect;
 
     using XBotInterface::getTemperature;

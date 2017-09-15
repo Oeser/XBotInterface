@@ -549,7 +549,7 @@ TEST_F( testModelInterface, checkLocalJacobian ){
 
 }
 
-TEST_F( testModelInterface, checkInverseInertiaMatrix)
+TEST_F( testModelInterface, checkCmm)
 {
     for(int i = 0; i < 100; i++){
 
