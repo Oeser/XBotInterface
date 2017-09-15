@@ -196,7 +196,6 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
     }
 
 
-
     return true;
 }
 
@@ -966,20 +965,26 @@ void XBot::ModelInterface::getCOMJacobian(KDL::Jacobian& J) const
 
 void XBot::ModelInterface::getInertiaInverseTimesVector(const Eigen::VectorXd& vec, Eigen::VectorXd& minv_vec) const
 {
-    ///TODO
-    std::cout<<"TODO!"<<std::endl;
+    _tmp_M.setIdentity(getJointNum(), getJointNum());
+    getInertiaMatrix(_tmp_M);
+    minv_vec = _tmp_M.inverse()*vec;
 }
 
 void XBot::ModelInterface::getInertiaInverseTimesMatrix(const Eigen::MatrixXd& Mat, Eigen::MatrixXd& Minv_Mat) const
 {
-    ///TODO
-    std::cout<<"TODO!"<<std::endl;
+    Minv_Mat.setZero(getJointNum(), getJointNum());
+    _tmp_inv_inertia.setZero(getJointNum());
+    for(int i = 0; i < Minv_Mat.rows(); ++i)
+    {
+        getInertiaInverseTimesVector(Mat.col(i), _tmp_inv_inertia);
+        Minv_Mat.col(i) = _tmp_inv_inertia;
+    }
 }
 
 void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
 {
-    ///TODO
-    std::cout<<"TODO!"<<std::endl;
+    _tmp_I.setIdentity(getJointNum(), getJointNum());
+    getInertiaInverseTimesMatrix(_tmp_I, Minv);
 }
 
 
