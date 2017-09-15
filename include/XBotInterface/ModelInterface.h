@@ -596,6 +596,28 @@ public:
      */
     virtual void getInertiaMatrix(Eigen::MatrixXd& M) const = 0;
 
+    /**
+     * @brief getInertiaInverseTimesVector Computes the inverse of the Inertia Matrix times a given
+     * vector
+     * @param vec input vector
+     * @param minv_vec the resultant vector
+     */
+    virtual void getInertiaInverseTimesVector(const Eigen::VectorXd& vec, Eigen::VectorXd& minv_vec) const;
+
+    /**
+     * @brief getInertiaInverseTimesMatrix Computes the inverse of the Inertia Matrix times a given
+     * matrix
+     * @param Mat input matrix
+     * @param Minv_Mat the resultant matrix
+     */
+    virtual void getInertiaInverseTimesMatrix(const Eigen::MatrixXd& Mat, Eigen::MatrixXd& Minv_Mat) const;
+
+    /**
+     * @brief getInertiaInverse compute the inverse of the Inertia Matrix
+     * @param Minv the inverse of the inertia matrix
+     */
+    virtual void getInertiaInverse(Eigen::MatrixXd& Minv) const;
+
 
     /**
      * @brief Computes gravity compensation torques. Make sure that you correctly specified
