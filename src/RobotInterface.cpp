@@ -44,6 +44,15 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
 
     // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    
+    // core YAML
+    std::string core_absolute_path;
+    computeAbsolutePath("core.yaml", // NOTE we fixed it.
+                        CONFIG_MIDDLE_PATH,
+                        core_absolute_path);
+    YAML::Node core_cfg = YAML::LoadFile(core_absolute_path);
+    
+    
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["RobotInterface"]) {
@@ -69,21 +78,21 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
     // subclass forced
     _subclass_name = std::string("RobotInterface") + _framework;
     // check the path to shared lib
-    if(root_cfg[_subclass_name]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(),
+    if(core_cfg[_subclass_name]["path_to_shared_lib"]) {
+        computeAbsolutePath(core_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(),
                             LIB_MIDDLE_PATH,
                             _path_to_shared_lib);
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << _subclass_name << " mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << " or core.yaml does not contain " << _subclass_name << " mandatory node!!" << std::endl;
         return false;
     }
 
-    if(root_cfg[_subclass_name]["subclass_factory_name"]) {
-        _subclass_factory_name = root_cfg[_subclass_name]["subclass_factory_name"].as<std::string>();
+    if(core_cfg[_subclass_name]["subclass_factory_name"]) {
+        _subclass_factory_name = core_cfg[_subclass_name]["subclass_factory_name"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : " << _subclass_name << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : " << _subclass_name << " node of  " << path_to_cfg << " or core.yaml does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
     return true;

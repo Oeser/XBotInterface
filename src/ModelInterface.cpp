@@ -38,13 +38,21 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
 
     // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    
+    // core YAML
+    std::string core_absolute_path;
+    computeAbsolutePath("core.yaml", // NOTE we fixed it.
+                        CONFIG_MIDDLE_PATH,
+                        core_absolute_path);
+    YAML::Node core_cfg = YAML::LoadFile(core_absolute_path);
+    
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["ModelInterface"]) {
         x_bot_interface = root_cfg["ModelInterface"];
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << " does not contain ModelInterface mandatory node!!!" << std::endl;
         return false;
     }
 
@@ -53,7 +61,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         vars["model_type"] = x_bot_interface["model_type"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << "  does not contain model_type mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << " does not contain model_type mandatory node!!" << std::endl;
         return false;
     }
 
@@ -61,21 +69,21 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
     vars["subclass_name"] = std::string("ModelInterface") + vars.at("model_type");
     vars["path_to_shared_lib"] = "";
     // check the path to shared lib
-    if(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(),
+    if(core_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
+        computeAbsolutePath(core_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(),
                             LIB_MIDDLE_PATH,
                             vars.at("path_to_shared_lib"));
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << vars.at("subclass_name") << " mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << " or core.yaml  does not contain " << vars.at("subclass_name") << " mandatory node!!" << std::endl;
         return false;
     }
 
-    if(root_cfg[vars.at("subclass_name")]["subclass_factory_name"]) {
-        vars["subclass_factory_name"] = root_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
+    if(core_cfg[vars.at("subclass_name")]["subclass_factory_name"]) {
+        vars["subclass_factory_name"] = core_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : " << vars.at("subclass_name") << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : " << vars.at("subclass_name") << " node of  " << path_to_cfg << " or core.yaml does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
 
