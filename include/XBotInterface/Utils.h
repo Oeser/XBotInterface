@@ -254,6 +254,33 @@ private:
 };
 
 
+/**
+ * @brief Computes the absolute path corresponging to a given path relative to the $ROBOTOLOGY_ROOT 
+ * environment variable.
+ */
+inline std::string computeAbsolutePath(const std::string& input_path){
+    
+    // if not an absolute path
+    if(input_path == "" || !(input_path.at(0) == '/')) {
+        // if you are working with the Robotology Superbuild
+        const char* env_p = std::getenv("ROBOTOLOGY_ROOT");
+        // check the env, otherwise error
+        if(env_p) {
+            std::string current_path(env_p);
+            // default relative path when working with the superbuild
+            current_path += input_path;
+            return current_path;
+        }
+        else {
+            std::cerr << "ERROR in " << __func__ << " : the input path  " << input_path << " is neither an absolute path nor related with the robotology superbuild. Download it!" << std::endl;
+            return "";
+        }
+    }
+    
+    // already an absolute path
+    return input_path;
+}
+
     }
 
 }
