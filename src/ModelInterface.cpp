@@ -19,6 +19,8 @@
 
 #include <XBotInterface/ModelInterface.h>
 
+#include <XBotInterface/Utils.h>
+
 #include <srdfdom_advr/model.h>
 
 #include <eigen3/Eigen/QR>
@@ -99,11 +101,14 @@ bool XBot::ModelInterface::isFloatingBase() const
 }
 
 
-XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
+XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_config, AnyMapConstPtr any_map )
 {
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
     std::map<std::string, std::string> vars;
+    
+    //compute absolute path
+    std::string path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_config);
 
     // parsing YAML
     if (!parseYAML(path_to_cfg, vars)) {

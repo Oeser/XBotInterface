@@ -18,6 +18,7 @@
 */
 
 #include <XBotInterface/RobotInterface.h>
+#include <XBotInterface/Utils.h>
 #include <ros/ros.h> //TBD: remove include
 
 // NOTE Static members need to be defined in the cpp
@@ -100,14 +101,18 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
 }
 
 
-XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg,
-                                        AnyMapConstPtr any_map,
-                                        const std::string& framework)
+XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot( const std::string &path_to_config,
+                                                          AnyMapConstPtr any_map,
+                                                          const std::string& framework)
 {
     // NOTE singleton
     if (_instance_ptr) {
         return _instance_ptr;
     }
+    
+    //compute absolute path
+    std::string path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_config);
+    
     // parsing YAML
     if (!parseYAML(path_to_cfg, framework)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
