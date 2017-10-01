@@ -727,7 +727,9 @@ public:
         VariableInfo& varinfo = it->second;
 
         if( data.rows() != varinfo.rows || data.cols() != varinfo.cols ){
-            std::cout << " in " << __func__ << "! Provided data has unmatching dimensions!" << std::endl;
+            std::cout << " in " << __func__ << "! Provided data for variable " << name << " has unmatching dimensions!" << std::endl;
+            std::cout << "Rows: " << data.rows() <<" != " << varinfo.rows<< std::endl;
+            std::cout << "Columns: " << data.cols() <<" != " << varinfo.cols<< std::endl;
             return false;
         }
 
@@ -868,7 +870,7 @@ public:
                                                (void *)pair.second.data(),
                                                0 );
 
-            Mat_VarWrite(mat_file, mat_var, MAT_COMPRESSION_NONE);
+            Mat_VarWrite(mat_file, mat_var, MAT_COMPRESSION_ZLIB);
             Mat_VarFree(mat_var);
 
         }
@@ -879,7 +881,7 @@ public:
 
             VariableInfo& varinfo = pair.second;
 
-            //varinfo.rearrange();
+//             varinfo.rearrange();
 
             int n_dims = 2;
             std::size_t dims[3];
@@ -888,11 +890,11 @@ public:
                 n_dims = 3;
                 dims[0] = varinfo.rows;
                 dims[1] = varinfo.cols;
-                dims[2] = varinfo.data.cols()/varinfo.cols;
+                dims[2] = (varinfo.tail > varinfo.head || varinfo.empty) ? (varinfo.tail-varinfo.head) : varinfo.data.cols()/varinfo.cols;
             }
             else{
                 dims[0] = varinfo.data.rows();
-                dims[1] = varinfo.data.cols();
+                dims[1] = (varinfo.tail > varinfo.head || varinfo.empty) ? (varinfo.tail-varinfo.head) : varinfo.data.cols();
             }
 
             matvar_t * mat_var = Mat_VarCreate(pair.first.c_str(),

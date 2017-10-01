@@ -244,6 +244,41 @@ XBot::RobotChain& XBot::RobotInterface::chain(const std::string& chain_name)
     return operator()(chain_name);
 }
 
+const XBot::RobotChain& XBot::RobotInterface::arm(int arm_id) const
+{
+    if (_XBotModel.get_arms_chain().size() > arm_id) {
+        const std::string &requested_arm_name = _XBotModel.get_arms_chain().at(arm_id);
+        return *_robot_chain_map.at(requested_arm_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a arms with id " << arm_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+const XBot::RobotChain& XBot::RobotInterface::chain(const std::string& chain_name) const
+{
+    return operator()(chain_name);
+}
+
+const XBot::RobotChain& XBot::RobotInterface::leg(int leg_id) const
+{
+    if (_XBotModel.get_legs_chain().size() > leg_id) {
+        const std::string &requested_leg_name = _XBotModel.get_legs_chain().at(leg_id);
+        return *_robot_chain_map.at(requested_leg_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a legs with id " << leg_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+const XBot::RobotChain& XBot::RobotInterface::operator()(const std::string& chain_name) const
+{
+    if (_robot_chain_map.count(chain_name)) {
+        return *_robot_chain_map.at(chain_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+
 double XBot::RobotInterface::getTimestampRx() const
 {
     return _ts_rx;

@@ -1413,6 +1413,8 @@ template <typename... SyncFlags>
 bool XBot::XBotInterface::sync ( const XBot::XBotInterface &other, SyncFlags... flags )
 {
      bool success = true;
+
+     /* Sync chains */
      for ( const auto & c : other._chain_map ) {
           const std::string &chain_name = c.first;
           const KinematicChain &chain = *c.second;
@@ -1420,13 +1422,41 @@ bool XBot::XBotInterface::sync ( const XBot::XBotInterface &other, SyncFlags... 
                _chain_map.at ( chain_name )->syncFrom ( chain, flags... );
 
           }
-//           else {
-//                if ( !chain.isVirtual() ) {
-//                     std::cerr << "ERROR " << __func__ << " : you are trying to synchronize XBotInterfaces with different chains!!" << std::endl;
-//                     success = false;
-//                }
-//           }
      }
+
+     XBot::FlagsParser parser;
+     parser.load_flags(flags...);
+
+     /* Sync FT */
+     if(parser.ft_flag()){
+        for(const auto& pair : other._ft_map){
+            auto it = _ft_map.find(pair.first);
+            if(it != _ft_map.end()){
+                *(it->second) = *(pair.second);
+            }
+            else{
+                std::cerr << "ERROR in " << __func__ << "! Unable to find FT \"" << pair.first << " inside this interface!" << std::endl;
+                success = false;
+            }
+        }
+     }
+
+     /* Sync IMU */
+     if(parser.imu_flag()){
+         for(const auto& pair : other._imu_map){
+            auto it = _imu_map.find(pair.first);
+            if(it != _imu_map.end()){
+                *(it->second) = *(pair.second);
+            }
+            else{
+                std::cerr << "ERROR in " << __func__ << "! Unable to find IMU \"" << pair.first << " inside this interface!" << std::endl;
+                success = false;
+            }
+        }
+
+     }
+
+
      return success;
 }
 

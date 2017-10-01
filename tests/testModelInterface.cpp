@@ -331,6 +331,78 @@ TEST_F( testModelInterface, checkCOM ){
 }
 
 
+TEST_F( testModelInterface, checkCOM2 ){
+
+    XBot::ModelInterface& model = *fb_model_ptr;
+
+    for(int iter=0; iter < 100; iter++){
+
+    Eigen::VectorXd q, q1, q2, qdot;
+    q.setRandom(model.getJointNum());
+    qdot.setRandom(model.getJointNum());
+
+
+    model.setJointPosition(q);
+    model.setJointVelocity(qdot);
+    model.update();
+
+    Eigen::MatrixXd Jcom, Jcom_hat, Jcom2;
+    Eigen::Vector3d com, com1, com2, dcom, jdotcomqdot;
+    model.getCOMJacobian(Jcom);
+    model.getCOMJacobian(Jcom2, jdotcomqdot);
+    model.getCOM(com);
+    model.getCOMVelocity(dcom);
+    
+    std::cout << "Jcom2:\n" << Jcom << std::endl;
+    std::cout << "Jcom:\n" << Jcom2 << std::endl;
+
+    EXPECT_EQ( Jcom.rows(), 3 );
+    EXPECT_EQ( Jcom.cols(), model.getJointNum() );
+
+
+    Eigen::Vector3d dcom1;
+    dcom1 = Jcom*qdot;
+    
+    std::cout << "dCom/dt: " << dcom.transpose() << "   " << dcom1.transpose() << std::endl;
+
+    EXPECT_NEAR( (dcom-dcom1).norm(), 0, 0.0001 );
+
+    double step_size = 0.000001;
+    Jcom_hat.resize(Jcom.rows(), Jcom.cols());
+
+    for(int i = 0; i < model.getJointNum(); i++){
+
+        q1 = q;
+        q2 = q;
+        q2(i) += step_size/2;
+        q1(i) -= step_size/2;
+
+        model.setJointPosition(q2);
+        model.update();
+        model.getCOM(com2);
+
+        model.setJointPosition(q1);
+        model.update();
+        model.getCOM(com1);
+
+
+        Jcom_hat.col(i) = (com2-com1)/step_size;
+
+
+    }
+
+
+    EXPECT_NEAR( (Jcom-Jcom_hat).norm()/Jcom.size(), 0, 0.00001 );
+    EXPECT_NEAR( (dcom-Jcom_hat*qdot).norm(), 0, 0.0001);
+
+    }
+
+
+
+}
+
+
+
 TEST_F( testModelInterface, checkJdotQdot ){
 
     XBot::ModelInterface& model = *model_ptr;
@@ -435,6 +507,178 @@ TEST_F( testModelInterface, checkSetFloatingBasePoseTwist ){
     }
 
 
+}
+
+
+TEST_F( testModelInterface, checkLocalJacobian ){
+
+
+    std::vector<urdf::LinkSharedPtr> links;
+    fb_model_ptr->getUrdf().getLinks(links);
+
+    for(int i = 0; i < links.size(); i++){
+
+        std::string link_name = links[i]->name;
+
+        Eigen::MatrixXd J1, J2;
+        Eigen::VectorXd q;
+        q.setRandom(fb_model_ptr->getJointNum());
+
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->update();
+
+        ASSERT_TRUE(fb_model_ptr->getJacobian(link_name, J1));
+        ASSERT_TRUE(fb_model_ptr->getJacobian(link_name, link_name, J2));
+
+        Eigen::Matrix3d w_R_link;
+        fb_model_ptr->getOrientation(link_name, w_R_link);
+        Eigen::MatrixXd w_I_link(6,6);
+
+        w_I_link << w_R_link, Eigen::Matrix3d::Zero(),
+                    Eigen::Matrix3d::Zero(), w_R_link;
+
+        J1 = w_I_link.transpose() * J1;
+
+
+
+        EXPECT_NEAR( (J1 - J2).norm(), 0, 0.0001 );
+
+    }
+
+
+}
+
+TEST_F( testModelInterface, checkCmm)
+{
+    for(int i = 0; i < 100; i++){
+
+        Eigen::Vector6d cmom, actual_cmom;
+        Eigen::VectorXd q, qdot;
+        Eigen::MatrixXd cmm;
+        
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+
+
+        fb_model_ptr->getCentroidalMomentum(actual_cmom);
+        fb_model_ptr->getCentroidalMomentumMatrix(cmm);
+        cmom = cmm * qdot;
+        
+        std::cout << cmom.transpose() << std::endl;
+        std::cout << actual_cmom.transpose() << std::endl;
+
+        EXPECT_NEAR( (cmom-actual_cmom).norm(), 0, 0.0001 );
+
+
+
+    }
+
+
+}
+
+TEST_F( testModelInterface, checkCmmDotQdot ){
+
+
+    for(int i = 0; i < 100; i++){
+
+        Eigen::Vector6d cmom, actual_cmom, cmmdotqdot, cmmdotqdot_est;
+        Eigen::VectorXd q, qdot;
+        Eigen::MatrixXd cmm, cmmdot, cmm1;
+        
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+
+
+        fb_model_ptr->getCentroidalMomentum(actual_cmom);
+        fb_model_ptr->getCentroidalMomentumMatrix(cmm, cmmdotqdot);
+        cmom = cmm * qdot;
+        
+        std::cout << cmom.transpose() << std::endl;
+        std::cout << actual_cmom.transpose() << "\n------" << std::endl;
+
+        EXPECT_NEAR( (cmom-actual_cmom).norm(), 0, 0.0001 );
+        
+        double dt = 1e-6;
+        fb_model_ptr->setJointPosition(q + qdot*dt);
+        fb_model_ptr->update();
+        fb_model_ptr->getCentroidalMomentumMatrix(cmm1);
+        
+        cmmdot = (cmm1 - cmm)/dt;
+        
+        cmmdotqdot_est = cmmdot * qdot;
+        
+        std::cout << cmmdotqdot.transpose() << std::endl;
+        std::cout << cmmdotqdot_est.transpose() << std::endl;
+        
+        EXPECT_NEAR( (cmmdotqdot-cmmdotqdot_est).norm(), 0, 0.0001 );
+        
+
+
+
+
+    }
+
+
+}
+
+
+TEST_F( testModelInterface, checkInverseInertiaMatrix)
+{
+    for(int i = 0; i < 100; i++){
+
+        Eigen::Vector6d twist, actual_twist;
+        Eigen::VectorXd q, qdot;
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+
+        Eigen::MatrixXd M(fb_model_ptr->getJointNum(), fb_model_ptr->getJointNum());
+        fb_model_ptr->getInertiaMatrix(M);
+        //std::cout<<"M: \n"<<M<<std::endl;
+
+
+
+        Eigen::MatrixXd M_inverse = M.inverse();
+        Eigen::VectorXd Minvq = M_inverse*(q);
+//        std::cout<<"Minvq: \n"<<Minvq.transpose()<<std::endl;
+        Eigen::VectorXd Minvq2;
+        fb_model_ptr->getInertiaInverseTimesVector(q, Minvq2);
+        //std::cout<<"M*Minvq2q: \n"<<((M*Minvq2)).transpose()<<std::endl;
+        EXPECT_NEAR((Minvq - Minvq2).norm(), 0.0, 1e-7);
+
+
+
+
+        Eigen::MatrixXd T(M.rows(), M.cols());
+        T.setRandom(M.rows(), M.cols());
+
+        Eigen::MatrixXd I = M_inverse*T;
+        //std::cout<<"I: \n"<<I<<std::endl;
+        Eigen::MatrixXd I2;
+        fb_model_ptr->getInertiaInverseTimesMatrix(T, I2);
+        //std::cout<<"I2: \n"<<I2<<std::endl;
+        EXPECT_NEAR((I - I2).norm(), 0.0, 1e-7);
+
+
+
+        Eigen::MatrixXd M_inverse2(fb_model_ptr->getJointNum(), fb_model_ptr->getJointNum());
+        fb_model_ptr->getInertiaInverse(M_inverse2);
+        //std::cout<<"M_inverse2: \n"<<M_inverse2<<std::endl;
+        //std::cout<<"M2: \n"<<M_inverse2.inverse()<<std::endl;
+        EXPECT_NEAR((M_inverse - M_inverse2).norm(), 0.0, 1e-7);
+    }
 }
 
 int main ( int argc, char **argv )
