@@ -281,6 +281,23 @@ inline std::string computeAbsolutePath(const std::string& input_path){
     return input_path;
 }
 
+/**
+ * @brief getter for the default XBot config file set by the env variable $XBOT_CONFIG
+ */
+inline std::string getXBotConfig(){
+    
+    const char* env_p = std::getenv("XBOT_CONFIG");
+    // check the env, otherwise error
+    if(env_p) {
+        std::string xbot_path(env_p);
+        return xbot_path;
+    }
+    else {
+        std::cerr << "WARNING in " << __func__ << " : XBOT_CONFIG env variable not set." << std::endl;
+        return "";
+    }
+}
+
     }
 
 }
