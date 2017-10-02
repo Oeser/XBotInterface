@@ -681,6 +681,68 @@ TEST_F( testModelInterface, checkInverseInertiaMatrix)
     }
 }
 
+TEST_F( testModelInterface, checkVelocityTwist ){
+ 
+    for(int i = 0; i < 100; i++){
+     
+        Eigen::Vector6d twist, actual_twist;
+        Eigen::VectorXd q, qdot;
+        q.setRandom(fb_model_ptr->getJointNum());
+        qdot.setRandom(fb_model_ptr->getJointNum());
+
+        fb_model_ptr->setJointPosition(q);
+        fb_model_ptr->setJointVelocity(qdot);
+        fb_model_ptr->update();
+        
+        Eigen::MatrixXd J;
+        
+        std::vector<urdf::LinkSharedPtr> links;
+        fb_model_ptr->getUrdf().getLinks(links);
+        
+        for(auto link: links){
+            
+            ASSERT_TRUE(fb_model_ptr->getVelocityTwist(link->name, twist));
+            ASSERT_TRUE(fb_model_ptr->getJacobian(link->name, J));
+            actual_twist = J*qdot;
+            EXPECT_NEAR((twist-actual_twist).norm(), 0.0, 1e-6);
+            
+        }
+        
+        
+    }
+    
+    
+    
+    for(int i = 0; i < 100; i++){
+     
+        Eigen::Vector6d twist, actual_twist;
+        Eigen::VectorXd q, qdot;
+        q.setRandom(model_ptr->getJointNum());
+        qdot.setRandom(model_ptr->getJointNum());
+
+        model_ptr->setJointPosition(q);
+        model_ptr->setJointVelocity(qdot);
+        model_ptr->update();
+        
+        Eigen::MatrixXd J;
+        
+        std::vector<urdf::LinkSharedPtr> links;
+        model_ptr->getUrdf().getLinks(links);
+        
+        for(auto link: links){
+            
+            ASSERT_TRUE(model_ptr->getVelocityTwist(link->name, twist));
+            ASSERT_TRUE(model_ptr->getJacobian(link->name, J));
+            actual_twist = J*qdot;
+            EXPECT_NEAR((twist-actual_twist).norm(), 0.0, 1e-6);
+            
+        }
+        
+        
+    }
+    
+}
+
 int main ( int argc, char **argv )
 {
      testing::InitGoogleTest ( &argc, argv );
