@@ -779,7 +779,7 @@ public:
     *       v_world = R * v_source
     * @return True if source_frame is valid. False otherwise.
     */
-    bool getOrientation(    const std::string& target_frame,
+    bool getOrientation(    const std::string& source_frame,
                             Eigen::Matrix3d& orientation) const;
     /**
     * @brief Computes the orientation of the source_frame w.r.t. the target_frame
