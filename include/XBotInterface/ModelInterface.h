@@ -283,6 +283,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to world frame
+    *       P_world = T * P_source
     * @return True if source_frame is valid. False otherwise.
     */
     virtual bool getPose( const std::string& source_frame,
@@ -294,6 +295,7 @@ public:
     * @param source_frame The source link name.
     * @param target_frame The target link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to target frame
+    *       P_target = T * P_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getPose( const std::string& source_frame,
@@ -305,6 +307,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to world frame
+    *       v_world = R * v_source
     * @return True if source_frame is valid. False otherwise.
     */
     bool getOrientation(const std::string& source_frame,
@@ -316,6 +319,7 @@ public:
     * @param source_frame The source link name.
     * @param target_frame The target link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to target frame
+    *       v_target = R * v_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getOrientation(const std::string& source_frame,
@@ -634,7 +638,7 @@ public:
      * @param n The non-linear torques vector (if model is floating base, includes virtual joints effort).
      * @return void
      */
-    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0; //TBD termss
+    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0;
 
     /**
      * @brief Computes inverse dynamics.
@@ -750,6 +754,7 @@ public:
     * @param source_frame The source link name.
     * @param target_frame The target link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to target frame
+    *       P_target = T * P_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getPose(   const std::string& source_frame,
@@ -760,6 +765,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to world frame
+    *       P_world = T * P_source
     * @return True if source_frame is valid. False otherwise.
     */
     bool getPose( const std::string& source_frame,
@@ -770,6 +776,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to world frame
+    *       v_world = R * v_source
     * @return True if source_frame is valid. False otherwise.
     */
     bool getOrientation(    const std::string& target_frame,
@@ -777,9 +784,10 @@ public:
     /**
     * @brief Computes the orientation of the source_frame w.r.t. the target_frame
     *
-    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
-    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
+    * @param source_frame The source link name. 
+    * @param target_frame The target link name. 
     * @param orientation A rotation matrix which rotates a vector from source frame to target frame
+    *       v_target = R * v_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getOrientation(    const std::string& source_frame,
