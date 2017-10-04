@@ -64,6 +64,11 @@ void XBot::Joint::init()
     _effort_ref = 0;
     _stiffness = 0;
     _damping = 0;
+    
+    if(_urdf_joint && _urdf_joint->type == urdf::Joint::CONTINUOUS){
+        _urdf_joint->limits->lower = -1e16;
+        _urdf_joint->limits->upper = 1e16;
+    }
 }
 
 bool XBot::Joint::isVirtualJoint() const

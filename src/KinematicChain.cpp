@@ -1570,6 +1570,18 @@ XBot::Joint::ConstPtr XBot::KinematicChain::getJointById(int id) const
     }
 }
 
+XBot::Joint::Ptr XBot::KinematicChain::getJointByName(const std::string& joint_name)
+{
+    auto it = _joint_name_map.find(joint_name);
+    if( it != _joint_name_map.end() ){
+        return it->second;
+    }
+    else{
+        std::cerr << "ERROR chain " << _chain_name << " does not contain joint " << joint_name << "!" << std::endl;
+        return XBot::Joint::Ptr();
+    }
+}
+
 XBot::Joint::ConstPtr XBot::KinematicChain::getJointByName(const std::string& joint_name) const
 {
     auto it = _joint_name_map.find(joint_name);

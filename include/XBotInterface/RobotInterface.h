@@ -108,6 +108,7 @@ public:
      * @return the robot chain with the requested chain_name
      */
     RobotChain& operator()(const std::string& chain_name);
+    const RobotChain& operator()(const std::string& chain_name) const;
 
     /**
      * @brief Getter for the robot chain with a certain chain_name
@@ -116,6 +117,7 @@ public:
      * @return the robot chain with the requested chain_name
      */
     RobotChain& chain(const std::string& chain_name);
+    const RobotChain& chain(const std::string& chain_name) const;
 
     /**
      * @brief Getter for the standard kinematic group arm: you can quickly access the i-th arm in the order specified in the SRDF
@@ -124,6 +126,7 @@ public:
      * @return the arm chain with the requested arm_id
      */
     RobotChain& arm(int arm_id);
+    const RobotChain& arm(int arm_id) const;
 
     /**
      * @brief Getter for the standard kinematic group leg: you can quickly access the i-th leg in the order specified in the SRDF
@@ -132,6 +135,7 @@ public:
      * @return the leg chain with the requested leg_id
      */
     RobotChain& leg(int leg_id);
+    const RobotChain& leg(int leg_id) const;
 
    /**
     * @brief Sets the robot references according to a ModelInterface.

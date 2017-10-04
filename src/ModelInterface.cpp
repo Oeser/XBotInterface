@@ -196,7 +196,6 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
     }
 
 
-
     return true;
 }
 
@@ -326,6 +325,40 @@ XBot::ModelChain& XBot::ModelInterface::operator()(const std::string& chain_name
 XBot::ModelChain& XBot::ModelInterface::chain(const std::string& chain_name)
 {
     return operator()(chain_name);
+}
+
+const XBot::ModelChain& XBot::ModelInterface::arm(int arm_id) const
+{
+     if (_XBotModel.get_arms_chain().size() > arm_id) {
+        const std::string &requested_arm_name = _XBotModel.get_arms_chain().at(arm_id);
+        return *_model_chain_map.at(requested_arm_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a arms with id " << arm_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+const XBot::ModelChain& XBot::ModelInterface::chain(const std::string& chain_name) const
+{
+    return operator()(chain_name);
+}
+
+const XBot::ModelChain& XBot::ModelInterface::leg(int leg_id) const
+{
+    if (_XBotModel.get_legs_chain().size() > leg_id) {
+        const std::string &requested_leg_name = _XBotModel.get_legs_chain().at(leg_id);
+        return *_model_chain_map.at(requested_leg_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a legs with id " << leg_id << " that does not exists!!" << std::endl;
+    return _dummy_chain;
+}
+
+const XBot::ModelChain& XBot::ModelInterface::operator()(const std::string& chain_name) const
+{
+    if (_model_chain_map.count(chain_name)) {
+        return *_model_chain_map.at(chain_name);
+    }
+    std::cerr << "ERROR " << __func__ << " : you are requesting a chain with name " << chain_name << " that does not exists!!" << std::endl;
+    return _dummy_chain;
 }
 
 
@@ -805,10 +838,154 @@ bool XBot::ModelInterface::getFloatingBaseTwist(KDL::Twist& floating_base_twist)
     return success;
 }
 
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const std::string& target_frame,
+                                       KDL::Jacobian& J) const
+{
+    bool success = getJacobian(link_name, J);
+    success = getOrientation(target_frame, _tmp_kdl_rotation) && success;
+    J.changeBase(_tmp_kdl_rotation.Inverse());
+    return success;
+}
+
+bool XBot::ModelInterface::getJacobian(const std::string& link_name,
+                                       const std::string& target_frame,
+                                       Eigen::MatrixXd& J) const
+{
+    bool success = getJacobian(link_name, target_frame, _tmp_kdl_jacobian);
+    J = _tmp_kdl_jacobian.data;
+    return success;
+}
 
 
+bool XBot::ModelInterface::setFloatingBaseAngularVelocity(const Eigen::Vector3d& floating_base_omega)
+{
+    Eigen::Vector6d twist;
+    bool success = getFloatingBaseTwist(twist);
+
+    if(!success) return false;
+
+    twist.tail<3>() = floating_base_omega;
+
+    return setFloatingBaseTwist(twist);
+}
+
+bool XBot::ModelInterface::setFloatingBaseAngularVelocity(const KDL::Vector& floating_base_omega)
+{
+    KDL::Twist twist;
+    bool success = getFloatingBaseTwist(twist);
+
+    if(!success) return false;
+
+    twist.rot = floating_base_omega;
+
+    return setFloatingBaseTwist(twist);
+}
+
+bool XBot::ModelInterface::setFloatingBaseOrientation(const Eigen::Matrix3d& world_R_floating_base)
+{
+    Eigen::Affine3d w_T_fb;
+    bool success = getFloatingBasePose(w_T_fb);
+
+    if(!success) return false;
+
+    w_T_fb.linear() = world_R_floating_base;
+
+    return setFloatingBasePose(w_T_fb);
+
+}
+
+bool XBot::ModelInterface::setFloatingBaseOrientation(const KDL::Rotation& world_R_floating_base)
+{
+    KDL::Frame w_T_fb;
+    bool success = getFloatingBasePose(w_T_fb);
+
+    if(!success) return false;
+
+    w_T_fb.M = world_R_floating_base;
+
+    return setFloatingBasePose(w_T_fb);
+}
+
+void XBot::ModelInterface::getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix) const
+{
+    Eigen::Vector6d cmmdotqdot;
+    getCentroidalMomentumMatrix(centroidal_momentum_matrix, cmmdotqdot);
+}
+
+void XBot::ModelInterface::getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix, 
+                                                       Eigen::Vector6d& CMMdotQdot) const
+{
+    centroidal_momentum_matrix.setZero(6, getJointNum());
+    
+    if(!isFloatingBase()){
+        std::cerr << "ERROR in " << __func__ << "! Only implemented for floating base robots!" << std::endl;
+        return;
+    }
+    getInertiaMatrix(_tmp_inertia);
+    computeNonlinearTerm(_tmp_nleffect);
+    computeGravityCompensation(_tmp_gcomp);
+    Eigen::Vector3d com;
+    getCOM(com);
+    
+    Eigen::Affine3d w_T_fb;
+    getFloatingBasePose(w_T_fb);
+    
+    Eigen::Vector3d fb_com = w_T_fb.inverse() * com;
+    
+    getFloatingBaseLink(_floating_base_link);
+    getJacobian(_floating_base_link, fb_com, _tmp_jacobian);
+    
+    Eigen::Matrix<double, 6, 6> Ju = _tmp_jacobian.block<6,6>(0,0);
+    Eigen::Matrix<double, 6, 6> Ju_T_inv = Ju.transpose().inverse();
+    
+    centroidal_momentum_matrix = Ju_T_inv * _tmp_inertia.block(0, 0, 6, getJointNum());
+    CMMdotQdot = Ju_T_inv * (_tmp_nleffect - _tmp_gcomp).head<6>();
+    
+}
+
+void XBot::ModelInterface::getCOMJacobian(Eigen::MatrixXd& J, Eigen::Vector3d& dJcomQdot) const
+{
+    Eigen::Vector6d dcmmqdot;
+    getCentroidalMomentumMatrix(_tmp_jacobian, dcmmqdot);
+    J = _tmp_jacobian.topRows(3) / getMass();
+    dJcomQdot = dcmmqdot.head<3>() / getMass();
+}
 
 
+void XBot::ModelInterface::getCOMJacobian(KDL::Jacobian& J, KDL::Vector& dJcomQdot) const
+{
+    std::cout << "TBD IMPLEMENT!!!" << std::endl;
+}
+
+void XBot::ModelInterface::getCOMJacobian(KDL::Jacobian& J) const
+{
+    std::cout << "TBD IMPLEMENT!!!" << std::endl;
+}
+
+void XBot::ModelInterface::getInertiaInverseTimesVector(const Eigen::VectorXd& vec, Eigen::VectorXd& minv_vec) const
+{
+    _tmp_M.setIdentity(getJointNum(), getJointNum());
+    getInertiaMatrix(_tmp_M);
+    minv_vec = _tmp_M.inverse()*vec;
+}
+
+void XBot::ModelInterface::getInertiaInverseTimesMatrix(const Eigen::MatrixXd& Mat, Eigen::MatrixXd& Minv_Mat) const
+{
+    Minv_Mat.setZero(getJointNum(), getJointNum());
+    _tmp_inv_inertia.setZero(getJointNum());
+    for(int i = 0; i < Minv_Mat.rows(); ++i)
+    {
+        getInertiaInverseTimesVector(Mat.col(i), _tmp_inv_inertia);
+        Minv_Mat.col(i) = _tmp_inv_inertia;
+    }
+}
+
+void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
+{
+    _tmp_I.setIdentity(getJointNum(), getJointNum());
+    getInertiaInverseTimesMatrix(_tmp_I, Minv);
+}
 
 
 

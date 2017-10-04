@@ -58,7 +58,7 @@ public:
     /**
      * @brief Shared pointer to const ModelInterface
      */
-    typedef std::shared_ptr<ModelInterface> ConstPtr;
+    typedef std::shared_ptr<const ModelInterface> ConstPtr;
 
     // ModelInterface must be default constructible and non-copyable
     ModelInterface() = default;
@@ -88,6 +88,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& chain(const std::string& chain_name);
+    const ModelChain& chain(const std::string& chain_name) const;
 
     /**
      * @brief Returns a handle to the kinematic chain named chain_name.
@@ -98,6 +99,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& operator()(const std::string& chain_name);
+    const ModelChain& operator()(const std::string& chain_name) const;
 
     /**
      * @brief Returns a handle to the kinematic chain corresponding to the
@@ -109,6 +111,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& arm(int arm_id);
+    const ModelChain& arm(int arm_id) const;
 
     /**
      * @brief Returns a handle to the kinematic chain corresponding to the
@@ -120,6 +123,7 @@ public:
      * @return A reference to the requested kinematic chain
      */
     ModelChain& leg(int leg_id);
+    const ModelChain& leg(int leg_id) const;
 
     /**
      * @brief Synchronizes the internal model state to the one of the XBotInterface
@@ -222,9 +226,17 @@ public:
     * @brief Sets the floating base pose w.r.t. the world frame
     *
     * @param floating_base_pose A homogeneous transformation which transforms a point from floating base frame to world frame
-    * @return True if the floating_base_pose frame is valid. False otherwise.
+    * @return True if the model is floating-base. False otherwise.
     */
     virtual bool setFloatingBasePose( const KDL::Frame& floating_base_pose ) = 0;
+
+    /**
+    * @brief Sets the floating base orientation w.r.t. the world frame
+    *
+    * @param world_R_floating_base A rotation matrix which rotates a vector from floating base frame to world frame
+    * @return True if the model is floating-base. False otherwise.
+    */
+    bool setFloatingBaseOrientation( const KDL::Rotation& world_R_floating_base );
 
     /**
     * @brief Gets the floating base pose w.r.t. the world frame
@@ -241,6 +253,14 @@ public:
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
     */
     virtual bool setFloatingBaseTwist( const KDL::Twist& floating_base_twist ) = 0;
+
+    /**
+    * @brief Sets the floating base angular velocity w.r.t. the world frame
+    *
+    * @param floating_base_omega The angular velocity of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool setFloatingBaseAngularVelocity( const KDL::Vector& floating_base_omega );
 
     /**
     * @brief Gets the floating base twist w.r.t. the world frame
@@ -263,6 +283,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to world frame
+    *       P_world = T * P_source
     * @return True if source_frame is valid. False otherwise.
     */
     virtual bool getPose( const std::string& source_frame,
@@ -274,6 +295,7 @@ public:
     * @param source_frame The source link name.
     * @param target_frame The target link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to target frame
+    *       P_target = T * P_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getPose( const std::string& source_frame,
@@ -285,6 +307,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to world frame
+    *       v_world = R * v_source
     * @return True if source_frame is valid. False otherwise.
     */
     bool getOrientation(const std::string& source_frame,
@@ -296,6 +319,7 @@ public:
     * @param source_frame The source link name.
     * @param target_frame The target link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to target frame
+    *       v_target = R * v_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getOrientation(const std::string& source_frame,
@@ -347,9 +371,24 @@ public:
      *
      * @param link_name The link name
      * @param J  The Jacobian expressed in the world frame
+     * @return True if the link_name and target_frame are valid link names. False otherwise.
+     */
+    bool getJacobian( const std::string& link_name,
+                      KDL::Jacobian& J) const;
+
+    /**
+     * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
+     * the derivative of the configuration vector gives the velocity twist of link_name according to target_frame
+     * (i.e. first linear then angular velocity).
+     * The reference point is the origin of the link with link_name name.
+     *
+     * @param link_name The link name
+     * @param target_frame The target frame name
+     * @param J  The Jacobian expressed in the world frame
      * @return True if the link_name is a valid link name. False otherwise.
      */
     bool getJacobian( const std::string& link_name,
+                      const std::string& target_frame,
                       KDL::Jacobian& J) const;
 
     /**
@@ -440,6 +479,20 @@ public:
      */
     bool getCOM( const std::string& reference_frame,
                          KDL::Vector& com_position ) const;
+                         
+                         
+    /**
+     * @brief Gets the COM Jacobian expressed in the world frame and the d(Jcom)/dt * qdot term, i.e.
+     * the COM acceleration due to joint velocities.
+     *
+     * @param J The COM Jacobian expressed in the world frame. Note that, since the COM is not fixed
+     * to any link, the Jacobian orientation part (i.e. the lower three rows) are undefined and filled with
+     * zeros.
+     * @param dJcomqdot The d(Jcom)/dt * qdot term, i.e. the COM acceleration due to joint velocities.
+     * @return void
+     */
+    virtual void getCOMJacobian( KDL::Jacobian& J, KDL::Vector& dJcomQdot) const;
+    
 
     /**
      * @brief Gets the COM Jacobian expressed in the world frame
@@ -449,7 +502,7 @@ public:
      * zeros.
      * @return void
      */
-    virtual void getCOMJacobian( KDL::Jacobian& J) const = 0;
+    virtual void getCOMJacobian( KDL::Jacobian& J) const;
 
     /**
      * @brief Gets the COM velocity expressed in the world frame
@@ -469,7 +522,7 @@ public:
 
 
     /**
-     * @brief Gets the robot mometum about its COM.
+     * @brief Gets the robot centroidal momentum matrix, i.e. the jacobian of the centroidal momentum.
      *
      * @param centroidal_momentum The robot centroidal momentum. The first three rows represent the
      * robot linear momentum, while the last three rows contain the angular momentum about the COM,
@@ -477,6 +530,25 @@ public:
      */
     virtual void getCentroidalMomentum(Eigen::Vector6d& centroidal_momentum) const = 0;
 
+    /**
+     * @brief Gets the robot centroidal momentum matrix, i.e. the jacobian of the centroidal momentum.
+     *
+     * @param centroidal_momentum_matrix The robot centroidal momentum matrix. The first three rows represent the
+     * jacobian of the robot linear momentum, while the last three rows contain the angular momentum about the COM,
+     * @param CMMdotQdot The d(CMM)/dt * qdot term, i.e. the derivative of the centroidal momentum due to joint velocities.
+     * @return void
+     */
+    virtual void getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix, 
+                                             Eigen::Vector6d& CMMdotQdot) const;
+    
+    /**
+     * @brief Gets the robot mometum about its COM.
+     *
+     * @param centroidal_momentum_matrix The robot centroidal momentum matrix. The first three rows represent the
+     * jacobian of the robot linear momentum, while the last three rows contain the angular momentum about the COM,
+     * @return void
+     */
+    virtual void getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix) const;
 
     /**
      * @brief Gets the weight of the robot
@@ -528,6 +600,28 @@ public:
      */
     virtual void getInertiaMatrix(Eigen::MatrixXd& M) const = 0;
 
+    /**
+     * @brief getInertiaInverseTimesVector Computes the inverse of the Inertia Matrix times a given
+     * vector
+     * @param vec input vector
+     * @param minv_vec the resultant vector
+     */
+    virtual void getInertiaInverseTimesVector(const Eigen::VectorXd& vec, Eigen::VectorXd& minv_vec) const;
+
+    /**
+     * @brief getInertiaInverseTimesMatrix Computes the inverse of the Inertia Matrix times a given
+     * matrix
+     * @param Mat input matrix
+     * @param Minv_Mat the resultant matrix
+     */
+    virtual void getInertiaInverseTimesMatrix(const Eigen::MatrixXd& Mat, Eigen::MatrixXd& Minv_Mat) const;
+
+    /**
+     * @brief getInertiaInverse compute the inverse of the Inertia Matrix
+     * @param Minv the inverse of the inertia matrix
+     */
+    virtual void getInertiaInverse(Eigen::MatrixXd& Minv) const;
+
 
     /**
      * @brief Computes gravity compensation torques. Make sure that you correctly specified
@@ -544,7 +638,7 @@ public:
      * @param n The non-linear torques vector (if model is floating base, includes virtual joints effort).
      * @return void
      */
-    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0; //TBD termss
+    virtual void computeNonlinearTerm( Eigen::VectorXd& n ) const = 0;
 
     /**
      * @brief Computes inverse dynamics.
@@ -614,12 +708,28 @@ public:
     bool setFloatingBasePose( const Eigen::Affine3d& floating_base_pose );
 
     /**
+    * @brief Sets the floating base orientation w.r.t. the world frame
+    *
+    * @param world_R_floating_base A rotation matrix which rotates a vector from floating base frame to world frame
+    * @return True if the model is floating-base. False otherwise.
+    */
+    bool setFloatingBaseOrientation( const Eigen::Matrix3d& world_R_floating_base );
+
+    /**
     * @brief Sets the floating base twist w.r.t. the world frame
     *
     * @param floating_base_twist The twist of the floating base w.r.t. the world
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
     */
     virtual bool setFloatingBaseTwist( const Eigen::Vector6d& floating_base_twist );
+
+    /**
+    * @brief Sets the floating base angular velocity w.r.t. the world frame
+    *
+    * @param floating_base_omega The angular velocity of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool setFloatingBaseAngularVelocity( const Eigen::Vector3d& floating_base_omega );
 
     /**
     * @brief Gets the floating base pose w.r.t. the world frame
@@ -644,6 +754,7 @@ public:
     * @param source_frame The source link name.
     * @param target_frame The target link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to target frame
+    *       P_target = T * P_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getPose(   const std::string& source_frame,
@@ -654,6 +765,7 @@ public:
     *
     * @param source_frame The source link name.
     * @param pose A homogeneous transformation which transforms a point from source frame to world frame
+    *       P_world = T * P_source
     * @return True if source_frame is valid. False otherwise.
     */
     bool getPose( const std::string& source_frame,
@@ -664,16 +776,18 @@ public:
     *
     * @param source_frame The source link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to world frame
+    *       v_world = R * v_source
     * @return True if source_frame is valid. False otherwise.
     */
-    bool getOrientation(    const std::string& target_frame,
+    bool getOrientation(    const std::string& source_frame,
                             Eigen::Matrix3d& orientation) const;
     /**
     * @brief Computes the orientation of the source_frame w.r.t. the target_frame
     *
-    * @param source_frame The source link name. If you want it w.r.t. the world frame, pass "world"
-    * @param target_frame The target link name. If you want it w.r.t. the world frame, pass "world"
+    * @param source_frame The source link name. 
+    * @param target_frame The target link name. 
     * @param orientation A rotation matrix which rotates a vector from source frame to target frame
+    *       v_target = R * v_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
     */
     bool getOrientation(    const std::string& source_frame,
@@ -714,6 +828,21 @@ public:
      * @return True if the link_name is a valid link name. False otherwise.
      */
     bool getJacobian( const std::string& link_name,
+                      Eigen::MatrixXd& J) const;
+
+    /**
+     * @brief Gets the Jacobian of link_name expressed in the target_frame, i.e a matrix such that its product with
+     * the derivative of the configuration vector gives the velocity twist of link_name according to target_frame
+     * (i.e. first linear then angular velocity).
+     * The reference point is the origin of the link with link_name name.
+     *
+     * @param link_name The link name
+     * @param target_frame The target frame name
+     * @param J  The Jacobian expressed in the world frame
+     * @return True if the link_name is a valid link name. False otherwise.
+     */
+    bool getJacobian( const std::string& link_name,
+                      const std::string& target_frame,
                       Eigen::MatrixXd& J) const;
 
     /**
@@ -759,6 +888,18 @@ public:
      */
     bool getCOM( const std::string& reference_frame,
                  Eigen::Vector3d& com_position ) const;
+                 
+    /**
+     * @brief Gets the COM Jacobian expressed in the world frame and the d(Jcom)/dt * qdot term, i.e.
+     * the COM acceleration due to joint velocities.
+     *
+     * @param J The COM Jacobian expressed in the world frame. Note that, since the COM is not fixed
+     * to any link, the Jacobian orientation part (i.e. the lower three rows) are undefined and filled with
+     * zeros.
+     * @param dJcomqdot The d(Jcom)/dt * qdot term, i.e. the COM acceleration due to joint velocities.
+     * @return void
+     */
+    virtual void getCOMJacobian( Eigen::MatrixXd& J, Eigen::Vector3d& dJcomQdot) const;
 
     /**
      * @brief Gets the COM Jacobian expressed in the world frame
@@ -944,7 +1085,14 @@ private:
     mutable KDL::Vector _tmp_kdl_vector, _tmp_kdl_vector_1;
     mutable KDL::Rotation _tmp_kdl_rotation, _tmp_kdl_rotation_1;
     mutable std::vector<int> _tmp_int_vector;
+    mutable std::string _floating_base_link;
     mutable Eigen::MatrixXd _tmp_postural_jacob;
+    mutable Eigen::MatrixXd _tmp_inertia;
+    mutable Eigen::VectorXd _tmp_inv_inertia;
+    mutable Eigen::MatrixXd _tmp_jacobian;
+    mutable Eigen::MatrixXd _tmp_M;
+    mutable Eigen::MatrixXd _tmp_I;
+    mutable Eigen::VectorXd _tmp_gcomp, _tmp_nleffect;
 
     using XBotInterface::getTemperature;
     using XBotInterface::setTemperature;

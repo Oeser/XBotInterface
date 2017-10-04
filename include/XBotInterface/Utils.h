@@ -22,6 +22,8 @@
 #define __XBOTINTERFACE_UTILS_H__
 
 #include <XBotInterface/ModelInterface.h>
+#include <SharedLibraryClassFactory.h>
+#include <SharedLibraryClass.h>
 
 namespace XBot {
     namespace Utils {
@@ -171,6 +173,113 @@ private:
 
 };
 
+
+#define REGISTER_GENERIC_PLUGIN(plugin_name, scoped_class_name, base_class_name) SHLIBPP_DEFINE_SHARED_SUBCLASS(plugin_name ## _factory, scoped_class_name, base_class_name);
+
+template <typename PluginType>
+class PluginLoader {
+
+public:
+
+    bool load(std::string plugin_name)
+    {
+
+        _ioplugin_factory = std::make_shared<shlibpp::SharedLibraryClassFactory<PluginType>>();
+        _ioplugin_class = std::make_shared<shlibpp::SharedLibraryClass<PluginType>>();
+
+        std::string path_to_so = "lib" + plugin_name + ".so";
+        computeAbsolutePath(path_to_so, LIB_MIDDLE_PATH, path_to_so);
+
+        std::string factory_name = plugin_name + "_factory";
+        _ioplugin_factory->open(path_to_so.c_str(), factory_name.c_str());
+
+        if (!_ioplugin_factory->isValid()) {
+            // NOTE print to celebrate the wizard
+            printf("error (%s) : %s\n", shlibpp::Vocab::decode(_ioplugin_factory->getStatus()).c_str(),
+                _ioplugin_factory->getLastNativeError().c_str());
+            _load_success = false;
+            return false;
+        }
+
+        _load_success = true;
+
+        // open io plugin
+        _ioplugin_class->open(*_ioplugin_factory);
+
+        return true;
+
+    }
+
+
+    PluginType* getPtr()
+    {
+        if(!_load_success) return nullptr;
+        else return &(*_ioplugin_class).getContent();
+    }
+
+private:
+
+    static bool computeAbsolutePath (const std::string& input_path,
+                                     const std::string& middle_path,
+                                     std::string& absolute_path)
+    {
+        // if not an absolute path
+        if(!(input_path.at(0) == '/')) {
+            // if you are working with the Robotology Superbuild
+            const char* env_p = std::getenv("ROBOTOLOGY_ROOT");
+            // check the env, otherwise error
+            if(env_p) {
+                std::string current_path(env_p);
+                // default relative path when working with the superbuild
+                current_path += middle_path;
+                current_path += input_path;
+                absolute_path = current_path;
+                return true;
+            }
+            else {
+                std::cerr << "ERROR in " << __func__ << " : the input path  " << input_path << " is neither an absolute path nor related with the robotology superbuild. Download it!" << std::endl;
+                return false;
+            }
+        }
+        // already an absolute path
+        absolute_path = input_path;
+        return true;
+    }
+
+    std::shared_ptr<shlibpp::SharedLibraryClassFactory<PluginType>> _ioplugin_factory;
+    std::shared_ptr<shlibpp::SharedLibraryClass<PluginType>> _ioplugin_class;
+
+    bool _load_success;
+
+};
+
+
+/**
+ * @brief Computes the absolute path corresponging to a given path relative to the $ROBOTOLOGY_ROOT 
+ * environment variable.
+ */
+inline std::string computeAbsolutePath(const std::string& input_path){
+    
+    // if not an absolute path
+    if(input_path == "" || !(input_path.at(0) == '/')) {
+        // if you are working with the Robotology Superbuild
+        const char* env_p = std::getenv("ROBOTOLOGY_ROOT");
+        // check the env, otherwise error
+        if(env_p) {
+            std::string current_path(env_p);
+            // default relative path when working with the superbuild
+            current_path += input_path;
+            return current_path;
+        }
+        else {
+            std::cerr << "ERROR in " << __func__ << " : the input path  " << input_path << " is neither an absolute path nor related with the robotology superbuild. Download it!" << std::endl;
+            return "";
+        }
+    }
+    
+    // already an absolute path
+    return input_path;
+}
 
     }
 

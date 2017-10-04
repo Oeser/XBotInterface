@@ -1455,7 +1455,11 @@ bool XBot::XBotInterface::setVelocityReference ( const JointIdMap& qdot )
 
 std::vector< std::string > XBot::XBotInterface::getChainNames() const
 {
-    return _XBotModel.get_chain_names();
+    std::vector<std::string> chains;
+    for(const auto& pair : _chain_map){
+        chains.push_back(pair.first);
+    }
+    return chains;
 }
 
 const std::map< std::string, XBot::KinematicChain::Ptr >& XBot::XBotInterface::getChainMap() const
