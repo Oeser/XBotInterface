@@ -33,7 +33,6 @@
 #include <XBotInterface/Logger.hpp>
 
 #define LIB_MIDDLE_PATH    "/build/install/lib/"
-#define CONFIG_MIDDLE_PATH "/build/install/configs/"
 
 namespace XBot {
 

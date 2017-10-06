@@ -49,7 +49,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
     // core YAML
     std::string core_absolute_path;
     computeAbsolutePath("core.yaml", // NOTE we fixed it.
-                        CONFIG_MIDDLE_PATH,
+                        "/",
                         core_absolute_path);
     YAML::Node core_cfg = YAML::LoadFile(core_absolute_path);
     
