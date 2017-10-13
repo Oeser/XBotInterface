@@ -268,6 +268,7 @@ inline std::string computeAbsolutePath(const std::string& input_path){
         if(env_p) {
             std::string current_path(env_p);
             // default relative path when working with the superbuild
+            current_path += "/";
             current_path += input_path;
             return current_path;
         }
