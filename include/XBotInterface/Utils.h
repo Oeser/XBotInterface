@@ -285,12 +285,27 @@ inline std::string computeAbsolutePath(const std::string& input_path){
 /**
  * @brief getter for the default XBot config file set by the env variable $XBOT_CONFIG
  */
-inline std::string getXBotConfig(){
-    
+inline std::string getXBotConfig()
+{
     const char* env_p = std::getenv("XBOT_CONFIG");
     // check the env, otherwise error
     if(env_p) {
-        std::string xbot_path(env_p);
+        std::string xbot_config(env_p);
+        YAML::Node core_cfg = YAML::LoadFile(xbot_config);
+
+        YAML::Node xbot_path_node;
+        // XBotInterface info
+        if(core_cfg["XBOT_CONFIG"]) {
+            xbot_path_node = core_cfg["XBOT_CONFIG"];
+        }
+        else {
+            std::cerr << "ERROR in " << __func__ << " : YAML file  " << xbot_config << " does not contain XBOT_CONFIG mandatory node!!!" << std::endl;
+            return "";
+        }
+        
+        std::string xbot_path = xbot_path_node.as<std::string>();
+        
+        std::cout << __func__ << xbot_path << std::endl;
         return xbot_path;
     }
     else {
