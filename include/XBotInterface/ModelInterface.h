@@ -76,7 +76,7 @@ public:
      * @param any_map a map with objects needed by RobotInterface actual implementations
      * @return A shared pointer to a new instance of ModelInterface.
      */
-    static ModelInterface::Ptr getModel(const std::string &path_to_cfg, AnyMapConstPtr any_map = AnyMapConstPtr());
+    static ModelInterface::Ptr getModel(const std::string& path_to_cfg, AnyMapConstPtr any_map = AnyMapConstPtr());
 
 
     /**
@@ -223,7 +223,8 @@ public:
     bool isFloatingBase() const;
 
     /**
-    * @brief Sets the floating base pose w.r.t. the world frame
+    * @brief Sets the floating base pose w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param floating_base_pose A homogeneous transformation which transforms a point from floating base frame to world frame
     * @return True if the model is floating-base. False otherwise.
@@ -231,7 +232,8 @@ public:
     virtual bool setFloatingBasePose( const KDL::Frame& floating_base_pose ) = 0;
 
     /**
-    * @brief Sets the floating base orientation w.r.t. the world frame
+    * @brief Sets the floating base orientation w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param world_R_floating_base A rotation matrix which rotates a vector from floating base frame to world frame
     * @return True if the model is floating-base. False otherwise.
@@ -239,7 +241,7 @@ public:
     bool setFloatingBaseOrientation( const KDL::Rotation& world_R_floating_base );
 
     /**
-    * @brief Gets the floating base pose w.r.t. the world frame
+    * @brief Gets the floating base pose w.r.t. the world frame. 
     *
     * @param floating_base_pose The homogeneous transformation which transforms a point from floating base frame to world frame
     * @return True if the the model is floating base. False otherwise.
@@ -247,7 +249,8 @@ public:
     bool getFloatingBasePose( KDL::Frame& floating_base_pose ) const;
 
     /**
-    * @brief Sets the floating base twist w.r.t. the world frame
+    * @brief Sets the floating base twist w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param floating_base_twist The twist of the floating base w.r.t. the world
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
@@ -255,12 +258,33 @@ public:
     virtual bool setFloatingBaseTwist( const KDL::Twist& floating_base_twist ) = 0;
 
     /**
-    * @brief Sets the floating base angular velocity w.r.t. the world frame
+    * @brief Sets the floating base angular velocity w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param floating_base_omega The angular velocity of the floating base w.r.t. the world
     * @return True if the the model is floating base. False otherwise.
     */
     bool setFloatingBaseAngularVelocity( const KDL::Vector& floating_base_omega );
+    
+    /**
+    * @brief Sets the floating base pose and twist w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
+    *
+    * @param pose The pose of the floating base w.r.t. the world
+    * @param twist The twist of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool setFloatingBaseState( const KDL::Frame& pose, const KDL::Twist& twist );
+    
+    /**
+    * @brief Sets the floating base orientation and angular velocity w.r.t. the world frame
+    * from an IMU sensor attached to the model. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
+    *
+    * @param imu The pose of the floating base w.r.t. the world
+    * @return True if the the model is floating base and the imu is valid. False otherwise.
+    */
+    bool setFloatingBaseState( XBot::ImuSensor::ConstPtr imu );
 
     /**
     * @brief Gets the floating base twist w.r.t. the world frame
@@ -698,17 +722,34 @@ public:
      */
     bool maskJacobian( const std::string& chain_name, KDL::Jacobian& J) const;
 
-    // EIGEN OVERLOADS
+    
+    /*************************/
+    /**** EIGEN OVERLOADS ****/
+    /*************************/
+    
+    
     /**
-    * @brief Sets the floating base pose w.r.t. the world frame
+    * @brief Sets the floating base pose w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param floating_base_pose A homogeneous transformation which transforms a point from floating base frame to world frame
     * @return True if the floating_base_pose frame is valid. False otherwise.
     */
     bool setFloatingBasePose( const Eigen::Affine3d& floating_base_pose );
+    
+    /**
+    * @brief Sets the floating base pose and twist w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
+    *
+    * @param pose The pose of the floating base w.r.t. the world
+    * @param twist The twist of the floating base w.r.t. the world
+    * @return True if the the model is floating base. False otherwise.
+    */
+    bool setFloatingBaseState( const Eigen::Affine3d& pose, const Eigen::Vector6d& twist );
 
     /**
-    * @brief Sets the floating base orientation w.r.t. the world frame
+    * @brief Sets the floating base orientation w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param world_R_floating_base A rotation matrix which rotates a vector from floating base frame to world frame
     * @return True if the model is floating-base. False otherwise.
@@ -716,7 +757,8 @@ public:
     bool setFloatingBaseOrientation( const Eigen::Matrix3d& world_R_floating_base );
 
     /**
-    * @brief Sets the floating base twist w.r.t. the world frame
+    * @brief Sets the floating base twist w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param floating_base_twist The twist of the floating base w.r.t. the world
     * @return True if the twist was set correctly (e.g. the model is indeed floating-base)
@@ -724,7 +766,8 @@ public:
     virtual bool setFloatingBaseTwist( const Eigen::Vector6d& floating_base_twist );
 
     /**
-    * @brief Sets the floating base angular velocity w.r.t. the world frame
+    * @brief Sets the floating base angular velocity w.r.t. the world frame. Note that update() must be called in order to
+    * recompute kinematics/dynamics accordingly.
     *
     * @param floating_base_omega The angular velocity of the floating base w.r.t. the world
     * @return True if the the model is floating base. False otherwise.

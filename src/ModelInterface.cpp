@@ -18,6 +18,7 @@
 */
 
 #include <XBotInterface/ModelInterface.h>
+#include <XBotInterface/Utils.h>
 
 #include <srdfdom_advr/model.h>
 
@@ -987,6 +988,44 @@ void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
     getInertiaInverseTimesMatrix(_tmp_I, Minv);
 }
 
+bool XBot::ModelInterface::setFloatingBaseState(const Eigen::Affine3d& pose, const Eigen::Vector6d& twist)
+{
+    bool success = setFloatingBasePose(pose);
+    success = update() && success;
+    success = setFloatingBaseTwist(twist);
+    return success;
+}
+
+bool XBot::ModelInterface::setFloatingBaseState(XBot::ImuSensor::ConstPtr imu)
+{
+    Eigen::Matrix3d fb_R_imu;
+    getFloatingBaseLink(_floating_base_link);
+    bool success = getOrientation(imu->getSensorName(), _floating_base_link,  fb_R_imu);
+    
+    Eigen::Affine3d fb_pose;
+    Eigen::Vector6d fb_twist;
+    
+    getFloatingBasePose(fb_pose);
+    getFloatingBaseTwist(fb_twist);
+    
+    Eigen::Matrix3d w_R_imu;
+    Eigen::Vector3d imu_ang_vel;
+    imu->getOrientation(w_R_imu);
+    imu->getAngularVelocity(imu_ang_vel);
+    
+    fb_pose.linear() = w_R_imu*fb_R_imu.transpose();
+    fb_twist.tail<3>() = w_R_imu * imu_ang_vel;
+    
+    return setFloatingBaseState(fb_pose, fb_twist);
+}
+
+bool XBot::ModelInterface::setFloatingBaseState(const KDL::Frame& pose, const KDL::Twist& twist)
+{
+    bool success = setFloatingBasePose(pose);
+    success = update() && success;
+    success = setFloatingBaseTwist(twist);
+    return success;
+}
 
 
 
