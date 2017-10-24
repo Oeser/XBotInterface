@@ -282,6 +282,20 @@ inline std::string computeAbsolutePath(const std::string& input_path){
     return input_path;
 }
 
+
+inline Eigen::Matrix6d GetAdjointFromRotation(const Eigen::Matrix3d& R){
+    
+    Eigen::Matrix6d I;
+    I.setZero();
+    
+    I.block<3,3>(0,0) = R;
+    I.block<3,3>(3,3) = R;
+    
+    return I;
+    
+}
+
+
     }
 
 }
