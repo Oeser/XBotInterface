@@ -19,6 +19,7 @@
 
 #include <XBotInterface/RobotInterface.h>
 #include <ros/ros.h> //TBD: remove include
+#include <dlfcn.h>
 
 // NOTE Static members need to be defined in the cpp
 std::string XBot::RobotInterface::_framework;
@@ -95,36 +96,41 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path
                                         AnyMapConstPtr any_map,
                                         const std::string& framework)
 {
-    // NOTE singleton
-    if (_instance_ptr) {
-        return _instance_ptr;
-    }
-    // parsing YAML
-    if (!parseYAML(path_to_cfg, framework)) {
-        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
-        return _instance_ptr;
-    }
+      // NOTE singleton
+      if (_instance_ptr) {
+	  return _instance_ptr;
+      }
+      // parsing YAML
+      if (!parseYAML(path_to_cfg, framework)) {
+	  std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
+	  return _instance_ptr;
+      }
 
-
-    // loading the requested model interface internal to the robot
-    _model = XBot::ModelInterface::getModel(path_to_cfg);
-
-
-    // loading the requested robot interface
-    _robot_interface_factory.open( _path_to_shared_lib.c_str(),
-                                                                                _subclass_factory_name.c_str());
-    if (!_robot_interface_factory.isValid()) {
-        // NOTE print to celebrate the wizard
-        printf("error (%s) : %s\n", shlibpp::Vocab::decode(_robot_interface_factory.getStatus()).c_str(),
-               _robot_interface_factory.getLastNativeError().c_str());
-    }
-    // open and init robot interface
-    _robot_interface_instance.open(_robot_interface_factory);
-    _robot_interface_instance->init(path_to_cfg, any_map);
-    // static instance of the robot interface
-    _instance_ptr = std::shared_ptr<RobotInterface>(&_robot_interface_instance.getContent(), [](RobotInterface* ptr){return;});
-
-
+      // loading the requested model interface internal to the robot
+      _model = XBot::ModelInterface::getModel(path_to_cfg);  
+      char *error;  
+      void * lib_handle;
+      lib_handle = dlopen(_path_to_shared_lib.c_str(), RTLD_NOW);
+      if (!lib_handle) {
+	std::cout <<" ROBOT INTERFACE NOT found! " << std::endl;
+	fprintf(stderr, "%s\n", dlerror());
+	//exit(1);
+      }
+      else     
+      {
+	std::cout <<" ROBOT INTERFACE found! " << std::endl;
+	RobotInterface* (*create)();
+	create = (RobotInterface* (*)())dlsym(lib_handle, "create_instance");
+	if ((error = dlerror()) != NULL) {
+	    fprintf(stderr, "%s\n", error);
+	    exit(1);
+	}
+	RobotInterface* instance =(RobotInterface*)create();
+	if( instance != nullptr){
+	  _instance_ptr = std::shared_ptr<RobotInterface>(instance); //,[](RobotInterface* ptr){return;});
+	  _instance_ptr->init(path_to_cfg, any_map);
+	}
+      }
 
     return _instance_ptr;
 
@@ -134,9 +140,6 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 {
     return *_model;
 }
-
-
-
 
 bool XBot::RobotInterface::sense(bool sync_model)
 {
