@@ -8,16 +8,13 @@ int main(int argc, char **argv){
 
     using namespace XBot::experimental;
     
-    Logger logger;
+    Logger::info() << "babcabc" << Logger::endl();
     
+    Logger::error() << "cabcabc" << Logger::endl();
     
-    logger.info() << "babcabc" << logger.endl();
+    Logger::warning() << "cabcabc" << Logger::endl();
     
-    logger.error() << "cabcabc" << logger.endl();
-    
-    logger.warning() << "cabcabc" << logger.endl();
-    
-    logger.success() << "cabcabc" << logger.endl();
+    Logger::success() << "cabcabc" << Logger::endl();
     
 
 }
