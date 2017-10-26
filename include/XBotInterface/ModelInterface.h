@@ -148,8 +148,11 @@ public:
      *  - Sync::Stiffness
      *  - Sync::Damping
      *  - Sync::Impedance
+     *  - Sync::Imu
+     *  - Sync::ForceTorque
+     *  - Sync::Sensors
+     *  - Sync::MotorSide [NOTE: must be used together with Position OR Velocity]
      *  - Sync::All
-
      * @return True if the synchronization is allowed, false otherwise.
      */
     template <typename... SyncFlags>

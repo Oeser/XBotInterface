@@ -32,6 +32,7 @@ namespace XBot {
                            bool& d,
                            bool& ft,
                            bool& imu,
+                           bool& motor_side,
                            Sync s = Sync::All){
 
         pos = (s == Sync::Position) || (s == Sync::All);
@@ -42,6 +43,10 @@ namespace XBot {
         d = (s == Sync::Damping) || (s == Sync::Impedance) || (s == Sync::All);
         ft = (s == Sync::ForceTorque) || (s == Sync::Sensors) || (s == Sync::All);
         imu = (s == Sync::Imu) || (s == Sync::Sensors) || (s == Sync::All);
+        motor_side = (s == Sync::MotorSide);
+        
+        
+        
 
     }
 
@@ -54,18 +59,22 @@ namespace XBot {
                            bool& d,
                            bool& ft,
                            bool& imu,
+                           bool& motor_side,
                            Sync s, Flags... rest){
+        
 
-        parseFlags(pos, vel, acc, eff, k, d, ft, imu, rest...);
+        parseFlags(pos, vel, acc, eff, k, d, ft, imu, motor_side, rest...);
 
-        pos = pos || (s == Sync::Position);
-        vel = vel || (s == Sync::Velocity);
-        acc = acc || (s == Sync::Acceleration);
-        eff = eff || (s == Sync::Effort);
-        k = k || (s == Sync::Stiffness);
-        d = d || (s == Sync::Damping);
-        ft = ft || (s == Sync::ForceTorque);
-        imu = imu || (s == Sync::Imu);
+        pos = pos || (s == Sync::Position) || (s == Sync::All);
+        vel = vel || (s == Sync::Velocity) || (s == Sync::All);
+        acc = acc || (s == Sync::Acceleration) || (s == Sync::All);
+        eff = eff || (s == Sync::Effort) || (s == Sync::All);
+        k = k || (s == Sync::Stiffness) || (s == Sync::Impedance) || (s == Sync::All);
+        d = d || (s == Sync::Damping) || (s == Sync::Impedance) || (s == Sync::All);
+        ft = ft || (s == Sync::ForceTorque) || (s == Sync::Sensors) || (s == Sync::All);
+        imu = imu || (s == Sync::Imu) || (s == Sync::Sensors) || (s == Sync::All);
+        motor_side = motor_side || (s == Sync::MotorSide);
+        
 
     }
 
@@ -91,6 +100,7 @@ namespace XBot {
             _flags_map["d"] = false;
             _flags_map["ft"] = false;
             _flags_map["imu"] = false;
+            _flags_map["motor_side"] = false;
 
             parseFlags(_flags_map["pos"],
                 _flags_map["vel"],
@@ -100,8 +110,13 @@ namespace XBot {
                 _flags_map["d"],
                 _flags_map["ft"],
                 _flags_map["imu"],
+                _flags_map["motor_side"],
                 flags...
             );
+            
+            if(_flags_map["motor_side"] && !_flags_map["pos"] && !_flags_map["vel"]){
+                throw std::runtime_error("Sync::MotorSide must be used together with Position OR Velocity!");
+            }
 
         }
 
@@ -113,6 +128,7 @@ namespace XBot {
         bool damping_flag() const { return _flags_map.at("d"); }
         bool ft_flag() const { return _flags_map.at("ft"); }
         bool imu_flag() const { return _flags_map.at("imu"); }
+        bool motor_side_flag() const { return _flags_map.at("motor_side"); }
 
     private:
 

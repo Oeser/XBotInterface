@@ -693,28 +693,84 @@ TEST_F(testXbotInterface, checkJointLimits){
 TEST_F(testXbotInterface, checkFlagParser){
 
     XBot::FlagsParser parser;
-    parser.load_flags(XBot::Sync::Position, XBot::Sync::Impedance);
+    parser.load_flags(XBot::Sync::Position, XBot::Sync::Velocity, XBot::Sync::Impedance);
+
+    EXPECT_TRUE(parser.position_flag());
+    EXPECT_TRUE(parser.stiffness_flag());
+    EXPECT_TRUE(parser.damping_flag());
+    EXPECT_TRUE(parser.velocity_flag());
+    EXPECT_FALSE(parser.effort_flag());
+    EXPECT_FALSE(parser.ft_flag());
+    EXPECT_FALSE(parser.imu_flag());
+    EXPECT_FALSE(parser.motor_side_flag());
+
+    parser.load_flags(XBot::Sync::Effort, XBot::Sync::Sensors, XBot::Sync::Impedance);
+
+    EXPECT_FALSE(parser.position_flag());
+    EXPECT_TRUE(parser.stiffness_flag());
+    EXPECT_TRUE(parser.damping_flag());
+    EXPECT_FALSE(parser.velocity_flag());
+    EXPECT_TRUE(parser.effort_flag());
+    EXPECT_TRUE(parser.ft_flag());
+    EXPECT_TRUE(parser.imu_flag());
+    EXPECT_FALSE(parser.motor_side_flag());
+    
+    parser.load_flags(XBot::Sync::Velocity, XBot::Sync::Sensors, XBot::Sync::MotorSide);
+
+    EXPECT_FALSE(parser.position_flag());
+    EXPECT_FALSE(parser.stiffness_flag());
+    EXPECT_FALSE(parser.damping_flag());
+    EXPECT_TRUE(parser.velocity_flag());
+    EXPECT_FALSE(parser.effort_flag());
+    EXPECT_TRUE(parser.ft_flag());
+    EXPECT_TRUE(parser.imu_flag());
+    EXPECT_TRUE(parser.motor_side_flag());
+    
+    parser.load_flags(XBot::Sync::Position, XBot::Sync::Effort, XBot::Sync::Impedance, XBot::Sync::MotorSide);
 
     EXPECT_TRUE(parser.position_flag());
     EXPECT_TRUE(parser.stiffness_flag());
     EXPECT_TRUE(parser.damping_flag());
     EXPECT_FALSE(parser.velocity_flag());
-    EXPECT_FALSE(parser.effort_flag());
+    EXPECT_TRUE(parser.effort_flag());
     EXPECT_FALSE(parser.ft_flag());
     EXPECT_FALSE(parser.imu_flag());
-
-    parser.load_flags(XBot::Sync::Effort, XBot::Sync::Sensors);
-
-    EXPECT_FALSE(parser.position_flag());
-    EXPECT_FALSE(parser.stiffness_flag());
-    EXPECT_FALSE(parser.damping_flag());
-    EXPECT_FALSE(parser.velocity_flag());
-    EXPECT_TRUE(parser.effort_flag());
-    EXPECT_TRUE(parser.ft_flag());
-    EXPECT_TRUE(parser.imu_flag());
+    EXPECT_TRUE(parser.motor_side_flag());
 
 }
 
+
+TEST_F(testXbotInterface, checkMotorSideSync){
+    
+    XBot::XBotInterface other;
+    other.init(path_to_cfg);
+
+    Eigen::VectorXd x, y;
+
+    setRandom(xbint);
+    setRandom(other);
+    
+    xbint.sync(other, XBot::Sync::Position, XBot::Sync::MotorSide);
+    
+    xbint.getJointPosition(x);
+    other.getMotorPosition(y);
+    
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+    
+    setRandom(xbint);
+    setRandom(other);
+    
+    EXPECT_THROW( xbint.sync(other, XBot::Sync::MotorSide), std::runtime_error );
+    
+    xbint.sync(other, XBot::Sync::MotorSide, XBot::Sync::Position);
+    xbint.getJointPosition(x);
+    other.getMotorPosition(y);
+    
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+    
+}
 
 int main ( int argc, char **argv )
 {

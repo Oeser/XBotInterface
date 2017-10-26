@@ -116,7 +116,8 @@ namespace XBot{
         All ,
         Sensors,
         Imu,
-        ForceTorque
+        ForceTorque,
+        MotorSide
 
     };
 

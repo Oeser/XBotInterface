@@ -621,7 +621,8 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
          sync_stiffness = false,
          sync_damping = false,
          sync_ft = false,
-         sync_imu = false;
+         sync_imu = false,
+         motor_side = false;
 
     parseFlags(sync_position,
                sync_velocity,
@@ -631,6 +632,7 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
                sync_damping,
                sync_ft,
                sync_imu,
+               motor_side,
                flags...);
 
 
@@ -639,7 +641,13 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
     if(sync_position){
 
         // RX
-        _link_pos = other._link_pos;
+        if(motor_side){
+            _link_pos = other._motor_pos;
+        }
+        else{
+            _link_pos = other._link_pos;
+        }
+        
         _motor_pos = other._motor_pos;
 
         // TX
@@ -649,7 +657,13 @@ bool XBot::Joint::syncFrom(const XBot::Joint &other, SyncFlags... flags)
     if(sync_velocity){
 
         // RX
-        _link_vel = other._link_vel;
+        if(motor_side){
+            _link_vel = other._motor_vel;
+        }
+        else{
+            _link_vel = other._link_vel;
+        }
+        
         _motor_vel = other._motor_vel;
 
         // TX
@@ -704,7 +718,8 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
          sync_stiffness = false,
          sync_damping = false,
          sync_ft = false,
-         sync_imu = false;
+         sync_imu = false,
+         sync_motor_side = false;
 
     parseFlags(sync_position,
                sync_velocity,
@@ -714,6 +729,7 @@ bool XBot::Joint::setReferenceFrom(const XBot::Joint& other, SyncFlags... flags)
                sync_damping,
                sync_ft,
                sync_imu,
+               sync_motor_side,
                flags...);
 
     /////////////////
