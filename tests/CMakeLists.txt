@@ -88,6 +88,12 @@ target_link_libraries(testModelInterface ${TestLibs})
 add_dependencies(testModelInterface GTest-ext XBotInterface)
 add_test(NAME XBot_testModelInterface COMMAND testModelInterface)
 
+# Unit tests related to Utils
+add_executable(testUtils    testUtils.cpp)
+target_link_libraries(testUtils ${TestLibs})
+add_dependencies(testUtils GTest-ext)
+add_test(NAME XBot_testUtils COMMAND testUtils)
+
 
 find_package(MATLAB QUIET)
 find_package(PythonInterp)
