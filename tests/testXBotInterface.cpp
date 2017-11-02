@@ -763,7 +763,18 @@ TEST_F(testXbotInterface, checkMotorSideSync){
     
     EXPECT_THROW( xbint.sync(other, XBot::Sync::MotorSide), std::runtime_error );
     
+    
+    setRandom(xbint);
+    setRandom(other);
     xbint.sync(other, XBot::Sync::MotorSide, XBot::Sync::Position);
+    xbint.getJointPosition(x);
+    other.getMotorPosition(y);
+    
+    EXPECT_TRUE( (x.array() == y.array()).all() );
+    
+    setRandom(xbint);
+    setRandom(other);
+    xbint.sync(other, XBot::Sync::MotorSide, XBot::Sync::All);
     xbint.getJointPosition(x);
     other.getMotorPosition(y);
     
