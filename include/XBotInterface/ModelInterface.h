@@ -1113,9 +1113,6 @@ private:
     std::map<std::string, XBot::ModelChain::Ptr> _model_chain_map;
     XBot::ModelChain _dummy_chain;
 
-    static shlibpp::SharedLibraryClassFactory<ModelInterface> _model_interface_factory;
-    static std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<ModelInterface> > > _model_interface_instance;
-
     bool _is_floating_base;
 
     using XBotInterface::_ordered_chain_names;

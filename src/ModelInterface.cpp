@@ -26,9 +26,6 @@
 #include <eigen3/Eigen/SVD>
 #include <dlfcn.h>
 
-// NOTE Static members need to be defined in the cpp
-shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
-std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > > XBot::ModelInterface::_model_interface_instance;
 
 bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars)
 {
@@ -95,33 +92,36 @@ bool XBot::ModelInterface::isFloatingBase() const
 
 XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
 {
+    std::string abs_path_to_cfg;
+    computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
+    
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
     std::map<std::string, std::string> vars;
 
     // parsing YAML
-    if (!parseYAML(path_to_cfg, vars)) {
-        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
+    if (!parseYAML(abs_path_to_cfg, vars)) {
+        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << abs_path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
 
     // check model floating base
     bool is_model_floating_base;
      // loading YAML
-    YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    YAML::Node root_cfg = YAML::LoadFile(abs_path_to_cfg);
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["ModelInterface"]) {
         x_bot_interface = root_cfg["ModelInterface"];
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << abs_path_to_cfg << "  does not contain ModelInterface mandatory node!!" << std::endl;
     }
     if(x_bot_interface["is_model_floating_base"]) {
         is_model_floating_base = x_bot_interface["is_model_floating_base"].as<bool>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << abs_path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
     }
 
     char *error;  
@@ -148,7 +148,7 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
       if( instance != nullptr){
             instance_ptr = std::shared_ptr<ModelInterface>(instance); //,[](ModelInterface* ptr){return;});
             instance_ptr->_is_floating_base = is_model_floating_base;
-            instance_ptr->init(path_to_cfg, any_map);
+            instance_ptr->init(abs_path_to_cfg, any_map);
       }
     }
 
