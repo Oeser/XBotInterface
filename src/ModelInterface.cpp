@@ -137,15 +137,18 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
       std::cout <<" MODEL INTERFACE found! " << std::endl;
       ModelInterface* (*create)();
       create = (ModelInterface* (*)())dlsym(lib_handle, "create_instance");
+      
       if ((error = dlerror()) != NULL) {
-	  fprintf(stderr, "%s\n", error);
-	  exit(1);
+            fprintf(stderr, "%s\n", error);
+            exit(1);
       }
+      
       ModelInterface* instance =(ModelInterface*)create();
+      
       if( instance != nullptr){
-	instance_ptr = std::shared_ptr<ModelInterface>(instance); //,[](ModelInterface* ptr){return;});
-	instance_ptr->_is_floating_base = is_model_floating_base;
-	instance_ptr->init(path_to_cfg, any_map);
+            instance_ptr = std::shared_ptr<ModelInterface>(instance); //,[](ModelInterface* ptr){return;});
+            instance_ptr->_is_floating_base = is_model_floating_base;
+            instance_ptr->init(path_to_cfg, any_map);
       }
     }
 

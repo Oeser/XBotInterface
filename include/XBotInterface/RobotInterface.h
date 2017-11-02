@@ -258,19 +258,17 @@ private:
     std::map<std::string, XBot::RobotChain::Ptr> _robot_chain_map;
     XBot::RobotChain _dummy_chain;
 
-    static RobotInterface::Ptr _instance_ptr;
-    static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
-    static shlibpp::SharedLibraryClassFactory<RobotInterface> _robot_interface_factory;
-    static ModelInterface::Ptr _model;
+    
 
-    static std::string _framework;
-    static std::string _subclass_name;
-    static std::string _path_to_shared_lib;
-    static std::string _subclass_factory_name;
+    ModelInterface::Ptr _model;
+
+    static RobotInterface::Ptr _instance_ptr;
 
     std::vector<std::string> _model_ordered_chain_name;
 
-    static bool parseYAML(const std::string &path_to_cfg, const std::string & framework);
+    static bool get_path_to_shared_lib(const std::string &path_to_cfg, 
+                                       const std::string& framework, 
+                                       std::string& path_to_so);
 
     double _ts_rx;
     double _ts_tx;
