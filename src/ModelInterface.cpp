@@ -24,6 +24,7 @@
 
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
+#include <dlfcn.h>
 
 // NOTE Static members need to be defined in the cpp
 shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
@@ -123,30 +124,30 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
         std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
     }
 
-    // loading the requested robot interface
-    _model_interface_factory.open( vars.at("path_to_shared_lib").c_str(),
-                                   vars.at("subclass_factory_name").c_str());
-    if (!_model_interface_factory.isValid()) {
-        // NOTE print to celebrate the wizard
-        printf("error (%s) : %s\n", shlibpp::Vocab::decode(_model_interface_factory.getStatus()).c_str(),
-               _model_interface_factory.getLastNativeError().c_str());
+    char *error;  
+    void * lib_handle;
+    lib_handle = dlopen(vars.at("path_to_shared_lib").c_str(), RTLD_NOW);
+    if (!lib_handle) {
+      std::cout <<" MODEL INTERFACE NOT found! " << std::endl;
+      fprintf(stderr, "%s\n", dlerror());
+      //exit(1);
     }
-
-    // save the instance
-    std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > ali_ptr(new shlibpp::SharedLibraryClass<XBot::ModelInterface>(_model_interface_factory));
-
-    _model_interface_instance.push_back(std::make_shared<shlibpp::SharedLibraryClass<XBot::ModelInterface> >());
-
-    shlibpp::SharedLibraryClass<XBot::ModelInterface>& model_instance =  *_model_interface_instance[_model_interface_instance.size()-1];
-
-    // open and init robot interface
-    model_instance.open(_model_interface_factory);
-    model_instance.getContent()._is_floating_base = is_model_floating_base;
-    model_instance->init(path_to_cfg, any_map);
-    // static instance of the robot interface
-    instance_ptr = std::shared_ptr<ModelInterface>(&model_instance.getContent(), [](ModelInterface* ptr){return;});
-
-
+    else     
+    {
+      std::cout <<" MODEL INTERFACE found! " << std::endl;
+      ModelInterface* (*create)();
+      create = (ModelInterface* (*)())dlsym(lib_handle, "create_instance");
+      if ((error = dlerror()) != NULL) {
+	  fprintf(stderr, "%s\n", error);
+	  exit(1);
+      }
+      ModelInterface* instance =(ModelInterface*)create();
+      if( instance != nullptr){
+	instance_ptr = std::shared_ptr<ModelInterface>(instance); //,[](ModelInterface* ptr){return;});
+	instance_ptr->_is_floating_base = is_model_floating_base;
+	instance_ptr->init(path_to_cfg, any_map);
+      }
+    }
 
     return instance_ptr;
 }
