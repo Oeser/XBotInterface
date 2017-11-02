@@ -60,7 +60,8 @@ public:
      * @param any_map a map with objects needed by RobotInterface actual implementations
      * @return a shared pointer to the RobotInterface instance
      */
-    static RobotInterface::Ptr getRobot(const std::string &path_to_cfg,
+    static RobotInterface::Ptr getRobot(const std::string& path_to_cfg,
+                                        const std::string& robot_name = "",
                                         AnyMapConstPtr any_map = AnyMapConstPtr(),
                                         const std::string& framework = "");
 
@@ -262,7 +263,7 @@ private:
 
     ModelInterface::Ptr _model;
 
-    static RobotInterface::Ptr _instance_ptr;
+    static std::map<std::string, RobotInterface::Ptr> _instance_ptr_map;
 
     std::vector<std::string> _model_ordered_chain_name;
 

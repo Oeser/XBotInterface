@@ -22,7 +22,7 @@
 #include <dlfcn.h>
 
 // NOTE Static members need to be defined in the cpp
-XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
+std::map<std::string, XBot::RobotInterface::Ptr> XBot::RobotInterface::_instance_ptr_map;
 
 
 XBot::RobotInterface::RobotInterface()
@@ -82,56 +82,84 @@ bool XBot::RobotInterface::get_path_to_shared_lib(const std::string &path_to_cfg
 }
 
 
-XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg,
-                                        AnyMapConstPtr any_map,
-                                        const std::string& framework)
+XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg,
+                                                         const std::string& robot_name,
+                                                         AnyMapConstPtr any_map,
+                                                         const std::string& framework)
 {
-      // NOTE singleton
-      if (_instance_ptr) {
-            return _instance_ptr;
-      }
-      
-      
-      // parsing YAML
-      std::string path_to_shared_lib;
-      if (!get_path_to_shared_lib(path_to_cfg, framework, path_to_shared_lib)) {
+    
+    std::string abs_path_to_cfg;
+    computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
+    std::string _robot_name_;
+    
+    /* If robot_name is null, retrieve it from Urdf */
+    if( robot_name == "" ){
+        YAML::Node cfg_root = YAML::LoadFile(abs_path_to_cfg);
+        std::string path_to_urdf = cfg_root["XBotInterface"]["urdf_path"].as<std::string>();
+        computeAbsolutePath(path_to_urdf, "/", path_to_urdf);
+        _robot_name_ = urdf::parseURDFFile(path_to_urdf)->name_;
+    }
+    else{
+        _robot_name_ = robot_name;
+    }
+    
+    /* Robots are managed as robot-wise singletons */
+    if (_instance_ptr_map.count(_robot_name_)) {
+        if( _instance_ptr_map.at(_robot_name_)->getPathToConfig() != abs_path_to_cfg ){
+            
+            std::cout << "Provided config: " << abs_path_to_cfg << std::endl;
+            std::cout << "Expected config: " << _instance_ptr_map.at(_robot_name_)->getPathToConfig() << std::endl;
+            
+            /* Same robot name AND different config file -> fatal error */
+            throw std::runtime_error("Unmatching config files for requested robot!");
+        }
+        else{
+            return _instance_ptr_map.at(_robot_name_);
+        }
+    }
+    
+    
+    // parsing YAML
+    std::string path_to_shared_lib;
+    if (!get_path_to_shared_lib(path_to_cfg, framework, path_to_shared_lib)) {
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
-        return _instance_ptr;
-      }
+        return RobotInterface::Ptr();
+    }
 
-      // loading the requested model interface internal to the robot
-      
-      char *error;  
-      void * lib_handle;
-      lib_handle = dlopen(path_to_shared_lib.c_str(), RTLD_NOW);
-      
-      if (!lib_handle) {
-            std::cout <<" ROBOT INTERFACE NOT found! " << std::endl;
-            fprintf(stderr, "%s\n", dlerror());
-            //exit(1);
-      }
-      else     
-      {
-            std::cout <<" ROBOT INTERFACE found! " << std::endl;
-            RobotInterface* (*create)();
-            create = (RobotInterface* (*)())dlsym(lib_handle, "create_instance");
+    // loading the requested model interface internal to the robot
+    
+    char *error;  
+    void * lib_handle;
+    lib_handle = dlopen(path_to_shared_lib.c_str(), RTLD_NOW);
+    
+    if (!lib_handle) {
+        std::cout <<" ROBOT INTERFACE NOT found! " << std::endl;
+        fprintf(stderr, "%s\n", dlerror());
+        //exit(1);
+    }
+    else     
+    {
+        std::cout <<" ROBOT INTERFACE found! " << std::endl;
+        RobotInterface* (*create)();
+        create = (RobotInterface* (*)())dlsym(lib_handle, "create_instance");
+        
+        if ((error = dlerror()) != NULL) {
+            fprintf(stderr, "%s\n", error);
+            exit(1);
+        }
+        
+        RobotInterface* instance =(RobotInterface *)create();
+        
+        if( instance != nullptr){
+            auto instance_ptr = std::shared_ptr<RobotInterface>(instance); 
+            instance_ptr->_model = XBot::ModelInterface::getModel(abs_path_to_cfg);
+            instance_ptr->init(abs_path_to_cfg, any_map);
+            _instance_ptr_map[_robot_name_] = instance_ptr;
             
-            if ((error = dlerror()) != NULL) {
-                fprintf(stderr, "%s\n", error);
-                exit(1);
-            }
-            
-            RobotInterface* instance =(RobotInterface*)create();
-            
-            if( instance != nullptr){
-                _instance_ptr = std::shared_ptr<RobotInterface>(instance); 
-                _instance_ptr->_model = XBot::ModelInterface::getModel(path_to_cfg);
-                _instance_ptr->init(path_to_cfg, any_map);
-                
-            }
-      }
+        }
+    }
 
-    return _instance_ptr;
+    return _instance_ptr_map.at(_robot_name_);
 
 }
 
