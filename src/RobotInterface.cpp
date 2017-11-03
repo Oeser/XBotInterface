@@ -88,9 +88,10 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
                                                          const std::string& framework)
 {
     
-    std::string abs_path_to_cfg;
-    computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
+    std::string abs_path_to_cfg = path_to_cfg;
+//     computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
     std::string _robot_name_;
+    
     
     /* If robot_name is null, retrieve it from Urdf */
     if( robot_name == "" ){

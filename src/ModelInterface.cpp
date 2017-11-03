@@ -92,8 +92,8 @@ bool XBot::ModelInterface::isFloatingBase() const
 
 XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
 {
-    std::string abs_path_to_cfg;
-    computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
+    std::string abs_path_to_cfg = path_to_cfg;
+//     computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
     
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
