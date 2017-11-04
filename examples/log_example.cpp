@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv){
 
-    using namespace XBot::experimental;
+    using namespace XBot;
     
     Eigen::MatrixXd q(20, 20);
     

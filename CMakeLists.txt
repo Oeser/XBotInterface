@@ -86,6 +86,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/bprinter/table_printer.cpp
                                  src/ConfigHelper.cpp
                                  src/Logger.cpp
+                                 src/RtLog.cpp
                                  )
 
 
