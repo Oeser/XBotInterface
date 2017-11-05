@@ -18,6 +18,7 @@
 */
 
 #include <XBotInterface/RobotInterface.h>
+#include <XBotInterface/Utils.h>
 #include <ros/ros.h> //TBD: remove include
 #include <dlfcn.h>
 
@@ -41,6 +42,15 @@ bool XBot::RobotInterface::get_path_to_shared_lib(const std::string &path_to_cfg
 
     // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    
+    // core YAML
+    std::string core_absolute_path;
+    computeAbsolutePath("core.yaml", // NOTE we fixed it.
+                        "/",
+                        core_absolute_path);
+    YAML::Node core_cfg = YAML::LoadFile(core_absolute_path);
+    
+    
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["RobotInterface"]) {
@@ -67,8 +77,8 @@ bool XBot::RobotInterface::get_path_to_shared_lib(const std::string &path_to_cfg
     
     std::string _subclass_name = std::string("RobotInterface") + _framework;
     // check the path to shared lib
-    if(root_cfg[_subclass_name]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(),
+    if(core_cfg[_subclass_name]["path_to_shared_lib"]) {
+        computeAbsolutePath(core_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(),
                             LIB_MIDDLE_PATH,
                             path_to_so);
     }
@@ -88,10 +98,8 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
                                                          const std::string& framework)
 {
     
-    std::string abs_path_to_cfg = path_to_cfg;
-//     computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
+    std::string abs_path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_config);;
     std::string _robot_name_;
-    
     
     /* If robot_name is null, retrieve it from Urdf */
     if( robot_name == "" ){
@@ -168,6 +176,9 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 {
     return *_model;
 }
+
+
+
 
 bool XBot::RobotInterface::sense(bool sync_model)
 {
