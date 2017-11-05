@@ -305,7 +305,7 @@ inline std::string getXBotConfig()
         
         std::string xbot_path = xbot_path_node.as<std::string>();
         
-        std::cout << __func__ << xbot_path << std::endl;
+        std::cout << __func__ << " -> " << xbot_path << std::endl;
         return xbot_path;
     }
     else {
