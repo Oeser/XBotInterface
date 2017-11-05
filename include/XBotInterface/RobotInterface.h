@@ -47,8 +47,12 @@ public:
      *
      */
     RobotInterface();
+    virtual ~RobotInterface(){
+      std::cout<<"~RobotInterface()"<<std::endl;
+    };
 
 
+    
     /**
      * @brief Getter for the robot singleton
      *
