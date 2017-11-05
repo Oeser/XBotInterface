@@ -331,4 +331,3 @@ inline Eigen::Matrix6d GetAdjointFromRotation(const Eigen::Matrix3d& R){
 }
 
 #endif
-#endif

@@ -102,15 +102,13 @@ bool XBot::ModelInterface::isFloatingBase() const
 
 XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_config, AnyMapConstPtr any_map )
 {
-    std::string abs_path_to_cfg = path_to_cfg;
-//     computeAbsolutePath(path_to_cfg, "/", abs_path_to_cfg);
     
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
     std::map<std::string, std::string> vars;
     
     //compute absolute path
-    std::string path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_config);
+    std::string abs_path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_config);
 
     // parsing YAML
     if (!parseYAML(abs_path_to_cfg, vars)) {
