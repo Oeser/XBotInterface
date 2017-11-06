@@ -20,13 +20,16 @@
 #include <XBotInterface/ModelInterface.h>
 #include <XBotInterface/Utils.h>
 
-#include <XBotInterface/Utils.h>
+
 
 #include <srdfdom_advr/model.h>
 
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
 #include <dlfcn.h>
+
+#include <XBotInterface/RtLog.hpp>
+using XBot::Logger;
 
 
 bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars)
@@ -139,13 +142,11 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
     void * lib_handle;
     lib_handle = dlopen(vars.at("path_to_shared_lib").c_str(), RTLD_NOW);
     if (!lib_handle) {
-      std::cout <<" MODEL INTERFACE NOT found! " << std::endl;
-      fprintf(stderr, "%s\n", dlerror());
-      //exit(1);
+      Logger::error() << "MODEL INTERFACE NOT found! \n" << dlerror() << Logger::endl();
     }
     else     
     {
-      std::cout <<" MODEL INTERFACE found! " << std::endl;
+      Logger::success() << "MODEL INTERFACE found! " << Logger::endl();
       ModelInterface* (*create)();
       create = (ModelInterface* (*)())dlsym(lib_handle, "create_instance");
       
@@ -157,7 +158,7 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
       ModelInterface* instance =(ModelInterface*)create();
       
       if( instance != nullptr){
-            instance_ptr = std::shared_ptr<ModelInterface>(instance); //,[](ModelInterface* ptr){return;});
+            instance_ptr = std::shared_ptr<ModelInterface>(instance); 
             instance_ptr->_is_floating_base = is_model_floating_base;
             instance_ptr->init(abs_path_to_cfg, any_map);
       }
@@ -183,14 +184,14 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     if(!init_model(path_to_cfg)){
 
-        std::cerr << "ERROR in " << __func__ << ": model interface could not be initialized!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << ": model interface could not be initialized!" << Logger::endl();
 
         return false;
     }
 
     if(!fillModelOrderedChain()){
 
-        std::cerr << "ERROR in " << __func__ << ": model interface could not be loaded! Model joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << ": model interface could not be loaded! \nModel joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << Logger::endl();
 
         return false;
 
@@ -303,8 +304,8 @@ bool XBot::ModelInterface::fillModelOrderedChain()
 
     //_model_ordered_chain_name;
 
-    std::cout << "Model ordered chains: " << std::endl;
-    for(const auto& s : _ordered_chain_names) std::cout << s << std::endl;
+    Logger::info() << "Model ordered chains: " << Logger::endl();
+    for(const auto& s : _ordered_chain_names) Logger::info() << s << Logger::endl();
 
     return success;
 }

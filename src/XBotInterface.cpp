@@ -18,6 +18,9 @@
 */
 
 #include <XBotInterface/XBotInterface.h>
+#include <XBotInterface/RtLog.hpp>
+
+using XBot::Logger;
 
 
 XBot::XBotInterface::XBotInterface()
@@ -137,7 +140,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
-        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
+        Logger::error() << "in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << Logger::endl();
         return false;
     }
 
@@ -147,7 +150,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
         x_bot_interface = root_cfg["XBotInterface"];
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain XBotInterface mandatory node!!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain XBotInterface mandatory node!!" << Logger::endl();
         return false;
     }
 
@@ -158,7 +161,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
                             _urdf_path);
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain urdf_path mandatory node!!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain urdf_path mandatory node!!" << Logger::endl();
         return false;
     }
 
@@ -169,7 +172,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
                             _srdf_path);
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain srdf_path mandatory node!!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain srdf_path mandatory node!!" << Logger::endl();
         return false;
     }
 
@@ -180,7 +183,7 @@ bool XBot::XBotInterface::parseYAML ( const std::string& path_to_cfg )
                             _joint_map_config);
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain joint_map_path mandatory node!!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << " : XBotInterface node of  " << path_to_cfg << "  does not contain joint_map_path mandatory node!!" << Logger::endl();
         return false;
     }
 
@@ -199,7 +202,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
     parseYAML(path_to_cfg);
     // initialize the model
     if (!_XBotModel.init(_urdf_path, _srdf_path, _joint_map_config)) {
-        printf("ERROR: model initialization failed, please check the urdf_path and srdf_path in your YAML config file.\n");
+        Logger::error() << "model initialization failed, please check the urdf_path, srdf_path and joint_map_path in your YAML config file" << Logger::endl();
         return false;
     }
     // generate the robot
@@ -241,7 +244,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
 
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
     if (_XBotModel.getDisabledJoints().size() > 0) {
-         std::cerr << "WARNING in " << __func__ << " : disabled joint detected in the specified SRDF. URDF must be updated accordingly (we hope you did it)." << std::endl;
+         Logger::warning() << "in " << __func__ << " : disabled joint detected in the specified SRDF. URDF must be updated accordingly" << Logger::endl();
     }
 
     // call virtual init_internal

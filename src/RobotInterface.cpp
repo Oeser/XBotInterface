@@ -19,8 +19,10 @@
 
 #include <XBotInterface/RobotInterface.h>
 #include <XBotInterface/Utils.h>
-#include <ros/ros.h> //TBD: remove include
 #include <dlfcn.h>
+
+#include <XBotInterface/RtLog.hpp>
+using XBot::Logger;
 
 // NOTE Static members need to be defined in the cpp
 std::map<std::string, XBot::RobotInterface::Ptr> XBot::RobotInterface::_instance_ptr_map;
@@ -116,8 +118,8 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
     if (_instance_ptr_map.count(_robot_name_)) {
         if( _instance_ptr_map.at(_robot_name_)->getPathToConfig() != abs_path_to_cfg ){
             
-            std::cout << "Provided config: " << abs_path_to_cfg << std::endl;
-            std::cout << "Expected config: " << _instance_ptr_map.at(_robot_name_)->getPathToConfig() << std::endl;
+            Logger::info() << "Provided config: " << abs_path_to_cfg << Logger::endl();
+            Logger::info() << "Expected config: " << _instance_ptr_map.at(_robot_name_)->getPathToConfig() << Logger::endl();
             
             /* Same robot name AND different config file -> fatal error */
             throw std::runtime_error("Unmatching config files for requested robot!");
@@ -142,13 +144,11 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
     lib_handle = dlopen(path_to_shared_lib.c_str(), RTLD_NOW);
     
     if (!lib_handle) {
-        std::cout <<" ROBOT INTERFACE NOT found! " << std::endl;
-        fprintf(stderr, "%s\n", dlerror());
-        //exit(1);
+        Logger::error() <<"ROBOT INTERFACE NOT found! \n" << dlerror() << std::endl;
     }
     else     
     {
-        std::cout <<" ROBOT INTERFACE found! " << std::endl;
+        Logger::success() << "ROBOT INTERFACE found! " << Logger::endl();
         RobotInterface* (*create)();
         create = (RobotInterface* (*)())dlsym(lib_handle, "create_instance");
         
@@ -389,14 +389,14 @@ bool XBot::RobotInterface::setControlMode(const std::map< std::string, XBot::Con
 
             if(set_internal_success){
                 getJointByNameInternal(pair.first)->setControlMode(pair.second);
-                std::cout << "INFO: Joint " << pair.first << " - with id : "
+                Logger::info() << "INFO: Joint " << pair.first << " - with id : "
                           << getJointByNameInternal(pair.first)->getJointId()
-                          << " - control mode changed to " << pair.second.getName() << std::endl;
+                          << " - control mode changed to " << pair.second.getName() << Logger::endl();
             }
             else {
-                std::cout << "WARNING: Joint " << pair.first  << " - with id : "
+                Logger::warning() << "WARNING: Joint " << pair.first  << " - with id : "
                           << getJointByNameInternal(pair.first)->getJointId() << " - CANNOT change control mode to "
-                          << pair.second.getName() << std::endl;
+                          << pair.second.getName() << Logger::endl();
             }
 
             success = set_internal_success && success;
@@ -417,14 +417,14 @@ bool XBot::RobotInterface::setControlMode(const XBot::ControlMode& control_mode)
 
         if(set_internal_success){
             _joint_vector[i]->setControlMode(control_mode);
-            std::cout << "INFO: Joint " << _joint_vector[i]->getJointName() << " - with id : "
+            Logger::info() << "INFO: Joint " << _joint_vector[i]->getJointName() << " - with id : "
                       << _joint_vector[i]->getJointId()
-                      << " - control mode changed to " << control_mode.getName() << std::endl;
+                      << " - control mode changed to " << control_mode.getName() << Logger::endl();
         }
         else {
-            std::cout << "WARNING: Joint " << _joint_vector[i]->getJointName()  << " - with id : "
+            Logger::warning() << "WARNING: Joint " << _joint_vector[i]->getJointName()  << " - with id : "
                       << _joint_vector[i]->getJointId() << " - CANNOT change control mode to "
-                      << control_mode.getName() << std::endl;
+                      << control_mode.getName() << Logger::endl();
         }
 
         success = set_internal_success && success;
@@ -440,7 +440,7 @@ bool XBot::RobotInterface::setControlMode(const std::string& chain_name, const X
     auto it = _chain_map.find(chain_name);
 
     if( it == _chain_map.end() ){
-        std::cerr << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << Logger::endl();
         return false;
     }
 
@@ -452,14 +452,14 @@ bool XBot::RobotInterface::setControlMode(const std::string& chain_name, const X
 
         if( set_internal_success ){
             it->second->getJointInternal(i)->setControlMode(control_mode);
-            std::cout << "INFO: Joint " << (it->second->getJoint(i)->getJointName()) << " - with id : "
+            Logger::info() << "INFO: Joint " << (it->second->getJoint(i)->getJointName()) << " - with id : "
                       << (it->second->getJoint(i)->getJointId())
-                      << " - control mode changed to " << control_mode.getName() << std::endl;
+                      << " - control mode changed to " << control_mode.getName() << Logger::endl();
         }
         else {
-            std::cout << "WARNING: Joint " << (it->second->getJoint(i)->getJointName())  << " - with id : "
+            Logger::warning() << "WARNING: Joint " << (it->second->getJoint(i)->getJointName())  << " - with id : "
                       << (it->second->getJoint(i)->getJointId()) << " - CANNOT change control mode to "
-                      << control_mode.getName() << std::endl;
+                      << control_mode.getName() << Logger::endl();
         }
 
         success = success && set_internal_success;

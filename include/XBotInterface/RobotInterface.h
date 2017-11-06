@@ -48,7 +48,9 @@ public:
      */
     RobotInterface();
     virtual ~RobotInterface(){
-      std::cout<<"~RobotInterface()"<<std::endl;
+        if( Logger::GetVerbosityLevel() == Logger::Severity::LOW ){
+            std::cout << "~RobotInterface()" << std::endl;
+        }
     };
 
 

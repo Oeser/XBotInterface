@@ -20,6 +20,9 @@
 #include <XBotInterface/KinematicChain.h>
 #include <eigen3/Eigen/Dense>
 
+#include <XBotInterface/RtLog.hpp>
+
+
 namespace XBot
 {
 
@@ -90,7 +93,7 @@ KinematicChain::KinematicChain(const std::string &chain_name,
                 ForceTorqueSensor::Ptr ft_ptr = std::make_shared<ForceTorqueSensor>(robot_urdf.getLink(ft_link_name), ft_id);
                 _ft_vector.push_back(ft_ptr);
                 _ft_map[ft_ptr->getSensorName()] = ft_ptr;
-                std::cout << "****************** FOUND FT " << ft_link_name << " ON CHAIN " << getChainName() << std::endl;
+                Logger::info() << "Found FT " << ft_link_name << " on chain " << getChainName() << Logger::endl();
             }
         }
 
@@ -111,7 +114,7 @@ KinematicChain::KinematicChain(const std::string &chain_name,
                 ImuSensor::Ptr imu_ptr = std::make_shared<ImuSensor>(robot_urdf.getLink(imu_link_name), imu_id);
                 _imu_vector.push_back(imu_ptr);
                 _imu_map[imu_ptr->getSensorName()] = imu_ptr;
-                std::cout << "****************** FOUND IMU " << imu_link_name << " ON CHAIN " << getChainName() << std::endl;
+                Logger::info() << "Found FT " << imu_link_name << " on chain " << getChainName() << Logger::endl();
             }
         }
 

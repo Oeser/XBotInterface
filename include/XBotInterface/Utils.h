@@ -22,6 +22,7 @@
 #define __XBOTINTERFACE_UTILS_H__
 
 #include <XBotInterface/ModelInterface.h>
+#include <XBotInterface/RtLog.hpp>
 #include <SharedLibraryClassFactory.h>
 #include <SharedLibraryClass.h>
 
@@ -156,8 +157,6 @@ private:
         _a1 = 2 - 8.0/std::pow(_omega*_ts, 2.0);
         _a2 = 1.0 + 4.0/std::pow(_omega*_ts, 2.0) - 4.0*_eps/(_omega*_ts);
 
-        std::cout << "Coeffs: " << 1.0 << " -- " << _b1 << " -- " << _b2 << "\n" <<
-        _a0 << " -- " << _a1 << " -- " << _a2 << std::endl;
     }
 
     double _omega;
@@ -305,11 +304,11 @@ inline std::string getXBotConfig()
         
         std::string xbot_path = xbot_path_node.as<std::string>();
         
-        std::cout << __func__ << " -> " << xbot_path << std::endl;
+        Logger::info() << __func__ << " -> " << xbot_path << Logger::endl();
         return xbot_path;
     }
     else {
-        std::cerr << "WARNING in " << __func__ << " : XBOT_CONFIG env variable not set." << std::endl;
+        Logger::warning() << "WARNING in " << __func__ << " : XBOT_CONFIG env variable not set." << Logger::endl();
         return "";
     }
 }
