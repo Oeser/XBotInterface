@@ -304,8 +304,9 @@ bool XBot::ModelInterface::fillModelOrderedChain()
 
     //_model_ordered_chain_name;
 
-    Logger::info() << "Model ordered chains: " << Logger::endl();
-    for(const auto& s : _ordered_chain_names) Logger::info() << s << Logger::endl();
+    Logger::info() << "Model ordered chains: \n";
+    for(const auto& s : _ordered_chain_names) Logger::log() << s << "\n";
+    Logger::log() << Logger::endl();
 
     return success;
 }
