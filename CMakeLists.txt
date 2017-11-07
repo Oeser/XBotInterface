@@ -52,6 +52,8 @@ find_package(Eigen3 REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 
+find_package(Xenomai QUIET)
+
 option(BUILD_TESTS "Compile XBotInterface tests" TRUE)
 
 
@@ -106,6 +108,10 @@ target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     ${bprinter_LIBRARIES}
                                     matio pthread
                                     )
+                                    
+if(${Xenomai_FOUND})
+set_xeno_flags(XBotInterface)
+endif()
 
 
 add_executable(test_exec src/main_test.cpp)
