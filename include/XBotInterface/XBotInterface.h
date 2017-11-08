@@ -32,7 +32,7 @@
 #include <XBotInterface/TypedefAndEnums.h>
 #include <XBotInterface/Logger.hpp>
 
-#define LIB_MIDDLE_PATH "/build/install/lib/"
+#define LIB_MIDDLE_PATH    "/build/install/lib/"
 
 namespace XBot {
 

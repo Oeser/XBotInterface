@@ -22,6 +22,7 @@
 #define __XBOTINTERFACE_UTILS_H__
 
 #include <XBotInterface/ModelInterface.h>
+#include <XBotInterface/RtLog.hpp>
 #include <SharedLibraryClassFactory.h>
 #include <SharedLibraryClass.h>
 
@@ -156,8 +157,6 @@ private:
         _a1 = 2 - 8.0/std::pow(_omega*_ts, 2.0);
         _a2 = 1.0 + 4.0/std::pow(_omega*_ts, 2.0) - 4.0*_eps/(_omega*_ts);
 
-        std::cout << "Coeffs: " << 1.0 << " -- " << _b1 << " -- " << _b2 << "\n" <<
-        _a0 << " -- " << _a1 << " -- " << _a2 << std::endl;
     }
 
     double _omega;
@@ -280,6 +279,50 @@ inline std::string computeAbsolutePath(const std::string& input_path){
     
     // already an absolute path
     return input_path;
+}
+
+/**
+ * @brief getter for the default XBot config file set by the env variable $XBOT_CONFIG
+ */
+inline std::string getXBotConfig()
+{
+    const char* env_p = std::getenv("XBOT_CONFIG");
+    // check the env, otherwise error
+    if(env_p) {
+        std::string xbot_config(env_p);
+        YAML::Node core_cfg = YAML::LoadFile(xbot_config);
+
+        YAML::Node xbot_path_node;
+        // XBotInterface info
+        if(core_cfg["XBOT_CONFIG"]) {
+            xbot_path_node = core_cfg["XBOT_CONFIG"];
+        }
+        else {
+            std::cerr << "ERROR in " << __func__ << " : YAML file  " << xbot_config << " does not contain XBOT_CONFIG mandatory node!!!" << std::endl;
+            return "";
+        }
+        
+        std::string xbot_path = xbot_path_node.as<std::string>();
+        
+        Logger::info() << __func__ << " -> " << xbot_path << Logger::endl();
+        return xbot_path;
+    }
+    else {
+        Logger::warning() << "WARNING in " << __func__ << " : XBOT_CONFIG env variable not set." << Logger::endl();
+        return "";
+    }
+}
+
+inline Eigen::Matrix6d GetAdjointFromRotation(const Eigen::Matrix3d& R){
+    
+    Eigen::Matrix6d I;
+    I.setZero();
+    
+    I.block<3,3>(0,0) = R;
+    I.block<3,3>(3,3) = R;
+    
+    return I;
+    
 }
 
     }
