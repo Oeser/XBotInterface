@@ -74,6 +74,39 @@ inline void computeOrientationError(const Eigen::Matrix3d& ref,
 
 }
 
+
+
+
+
+inline void ThirdOrderTrajectory(const double init_time,
+				 const double init_pos, 
+				 const double final_pos, 
+				 const double max_vel, 
+				 const double traj_time, 
+				 double& ref, 
+				 double& ref_dot, 
+				 double& duration) 
+{ 
+  double time_t; 
+  double length; 
+  length = final_pos - init_pos; 
+  time_t = traj_time - init_time; 
+  duration    = 1.5 * length / max_vel; 
+  if (time_t>= 0 && time_t<= duration) { 
+  ref     = -2.0 * length * std::pow(time_t/duration,3) + 3.0 * length * std::pow(time_t/duration,2) + init_pos; 
+  ref_dot   = -6.0 * length * std::pow(time_t,2)/std::pow(duration,3) + 6.0 * length * time_t/std::pow(duration,2); 
+  } 
+  else if (time_t<0) { 
+    ref = init_pos; 
+    ref_dot = 0; 
+  } 
+  else { 
+    ref = final_pos;
+    ref_dot = 0; 
+  } 
+} 
+
+
 template <typename SignalType>
 class SecondOrderFilter {
 
