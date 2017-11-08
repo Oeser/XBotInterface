@@ -78,6 +78,43 @@ inline void computeOrientationError(const Eigen::Matrix3d& ref,
 
 
 
+inline void FifthOrderTrajectory(const double init_time,
+				 const double init_pos, 
+				 const double final_pos, 
+				 const double max_vel, 
+				 const double traj_time, 
+				 double& ref, 
+				 double& ref_dot, 
+				 double& duration) 
+{ 
+  double t = traj_time - init_time;
+  
+  double t1 = final_pos - init_pos;
+  duration = 0.15e2 / 0.8e1 * t1 / max_vel;
+
+  if (t>= 0 && t<= duration) 
+  { 
+    double t2 = 0.1e1 / t1;
+    double t3 = t * t;
+    double t4 = t2 * max_vel * t;
+    double t5 = std::pow(t2, 2) * std::pow(max_vel, 3);
+    ref = init_pos + t5 * t * t3 * (t4 * (0.2589077 * t2 * max_vel * t - 1.2136) + 1.5170);
+    ref_dot = t5 * t3 * (t4 * (1.2945 * t4 - 4.8545) + 4.5511);
+  } 
+  else if (t<0) { 
+    ref = init_pos; 
+    ref_dot = 0; 
+  } 
+  else { 
+    ref = final_pos;
+    ref_dot = 0; 
+  } 
+} 
+
+
+
+
+
 inline void ThirdOrderTrajectory(const double init_time,
 				 const double init_pos, 
 				 const double final_pos, 
