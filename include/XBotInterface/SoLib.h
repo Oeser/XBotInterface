@@ -56,26 +56,27 @@ public:
     lib_handle = dlopen(path_to_so.c_str(), RTLD_NOW);
     if (!lib_handle) {
         XBot::Logger::error() << lib_name <<" so library NOT found! \n" << dlerror() << XBot::Logger::endl();
-        fprintf(stderr, "%s\n", dlerror());
-        //exit(1);
     }
     else     
     {
-        Logger::success(Logger::Severity::MID) << lib_name << " so library found! " << Logger::endl();
+        Logger::success() << lib_name << " so library found! " << Logger::endl();
         handles[lib_name] = lib_handle;
       
         T* (*create)();
         create = (T* (*)())dlsym(lib_handle, "create_instance");
         if ((error = dlerror()) != NULL) {
-            fprintf(stderr, "%s\n", error);
-            exit(1);
+            XBot::Logger::error() << " in loading library " << lib_name << ": \n" << error << XBot::Logger::endl();
+            return nullptr;
         }        
         
         T* instance =(T*)create();
         if( instance != nullptr){
-          return std::shared_ptr<T>(instance);
+            return std::shared_ptr<T>(instance);
         }
+        
+        XBot::Logger::error() << " in loading library " << lib_name << ": obtained pointer is null" << XBot::Logger::endl();
      }
+     
     return nullptr;
     
 }
@@ -83,7 +84,7 @@ public:
   static void unloadLib(const std::string& file_name)
   {
     dlclose( handles[file_name] );
-    std::cout << file_name <<" so library unloaded! " << std::endl;
+    Logger::info() << file_name <<" so library unloaded! " << Logger::endl();
   }
   
 private:
