@@ -5,7 +5,6 @@ int main(int argc, char **argv){
 
     using XBot::Sync;
 
-    auto& logger = *XBot::ConsoleLogger::getLogger("home_logger");
     
 
     std::string path_to_config_file(argv[1]); // from command line
@@ -18,7 +17,6 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    logger.info() << "q homing : " << qhome << logger.endl();
 
     Eigen::VectorXd qinitial;
 
@@ -41,7 +39,6 @@ int main(int argc, char **argv){
         robot.setPositionReference(qinitial+alpha*(qhome-qinitial));
 
 
-        logger.info() << "q ref : " << qinitial+alpha*(qhome-qinitial) << logger.endl();
 
         robot.move();
 

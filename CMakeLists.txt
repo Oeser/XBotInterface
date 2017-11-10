@@ -86,7 +86,7 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/ImuSensor.cpp
                                  src/ControlMode.cpp
                                  src/bprinter/table_printer.cpp
-                                 src/ConfigHelper.cpp
+#                                  src/ConfigHelper.cpp
                                  src/Logger.cpp
                                  src/RtLog.cpp
                                  )

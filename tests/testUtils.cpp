@@ -1,7 +1,50 @@
 #include <gtest/gtest.h>
 #include <XBotInterface/Utils.h>
+#include <XBotInterface/RtLog.hpp>
+#include <thread>
+#include <functional>
 
-TEST (testUtils, checkFilterDcGainDouble) { 
+using XBot::Logger;
+
+namespace {
+
+class testUtils: public ::testing::Test {
+    
+public:
+    
+    
+    void test_mt_log_func(int th_id) {
+        for(int i = 0; i < 5000; i++){
+            Logger::info() << "Thread #" << th_id << " printing to logger!" << Logger::endl();
+            Logger::error("Thread #%d printing to logger", th_id);
+            usleep(1000);
+        }
+     }
+
+protected:
+
+     testUtils(){
+         
+         
+     }
+
+     virtual ~testUtils() {
+     }
+
+     virtual void SetUp() {
+         
+     }
+
+     virtual void TearDown() {
+     }
+     
+     
+     
+};
+
+
+
+TEST_F (testUtils, checkFilterDcGainDouble) { 
     
     XBot::Utils::SecondOrderFilter<double> filter;
     
@@ -44,7 +87,7 @@ TEST (testUtils, checkFilterDcGainDouble) {
 }
  
  
-TEST (testUtils, checkFilterDcGainEigen) { 
+TEST_F (testUtils, checkFilterDcGainEigen) { 
     
     XBot::Utils::SecondOrderFilter<Eigen::Vector3d> filter;
     
@@ -75,7 +118,27 @@ TEST (testUtils, checkFilterDcGainEigen) {
     
 }
 
+
+
+TEST_F(testUtils, checkMtLogger){
+    
+    std::vector<std::thread> th;
+    
+    auto f = std::bind(&testUtils::test_mt_log_func, this, std::placeholders::_1);
+    
+    for(int i = 0; i < 5; i++){
+        th.push_back(std::thread(f, i+1));
+    }
+    
+    for(auto& t : th){
+        t.join();
+    }
+}
+
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
+}
+
 }

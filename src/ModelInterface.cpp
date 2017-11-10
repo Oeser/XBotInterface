@@ -19,16 +19,13 @@
 
 #include <XBotInterface/ModelInterface.h>
 #include <XBotInterface/Utils.h>
-
-
-
 #include <srdfdom_advr/model.h>
-
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
 #include <dlfcn.h>
-
+#include <XBotInterface/SoLib.h>
 #include <XBotInterface/RtLog.hpp>
+
 using XBot::Logger;
 
 
@@ -138,31 +135,11 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
         std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << abs_path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
     }
 
-    char *error;  
-    void * lib_handle;
-    lib_handle = dlopen(vars.at("path_to_shared_lib").c_str(), RTLD_NOW);
-    if (!lib_handle) {
-      Logger::error() << "MODEL INTERFACE NOT found! \n" << dlerror() << Logger::endl();
-    }
-    else     
-    {
-      Logger::success() << "MODEL INTERFACE found! " << Logger::endl();
-      ModelInterface* (*create)();
-      create = (ModelInterface* (*)())dlsym(lib_handle, "create_instance");
-      
-      if ((error = dlerror()) != NULL) {
-            fprintf(stderr, "%s\n", error);
-            exit(1);
-      }
-      
-      ModelInterface* instance =(ModelInterface*)create();
-      
-      if( instance != nullptr){
-            instance_ptr = std::shared_ptr<ModelInterface>(instance); 
+     instance_ptr  = SoLib::getFactory<XBot::ModelInterface>(vars.at("path_to_shared_lib"),"MODEL INTERFACE");
+     if( instance_ptr){
             instance_ptr->_is_floating_base = is_model_floating_base;
             instance_ptr->init(abs_path_to_cfg, any_map);
       }
-    }
 
     return instance_ptr;
 }
