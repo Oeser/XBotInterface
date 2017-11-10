@@ -85,7 +85,7 @@ inline void FifthOrderTrajectory(const double init_time,
 				 const double traj_time, 
 				 double& ref, 
 				 double& ref_dot, 
-				 double& duration) 
+				 double& duration)
 { 
   double t = traj_time - init_time;
   

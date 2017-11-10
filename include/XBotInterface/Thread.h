@@ -26,7 +26,7 @@
 #include <sys/timerfd.h>
 #endif
 
-#include <XCM/XBotUtils.h>
+#include <XBotInterface/XBotUtils.h>
 #include <XBotInterface/RtLog.hpp>
 
 using XBot::Logger;
