@@ -23,7 +23,7 @@
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
 #include <dlfcn.h>
-#include <XBotCore-interfaces/SoLib.h>
+#include <XBotInterface/SoLib.h>
 #include <XBotInterface/RtLog.hpp>
 
 using XBot::Logger;

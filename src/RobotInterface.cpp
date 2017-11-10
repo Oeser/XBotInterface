@@ -20,7 +20,7 @@
 #include <XBotInterface/RobotInterface.h>
 #include <XBotInterface/Utils.h>
 #include <dlfcn.h>
-#include <XBotCore-interfaces/SoLib.h>
+#include <XBotInterface/SoLib.h>
 #include <XBotInterface/RtLog.hpp>
 using XBot::Logger;
 
