@@ -285,6 +285,8 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
         _imu_id_map[pair.second->getSensorId()] = pair.second;
     }
 
+    post_init();
+    
     return success;
 
 }

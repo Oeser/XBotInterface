@@ -1357,6 +1357,10 @@ protected:
      virtual bool init_internal ( const std::string& path_to_cfg, AnyMapConstPtr any_map ) {
           return true;
      }
+     
+     virtual bool post_init() {
+         return true;
+     }
 
 
      static bool computeAbsolutePath ( const std::string& input_path,

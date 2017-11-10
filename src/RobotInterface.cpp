@@ -220,6 +220,19 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg, AnyMapC
     return success;
 }
 
+bool XBot::RobotInterface::post_init()
+{
+    sense();
+    
+    Eigen::VectorXd tmp;
+    getMotorPosition(tmp);
+    setPositionReference(tmp);
+    
+    return true;
+}
+
+
+
 XBot::RobotChain& XBot::RobotInterface::arm(int arm_id)
 {
     if (_XBotModel.get_arms_chain().size() > arm_id) {

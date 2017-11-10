@@ -254,6 +254,8 @@ protected:
 private:
 
     virtual bool init_internal(const std::string &path_to_cfg, AnyMapConstPtr any_map);
+    
+    virtual bool post_init();
 
     using XBotInterface::_chain_map;
     using XBotInterface::_ordered_joint_vector;
