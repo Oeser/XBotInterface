@@ -152,7 +152,7 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
-        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
+        Logger::error() << "in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << Logger::endl();
         return false;
     }
 
@@ -161,14 +161,14 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     if(!init_model(path_to_cfg)){
 
-        Logger::error() << "ERROR in " << __func__ << ": model interface could not be initialized!" << Logger::endl();
+        Logger::error() << "in " << __func__ << ": model interface could not be initialized!" << Logger::endl();
 
         return false;
     }
 
     if(!fillModelOrderedChain()){
 
-        Logger::error() << "ERROR in " << __func__ << ": model interface could not be loaded! \nModel joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << Logger::endl();
+        Logger::error() << "in " << __func__ << ": model interface could not be loaded! \nModel joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << Logger::endl();
 
         return false;
 
