@@ -79,37 +79,48 @@ inline void computeOrientationError(const Eigen::Matrix3d& ref,
 
 
 inline void FifthOrderTrajectory(const double init_time,
-				 const double init_pos, 
-				 const double final_pos, 
-				 const double max_vel, 
+				 const Eigen::VectorXd _startPosture, 
+				 const Eigen::VectorXd _targetPosture, 
+				 const double _max_vel, 
 				 const double traj_time, 
-				 double& ref, 
-				 double& ref_dot, 
-				 double& duration)
+				 Eigen::VectorXd& ref, 
+				 Eigen::VectorXd& ref_dot, 
+				 double& _duration_) 
 { 
-  double t = traj_time - init_time;
-  
-  double t1 = final_pos - init_pos;
-  duration = 0.15e2 / 0.8e1 * t1 / max_vel;
-
-  if (t>= 0 && t<= duration) 
-  { 
-    double t2 = 0.1e1 / t1;
-    double t3 = t * t;
-    double t4 = t2 * max_vel * t;
-    double t5 = std::pow(t2, 2) * std::pow(max_vel, 3);
-    ref = init_pos + t5 * t * t3 * (t4 * (0.2589077 * t2 * max_vel * t - 1.2136) + 1.5170);
-    ref_dot = t5 * t3 * (t4 * (1.2945 * t4 - 4.8545) + 4.5511);
-  } 
-  else if (t<0) { 
-    ref = init_pos; 
-    ref_dot = 0; 
+  double _t1;
+  double duration_temp 	= 0.0;
+  int _vec_size  	= _startPosture.size();
+  // Find the trajectory duration
+  _duration_ 		= 0.0;
+  for (int i=0; i<_vec_size; i++) 
+  {
+    _t1 		= _targetPosture(i) - _startPosture(i);
+    duration_temp 	= 1.8750 * std::abs(_t1) / _max_vel;
+    if (duration_temp > _duration_)
+      _duration_ 	= duration_temp;
+  }
+  // Generate the trajectory
+  double _time_ 	= traj_time - init_time;
+  if (_time_>= 0 && _time_<= _duration_) 
+  {
+    double tr 		= (_time_/_duration_);
+    double tr2 		= tr * tr;
+    double tr3 		= tr2 * tr;
+    double s 		=  (6.0 * tr3 * tr2 		- 15.0 * tr3 * tr 	+ 10.0 * tr3);
+    double sd 		= (30.0 * tr3 * tr/_duration_ 	- 60.0 * tr3/_duration_ + 30.0 * tr2/_duration_);
+    //
+    ref 			= _startPosture + (_targetPosture - _startPosture) * s;
+    ref_dot 		= (_targetPosture - _startPosture) * sd;
+  }
+  else if (_time_<0) {
+    ref 		= _startPosture; 
+    ref_dot 		= 0.0 * _startPosture; 
   } 
   else { 
-    ref = final_pos;
-    ref_dot = 0; 
-  } 
-} 
+    ref 		= _targetPosture;
+    ref_dot 		= 0.0 * _targetPosture; 
+  }
+}
 
 
 
