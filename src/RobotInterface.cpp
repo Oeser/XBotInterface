@@ -20,7 +20,7 @@
 #include <XBotInterface/RobotInterface.h>
 #include <XBotInterface/Utils.h>
 #include <dlfcn.h>
-
+#include <XBotCore-interfaces/SoLib.h>
 #include <XBotInterface/RtLog.hpp>
 using XBot::Logger;
 
@@ -138,35 +138,12 @@ XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path
     }
 
     // loading the requested model interface internal to the robot
-    
-    char *error;  
-    void * lib_handle;
-    lib_handle = dlopen(path_to_shared_lib.c_str(), RTLD_NOW);
-    
-    if (!lib_handle) {
-        Logger::error() <<"ROBOT INTERFACE NOT found! \n" << dlerror() << std::endl;
-    }
-    else     
-    {
-        Logger::success() << "ROBOT INTERFACE found! " << Logger::endl();
-        RobotInterface* (*create)();
-        create = (RobotInterface* (*)())dlsym(lib_handle, "create_instance");
-        
-        if ((error = dlerror()) != NULL) {
-            fprintf(stderr, "%s\n", error);
-            exit(1);
-        }
-        
-        RobotInterface* instance =(RobotInterface *)create();
-        
-        if( instance != nullptr){
-            auto instance_ptr = std::shared_ptr<RobotInterface>(instance); 
-            instance_ptr->_model = XBot::ModelInterface::getModel(abs_path_to_cfg);
-            instance_ptr->init(abs_path_to_cfg, any_map);
-            _instance_ptr_map[_robot_name_] = instance_ptr;
-            
-        }
-    }
+    auto instance_ptr  = SoLib::getFactory<XBot::RobotInterface>(path_to_shared_lib,"RobotInterface");
+    if( instance_ptr){ 
+          instance_ptr->_model = XBot::ModelInterface::getModel(abs_path_to_cfg);
+          instance_ptr->init(abs_path_to_cfg, any_map);
+          _instance_ptr_map[_robot_name_] = instance_ptr;            
+      }
 
     return _instance_ptr_map.at(_robot_name_);
 
