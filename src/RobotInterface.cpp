@@ -18,24 +18,23 @@
 */
 
 #include <XBotInterface/RobotInterface.h>
-#include <ros/ros.h> //TBD: remove include
+#include <XBotInterface/Utils.h>
 #include <dlfcn.h>
+#include <XBotInterface/SoLib.h>
+#include <XBotInterface/RtLog.hpp>
+using XBot::Logger;
 
 // NOTE Static members need to be defined in the cpp
-std::string XBot::RobotInterface::_framework;
-std::string XBot::RobotInterface::_subclass_name;
-std::string XBot::RobotInterface::_path_to_shared_lib;
-std::string XBot::RobotInterface::_subclass_factory_name;
-XBot::RobotInterface::Ptr XBot::RobotInterface::_instance_ptr;
-XBot::ModelInterface::Ptr XBot::RobotInterface::_model;
-shlibpp::SharedLibraryClass<XBot::RobotInterface> XBot::RobotInterface::_robot_interface_instance;
-shlibpp::SharedLibraryClassFactory<XBot::RobotInterface> XBot::RobotInterface::_robot_interface_factory;
+std::map<std::string, XBot::RobotInterface::Ptr> XBot::RobotInterface::_instance_ptr_map;
+
 
 XBot::RobotInterface::RobotInterface()
 {
 }
 
-bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::string& framework)
+bool XBot::RobotInterface::get_path_to_shared_lib(const std::string &path_to_cfg, 
+                                                  const std::string& framework, 
+                                                  std::string& path_to_so)
 {
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
@@ -45,6 +44,15 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
 
     // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    
+    // core YAML
+    std::string core_absolute_path;
+    computeAbsolutePath("core.yaml", // NOTE we fixed it.
+                        "/",
+                        core_absolute_path);
+    YAML::Node core_cfg = YAML::LoadFile(core_absolute_path);
+    
+    
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["RobotInterface"]) {
@@ -55,6 +63,7 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
         return false;
     }
     // check framework
+    std::string _framework;
     if(x_bot_interface["framework_name"]) {
         _framework = x_bot_interface["framework_name"].as<std::string>();
     }
@@ -67,72 +76,76 @@ bool XBot::RobotInterface::parseYAML(const std::string &path_to_cfg, const std::
         _framework = framework;
     }
 
-    // subclass forced
-    _subclass_name = std::string("RobotInterface") + _framework;
+    
+    std::string _subclass_name = std::string("RobotInterface") + _framework;
     // check the path to shared lib
-    if(root_cfg[_subclass_name]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(),
+    if(core_cfg[_subclass_name]["path_to_shared_lib"]) {
+        computeAbsolutePath(core_cfg[_subclass_name]["path_to_shared_lib"].as<std::string>(),
                             LIB_MIDDLE_PATH,
-                            _path_to_shared_lib);
+                            path_to_so);
     }
     else {
         std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << _subclass_name << " mandatory node!!" << std::endl;
         return false;
     }
 
-    if(root_cfg[_subclass_name]["subclass_factory_name"]) {
-        _subclass_factory_name = root_cfg[_subclass_name]["subclass_factory_name"].as<std::string>();
-    }
-    else {
-        std::cerr << "ERROR in " << __func__ << " : " << _subclass_name << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
-        return false;
-    }
     return true;
 
 }
 
 
-XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string &path_to_cfg,
-                                        AnyMapConstPtr any_map,
-                                        const std::string& framework)
+XBot::RobotInterface::Ptr XBot::RobotInterface::getRobot(const std::string& path_to_cfg,
+                                                         const std::string& robot_name,
+                                                         AnyMapConstPtr any_map,
+                                                         const std::string& framework)
 {
-      // NOTE singleton
-      if (_instance_ptr) {
-	  return _instance_ptr;
-      }
-      // parsing YAML
-      if (!parseYAML(path_to_cfg, framework)) {
-	  std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
-	  return _instance_ptr;
+    
+    std::string abs_path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_cfg);;
+    std::string _robot_name_;
+    
+    /* If robot_name is null, retrieve it from Urdf */
+    if( robot_name == "" ){
+        YAML::Node cfg_root = YAML::LoadFile(abs_path_to_cfg);
+        std::string path_to_urdf = cfg_root["XBotInterface"]["urdf_path"].as<std::string>();
+        computeAbsolutePath(path_to_urdf, "/", path_to_urdf);
+        _robot_name_ = urdf::parseURDFFile(path_to_urdf)->name_;
+    }
+    else{
+        _robot_name_ = robot_name;
+    }
+    
+    /* Robots are managed as robot-wise singletons */
+    if (_instance_ptr_map.count(_robot_name_)) {
+        if( _instance_ptr_map.at(_robot_name_)->getPathToConfig() != abs_path_to_cfg ){
+            
+            Logger::info() << "Provided config: " << abs_path_to_cfg << Logger::endl();
+            Logger::info() << "Expected config: " << _instance_ptr_map.at(_robot_name_)->getPathToConfig() << Logger::endl();
+            
+            /* Same robot name AND different config file -> fatal error */
+            throw std::runtime_error("Unmatching config files for requested robot!");
+        }
+        else{
+            return _instance_ptr_map.at(_robot_name_);
+        }
+    }
+    
+    
+    // parsing YAML
+    std::string path_to_shared_lib;
+    if (!get_path_to_shared_lib(path_to_cfg, framework, path_to_shared_lib)) {
+        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
+        return RobotInterface::Ptr();
+    }
+
+    // loading the requested model interface internal to the robot
+    auto instance_ptr  = SoLib::getFactory<XBot::RobotInterface>(path_to_shared_lib,"RobotInterface");
+    if( instance_ptr){ 
+          instance_ptr->_model = XBot::ModelInterface::getModel(abs_path_to_cfg);
+          instance_ptr->init(abs_path_to_cfg, any_map);
+          _instance_ptr_map[_robot_name_] = instance_ptr;            
       }
 
-      // loading the requested model interface internal to the robot
-      _model = XBot::ModelInterface::getModel(path_to_cfg);  
-      char *error;  
-      void * lib_handle;
-      lib_handle = dlopen(_path_to_shared_lib.c_str(), RTLD_NOW);
-      if (!lib_handle) {
-	std::cout <<" ROBOT INTERFACE NOT found! " << std::endl;
-	fprintf(stderr, "%s\n", dlerror());
-	//exit(1);
-      }
-      else     
-      {
-	std::cout <<" ROBOT INTERFACE found! " << std::endl;
-	RobotInterface* (*create)();
-	create = (RobotInterface* (*)())dlsym(lib_handle, "create_instance");
-	if ((error = dlerror()) != NULL) {
-	    fprintf(stderr, "%s\n", error);
-	    exit(1);
-	}
-	RobotInterface* instance =(RobotInterface*)create();
-	if( instance != nullptr){
-	  _instance_ptr = std::shared_ptr<RobotInterface>(instance); //,[](RobotInterface* ptr){return;});
-	  _instance_ptr->init(path_to_cfg, any_map);
-	}
-      }
-
-    return _instance_ptr;
+    return _instance_ptr_map.at(_robot_name_);
 
 }
 
@@ -140,6 +153,9 @@ XBot::ModelInterface& XBot::RobotInterface::model()
 {
     return *_model;
 }
+
+
+
 
 bool XBot::RobotInterface::sense(bool sync_model)
 {
@@ -203,6 +219,19 @@ bool XBot::RobotInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     return success;
 }
+
+bool XBot::RobotInterface::post_init()
+{
+    sense();
+    
+    Eigen::VectorXd tmp;
+    getMotorPosition(tmp);
+    setPositionReference(tmp);
+    
+    return true;
+}
+
+
 
 XBot::RobotChain& XBot::RobotInterface::arm(int arm_id)
 {
@@ -350,14 +379,14 @@ bool XBot::RobotInterface::setControlMode(const std::map< std::string, XBot::Con
 
             if(set_internal_success){
                 getJointByNameInternal(pair.first)->setControlMode(pair.second);
-                std::cout << "INFO: Joint " << pair.first << " - with id : "
+                Logger::info() << "INFO: Joint " << pair.first << " - with id : "
                           << getJointByNameInternal(pair.first)->getJointId()
-                          << " - control mode changed to " << pair.second.getName() << std::endl;
+                          << " - control mode changed to " << pair.second.getName() << Logger::endl();
             }
             else {
-                std::cout << "WARNING: Joint " << pair.first  << " - with id : "
+                Logger::warning() << "WARNING: Joint " << pair.first  << " - with id : "
                           << getJointByNameInternal(pair.first)->getJointId() << " - CANNOT change control mode to "
-                          << pair.second.getName() << std::endl;
+                          << pair.second.getName() << Logger::endl();
             }
 
             success = set_internal_success && success;
@@ -378,14 +407,14 @@ bool XBot::RobotInterface::setControlMode(const XBot::ControlMode& control_mode)
 
         if(set_internal_success){
             _joint_vector[i]->setControlMode(control_mode);
-            std::cout << "INFO: Joint " << _joint_vector[i]->getJointName() << " - with id : "
+            Logger::info() << "INFO: Joint " << _joint_vector[i]->getJointName() << " - with id : "
                       << _joint_vector[i]->getJointId()
-                      << " - control mode changed to " << control_mode.getName() << std::endl;
+                      << " - control mode changed to " << control_mode.getName() << Logger::endl();
         }
         else {
-            std::cout << "WARNING: Joint " << _joint_vector[i]->getJointName()  << " - with id : "
+            Logger::warning() << "WARNING: Joint " << _joint_vector[i]->getJointName()  << " - with id : "
                       << _joint_vector[i]->getJointId() << " - CANNOT change control mode to "
-                      << control_mode.getName() << std::endl;
+                      << control_mode.getName() << Logger::endl();
         }
 
         success = set_internal_success && success;
@@ -401,7 +430,7 @@ bool XBot::RobotInterface::setControlMode(const std::string& chain_name, const X
     auto it = _chain_map.find(chain_name);
 
     if( it == _chain_map.end() ){
-        std::cerr << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << std::endl;
+        Logger::error() << "ERROR in " << __func__ << "! Chain " << chain_name << " is NOT defined!" << Logger::endl();
         return false;
     }
 
@@ -413,14 +442,14 @@ bool XBot::RobotInterface::setControlMode(const std::string& chain_name, const X
 
         if( set_internal_success ){
             it->second->getJointInternal(i)->setControlMode(control_mode);
-            std::cout << "INFO: Joint " << (it->second->getJoint(i)->getJointName()) << " - with id : "
+            Logger::info() << "INFO: Joint " << (it->second->getJoint(i)->getJointName()) << " - with id : "
                       << (it->second->getJoint(i)->getJointId())
-                      << " - control mode changed to " << control_mode.getName() << std::endl;
+                      << " - control mode changed to " << control_mode.getName() << Logger::endl();
         }
         else {
-            std::cout << "WARNING: Joint " << (it->second->getJoint(i)->getJointName())  << " - with id : "
+            Logger::warning() << "WARNING: Joint " << (it->second->getJoint(i)->getJointName())  << " - with id : "
                       << (it->second->getJoint(i)->getJointId()) << " - CANNOT change control mode to "
-                      << control_mode.getName() << std::endl;
+                      << control_mode.getName() << Logger::endl();
         }
 
         success = success && set_internal_success;

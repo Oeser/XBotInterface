@@ -48,7 +48,9 @@ public:
      */
     RobotInterface();
     virtual ~RobotInterface(){
-      std::cout<<"~RobotInterface()"<<std::endl;
+        if( Logger::GetVerbosityLevel() == Logger::Severity::LOW ){
+            std::cout << "~RobotInterface()" << std::endl;
+        }
     };
 
 
@@ -60,7 +62,8 @@ public:
      * @param any_map a map with objects needed by RobotInterface actual implementations
      * @return a shared pointer to the RobotInterface instance
      */
-    static RobotInterface::Ptr getRobot(const std::string &path_to_cfg,
+    static RobotInterface::Ptr getRobot(const std::string& path_to_cfg,
+                                        const std::string& robot_name = "",
                                         AnyMapConstPtr any_map = AnyMapConstPtr(),
                                         const std::string& framework = "");
 
@@ -251,6 +254,8 @@ protected:
 private:
 
     virtual bool init_internal(const std::string &path_to_cfg, AnyMapConstPtr any_map);
+    
+    virtual bool post_init();
 
     using XBotInterface::_chain_map;
     using XBotInterface::_ordered_joint_vector;
@@ -258,19 +263,17 @@ private:
     std::map<std::string, XBot::RobotChain::Ptr> _robot_chain_map;
     XBot::RobotChain _dummy_chain;
 
-    static RobotInterface::Ptr _instance_ptr;
-    static shlibpp::SharedLibraryClass<RobotInterface> _robot_interface_instance;
-    static shlibpp::SharedLibraryClassFactory<RobotInterface> _robot_interface_factory;
-    static ModelInterface::Ptr _model;
+    
 
-    static std::string _framework;
-    static std::string _subclass_name;
-    static std::string _path_to_shared_lib;
-    static std::string _subclass_factory_name;
+    ModelInterface::Ptr _model;
+
+    static std::map<std::string, RobotInterface::Ptr> _instance_ptr_map;
 
     std::vector<std::string> _model_ordered_chain_name;
 
-    static bool parseYAML(const std::string &path_to_cfg, const std::string & framework);
+    static bool get_path_to_shared_lib(const std::string &path_to_cfg, 
+                                       const std::string& framework, 
+                                       std::string& path_to_so);
 
     double _ts_rx;
     double _ts_tx;

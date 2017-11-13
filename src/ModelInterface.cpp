@@ -18,16 +18,16 @@
 */
 
 #include <XBotInterface/ModelInterface.h>
-
+#include <XBotInterface/Utils.h>
 #include <srdfdom_advr/model.h>
-
 #include <eigen3/Eigen/QR>
 #include <eigen3/Eigen/SVD>
 #include <dlfcn.h>
+#include <XBotInterface/SoLib.h>
+#include <XBotInterface/RtLog.hpp>
 
-// NOTE Static members need to be defined in the cpp
-shlibpp::SharedLibraryClassFactory<XBot::ModelInterface> XBot::ModelInterface::_model_interface_factory;
-std::vector<std::shared_ptr<shlibpp::SharedLibraryClass<XBot::ModelInterface> > > XBot::ModelInterface::_model_interface_instance;
+using XBot::Logger;
+
 
 bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<std::string, std::string>& vars)
 {
@@ -39,13 +39,21 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
 
     // loading YAML
     YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    
+    // core YAML
+    std::string core_absolute_path;
+    computeAbsolutePath("core.yaml", // NOTE we fixed it.
+                        "/",
+                        core_absolute_path);
+    YAML::Node core_cfg = YAML::LoadFile(core_absolute_path);
+    
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["ModelInterface"]) {
         x_bot_interface = root_cfg["ModelInterface"];
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << " does not contain ModelInterface mandatory node!!!" << std::endl;
         return false;
     }
 
@@ -54,7 +62,7 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
         vars["model_type"] = x_bot_interface["model_type"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << "  does not contain model_type mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : RobotInterface node of  " << path_to_cfg << " does not contain model_type mandatory node!!" << std::endl;
         return false;
     }
 
@@ -62,21 +70,21 @@ bool XBot::ModelInterface::parseYAML(const std::string &path_to_cfg, std::map<st
     vars["subclass_name"] = std::string("ModelInterface") + vars.at("model_type");
     vars["path_to_shared_lib"] = "";
     // check the path to shared lib
-    if(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
-        computeAbsolutePath(root_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(),
+    if(core_cfg[vars.at("subclass_name")]["path_to_shared_lib"]) {
+        computeAbsolutePath(core_cfg[vars.at("subclass_name")]["path_to_shared_lib"].as<std::string>(),
                             LIB_MIDDLE_PATH,
                             vars.at("path_to_shared_lib"));
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain " << vars.at("subclass_name") << " mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << " or core.yaml  does not contain " << vars.at("subclass_name") << " mandatory node!!" << std::endl;
         return false;
     }
 
-    if(root_cfg[vars.at("subclass_name")]["subclass_factory_name"]) {
-        vars["subclass_factory_name"] = root_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
+    if(core_cfg[vars.at("subclass_name")]["subclass_factory_name"]) {
+        vars["subclass_factory_name"] = core_cfg[vars.at("subclass_name")]["subclass_factory_name"].as<std::string>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : " << vars.at("subclass_name") << " node of  " << path_to_cfg << "  does not contain subclass_factory_name mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : " << vars.at("subclass_name") << " node of  " << path_to_cfg << " or core.yaml does not contain subclass_factory_name mandatory node!!" << std::endl;
         return false;
     }
 
@@ -92,61 +100,46 @@ bool XBot::ModelInterface::isFloatingBase() const
 }
 
 
-XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_cfg, AnyMapConstPtr any_map )
+XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& path_to_config, AnyMapConstPtr any_map )
 {
+    
     // Model instance to return
     ModelInterface::Ptr instance_ptr;
     std::map<std::string, std::string> vars;
+    
+    //compute absolute path
+    std::string abs_path_to_cfg = XBot::Utils::computeAbsolutePath(path_to_config);
 
     // parsing YAML
-    if (!parseYAML(path_to_cfg, vars)) {
-        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << path_to_cfg << " . See error above!!" << std::endl;
+    if (!parseYAML(abs_path_to_cfg, vars)) {
+        std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << abs_path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
 
     // check model floating base
     bool is_model_floating_base;
      // loading YAML
-    YAML::Node root_cfg = YAML::LoadFile(path_to_cfg);
+    YAML::Node root_cfg = YAML::LoadFile(abs_path_to_cfg);
     YAML::Node x_bot_interface;
     // XBotInterface info
     if(root_cfg["ModelInterface"]) {
         x_bot_interface = root_cfg["ModelInterface"];
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : YAML file  " << path_to_cfg << "  does not contain ModelInterface mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : YAML file  " << abs_path_to_cfg << "  does not contain ModelInterface mandatory node!!" << std::endl;
     }
     if(x_bot_interface["is_model_floating_base"]) {
         is_model_floating_base = x_bot_interface["is_model_floating_base"].as<bool>();
     }
     else {
-        std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
+        std::cerr << "ERROR in " << __func__ << " : ModelInterface node of  " << abs_path_to_cfg << "  does not contain is_model_floating_base mandatory node!!" << std::endl;
     }
 
-    char *error;  
-    void * lib_handle;
-    lib_handle = dlopen(vars.at("path_to_shared_lib").c_str(), RTLD_NOW);
-    if (!lib_handle) {
-      std::cout <<" MODEL INTERFACE NOT found! " << std::endl;
-      fprintf(stderr, "%s\n", dlerror());
-      //exit(1);
-    }
-    else     
-    {
-      std::cout <<" MODEL INTERFACE found! " << std::endl;
-      ModelInterface* (*create)();
-      create = (ModelInterface* (*)())dlsym(lib_handle, "create_instance");
-      if ((error = dlerror()) != NULL) {
-	  fprintf(stderr, "%s\n", error);
-	  exit(1);
+     instance_ptr  = SoLib::getFactory<XBot::ModelInterface>(vars.at("path_to_shared_lib"),"MODEL INTERFACE");
+     if( instance_ptr){
+            instance_ptr->_is_floating_base = is_model_floating_base;
+            instance_ptr->init(abs_path_to_cfg, any_map);
       }
-      ModelInterface* instance =(ModelInterface*)create();
-      if( instance != nullptr){
-	instance_ptr = std::shared_ptr<ModelInterface>(instance); //,[](ModelInterface* ptr){return;});
-	instance_ptr->_is_floating_base = is_model_floating_base;
-	instance_ptr->init(path_to_cfg, any_map);
-      }
-    }
 
     return instance_ptr;
 }
@@ -159,7 +152,7 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     std::ifstream fin(path_to_cfg);
     if (fin.fail()) {
-        std::cerr << "ERROR in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << std::endl;
+        Logger::error() << "in " << __func__ << "! Can NOT open " << path_to_cfg << "!" << Logger::endl();
         return false;
     }
 
@@ -168,14 +161,14 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     if(!init_model(path_to_cfg)){
 
-        std::cerr << "ERROR in " << __func__ << ": model interface could not be initialized!" << std::endl;
+        Logger::error() << "in " << __func__ << ": model interface could not be initialized!" << Logger::endl();
 
         return false;
     }
 
     if(!fillModelOrderedChain()){
 
-        std::cerr << "ERROR in " << __func__ << ": model interface could not be loaded! Model joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << std::endl;
+        Logger::error() << "in " << __func__ << ": model interface could not be loaded! \nModel joint ordering must be chain-by-chain and inside each chain joints must go from base link to tip link!" << Logger::endl();
 
         return false;
 
@@ -288,8 +281,9 @@ bool XBot::ModelInterface::fillModelOrderedChain()
 
     //_model_ordered_chain_name;
 
-    std::cout << "Model ordered chains: " << std::endl;
-    for(const auto& s : _ordered_chain_names) std::cout << s << std::endl;
+    Logger::info() << "Model ordered chains: \n";
+    for(const auto& s : _ordered_chain_names) Logger::log() << s << "\n";
+    Logger::log() << Logger::endl();
 
     return success;
 }
@@ -988,6 +982,44 @@ void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
     getInertiaInverseTimesMatrix(_tmp_I, Minv);
 }
 
+bool XBot::ModelInterface::setFloatingBaseState(const Eigen::Affine3d& pose, const Eigen::Vector6d& twist)
+{
+    bool success = setFloatingBasePose(pose);
+    success = update() && success;
+    success = setFloatingBaseTwist(twist);
+    return success;
+}
+
+bool XBot::ModelInterface::setFloatingBaseState(XBot::ImuSensor::ConstPtr imu)
+{
+    Eigen::Matrix3d fb_R_imu;
+    getFloatingBaseLink(_floating_base_link);
+    bool success = getOrientation(imu->getSensorName(), _floating_base_link,  fb_R_imu);
+    
+    Eigen::Affine3d fb_pose;
+    Eigen::Vector6d fb_twist;
+    
+    getFloatingBasePose(fb_pose);
+    getFloatingBaseTwist(fb_twist);
+    
+    Eigen::Matrix3d w_R_imu;
+    Eigen::Vector3d imu_ang_vel;
+    imu->getOrientation(w_R_imu);
+    imu->getAngularVelocity(imu_ang_vel);
+    
+    fb_pose.linear() = w_R_imu*fb_R_imu.transpose();
+    fb_twist.tail<3>() = w_R_imu * imu_ang_vel;
+    
+    return setFloatingBaseState(fb_pose, fb_twist);
+}
+
+bool XBot::ModelInterface::setFloatingBaseState(const KDL::Frame& pose, const KDL::Twist& twist)
+{
+    bool success = setFloatingBasePose(pose);
+    success = update() && success;
+    success = setFloatingBaseTwist(twist);
+    return success;
+}
 
 
 

@@ -1,43 +1,41 @@
-#include <XBotInterface/Logger.hpp>
+#include <XBotInterface/RtLog.hpp>
 #include <Eigen/Dense>
 
 #include <unistd.h>
 
-#define LOG_ITERATION 4e3
-#define LOG_PERIOD_MICRO 1e5
 
 int main(int argc, char **argv){
 
-    auto& file_logger = *XBot::FileLogger::getLogger("file_logger", "/tmp/test_file_logger");
-    auto& console_logger = *XBot::ConsoleLogger::getLogger();
-
-    auto& mfile_logger = *XBot::MatLogger::getLogger("/tmp/test_mfile_logger.mat");
-
-    Eigen::VectorXd q;
-    Eigen::MatrixXd A;
-
-
-    mfile_logger.createVectorVariable("q_v", 5, 1);
-    mfile_logger.createMatrixVariable("A_v", 6, 6, 1);
-
-    q.setConstant(5,0.123456789);
-    A.setConstant(6,6,0.123456789);
-
-    int i = 0;
-    while(i < LOG_ITERATION) {
-
-        file_logger.info() << "Vector q is :" << q.transpose() << file_logger.endl();
-        console_logger.warning() << "Vector q is :" << q.transpose() << console_logger.endl();
-//         console_logger.error() << "Vector q is :" << q.transpose() << console_logger.endl();
-
-        mfile_logger.add("q_v", q*std::sin(i/100.0));
-        mfile_logger.add("A_v", A*i);
-//         mfile_logger.add("scalar", double(i)/1.2345);
-
-//         usleep(LOG_PERIOD_MICRO);
-        i++;
-    }
-
-    return 0;
+    using namespace XBot;
+    
+    Eigen::MatrixXd q(20, 20);
+    
+    Logger::SetVerbosityLevel(Logger::Severity::MID);
+    
+    Logger::error("My error like printf: %d %f %s\n", 3, 2.73, "mamma");
+    
+    Logger::info() << "babcabc" << Logger::endl(); // not printed
+    
+    Logger::error() << "cabcabc" << Logger::endl();
+    
+    Logger::warning() << "cabcabc" << Logger::endl(); 
+    
+    Logger::success(Logger::Severity::MID) << "cabcabc" << Logger::endl(); // printed
+    
+    Logger::info(Logger::Severity::MID) << q.transpose().format(Eigen::IOFormat(4)) << Logger::endl(); // printed
+    
+    Logger::error() << "error line 1\n";
+    Logger::log() << "error line 2\n";
+    Logger::log() << "error line 3" << Logger::endl();
+    
+    Logger::error() << "Will this be displayed?" << std::endl;
+    Logger::error() << "Then Will this be displayed?" << Logger::endl();
+    
+    
+    
+    LoggerClass logger("log_example");
+    
+    logger.warning() << "my warn" << logger.endl();
+    logger.info("My int is %d, my double is %f\n", 1, 3.14);
 
 }

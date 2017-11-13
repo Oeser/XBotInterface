@@ -116,18 +116,26 @@ namespace XBot{
         All ,
         Sensors,
         Imu,
-        ForceTorque
+        ForceTorque,
+        MotorSide
 
     };
 
 }
 
 namespace Eigen {
+    
     /**
      * @brief Typedef for a 6 element column vector of double.
      *
      */
     typedef Eigen::Matrix<double, 6, 1> Vector6d;
+    
+    /**
+     * @brief Typedef for a 6-by-6 matrix of double.
+     *
+     */
+    typedef Eigen::Matrix<double, 6, 6> Matrix6d;
 }
 
 #endif

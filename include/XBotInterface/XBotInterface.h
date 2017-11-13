@@ -32,7 +32,7 @@
 #include <XBotInterface/TypedefAndEnums.h>
 #include <XBotInterface/Logger.hpp>
 
-#define LIB_MIDDLE_PATH "/build/install/lib/"
+#define LIB_MIDDLE_PATH    "/build/install/lib/"
 
 namespace XBot {
 
@@ -1356,6 +1356,10 @@ protected:
 
      virtual bool init_internal ( const std::string& path_to_cfg, AnyMapConstPtr any_map ) {
           return true;
+     }
+     
+     virtual bool post_init() {
+         return true;
      }
 
 

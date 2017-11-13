@@ -22,6 +22,7 @@
 #define __XBOTINTERFACE_UTILS_H__
 
 #include <XBotInterface/ModelInterface.h>
+#include <XBotInterface/RtLog.hpp>
 #include <SharedLibraryClassFactory.h>
 #include <SharedLibraryClass.h>
 
@@ -72,6 +73,87 @@ inline void computeOrientationError(const Eigen::Matrix3d& ref,
     error = q.w()*q_d.vec() - q_d.w()*q.vec() - q_d.vec().cross(q.vec());
 
 }
+
+
+
+
+
+inline void FifthOrderTrajectory(const double init_time,
+				 const Eigen::VectorXd _startPosture, 
+				 const Eigen::VectorXd _targetPosture, 
+				 const double _max_vel, 
+				 const double traj_time, 
+				 Eigen::VectorXd& ref, 
+				 Eigen::VectorXd& ref_dot, 
+				 double& _duration_) 
+{ 
+  double _t1;
+  double duration_temp 	= 0.0;
+  int _vec_size  	= _startPosture.size();
+  // Find the trajectory duration
+  _duration_ 		= 0.0;
+  for (int i=0; i<_vec_size; i++) 
+  {
+    _t1 		= _targetPosture(i) - _startPosture(i);
+    duration_temp 	= 1.8750 * std::abs(_t1) / _max_vel;
+    if (duration_temp > _duration_)
+      _duration_ 	= duration_temp;
+  }
+  // Generate the trajectory
+  double _time_ 	= traj_time - init_time;
+  if (_time_>= 0 && _time_<= _duration_) 
+  {
+    double tr 		= (_time_/_duration_);
+    double tr2 		= tr * tr;
+    double tr3 		= tr2 * tr;
+    double s 		=  (6.0 * tr3 * tr2 		- 15.0 * tr3 * tr 	+ 10.0 * tr3);
+    double sd 		= (30.0 * tr3 * tr/_duration_ 	- 60.0 * tr3/_duration_ + 30.0 * tr2/_duration_);
+    //
+    ref 			= _startPosture + (_targetPosture - _startPosture) * s;
+    ref_dot 		= (_targetPosture - _startPosture) * sd;
+  }
+  else if (_time_<0) {
+    ref 		= _startPosture; 
+    ref_dot 		= 0.0 * _startPosture; 
+  } 
+  else { 
+    ref 		= _targetPosture;
+    ref_dot 		= 0.0 * _targetPosture; 
+  }
+}
+
+
+
+
+
+inline void ThirdOrderTrajectory(const double init_time,
+				 const double init_pos, 
+				 const double final_pos, 
+				 const double max_vel, 
+				 const double traj_time, 
+				 double& ref, 
+				 double& ref_dot, 
+				 double& duration) 
+{ 
+  double time_t; 
+  double length; 
+  length = final_pos - init_pos; 
+  time_t = traj_time - init_time; 
+  duration    = 1.5 * length / max_vel; 
+  if (time_t>= 0 && time_t<= duration) { 
+  ref     = -2.0 * length * std::pow(time_t/duration,3) + 3.0 * length * std::pow(time_t/duration,2) + init_pos; 
+  ref_dot   = -6.0 * length * std::pow(time_t,2)/std::pow(duration,3) + 6.0 * length * time_t/std::pow(duration,2); 
+  } 
+  else if (time_t<0) { 
+    ref = init_pos; 
+    ref_dot = 0; 
+  } 
+  else { 
+    ref = final_pos;
+    ref_dot = 0; 
+  } 
+} 
+
 
 template <typename SignalType>
 class SecondOrderFilter {
@@ -156,8 +238,6 @@ private:
         _a1 = 2 - 8.0/std::pow(_omega*_ts, 2.0);
         _a2 = 1.0 + 4.0/std::pow(_omega*_ts, 2.0) - 4.0*_eps/(_omega*_ts);
 
-        std::cout << "Coeffs: " << 1.0 << " -- " << _b1 << " -- " << _b2 << "\n" <<
-        _a0 << " -- " << _a1 << " -- " << _a2 << std::endl;
     }
 
     double _omega;
@@ -280,6 +360,50 @@ inline std::string computeAbsolutePath(const std::string& input_path){
     
     // already an absolute path
     return input_path;
+}
+
+/**
+ * @brief getter for the default XBot config file set by the env variable $XBOT_CONFIG
+ */
+inline std::string getXBotConfig()
+{
+    const char* env_p = std::getenv("XBOT_CONFIG");
+    // check the env, otherwise error
+    if(env_p) {
+        std::string xbot_config(env_p);
+        YAML::Node core_cfg = YAML::LoadFile(xbot_config);
+
+        YAML::Node xbot_path_node;
+        // XBotInterface info
+        if(core_cfg["XBOT_CONFIG"]) {
+            xbot_path_node = core_cfg["XBOT_CONFIG"];
+        }
+        else {
+            std::cerr << "ERROR in " << __func__ << " : YAML file  " << xbot_config << " does not contain XBOT_CONFIG mandatory node!!!" << std::endl;
+            return "";
+        }
+        
+        std::string xbot_path = xbot_path_node.as<std::string>();
+        
+        Logger::info() << __func__ << " -> " << xbot_path << Logger::endl();
+        return xbot_path;
+    }
+    else {
+        Logger::warning() << "WARNING in " << __func__ << " : XBOT_CONFIG env variable not set." << Logger::endl();
+        return "";
+    }
+}
+
+inline Eigen::Matrix6d GetAdjointFromRotation(const Eigen::Matrix3d& R){
+    
+    Eigen::Matrix6d I;
+    I.setZero();
+    
+    I.block<3,3>(0,0) = R;
+    I.block<3,3>(3,3) = R;
+    
+    return I;
+    
 }
 
     }
