@@ -743,6 +743,61 @@ TEST_F( testModelInterface, checkVelocityTwist ){
     
 }
 
+
+TEST_F( testModelInterface, checkIMU )
+{
+    
+    XBot::ImuSensor::ConstPtr const_imu = fb_model_ptr->getImu().begin()->second;
+    auto imu = std::const_pointer_cast<XBot::ImuSensor>(const_imu);
+    
+    
+    Eigen::Quaterniond qor;
+    qor.coeffs() << 1,2,3,4;
+    qor.normalize();
+    
+    Eigen::Matrix3d R(qor);
+    
+    Eigen::Vector3d omega;
+    omega.setRandom();
+    
+    Eigen::Vector3d acc;
+    
+    imu->setImuData(R, acc, omega, 0);
+    
+    Eigen::VectorXd q, qdot;
+    q.setRandom(fb_model_ptr->getJointNum());
+    qdot.setRandom(fb_model_ptr->getJointNum());
+
+    fb_model_ptr->setJointPosition(q);
+    fb_model_ptr->setJointVelocity(qdot);
+    fb_model_ptr->update();
+    
+    
+    ASSERT_TRUE( fb_model_ptr->setFloatingBaseState(imu) );
+    fb_model_ptr->update();
+    
+    Eigen::Matrix3d actual_R;
+    Eigen::Affine3d T;
+    ASSERT_TRUE( fb_model_ptr->getFloatingBasePose(T) );
+    actual_R = T.linear();
+    
+    Eigen::Vector6d actual_omega;
+    fb_model_ptr->getFloatingBaseTwist(actual_omega);
+    
+    std::cout << R << std::endl;
+    std::cout << actual_R << std::endl;
+    
+    std::cout << omega.transpose() << std::endl;
+    std::cout << actual_omega.transpose() << std::endl;
+    
+    EXPECT_NEAR( (R*actual_R.transpose() - Eigen::Matrix3d::Identity()).norm() , 0, 0.001);
+    
+    EXPECT_NEAR( (R*omega - actual_omega.tail<3>()).norm() , 0, 0.001);
+    
+    
+    
+}
+
 int main ( int argc, char **argv )
 {
      testing::InitGoogleTest ( &argc, argv );
