@@ -56,6 +56,7 @@ find_package(Xenomai QUIET)
 
 option(BUILD_TESTS "Compile XBotInterface tests" TRUE)
 
+set(ENABLE_XENO CACHE BOOL "OFF")
 
 
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
@@ -109,8 +110,10 @@ target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     matio pthread
                                     )
                                     
-if(${Xenomai_FOUND})
-set_xeno_flags(XBotInterface)
+if( ${ENABLE_XENO} )
+  if( ${Xenomai_FOUND})
+  set_xeno_flags(XBotInterface)
+  endif()
 endif()
 
 
