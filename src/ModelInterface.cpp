@@ -820,7 +820,7 @@ bool XBot::ModelInterface::getFloatingBasePose(KDL::Frame& floating_base_pose) c
 {
     std::string fb_link;
     bool success = getFloatingBaseLink(fb_link);
-    success = getPose(fb_link, floating_base_pose);
+    success = getPose(fb_link, floating_base_pose) && success;
     return success;
 
 }
