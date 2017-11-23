@@ -243,6 +243,7 @@ namespace XBot {
     
     void operator<< ( std::ostream& os, Endl& endl )
     {
+        os << "\n";
         endl.print();
     }
     
@@ -495,7 +496,7 @@ namespace XBot {
         if(_rt_mode)
         {
             
-            DPRINTF("%s\n", _buffer);
+            DPRINTF("%s", _buffer);
         
 #if !defined __XENO__ && !defined __COBALT__ 
 //             fflush(stdout);
@@ -503,7 +504,7 @@ namespace XBot {
         }
         else
         {
-            printf("%s\n", _buffer);
+            printf("%s", _buffer);
         }
     }
 
