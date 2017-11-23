@@ -38,7 +38,11 @@ namespace XBot {
     
     LoggerClass Logger::_logger("");
     
-        
+    void XBot::Logger::SetRtMode(bool rt_mode_active)
+    {
+        _logger.setRtMode(rt_mode_active);
+    }
+    
 
     std::ostream& Logger::error(Logger::Severity s)
     {
@@ -239,6 +243,7 @@ namespace XBot {
     
     void operator<< ( std::ostream& os, Endl& endl )
     {
+        os << "\n";
         endl.print();
     }
     
@@ -473,14 +478,34 @@ namespace XBot {
         
     }
     
+    void LoggerClass::setRtMode(bool flag)
+    {
+        _rt_mode = flag;
+        if(_rt_mode){
+            info("Real time print enabled!");
+        }
+        else{
+            info("Real time print disabled!");
+        }
+    }
+
+    
     
     inline void LoggerClass::print_internal()
     {
-        DPRINTF("%s\n", _buffer);
+        if(_rt_mode)
+        {
+            
+            DPRINTF("%s", _buffer);
         
 #if !defined __XENO__ && !defined __COBALT__ 
-        fflush(stdout);
+//             fflush(stdout);
 #endif
+        }
+        else
+        {
+            printf("%s", _buffer);
+        }
     }
 
 

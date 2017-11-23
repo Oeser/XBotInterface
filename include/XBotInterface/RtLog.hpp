@@ -89,6 +89,11 @@ namespace XBot {
         enum class Severity { DEBUG = -1, LOW = 0, MID = 1, HIGH = 2, FATAL = 3 };
         
         /**
+         * @brief Enables/disables the usage of rt_printf (needed for logging from Xenomai 2 RT threads)
+         */
+        static void SetRtMode(bool rt_mode_active);
+        
+        /**
          * @brief Writes to the internal stream with no special formatting and without changing
          * the severity level (which defaults to HIGH). 
          * 
@@ -237,6 +242,11 @@ namespace XBot {
         LoggerClass(std::string logger_name);
         
         ~LoggerClass();
+        
+        /**
+         * @brief Enables/disables the usage of rt_printf (needed for logging from Xenomai 2 RT threads)
+         */
+        void setRtMode(bool rt_mode_active);
         
         /**
          * @brief Writes to the internal stream with no special formatting and without changing
@@ -389,6 +399,7 @@ namespace XBot {
         std::string _name, _name_tag;
         Logger::Severity _severity;
         Logger::Severity _verbosity_level;
+        bool _rt_mode;
         
         
         std::unique_ptr<Mutex> _mutex;
