@@ -254,84 +254,6 @@ private:
 };
 
 
-#define REGISTER_GENERIC_PLUGIN(plugin_name, scoped_class_name, base_class_name) SHLIBPP_DEFINE_SHARED_SUBCLASS(plugin_name ## _factory, scoped_class_name, base_class_name);
-
-template <typename PluginType>
-class PluginLoader {
-
-public:
-
-    bool load(std::string plugin_name)
-    {
-
-        _ioplugin_factory = std::make_shared<shlibpp::SharedLibraryClassFactory<PluginType>>();
-        _ioplugin_class = std::make_shared<shlibpp::SharedLibraryClass<PluginType>>();
-
-        std::string path_to_so = "lib" + plugin_name + ".so";
-        computeAbsolutePath(path_to_so, LIB_MIDDLE_PATH, path_to_so);
-
-        std::string factory_name = plugin_name + "_factory";
-        _ioplugin_factory->open(path_to_so.c_str(), factory_name.c_str());
-
-        if (!_ioplugin_factory->isValid()) {
-            // NOTE print to celebrate the wizard
-            printf("error (%s) : %s\n", shlibpp::Vocab::decode(_ioplugin_factory->getStatus()).c_str(),
-                _ioplugin_factory->getLastNativeError().c_str());
-            _load_success = false;
-            return false;
-        }
-
-        _load_success = true;
-
-        // open io plugin
-        _ioplugin_class->open(*_ioplugin_factory);
-
-        return true;
-
-    }
-
-
-    PluginType* getPtr()
-    {
-        if(!_load_success) return nullptr;
-        else return &(*_ioplugin_class).getContent();
-    }
-
-private:
-
-    static bool computeAbsolutePath (const std::string& input_path,
-                                     const std::string& middle_path,
-                                     std::string& absolute_path)
-    {
-        // if not an absolute path
-        if(!(input_path.at(0) == '/')) {
-            // if you are working with the Robotology Superbuild
-            const char* env_p = std::getenv("ROBOTOLOGY_ROOT");
-            // check the env, otherwise error
-            if(env_p) {
-                std::string current_path(env_p);
-                // default relative path when working with the superbuild
-                current_path += middle_path;
-                current_path += input_path;
-                absolute_path = current_path;
-                return true;
-            }
-            else {
-                std::cerr << "ERROR in " << __func__ << " : the input path  " << input_path << " is neither an absolute path nor related with the robotology superbuild. Download it!" << std::endl;
-                return false;
-            }
-        }
-        // already an absolute path
-        absolute_path = input_path;
-        return true;
-    }
-
-    std::shared_ptr<shlibpp::SharedLibraryClassFactory<PluginType>> _ioplugin_factory;
-    std::shared_ptr<shlibpp::SharedLibraryClass<PluginType>> _ioplugin_class;
-
-    bool _load_success;
-
-};
 
 
 /**
@@ -405,6 +327,167 @@ inline Eigen::Matrix6d GetAdjointFromRotation(const Eigen::Matrix3d& R){
     return I;
     
 }
+
+
+template <typename T>   
+class LimitedDeque {
+    
+public:
+    
+    LimitedDeque(int N = 0);
+    
+    void push_back(const T& elem);
+    void push_back();
+    bool pop_back();
+    
+    T& back();
+    const T& back() const;
+    
+    int size() const;
+    int capacity() const { return N; }
+    
+    bool is_full() const;
+    bool is_empty() const;
+    
+    void reset();
+    
+private:
+    
+    const int N;
+    
+    int decrement_mod(int idx);
+    
+    int _oldest;
+    int _newest;
+    
+    std::vector<T> _buffer;
+
+};
+
+template <typename T>
+inline LimitedDeque<T>::LimitedDeque(int _N):
+    N(_N)
+{
+    reset();
+    
+    _buffer.resize(N);
+}
+
+template <typename T>
+inline const T& LimitedDeque<T>::back() const
+{
+    if(is_empty()){
+        throw std::out_of_range("back() called on a empty deque");
+    }
+    else{
+        int back_idx = decrement_mod(_newest);
+        return _buffer.at(back_idx);
+    }
+    
+}
+
+template <typename T>
+T& LimitedDeque<T>::back()
+{
+    if(is_empty()){
+        throw std::out_of_range("back() called on a empty deque");
+    }
+    else{
+        int back_idx = decrement_mod(_newest);
+        return _buffer.at(back_idx);
+    }
+}
+
+
+template <typename T>
+inline bool LimitedDeque<T>::pop_back()
+{
+    if(is_empty()){
+        return false;
+    }
+    else{
+        _newest = decrement_mod(_newest);
+        if( _newest == _oldest )
+        {
+            reset();
+        }
+        
+        return true;
+    }
+}
+
+template <typename T>
+inline void LimitedDeque<T>::push_back(const T& elem)
+{
+    push_back();
+    back() = elem;
+}
+
+template <typename T>
+inline void LimitedDeque<T>::push_back()
+{
+    if(is_full()){
+        
+        
+        _oldest = ( _oldest + 1 ) % N;
+        _newest = _oldest;
+        
+    }
+    else{
+        
+        if(is_empty()){
+            _oldest = 0;
+        }
+        
+        _newest = ( _newest + 1 ) % N;
+        
+    } 
+}  
+
+
+template <typename T>
+inline int LimitedDeque<T>::size() const
+{
+    if ( is_full() ) {
+        return N;
+    }
+    else if ( is_empty() ) {
+        return 0;
+    }
+    else if ( _newest > _oldest ) {
+        return _newest - _oldest;
+    }
+    else {
+        return ( N - _oldest + _newest );
+    }
+}
+
+template <typename T>
+inline bool LimitedDeque<T>::is_full() const
+{
+    return _oldest == _newest;
+}
+
+template <typename T>
+inline bool LimitedDeque<T>::is_empty() const
+{
+    return !is_full() && _newest == 0 && _oldest == -1;
+}
+
+template <typename T>
+inline int LimitedDeque<T>::decrement_mod(int idx)
+{
+    idx--;
+    return idx >= 0 ? idx : (idx + N);
+}
+
+template <typename T>
+inline void LimitedDeque<T>::reset()
+{
+    _oldest = -1;
+    _newest = 0;
+}
+
 
     }
 

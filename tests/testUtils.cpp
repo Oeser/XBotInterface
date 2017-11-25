@@ -120,19 +120,86 @@ TEST_F (testUtils, checkFilterDcGainEigen) {
 
 
 
-TEST_F(testUtils, checkMtLogger){
+// TEST_F(testUtils, checkMtLogger){
+//     
+//     std::vector<std::thread> th;
+//     
+//     auto f = std::bind(&testUtils::test_mt_log_func, this, std::placeholders::_1);
+//     
+//     for(int i = 0; i < 5; i++){
+//         th.push_back(std::thread(f, i+1));
+//     }
+//     
+//     for(auto& t : th){
+//         t.join();
+//     }
+// }
+
+
+
+TEST_F( testUtils, checkLimitedDeque ){
+ 
+    int N = 10;
     
-    std::vector<std::thread> th;
+    XBot::Utils::LimitedDeque<int> deque(N);
     
-    auto f = std::bind(&testUtils::test_mt_log_func, this, std::placeholders::_1);
+//     EXPECT_THROW( deque.back(), std::out_of_range );
+    EXPECT_FALSE( deque.pop_back() );
+    EXPECT_TRUE( deque.is_empty() );
     
-    for(int i = 0; i < 5; i++){
-        th.push_back(std::thread(f, i+1));
+    for(int i = 0; i < (N-1); i++){
+        EXPECT_EQ(deque.size(), i);
+        deque.push_back();
+        EXPECT_EQ(deque.size(), i+1);
+        deque.back() = i;
+        EXPECT_FALSE(deque.is_full());
+        EXPECT_FALSE(deque.is_empty());
     }
     
-    for(auto& t : th){
-        t.join();
+    deque.push_back();
+    deque.back() = N-1;
+    
+    EXPECT_TRUE( deque.is_full() );
+    EXPECT_EQ( deque.size(), deque.capacity() );
+    EXPECT_FALSE( deque.is_empty() );
+    
+    for(int i = N-1; i >= 0; i--){
+        std::cout << deque.back() << std::endl;
+        EXPECT_EQ( deque.back(), i );
+        EXPECT_TRUE( deque.pop_back() );
+        EXPECT_EQ( deque.size(), i );
     }
+    
+    EXPECT_TRUE( deque.is_empty() );
+    
+    
+    
+    for(int i = 0; i < (1.5*N); i++){
+        EXPECT_EQ(deque.size(), std::min(N, i));
+        deque.push_back();
+        EXPECT_EQ(deque.size(), std::min(N, i+1));
+        deque.back() = i;
+        std::cout << deque.back() << std::endl;
+        EXPECT_FALSE(deque.is_empty());
+    }
+    
+    EXPECT_EQ(deque.size(), N);
+    
+    for(int i = 0; i < N; i++){
+        std::cout << "Iter " << i << std::endl;
+        EXPECT_EQ(deque.back(), int(1.5*N)-1-i);
+        std::cout << deque.back() << std::endl;
+        EXPECT_EQ(deque.size(), N-i);
+        EXPECT_TRUE(deque.pop_back());
+        EXPECT_EQ(deque.size(), N-i-1);
+    }
+    
+    EXPECT_TRUE(deque.is_empty());
+    
+    
+    
+    
+    
 }
 
 

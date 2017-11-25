@@ -987,6 +987,9 @@ bool XBot::ModelInterface::setFloatingBaseState(const Eigen::Affine3d& pose, con
     bool success = setFloatingBasePose(pose);
     success = update() && success;
     success = setFloatingBaseTwist(twist);
+    if(!success){
+        Logger::error() << __func__ << " failed!" << Logger::endl();
+    }
     return success;
 }
 
