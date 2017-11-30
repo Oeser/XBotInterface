@@ -206,7 +206,7 @@ inline void XBot::Thread_hook::create ( int rt=true, int cpu_nr=0 ) {
     pthread_attr_setschedparam ( &attr, &schedparam );
 
     pthread_attr_getstacksize ( &attr, &dflt_stacksize );
-//     DPRINTF ( "default stack size %ld\n", dflt_stacksize );
+    Logger::info("default stack size %ld\n", dflt_stacksize );
     if ( stacksize > 0 ) {
         pthread_attr_setstacksize ( &attr, stacksize );
     }
