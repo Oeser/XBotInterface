@@ -235,12 +235,12 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
         }
 
     }
-    
+
     // hands
     for( const auto& hand_pair : _XBotModel.get_hands() ) {
         _hand_map[hand_pair.first] =  std::make_shared<XBot::Hand>(hand_pair.second, hand_pair.first);
         _hand_id_map[hand_pair.second] =  _hand_map.at(hand_pair.first);
-    } 
+    }
 
     // NOTE if you have disabled joint, the URDF should be updated in order to have compatibility btw robot and model
     if (_XBotModel.getDisabledJoints().size() > 0) {
@@ -286,7 +286,7 @@ bool XBot::XBotInterface::init(const std::string &path_to_cfg, AnyMapConstPtr an
     }
 
     post_init();
-    
+
     return success;
 
 }
@@ -1884,13 +1884,13 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
                 const std::vector<double>& joint_value = value_pair.second;
 
                 if( joint_value.size() != 1 ){
-                    std::cerr << "ERROR in " << __func__ << ": multi-dof joints not supported!" << std::endl;
-                    return false;
+                    Logger::warning() << "in " << __func__ << ": multi-dof joints not supported!" << Logger::endl();
+                    continue;
                 }
 
                 if(!hasJoint(joint_name)){
-                    std::cerr << "ERROR in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << std::endl;
-                    return false;
+                    Logger::warning() << "in " << __func__ << "! Joint " << joint_name << " is NOT defined!" << Logger::endl();
+                    continue;
                 }
 
                 int dof_index = getDofIndex(joint_name);
@@ -1903,7 +1903,7 @@ bool XBot::XBotInterface::getRobotState(const std::string& state_name,
     }
 
     if(!success){
-        std::cerr << "ERROR in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << std::endl;
+        Logger::error() << "in " << __func__ << ": required group state " << state_name << " is NOT defined as a group state for the whole robot. Check in the SRDF that " << state_name << " is defined for the chains group" << Logger::endl();
     }
 
     return success;
