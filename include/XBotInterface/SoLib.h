@@ -41,19 +41,23 @@ extern "C" void destroy_instance( base_class* instance ) \
 
 using XBot::Logger;
 
-namespace{
+namespace {
+
 
 class SoLib {
 
 public:
-  
-  template <class T>
-  static std::shared_ptr<T> getFactory(const std::string& path_to_so, const std::string& lib_name)
-  {
 
+template <class T>
+static std::shared_ptr<T> getFactory(const std::string& path_to_so, const std::string& lib_name)
+{
+    std::string abs_path;
+    std::string middle_path = "/build/install/lib/lib";
+    computeAbsolutePath(path_to_so, middle_path, abs_path);
+    
     char *error;  
     void* lib_handle;
-    lib_handle = dlopen(path_to_so.c_str(), RTLD_NOW);
+    lib_handle = dlopen(abs_path.c_str(), RTLD_NOW);
     if (!lib_handle) {
         XBot::Logger::error() << lib_name <<" so library NOT found! \n" << dlerror() << XBot::Logger::endl();
     }
@@ -61,7 +65,7 @@ public:
     {
         Logger::success() << lib_name << " so library found! " << Logger::endl();
         handles[lib_name] = lib_handle;
-      
+    
         T* (*create)();
         create = (T* (*)())dlsym(lib_handle, "create_instance");
         if ((error = dlerror()) != NULL) {
@@ -75,8 +79,8 @@ public:
         }
         
         XBot::Logger::error() << " in loading library " << lib_name << ": obtained pointer is null" << XBot::Logger::endl();
-     }
-     
+    }
+    
     return nullptr;
     
 }
@@ -124,6 +128,7 @@ private:
 };
 
 std::map<std::string, void*> SoLib::handles;
+
 }
 
 #endif
