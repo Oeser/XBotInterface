@@ -772,9 +772,20 @@ TEST_F( testModelInterface, checkIMU )
     fb_model_ptr->setJointVelocity(qdot);
     fb_model_ptr->update();
     
+    Eigen::Affine3d T_fb;
+    Eigen::Vector6d twist_fb;
+    
+    fb_model_ptr->getFloatingBasePose(T_fb);
+    fb_model_ptr->getFloatingBaseTwist(twist_fb);
+    
     
     ASSERT_TRUE( fb_model_ptr->setFloatingBaseState(imu) );
     fb_model_ptr->update();
+    
+    
+    Eigen::VectorXd qnew, qdotnew;
+    fb_model_ptr->getJointPosition(qnew);
+    fb_model_ptr->getJointVelocity(qdotnew);
     
     Eigen::Matrix3d actual_R;
     Eigen::Affine3d T;
@@ -790,9 +801,18 @@ TEST_F( testModelInterface, checkIMU )
     std::cout << omega.transpose() << std::endl;
     std::cout << actual_omega.transpose() << std::endl;
     
+    
+    
     EXPECT_NEAR( (R*actual_R.transpose() - Eigen::Matrix3d::Identity()).norm() , 0, 0.001);
     
     EXPECT_NEAR( (R*omega - actual_omega.tail<3>()).norm() , 0, 0.001);
+    
+    EXPECT_NEAR( (T.translation()-T_fb.translation()).norm(), 0.0, 1e-10 );
+    
+    EXPECT_NEAR( (twist_fb.head(3)-actual_omega.head(3)).norm(), 0.0, 1e-10 );
+    
+    EXPECT_NEAR( (q-qnew).head(3).norm(), 0, 1e-10 );
+    EXPECT_NEAR( (qdot-qdotnew).head(3).norm(), 0, 1e-10 );
     
     
     
