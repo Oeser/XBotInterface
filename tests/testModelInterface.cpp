@@ -1,7 +1,10 @@
 #include <XBotInterface/ModelInterface.h>
+#include <XBotInterface/Utils.h>
 #include <gtest/gtest.h>
 #include <cstdlib>
 #include <time.h>
+
+
 
 class testModelInterface : public testing::Test {
 
@@ -337,112 +340,239 @@ TEST_F( testModelInterface, checkCOM2 ){
 
     for(int iter=0; iter < 100; iter++){
 
-    Eigen::VectorXd q, q1, q2, qdot;
-    q.setRandom(model.getJointNum());
-    qdot.setRandom(model.getJointNum());
-
-
-    model.setJointPosition(q);
-    model.setJointVelocity(qdot);
-    model.update();
-
-    Eigen::MatrixXd Jcom, Jcom_hat, Jcom2;
-    Eigen::Vector3d com, com1, com2, dcom, jdotcomqdot;
-    model.getCOMJacobian(Jcom);
-    model.getCOMJacobian(Jcom2, jdotcomqdot);
-    model.getCOM(com);
-    model.getCOMVelocity(dcom);
-    
-    std::cout << "Jcom2:\n" << Jcom << std::endl;
-    std::cout << "Jcom:\n" << Jcom2 << std::endl;
-
-    EXPECT_EQ( Jcom.rows(), 3 );
-    EXPECT_EQ( Jcom.cols(), model.getJointNum() );
-
-
-    Eigen::Vector3d dcom1;
-    dcom1 = Jcom*qdot;
-    
-    std::cout << "dCom/dt: " << dcom.transpose() << "   " << dcom1.transpose() << std::endl;
-
-    EXPECT_NEAR( (dcom-dcom1).norm(), 0, 0.0001 );
-
-    double step_size = 0.000001;
-    Jcom_hat.resize(Jcom.rows(), Jcom.cols());
-
-    for(int i = 0; i < model.getJointNum(); i++){
-
-        q1 = q;
-        q2 = q;
-        q2(i) += step_size/2;
-        q1(i) -= step_size/2;
-
-        model.setJointPosition(q2);
-        model.update();
-        model.getCOM(com2);
-
-        model.setJointPosition(q1);
-        model.update();
-        model.getCOM(com1);
-
-
-        Jcom_hat.col(i) = (com2-com1)/step_size;
-
-
-    }
-
-
-    EXPECT_NEAR( (Jcom-Jcom_hat).norm()/Jcom.size(), 0, 0.00001 );
-    EXPECT_NEAR( (dcom-Jcom_hat*qdot).norm(), 0, 0.0001);
-
-    }
-
-
-
-}
-
-
-
-TEST_F( testModelInterface, checkJdotQdot ){
-
-    XBot::ModelInterface& model = *model_ptr;
-    std::string ee_name = model.arm(0).getTipLinkName();
-
-    Eigen::VectorXd q, qdot;
-    Eigen::Matrix<double,6,1> jdotqdot, jdotqdot_numerical;
-    Eigen::MatrixXd J1, J2, Jdot;
-
-    for(int i = 0; i < 100; i++){
-
+        Eigen::VectorXd q, q1, q2, qdot;
         q.setRandom(model.getJointNum());
-        qdot.setRandom(q.size());
+        qdot.setRandom(model.getJointNum());
+
 
         model.setJointPosition(q);
         model.setJointVelocity(qdot);
         model.update();
 
-        model.computeJdotQdot(ee_name, Eigen::Vector3d::Zero(), jdotqdot);
+        Eigen::MatrixXd Jcom, Jcom_hat, Jcom2;
+        Eigen::Vector3d com, com1, com2, dcom, jdotcomqdot;
+        model.getCOMJacobian(Jcom);
+        model.getCOMJacobian(Jcom2, jdotcomqdot);
+        model.getCOM(com);
+        model.getCOMVelocity(dcom);
+        
+        std::cout << "Jcom2:\n" << Jcom << std::endl;
+        std::cout << "Jcom:\n" << Jcom2 << std::endl;
 
-        double dt = 1e-6;
+        EXPECT_EQ( Jcom.rows(), 3 );
+        EXPECT_EQ( Jcom.cols(), model.getJointNum() );
+        EXPECT_NEAR( (Jcom-Jcom2).norm(), 0, 0.00001 );
 
-        model.setJointPosition(q + 0.5*dt*qdot);
-        model.update();
-        model.getJacobian(ee_name, J2);
 
-        model.setJointPosition(q - 0.5*dt*qdot);
-        model.update();
-        model.getJacobian(ee_name, J1);
+        Eigen::Vector3d dcom1;
+        dcom1 = Jcom*qdot;
+        
+        std::cout << "dCom/dt: " << dcom.transpose() << "   " << dcom1.transpose() << std::endl;
 
-        Jdot = (J2 - J1)/dt;
-        jdotqdot_numerical = Jdot * qdot;
+        EXPECT_NEAR( (dcom-dcom1).norm(), 0, 0.0001 );
 
-//         std::cout << "JdotQdot error: " << (jdotqdot-jdotqdot_numerical).norm()/model.getJointNum() << std::endl;
+        double step_size = 0.000001;
+        Jcom_hat.resize(Jcom.rows(), Jcom.cols());
 
-        EXPECT_NEAR( (jdotqdot-jdotqdot_numerical).norm()/model.getJointNum(), 0.0,  1e-6 );
+        for(int i = 0; i < model.getJointNum(); i++){
+
+            q1 = q;
+            q2 = q;
+            q2(i) += step_size/2;
+            q1(i) -= step_size/2;
+
+            model.setJointPosition(q2);
+            model.update();
+            model.getCOM(com2);
+
+            model.setJointPosition(q1);
+            model.update();
+            model.getCOM(com1);
+
+
+            Jcom_hat.col(i) = (com2-com1)/step_size;
+
+
+        }
+
+
+        EXPECT_NEAR( (Jcom-Jcom_hat).norm()/Jcom.size(), 0, 0.00001 );
+        EXPECT_NEAR( (dcom-Jcom_hat*qdot).norm(), 0, 0.0001);
 
     }
 
+
+
 }
+
+
+Eigen::Vector6d getPartialDerivative(const Eigen::MatrixXd& J, int joint_idx, int col_idx)
+{
+    using namespace XBot::Utils;
+    
+    int j = joint_idx;
+    int i = col_idx;
+
+    Eigen::Vector6d jac_j_ = J.col(j);
+    Eigen::Vector6d jac_i_ = J.col(i);
+
+    Eigen::Vector6d t_djdq_;
+    t_djdq_.setZero();
+
+    if(j < i)
+    {
+        // P_{\Delta}({}_{bs}J^{j})  ref (20)
+        t_djdq_.head<3>() = skewSymmetricMatrix(jac_j_.tail<3>()) * jac_i_.head<3>();
+        t_djdq_.tail<3>() = skewSymmetricMatrix(jac_j_.tail<3>()) * jac_i_.tail<3>();
+    }else if(j > i)
+    {
+        // M_{\Delta}({}_{bs}J^{j})  ref (23)
+        t_djdq_.tail<3>().setZero();
+        t_djdq_.head<3>() = -skewSymmetricMatrix(jac_j_.head<3>()) * jac_i_.tail<3>();
+    }else if(j == i)
+    {
+        // ref (40)
+        t_djdq_.tail<3>().setZero();
+        t_djdq_.head<3>() = skewSymmetricMatrix(jac_i_.tail<3>()) * jac_i_.head<3>();
+    }
+    
+    return t_djdq_;
+}
+
+void computeJdot(const Eigen::MatrixXd& J, const Eigen::VectorXd& qdot, Eigen::MatrixXd& Jdot)
+{
+    Jdot = J*0;
+    
+    int k = 0;
+    
+    Eigen::Vector6d jac_dot_k;
+    jac_dot_k.setZero();
+    
+    for(int i = 0; i < J.cols(); i++)
+    {
+
+        for(int j = 0; j < J.cols(); j++)
+        {
+            // Column J is the sum of all partial derivatives  ref (41)
+            jac_dot_k += getPartialDerivative(J, j, k) * qdot(j);
+        }
+        
+        Jdot.col(k++) = jac_dot_k;
+        
+        jac_dot_k.setZero();
+    }
+    
+}
+
+
+TEST_F( testModelInterface, checkJdotQdot ){
+
+    XBot::ModelInterface& model = *fb_model_ptr;
+    std::string ee_name = model.arm(0).getTipLinkName();
+
+    Eigen::VectorXd q, qdot;
+    Eigen::Matrix<double,6,1> jdotqdot, jdotqdot_numerical, jdotqdot_ana;
+    Eigen::MatrixXd J1, J2, Jdot, Jdot_analytic;
+    
+    std::vector<urdf::LinkSharedPtr> links;
+    fb_model_ptr->getUrdf().getLinks(links);
+    
+    for(int k = 0; k < links.size(); k++){
+        
+        ee_name = links[k]->name;
+
+        for(int i = 0; i < 100; i++){
+
+            q.setRandom(model.getJointNum());
+            qdot.setRandom(q.size());
+
+            model.setJointPosition(q);
+            model.setJointVelocity(qdot);
+            model.update();
+            
+            Eigen::Vector3d ref_point = Eigen::Vector3d::Zero();
+
+            model.computeJdotQdot(ee_name, ref_point, jdotqdot);
+            
+
+            double dt = 1e-6;
+
+            model.setJointPosition(q + 0.5*dt*qdot);
+            model.update();
+            model.getJacobian(ee_name, ref_point, J2);
+
+            model.setJointPosition(q - 0.5*dt*qdot);
+            model.update();
+            model.getJacobian(ee_name, ref_point, J1);
+
+            Jdot = (J2 - J1)/dt;
+            computeJdot((J1+J2)/2, qdot, Jdot_analytic);
+            
+            jdotqdot_numerical = Jdot * qdot;
+            jdotqdot_ana = Jdot_analytic * qdot;
+
+            EXPECT_NEAR( (jdotqdot-jdotqdot_numerical).norm()/model.getJointNum(), 0.0,  1e-6 );
+            EXPECT_NEAR( (jdotqdot-jdotqdot_ana).norm()/model.getJointNum(), 0.0,  1e-6 );
+            EXPECT_NEAR( (jdotqdot_numerical-jdotqdot_ana).norm()/model.getJointNum(), 0.0,  1e-6 );
+            EXPECT_NEAR( (Jdot-Jdot_analytic).norm(), 0, 0.0001 );
+
+        }
+        
+    }
+
+}
+
+
+TEST_F( testModelInterface, checkXddot ){
+
+    XBot::ModelInterface& model = *fb_model_ptr;
+    std::string ee_name = model.arm(0).getTipLinkName();
+
+    Eigen::VectorXd q, qdot, qddot;
+    Eigen::Vector6d jdotqdot;
+    Eigen::MatrixXd J, Jdot_analytic;
+    
+    
+    std::vector<urdf::LinkSharedPtr> links;
+    fb_model_ptr->getUrdf().getLinks(links);
+    
+    for(int k = 0; k < links.size(); k++){
+        
+        ee_name = links[k]->name;
+
+        for(int i = 0; i < 100; i++){
+
+            q.setRandom(model.getJointNum());
+            qdot.setRandom(q.size());
+            qddot.setRandom(q.size());
+
+            model.setJointPosition(q);
+            model.setJointVelocity(qdot);
+            model.setJointAcceleration(qddot);
+            model.update();
+
+            model.computeJdotQdot(ee_name, Eigen::Vector3d::Zero(), jdotqdot);
+
+            model.getJacobian(ee_name, J);
+
+            computeJdot(J, qdot, Jdot_analytic);
+            
+            Eigen::Vector6d xddot, xddot_comp, xddot_comp_analytic;
+            
+            model.getAccelerationTwist(ee_name, xddot);
+            
+            xddot_comp = J*qddot + jdotqdot;
+            xddot_comp_analytic = J*qddot + Jdot_analytic*qdot;
+            
+            EXPECT_NEAR( (xddot-xddot_comp).norm(), 0, 0.00001 );
+            EXPECT_NEAR( (xddot-xddot_comp_analytic).norm(), 0, 0.00001 );
+
+        }
+        
+    }
+
+}
+
 
 TEST_F( testModelInterface, checkSetFloatingBasePose ){
 
