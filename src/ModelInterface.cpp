@@ -189,6 +189,7 @@ bool XBot::ModelInterface::init_internal(const std::string& path_to_cfg, AnyMapC
 
     }
 
+    _tmp_h.setZero(1);
 
     return true;
 }
@@ -635,15 +636,98 @@ bool XBot::ModelInterface::setGravity(const std::string& reference_frame, const 
     return success;
 }
 
+namespace {
+    
+    inline Eigen::Vector6d getPartialDerivative(Eigen::Ref<const Eigen::MatrixXd> J, int joint_idx, int col_idx)
+    {
+        using namespace XBot::Utils;
+        
+        int j = joint_idx;
+        int i = col_idx;
+
+        Eigen::Vector6d jac_j_ = J.col(j);
+        Eigen::Vector6d jac_i_ = J.col(i);
+
+        Eigen::Vector6d t_djdq_;
+        t_djdq_.setZero();
+
+        if(j < i)
+        {
+            // P_{\Delta}({}_{bs}J^{j})  ref (20)
+            t_djdq_.head<3>() = skewSymmetricMatrix(jac_j_.tail<3>()) * jac_i_.head<3>();
+            t_djdq_.tail<3>() = skewSymmetricMatrix(jac_j_.tail<3>()) * jac_i_.tail<3>();
+        }else if(j > i)
+        {
+            // M_{\Delta}({}_{bs}J^{j})  ref (23)
+            t_djdq_.tail<3>().setZero();
+            t_djdq_.head<3>() = -skewSymmetricMatrix(jac_j_.head<3>()) * jac_i_.tail<3>();
+        }else if(j == i)
+        {
+            // ref (40)
+            t_djdq_.tail<3>().setZero();
+            t_djdq_.head<3>() = skewSymmetricMatrix(jac_i_.tail<3>()) * jac_i_.head<3>();
+        }
+        
+        return t_djdq_;
+    }
+    
+    void computeJdot(Eigen::Ref<const Eigen::MatrixXd> J, 
+                     const Eigen::VectorXd& qdot, 
+                     Eigen::MatrixXd& Jdot)
+    {
+        Jdot = J*0;
+        
+        int k = 0;
+        
+        Eigen::Vector6d jac_dot_k;
+        jac_dot_k.setZero();
+        
+        for(int i = 0; i < J.cols(); i++)
+        {
+
+            for(int j = 0; j < J.cols(); j++)
+            {
+                // Column J is the sum of all partial derivatives  ref (41)
+                jac_dot_k += ::getPartialDerivative(J, j, k) * qdot(j);
+            }
+            
+            Jdot.col(k++) = jac_dot_k;
+            
+            jac_dot_k.setZero();
+        }
+        
+    }
+}
+
 bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name,
                          const Eigen::Vector3d& point,
                          Eigen::Matrix<double,6,1>& jdotqdot) const
 {
-    tf::vectorEigenToKDL(point, _tmp_kdl_vector);
-    bool success = computeJdotQdot(link_name, _tmp_kdl_vector, _tmp_kdl_twist);
-    tf::twistKDLToEigen(_tmp_kdl_twist, jdotqdot);
+
+    bool success = false;
+    
+    success = getJacobian(link_name, point, _tmp_jacobian);
+    getJointVelocity(_tmp_jstate);
+    ::computeJdot(_tmp_jacobian, _tmp_jstate, _tmp_jacobiandot);
+    jdotqdot.noalias() = _tmp_jacobiandot * _tmp_jstate;
+    
+    return success;
+
+}
+
+bool XBot::ModelInterface::computeJdotQdot(const std::string& link_name, 
+                                           const KDL::Vector& point,
+                                           KDL::Twist& jdotqdot) const
+{
+    Eigen::Vector3d eigen_vec3d;
+    Eigen::Vector6d eigen_vec6d;
+    tf::vectorKDLToEigen(point, eigen_vec3d);
+    bool success = computeJdotQdot(link_name, eigen_vec3d, eigen_vec6d);
+    tf::twistEigenToKDL(eigen_vec6d, jdotqdot);
+    
     return success;
 }
+
 
 
 bool XBot::ModelInterface::getPointAcceleration(const std::string& link_name,
@@ -914,11 +998,12 @@ void XBot::ModelInterface::getCentroidalMomentumMatrix(Eigen::MatrixXd& centroid
     centroidal_momentum_matrix.setZero(6, getJointNum());
     
     if(!isFloatingBase()){
-        std::cerr << "ERROR in " << __func__ << "! Only implemented for floating base robots!" << std::endl;
+        Logger::error() << "in " << __func__ << "! Only implemented for floating base robots!" << Logger::endl();
         return;
     }
+    
     getInertiaMatrix(_tmp_inertia);
-    computeNonlinearTerm(_tmp_nleffect);
+    computeNonlinearTerm(_tmp_h);
     computeGravityCompensation(_tmp_gcomp);
     Eigen::Vector3d com;
     getCOM(com);
@@ -935,15 +1020,15 @@ void XBot::ModelInterface::getCentroidalMomentumMatrix(Eigen::MatrixXd& centroid
     Eigen::Matrix<double, 6, 6> Ju_T_inv = Ju.transpose().inverse();
     
     centroidal_momentum_matrix = Ju_T_inv * _tmp_inertia.block(0, 0, 6, getJointNum());
-    CMMdotQdot = Ju_T_inv * (_tmp_nleffect - _tmp_gcomp).head<6>();
+    CMMdotQdot = Ju_T_inv * (_tmp_h - _tmp_gcomp).head<6>();
     
 }
 
 void XBot::ModelInterface::getCOMJacobian(Eigen::MatrixXd& J, Eigen::Vector3d& dJcomQdot) const
 {
     Eigen::Vector6d dcmmqdot;
-    getCentroidalMomentumMatrix(_tmp_jacobian, dcmmqdot);
-    J = _tmp_jacobian.topRows(3) / getMass();
+    getCentroidalMomentumMatrix(_tmp_cmm, dcmmqdot);
+    J = _tmp_cmm.topRows(3) / getMass();
     dJcomQdot = dcmmqdot.head<3>() / getMass();
 }
 
@@ -987,6 +1072,9 @@ bool XBot::ModelInterface::setFloatingBaseState(const Eigen::Affine3d& pose, con
     bool success = setFloatingBasePose(pose);
     success = update() && success;
     success = setFloatingBaseTwist(twist);
+    if(!success){
+        Logger::error() << __func__ << " failed!" << Logger::endl();
+    }
     return success;
 }
 

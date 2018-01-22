@@ -15,7 +15,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>
-*/
+ * 
+ * NOTE: implementation of the jacobian derivative was adapted from KDL::ChainJntToJacDotSolver 
+ */
 
 #ifndef __MODEL_INTERFACE_H__
 #define __MODEL_INTERFACE_H__
@@ -485,9 +487,9 @@ public:
     * @param jdotqdot The resulting acceleration twist.
     * @return True if link_name is a valid link name.
     */
-    virtual bool computeJdotQdot(const std::string& link_name,
+    bool computeJdotQdot(const std::string& link_name,
                          const KDL::Vector& point,
-                         KDL::Twist& jdotqdot) const = 0;
+                         KDL::Twist& jdotqdot) const;
 
     /**
      * @brief Gets the COM position vector w.r.t. the world frame
@@ -1106,6 +1108,8 @@ protected:
 
 
 private:
+    
+    
 
 
     using XBotInterface::_chain_map;
@@ -1132,10 +1136,10 @@ private:
     mutable Eigen::MatrixXd _tmp_postural_jacob;
     mutable Eigen::MatrixXd _tmp_inertia;
     mutable Eigen::VectorXd _tmp_inv_inertia;
-    mutable Eigen::MatrixXd _tmp_jacobian;
+    mutable Eigen::MatrixXd _tmp_jacobian, _tmp_cmm, _tmp_jacobiandot;
     mutable Eigen::MatrixXd _tmp_M;
     mutable Eigen::MatrixXd _tmp_I;
-    mutable Eigen::VectorXd _tmp_gcomp, _tmp_nleffect;
+    mutable Eigen::VectorXd _tmp_gcomp, _tmp_h, _tmp_jstate;
 
     using XBotInterface::getTemperature;
     using XBotInterface::setTemperature;

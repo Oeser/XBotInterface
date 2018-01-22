@@ -243,7 +243,7 @@ namespace XBot {
     
     void operator<< ( std::ostream& os, Endl& endl )
     {
-        os << "\n";
+        os << color_reset << "\n";
         endl.print();
     }
     
@@ -281,6 +281,8 @@ namespace XBot {
         int nchars = vsnprintf(&_buffer[pos], (BUFFER_SIZE - pos), fmt, args);
         
         _sink.seekp(std::min(pos + nchars, BUFFER_SIZE - 1));
+        
+        _sink << color_reset;
         
         print();
     }
@@ -464,8 +466,6 @@ namespace XBot {
     void LoggerClass::print()
     {
         SET_LOCK_GUARD(*_mutex)
-        
-          _sink << color_reset;
         
         
         if( (int)_severity >= (int)_verbosity_level ){

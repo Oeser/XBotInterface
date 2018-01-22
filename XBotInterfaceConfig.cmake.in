@@ -4,8 +4,6 @@ set(XBotInterface_VERSION @XBotInterface_VERSION@)
 
 set_and_check(XBotInterface_INCLUDEDIR "@PACKAGE_XBotInterface_INCLUDEDIR@")
 include(CMakeFindDependencyMacro)
-find_package(YCM)
-find_dependency(sharedlibpp)
 find_dependency(kdl_parser)
 find_package(Eigen3)
 find_dependency(orocos_kdl)
