@@ -38,9 +38,6 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-# find the required packages
-# find_package(Threads)
-
 ###########
 ## Build ##
 ###########
@@ -48,8 +45,6 @@ add_executable(ik_example ik_example.cpp)
 add_executable(id_example id_example.cpp)
 add_executable(read_example read_example.cpp)
 add_executable(home_example home_example.cpp)
-
-add_executable(log_example log_example.cpp)
 add_executable(state_machine_example state_machine_example.cpp)
 
 ##########
@@ -59,8 +54,6 @@ target_link_libraries(ik_example XBotInterface )
 target_link_libraries(id_example XBotInterface )
 target_link_libraries(read_example XBotInterface )
 target_link_libraries(home_example XBotInterface )
-
-target_link_libraries(log_example XBotInterface )
 target_link_libraries(state_machine_example XBotInterface )
 
 #############

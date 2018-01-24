@@ -51,16 +51,17 @@ find_package(Eigen3 REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 find_package(Xenomai QUIET)
+find_package(XBotLogger REQUIRED)
 
 option(BUILD_TESTS "Compile XBotInterface tests" TRUE)
 
 set(ENABLE_XENO CACHE BOOL "ON")
 
-
 include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
+                            ${XBotLogger_INCLUDE_DIRS}
                             )
 
 
@@ -83,8 +84,6 @@ add_library(XBotInterface SHARED ${XBotInterface_INCLUDES}
                                  src/ImuSensor.cpp
                                  src/ControlMode.cpp
                                  src/bprinter/table_printer.cpp
-                                 src/Logger.cpp
-                                 src/RtLog.cpp
                                  )
 
 
@@ -100,7 +99,8 @@ target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
                                     ${eigen_conversions_LIBRARIES}
                                     ${bprinter_LIBRARIES}
-                                    matio pthread
+                                    ${XBotLogger_LIBRARIES}
+                                    pthread
                                     )
                                     
 if( ${ENABLE_XENO} )
