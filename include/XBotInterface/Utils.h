@@ -489,6 +489,46 @@ inline void LimitedDeque<T>::reset()
 }
 
 
+inline void FifthOrderPlanning(double x0, double dx0, double ddx0, 
+                        double goal, double start_time, double end_time, 
+                        double time, double& x, double& dx, double& ddx
+                       )
+{
+    Eigen::Matrix6d A;
+    A << 1.0000,         0,         0,         0,         0,         0,
+              0,    1.0000,         0,         0,         0,         0,
+              0,         0,    0.5000,         0,         0,         0,
+       -10.0000,   -6.0000,   -1.5000,   10.0000,   -4.0000,    0.5000,
+        15.0000,    8.0000,    1.5000,  -15.0000,    7.0000,   -1.0000,
+        -6.0000,   -3.0000,   -0.5000,    6.0000,   -3.0000,    0.5000;
+    
+    double alpha = (end_time-start_time);
+    alpha = std::max(1e-6, alpha);
+    double tau = (time - start_time)/alpha; // d/dt = d/d(alpha*tau)
+    tau = std::max(0.0, tau);
+    tau = std::min(tau, 1.0);
+        
+    Eigen::Vector6d b;
+    b << x0, dx0*alpha, ddx0*std::pow(alpha,2.0), goal, 0.0, 0.0;
+    
+    Eigen::Vector6d coeffs = A*b;
+    
+    Eigen::Vector6d t_v, dt_v, ddt_v;
+    for(int i = 0; i < 6; i++)
+    {
+        t_v(i) = std::pow(tau, i);
+        dt_v(i) = i > 0 ? std::pow(tau, i-1)*i : 0;
+        ddt_v(i) = i > 1 ? std::pow(tau, i-2)*i*(i-1) : 0;
+        
+    }
+    
+    x = coeffs.dot(t_v);
+    dx = coeffs.dot(dt_v)/alpha;
+    ddx = coeffs.dot(ddt_v)/(alpha*alpha);
+}
+
+
+
     }
 
 }

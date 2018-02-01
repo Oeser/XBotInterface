@@ -6,6 +6,7 @@
 
 using XBot::Logger;
 
+
 namespace {
 
 class testUtils: public ::testing::Test {
@@ -202,6 +203,42 @@ TEST_F( testUtils, checkLimitedDeque ){
     
 }
 
+
+TEST_F(testUtils, checkPlanner)
+{
+    auto logger = XBot::MatLogger::getLogger("/tmp/checkPlannerXBotUtils");
+    double x0 = 1;
+    double dx0 = -1;
+    double ddx0 = 1;
+    double goal = 0;
+    double x, dx, ddx;
+    
+    for(double time = 0; time <= 10.0; time += 0.01)
+    {
+        
+        XBot::Utils::FifthOrderPlanning(x0, dx0, ddx0, goal, 0, 10, time, x, dx, ddx);
+        
+        if(time == 0.0)
+        {
+            EXPECT_TRUE(std::fabs(x0-x) <= 1e-6);
+            EXPECT_TRUE(std::fabs(dx0-dx) <= 1e-6);
+            EXPECT_TRUE(std::fabs(ddx0-ddx) <= 1e-6);
+        }
+        
+        logger->add("x", x);
+        logger->add("dx", dx);
+        logger->add("ddx", ddx);
+        logger->add("goal", goal);
+    }
+
+    EXPECT_TRUE(std::fabs(goal-x) <= 1e-6);
+    EXPECT_TRUE(std::fabs(dx) <= 1e-6);
+    EXPECT_TRUE(std::fabs(ddx) <= 1e-6);
+    
+    logger->flush();
+    
+    
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
