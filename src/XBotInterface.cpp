@@ -2126,6 +2126,18 @@ void XBot::XBotInterface::initLog(MatLogger::Ptr logger, int buffer_size, int in
         prefix = prefix + "_";
     }
 
+    /* Log chain indices!! */
+    std::vector<int> chain_ids;
+    for(auto c : getChainNames())
+    {
+        chain_ids.clear();
+        for(auto j: _chain_map.at(c)->getJointNames())
+        {
+            chain_ids.push_back(getDofIndex(j) + 1); // 1-based indexing
+        }
+        
+        logger->add(c, chain_ids);
+    }
 
     logger->createVectorVariable(prefix + "joint_position", getJointNum(), interleave, buffer_size);
     logger->createVectorVariable(prefix + "motor_position", getJointNum(), interleave, buffer_size);
