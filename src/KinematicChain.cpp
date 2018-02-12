@@ -236,6 +236,7 @@ void XBot::KinematicChain::pushBackJoint ( Joint::Ptr joint )
     _joint_vector.push_back(joint);
     _urdf_joints.push_back(joint->getUrdfJoint());
     _ordered_joint_name.push_back(joint->getJointName());
+    _ordered_joint_id.push_back(joint->getJointId());
     _joint_num = _joint_vector.size();
     if(joint->getJointId() < 0) _is_virtual = true;
 }
