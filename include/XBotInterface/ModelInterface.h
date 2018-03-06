@@ -26,7 +26,6 @@
 #include <vector>
 #include <map>
 
-#include <SharedLibraryClass.h>
 #include <Eigen/Geometry>
 #include <kdl/frames.hpp>
 #include <kdl/jacobian.hpp>
