@@ -39,6 +39,8 @@ extern "C" void destroy_instance( base_class* instance ) \
   delete instance; \
 }\
 
+
+
 using XBot::Logger;
 
 namespace {
@@ -85,22 +87,59 @@ static std::shared_ptr<T> getFactory(const std::string& path_to_so, const std::s
     
 }
   
-  static void unloadLib(const std::string& file_name)
-  {
+static void unloadLib(const std::string& file_name)
+{
     dlclose( handles[file_name] );
     Logger::info() << file_name <<" so library unloaded! " << Logger::endl();
-  }
+}
+
+template <class T, typename... Args>
+static std::shared_ptr<T> getFactoryWithArgs(const std::string& path_to_so, const std::string& lib_name, Args... args)
+{
+    std::string abs_path;
+    std::string middle_path = "/build/install/lib/lib";
+    computeAbsolutePath(path_to_so, middle_path, abs_path);
+    
+    char *error;  
+    void* lib_handle;
+    lib_handle = dlopen(abs_path.c_str(), RTLD_NOW);
+    if (!lib_handle) {
+        XBot::Logger::error() << lib_name <<" so library NOT found! \n" << dlerror() << XBot::Logger::endl();
+    }
+    else     
+    {
+        Logger::success() << lib_name << " so library found! " << Logger::endl();
+        handles[lib_name] = lib_handle;
+    
+        T* (*create)(Args... args);
+        create = (T* (*)(Args... args))dlsym(lib_handle, "create_instance");
+        if ((error = dlerror()) != NULL) {
+            XBot::Logger::error() << " in loading library " << lib_name << ": \n" << error << XBot::Logger::endl();
+            return nullptr;
+        }        
+        
+        T* instance =(T*)create(args...);
+        if( instance != nullptr){
+            return std::shared_ptr<T>(instance);
+        }
+        
+        XBot::Logger::error() << " in loading library " << lib_name << ": obtained pointer is null" << XBot::Logger::endl();
+    }
+    
+    return nullptr;
+    
+}
   
 private:
   
-  SoLib() = delete;
-  
-  static std::map<std::string, void*> handles;
-  
-  static bool computeAbsolutePath ( const std::string& input_path,
-                                      const std::string& middle_path,
-                                      std::string& absolute_path )
-  {
+SoLib() = delete;
+
+static std::map<std::string, void*> handles;
+
+static bool computeAbsolutePath ( const std::string& input_path,
+                                    const std::string& middle_path,
+                                    std::string& absolute_path )
+{
     // if not an absolute path
     if(!(input_path.at(0) == '/')) {
         // if you are working with the Robotology Superbuild
