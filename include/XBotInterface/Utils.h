@@ -23,8 +23,6 @@
 
 #include <XBotInterface/ModelInterface.h>
 #include <XBotInterface/RtLog.hpp>
-#include <SharedLibraryClassFactory.h>
-#include <SharedLibraryClass.h>
 
 namespace XBot {
     namespace Utils {

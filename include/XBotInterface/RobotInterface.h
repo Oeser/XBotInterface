@@ -23,7 +23,6 @@
 #include <vector>
 #include <map>
 #include <memory>
-#include <SharedLibraryClass.h>
 
 #include <cstdlib>
 

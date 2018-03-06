@@ -24,7 +24,7 @@
 #include <ostream>
 #include <iostream>
 #include <sstream>
-
+#include <vector>
 #include <unordered_map>
 
 #include <eigen3/Eigen/Dense>
