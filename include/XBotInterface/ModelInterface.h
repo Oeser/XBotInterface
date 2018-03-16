@@ -1095,6 +1095,9 @@ public:
     using XBotInterface::setMotorVelocity;
     using XBotInterface::setJointAcceleration;
     using XBotInterface::setJointEffort;
+    
+    using XBotInterface::setStiffness;
+    using XBotInterface::setDamping;
 
 
 protected:
@@ -1155,8 +1158,7 @@ private:
     using XBotInterface::setPositionReference;
     using XBotInterface::setVelocityReference;
     using XBotInterface::setEffortReference;
-    using XBotInterface::setStiffness;
-    using XBotInterface::setDamping;
+    
 
     using XBotInterface::getChainMap;
 
