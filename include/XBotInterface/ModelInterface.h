@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>
- * 
- * NOTE: implementation of the jacobian derivative was adapted from KDL::ChainJntToJacDotSolver 
+ *
+ * NOTE: implementation of the jacobian derivative was adapted from KDL::ChainJntToJacDotSolver
  */
 
 #ifndef __MODEL_INTERFACE_H__
@@ -245,7 +245,7 @@ public:
     bool setFloatingBaseOrientation( const KDL::Rotation& world_R_floating_base );
 
     /**
-    * @brief Gets the floating base pose w.r.t. the world frame. 
+    * @brief Gets the floating base pose w.r.t. the world frame.
     *
     * @param floating_base_pose The homogeneous transformation which transforms a point from floating base frame to world frame
     * @return True if the the model is floating base. False otherwise.
@@ -269,7 +269,7 @@ public:
     * @return True if the the model is floating base. False otherwise.
     */
     bool setFloatingBaseAngularVelocity( const KDL::Vector& floating_base_omega );
-    
+
     /**
     * @brief Sets the floating base pose and twist w.r.t. the world frame. Note that update() must be called in order to
     * recompute kinematics/dynamics accordingly.
@@ -279,7 +279,7 @@ public:
     * @return True if the the model is floating base. False otherwise.
     */
     bool setFloatingBaseState( const KDL::Frame& pose, const KDL::Twist& twist );
-    
+
     /**
     * @brief Sets the floating base orientation and angular velocity w.r.t. the world frame
     * from an IMU sensor attached to the model. Note that update() must be called in order to
@@ -507,8 +507,8 @@ public:
      */
     bool getCOM( const std::string& reference_frame,
                          KDL::Vector& com_position ) const;
-                         
-                         
+
+
     /**
      * @brief Gets the COM Jacobian expressed in the world frame and the d(Jcom)/dt * qdot term, i.e.
      * the COM acceleration due to joint velocities.
@@ -520,7 +520,7 @@ public:
      * @return void
      */
     virtual void getCOMJacobian( KDL::Jacobian& J, KDL::Vector& dJcomQdot) const;
-    
+
 
     /**
      * @brief Gets the COM Jacobian expressed in the world frame
@@ -566,9 +566,9 @@ public:
      * @param CMMdotQdot The d(CMM)/dt * qdot term, i.e. the derivative of the centroidal momentum due to joint velocities.
      * @return void
      */
-    virtual void getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix, 
+    virtual void getCentroidalMomentumMatrix(Eigen::MatrixXd& centroidal_momentum_matrix,
                                              Eigen::Vector6d& CMMdotQdot) const;
-    
+
     /**
      * @brief Gets the robot mometum about its COM.
      *
@@ -726,12 +726,12 @@ public:
      */
     bool maskJacobian( const std::string& chain_name, KDL::Jacobian& J) const;
 
-    
+
     /*************************/
     /**** EIGEN OVERLOADS ****/
     /*************************/
-    
-    
+
+
     /**
     * @brief Sets the floating base pose w.r.t. the world frame. Note that update() must be called in order to
     * recompute kinematics/dynamics accordingly.
@@ -740,7 +740,7 @@ public:
     * @return True if the floating_base_pose frame is valid. False otherwise.
     */
     bool setFloatingBasePose( const Eigen::Affine3d& floating_base_pose );
-    
+
     /**
     * @brief Sets the floating base pose and twist w.r.t. the world frame. Note that update() must be called in order to
     * recompute kinematics/dynamics accordingly.
@@ -831,8 +831,8 @@ public:
     /**
     * @brief Computes the orientation of the source_frame w.r.t. the target_frame
     *
-    * @param source_frame The source link name. 
-    * @param target_frame The target link name. 
+    * @param source_frame The source link name.
+    * @param target_frame The target link name.
     * @param orientation A rotation matrix which rotates a vector from source frame to target frame
     *       v_target = R * v_source
     * @return True if both source_frame and target_frame are valid. False otherwise.
@@ -935,7 +935,7 @@ public:
      */
     bool getCOM( const std::string& reference_frame,
                  Eigen::Vector3d& com_position ) const;
-                 
+
     /**
      * @brief Gets the COM Jacobian expressed in the world frame and the d(Jcom)/dt * qdot term, i.e.
      * the COM acceleration due to joint velocities.
@@ -1095,7 +1095,7 @@ public:
     using XBotInterface::setMotorVelocity;
     using XBotInterface::setJointAcceleration;
     using XBotInterface::setJointEffort;
-    
+
     using XBotInterface::setStiffness;
     using XBotInterface::setDamping;
 
@@ -1110,8 +1110,8 @@ protected:
 
 
 private:
-    
-    
+
+
 
 
     using XBotInterface::_chain_map;
@@ -1141,7 +1141,7 @@ private:
     mutable Eigen::MatrixXd _tmp_jacobian, _tmp_cmm, _tmp_jacobiandot;
     mutable Eigen::MatrixXd _tmp_M;
     mutable Eigen::MatrixXd _tmp_I;
-    mutable Eigen::VectorXd _tmp_gcomp, _tmp_h, _tmp_jstate;
+    mutable Eigen::VectorXd _tmp_gcomp, _tmp_h, _tmp_jstate, _M_col;
 
     using XBotInterface::getTemperature;
     using XBotInterface::setTemperature;
@@ -1158,7 +1158,7 @@ private:
     using XBotInterface::setPositionReference;
     using XBotInterface::setVelocityReference;
     using XBotInterface::setEffortReference;
-    
+
 
     using XBotInterface::getChainMap;
 

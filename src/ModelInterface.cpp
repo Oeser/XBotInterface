@@ -1052,13 +1052,18 @@ void XBot::ModelInterface::getInertiaInverseTimesVector(const Eigen::VectorXd& v
 
 void XBot::ModelInterface::getInertiaInverseTimesMatrix(const Eigen::MatrixXd& Mat, Eigen::MatrixXd& Minv_Mat) const
 {
+
     Minv_Mat.setZero(getJointNum(), getJointNum());
     _tmp_inv_inertia.setZero(getJointNum());
+
     for(int i = 0; i < Minv_Mat.rows(); ++i)
     {
-        getInertiaInverseTimesVector(Mat.col(i), _tmp_inv_inertia);
+        _M_col = Mat.col(i);
+        getInertiaInverseTimesVector(_M_col, _tmp_inv_inertia);
         Minv_Mat.col(i) = _tmp_inv_inertia;
     }
+
+    Minv_Mat = Mat;
 }
 
 void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
