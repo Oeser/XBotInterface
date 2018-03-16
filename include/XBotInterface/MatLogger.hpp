@@ -27,6 +27,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include <stdlib.h>
+
 #include <eigen3/Eigen/Dense>
 
 #include <signal.h>
@@ -141,10 +143,32 @@ public:
     }
     
     
+    /**
+     * @brief Flushing all the log instances
+     * 
+     * @return void
+     */
     static void FlushAll() {
         for(auto pair: _instances){
             pair.second->flush();
         }
+    }
+    
+    /**
+     * @brief utility to set the SCP log parameters: note that it will enable the SCP log in the flush
+     * 
+     * @param remote_username remote username
+     * @param remote_ip_address IPv4 remote address
+     * @param remote_log_folder_path path of the log folder on the remote host
+     * @return void
+     */
+    static void SetSCPLogParameters(const std::string& remote_username, 
+                                    const std::string& remote_ip_address,
+                                    const std::string& remote_log_folder_path  ) {
+        _enable_scp_log = true;
+        _remote_username = remote_username;
+        _remote_ip_address = remote_ip_address;
+        _remote_log_folder_path = remote_log_folder_path;
     }
 
 
@@ -525,7 +549,9 @@ public:
 
         Logger::success() << "Flushing to " << _file_name << " complete!" << Logger::endl();
 
-
+        if( _enable_scp_log ) {
+            std::system(std::string("scp " + _file_name + " " + _remote_username + "@" + _remote_ip_address + ":" + _remote_log_folder_path).c_str());
+        }
 
     }
 
@@ -562,6 +588,8 @@ protected:
 private:
 
     static std::unordered_map<std::string, Ptr> _instances;
+    static bool _enable_scp_log;
+    static std::string _remote_username, _remote_ip_address, _remote_log_folder_path;
 //     ConsoleLogger::Ptr _clog;
     bool _flushed;
 

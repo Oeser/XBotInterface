@@ -23,6 +23,8 @@ namespace XBot {
 
 
 std::unordered_map<std::string, MatLogger::Ptr> MatLogger::_instances;
+bool MatLogger::_enable_scp_log = false;
+std::string MatLogger::_remote_username, MatLogger::_remote_ip_address, MatLogger::_remote_log_folder_path;
 
 
 }
