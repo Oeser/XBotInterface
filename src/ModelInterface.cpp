@@ -1063,7 +1063,6 @@ void XBot::ModelInterface::getInertiaInverseTimesMatrix(const Eigen::MatrixXd& M
         Minv_Mat.col(i) = _tmp_inv_inertia;
     }
 
-    Minv_Mat = Mat;
 }
 
 void XBot::ModelInterface::getInertiaInverse(Eigen::MatrixXd& Minv) const
