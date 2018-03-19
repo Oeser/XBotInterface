@@ -52,7 +52,11 @@ find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 find_package(Xenomai QUIET)
 
-option(BUILD_TESTS "Compile XBotInterface tests" TRUE)
+message("test " ${kdl_parser_INCLUDE_DIRS})
+
+message(WARNING "Consider activating the tests!")
+# option(BUILD_TESTS "Compile XBotInterface tests" TRUE)
+option(BUILD_TESTS "Compile XBotInterface tests" OFF)
 
 set(ENABLE_XENO CACHE BOOL "ON")
 
