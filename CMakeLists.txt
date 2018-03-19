@@ -61,6 +61,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${EIGEN3_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
+                            ${eigen_conversions_INCLUDE_DIRS}
                             )
 
 
