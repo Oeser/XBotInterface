@@ -52,6 +52,10 @@ find_package(orocos_kdl REQUIRED)
 find_package(eigen_conversions REQUIRED)
 find_package(Xenomai QUIET)
 
+find_package(PkgConfig)
+pkg_check_modules(YAML_CPP yaml-cpp=0.5.1)
+message(STATUS "YAML_CPP Version: ${YAML_CPP_VERSION}")
+
 message("test " ${kdl_parser_INCLUDE_DIRS})
 
 message(WARNING "Consider activating the tests!")
@@ -66,6 +70,7 @@ include_directories(include ${XBotCoreModel_INCLUDE_DIRS}
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
                             ${eigen_conversions_INCLUDE_DIRS}
+                            ${YAML_CPP_INCLUDE_DIRS}
                             )
 
 
@@ -105,6 +110,7 @@ target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
                                     ${orocos_kdl_LIBRARIES}
                                     ${eigen_conversions_LIBRARIES}
                                     ${bprinter_LIBRARIES}
+                                    ${YAML_CPP_LIBRARIES}
                                     matio pthread
                                     )
                                     
