@@ -115,7 +115,7 @@ XBot::ModelInterface::Ptr XBot::ModelInterface::getModel ( const std::string& pa
         std::cerr << "ERROR in " << __func__ << " : could not parse the YAML " << abs_path_to_cfg << " . See error above!!" << std::endl;
         return instance_ptr;
     }
-
+    std::cout<<"Full path to yaml: "<<abs_path_to_cfg<<std::endl;
     // check model floating base
     bool is_model_floating_base;
      // loading YAML
