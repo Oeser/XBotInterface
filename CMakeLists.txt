@@ -104,6 +104,7 @@ target_include_directories(XBotInterface PUBLIC
                             ${kdl_parser_INCLUDE_DIRS}
                             ${orocos_kdl_INCLUDE_DIRS}
                             ${bprinter_INCLUDE_DIRS}
+                            ${eigen_conversions_INCLUDE_DIRS}
                             )
 
 target_link_libraries(XBotInterface PUBLIC ${XBotCoreModel_LIBRARIES}
